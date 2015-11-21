@@ -205,8 +205,9 @@ Zotero.Container.prototype.updateObjectsFromWriteResponse = function(objectsArra
         //update the itemKey for the parent
         if(data.hasOwnProperty('success')){
             //update each successfully written item, possibly with new itemKeys
-            J.each(data.success, function(ind, key){
+            Object.keys(data.success).forEach(function(ind){
                 var i = parseInt(ind, 10);
+                var key = data.success[ind];
                 var object = objectsArray[i];
                 //throw error if objectKey mismatch
                 if(object.key !== "" && object.key !== key){
@@ -222,7 +223,8 @@ Zotero.Container.prototype.updateObjectsFromWriteResponse = function(objectsArra
         }
         if(data.hasOwnProperty('failed')){
             Z.debug("updating objects with failed writes", 3);
-            J.each(data.failed, function(ind, failure){
+            Object.keys(data.failed).forEach(function(ind){
+                var failure = data.failed[ind];
                 Z.error("failed write " + ind + " - " + failure);
                 var i = parseInt(ind, 10);
                 var object = objectsArray[i];
