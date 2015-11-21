@@ -10,7 +10,6 @@ Zotero.Items = function(jsonBody){
 	this.objectMap = this.itemObjects;
 	this.objectArray = [];
 	this.unsyncedItemKeys = [];
-	this.newUnsyncedItems = [];
 	
 	if(jsonBody){
 		this.addItemsFromJson(jsonBody);
@@ -38,7 +37,7 @@ Zotero.Items.prototype.addItemsFromJson = function(jsonBody){
 	var parsedItemJson = jsonBody;
 	var itemsAdded = [];
 	Z.debug("looping");
-	J.each(parsedItemJson, function(index, itemObj) {
+	parsedItemJson.forEach(function(itemObj){
 		Z.debug("creating new Item");
 		var item = new Zotero.Item(itemObj);
 		items.addItem(item);
@@ -50,14 +49,6 @@ Zotero.Items.prototype.addItemsFromJson = function(jsonBody){
 //Remove item from local set if it has been marked as deleted by the server
 Zotero.Items.prototype.removeLocalItem = function(key){
 	return this.removeObject(key);
-	/*
-	var items = this;
-	if(items.itemObjects.hasOwnProperty(key) && items.itemObjects[key].synced === true){
-		delete items.itemObjects[key];
-		return true;
-	}
-	return false;
-	*/
 };
 
 Zotero.Items.prototype.removeLocalItems = function(keys){
@@ -159,11 +150,12 @@ Zotero.Items.prototype.untrashItems = function(itemsArray){
 Zotero.Items.prototype.findItems = function(config){
 	var items = this;
 	var matchingItems = [];
-	J.each(items.itemObjects, function(i, item){
-		if(config.collectionKey && (J.inArray(config.collectionKey, item.apiObj.collections === -1) )){
+	Object.keys(item.itemObjects).forEach(function(key){
+		var item = item.itemObjects[key];
+		if(config.collectionKey && (item.apiObj.collections.inArray(config.collectionKey) === -1) ){
 			return;
 		}
-		matchingItems.push(items.itemObjects[i]);
+		matchingItems.push(items.itemObjects[key]);
 	});
 	return matchingItems;
 };
@@ -260,67 +252,3 @@ Zotero.Items.prototype.writeItems = function(itemsArray){
 		return responses;
 	});
 };
-
-/*
-Zotero.Items.prototype.writeNewUnsyncedItems = function(){
-	var items = this;
-	var library = items.owningLibrary;
-	var urlConfig = {target:'items', libraryType:library.libraryType, libraryID:library.libraryID};
-	var writeUrl = Zotero.ajax.apiRequestUrl(urlConfig) + Zotero.ajax.apiQueryString(urlConfig);
-	var writeData = {};
-	writeData.items = [];
-	for(var i = 0; i < items.newUnsyncedItems.length; i++){
-		writeData.items.push(items.newUnsyncedItems[i].apiObj);
-	}
-	
-	//make request to api to write items
-	return Zotero.ajaxRequest(writeUrl, 'POST', {data:writeData})
-	.then(function(response){
-		if(response.jqxhr.status !== 200){
-			//request atomically failed, nothing went through
-		}
-		else {
-			//request went through and was processed
-			//must check response body to know if writes failed for any reason
-			var updatedVersion = response.jqxhr.getResponseHeader("Last-Modified-Version");
-			if(typeof response.data !== 'object'){
-				//unexpected response from server
-			}
-			var failedIndices = {};
-			if(response.data.hasOwnProperty('success')){
-				//add itemkeys to any successful creations
-				J.each(response.data.success, function(key, val){
-					var index = parseInt(key, 10);
-					var objectKey = val;
-					var item = items.newUnsyncedItems[index];
-					
-					item.updateItemKey(objectKey);
-					item.version = updatedVersion;
-					item.synced = true;
-					items.addItem(item);
-				});
-			}
-			if(response.data.hasOwnProperty('unchanged') ){
-				J.each(response.data.unchanged, function(key, val){
-					
-				});
-			}
-			if(response.data.hasOwnProperty('failed') ){
-				J.each(response.data.failed, function(key, val){
-					failedIndices[key] = true;
-					Z.error("ItemWrite failed: " + val.key + " : http " + val.code + " : " + val.message, 1);
-				});
-			}
-			
-			//remove all but failed writes from newUnsyncedItems
-			var newnewUnsyncedItems = [];
-			J.each(items.newUnsyncedItems, function(i, v){
-				if(failedIndices.hasOwnProperty(i)){
-					newnewUnsyncedItems.push(v);
-				}
-			});
-			items.newUnsyncedItems = newnewUnsyncedItems;
-		}
-	});
-};
-*/

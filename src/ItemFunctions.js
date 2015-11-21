@@ -125,7 +125,7 @@ Zotero.Library.prototype.loadPublications = function(config){
 		Z.debug('loadPublications proxied callback', 3);
 		publicationItems = [];
 		parsedItemJson = response.data;
-		J.each(parsedItemJson, function(index, itemObj) {
+		parsedItemJson.forEach(function(itemObj){
 			var item = new Zotero.Item(itemObj);
 			publicationItems.push(item);
 		});

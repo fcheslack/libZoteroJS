@@ -32,9 +32,10 @@ Zotero.file.uploadFile = function(uploadInfo, fileInfo){
 	Z.debug(uploadInfo, 4);
 	
 	var formData = new FormData();
-	J.each(uploadInfo.params, function(index, val){
-		formData.append(index, val);
-	});
+	Object.keys(uploadInfo.params).forEach(function(key){
+		var val = uploadInfo.params[key];
+		formData.append(key, val);
+	})
 	
 	var blobData = new Blob([fileInfo.filedata], {type : fileInfo.contentType});
 	formData.append('file', blobData);

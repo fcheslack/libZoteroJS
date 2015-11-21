@@ -207,7 +207,7 @@ Zotero.Item.prototype.createChildNotes = function(notes){
 		childItems.push(templateItem);
 	}, this);
 	
-	J.each(notes, function(ind, note){
+	notes.forEach(function(note){
 		var childItem = new Zotero.Item();
 		var p = childItem.initEmpty('note')
 		.then(function(noteItem){
@@ -300,7 +300,8 @@ Zotero.Item.prototype.getItemFields = function (locale) {
 	if(itemFields){
 		Z.debug("have itemFields in localStorage", 3);
 		Zotero.Item.prototype.itemFields = itemFields;//JSON.parse(Zotero.storage.localStorage['itemFields']);
-		J.each(Zotero.Item.prototype.itemFields, function(ind, val){
+		Object.keys(Zotero.Item.prototype.itemFields).forEach(function(key){
+			var val = Zotero.Item.prototype.itemFields[key];
 			Zotero.localizations.fieldMap[val.field] = val.localized;
 		});
 		return;
@@ -315,7 +316,8 @@ Zotero.Item.prototype.getItemFields = function (locale) {
 				Zotero.Item.prototype.itemFields = data;
 				Zotero.cache.save({locale:locale, target:'itemFields'}, data);
 				//Zotero.storage.localStorage['itemFields'] = JSON.stringify(data);
-				J.each(Zotero.Item.prototype.itemFields, function(ind, val){
+				Object.keys(Zotero.Item.prototype.itemFields).forEach(function(key){
+					var val = Zotero.Item.prototype.itemFields[key];
 					Zotero.localizations.fieldMap[val.field] = val.localized;
 				});
 			}
@@ -876,9 +878,10 @@ Zotero.Item.prototype.cslItem = function(){
 	
 	// get all text variables (there must be a better way)
 	// TODO: does citeproc-js permit short forms?
-	J.each(zoteroItem.cslFieldMap, function(variable, fields){
+	Object.keys(zoteroItem.cslFieldMap).forEach(function(variable){
+		var fields = zoteroItem.cslFieldMap[variable];
 		if (variable == "URL" && ignoreURL) return;
-		J.each(fields, function(ind, field){
+		fields.forEach(function(field){
 			var value = zoteroItem.get(field);
 			if(value){
 				//TODO: strip enclosing quotes? necessary when not pulling from DB?
@@ -889,7 +892,7 @@ Zotero.Item.prototype.cslItem = function(){
 	
 	// separate name variables
 	var creators = zoteroItem.get('creators');
-	J.each(creators, function(ind, creator){
+	creators.forEach(function(creator){
 		var creatorType = creator['creatorType'];// isset(self::$zoteroNameMap[$creatorType]) ? self::$zoteroNameMap[$creatorType] : false;
 		if (!creatorType) return;
 		
@@ -910,7 +913,8 @@ Zotero.Item.prototype.cslItem = function(){
 	});
 	
 	// get date variables
-	J.each(zoteroItem.cslDateMap, function(key, val){
+	Object.keys(zoteroItem.cslDateMap).forEach(function(key){
+		var val = zoteroItem.cslDateMap[key];
 		var date = zoteroItem.get(val);
 		if (date) {
 			cslItem[key] = {"raw": date};

@@ -43,7 +43,7 @@ Zotero.Tags.prototype.removeTag = function(tagname){
 
 Zotero.Tags.prototype.removeTags = function(tagnames){
 	var tags = this;
-	J.each(tagnames, function(i, tagname){
+	tagnames.forEach(function(tagname){
 		delete tags.tagObjects[tagname];
 	});
 	tags.updateSecondaryData();
@@ -52,7 +52,7 @@ Zotero.Tags.prototype.removeTags = function(tagnames){
 Zotero.Tags.prototype.plainTagsList = function(tagsArray){
 	Z.debug("Zotero.Tags.plainTagsList", 3);
 	var plainList = [];
-	J.each(tagsArray, function(index, tag){
+	tagsArray.forEach(function(tag){
 		plainList.push(tag.apiObj.tag);
 	});
 	return plainList;
@@ -73,7 +73,8 @@ Zotero.Tags.prototype.updateSecondaryData = function(){
 	Z.debug("Zotero.Tags.updateSecondaryData", 3);
 	var tags = this;
 	tags.tagsArray = [];
-	J.each(tags.tagObjects, function(key, val){
+	Object.keys(tags.tagObjects).forEach(function(key){
+		var val = tags.tagObjects[key];
 		tags.tagsArray.push(val);
 	});
 	tags.tagsArray.sort(Zotero.Tag.prototype.tagComparer());
@@ -84,7 +85,8 @@ Zotero.Tags.prototype.updateSecondaryData = function(){
 
 Zotero.Tags.prototype.updateTagsVersion = function(tagsVersion) {
 	var tags = this;
-	J.each(tags.tagObjects, function(key, tag) {
+	Object.keys(tags.tagObjects).forEach(function(key){
+		var tag = tags.tagObjects[key];
 		tag.set('version', tagsVersion);
 	});
 };
@@ -92,7 +94,8 @@ Zotero.Tags.prototype.updateTagsVersion = function(tagsVersion) {
 Zotero.Tags.prototype.rebuildTagsArray = function() {
 	var tags = this;
 	tags.tagsArray = [];
-	J.each(tags.tagObjects, function(key, tag) {
+	Object.keys(tags.tagObjects).forEach(function(key){
+		var tag = tags.tagObjects[key];
 		tags.tagsArray.push(tag);
 	});
 };
@@ -101,7 +104,7 @@ Zotero.Tags.prototype.addTagsFromJson = function(jsonBody){
 	Z.debug('Zotero.Tags.addTagsFromJson', 3);
 	var tags = this;
 	var tagsAdded = [];
-	J.each(jsonBody, function(index, tagObj){
+	jsonBody.forEach(function(tagObj){
 		var tag = new Zotero.Tag(tagObj);
 		tags.addTag(tag);
 		tagsAdded.push(tag);

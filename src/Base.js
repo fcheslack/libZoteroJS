@@ -275,10 +275,11 @@ Zotero.Cache = function(store){
 //array with '/'
 Zotero.Cache.prototype.objectCacheString = function(params){
 	var paramVarsArray = [];
-	J.each(params, function(index, value){
+	Object.keys(params).forEach(function(index){
+		var value = params[index];
 		if(!value) { return; }
-		else if(value instanceof Array){
-			J.each(value, function(i, v){
+		else if(Array.isArray(value)){
+			value.forEach(function(v, i){
 				paramVarsArray.push(index + '/' + encodeURIComponent(v) );
 			});
 		}
@@ -337,8 +338,9 @@ Zotero.Cache.prototype.expireCacheTag = function(tag){
 	Z.debug("Zotero.Cache.expireCacheTag", 3);
 	var registry = JSON.parse(this.store._registry);
 	var store = this.store;
-	J.each(registry, function(index, value){
-		if(J.inArray(tag, value.cachetags) != (-1) ){
+	Object.keys(registry).forEach(function(index){
+		var value = registry[index];
+		if(value.cachetags.indexOf(tag) != (-1)){
 			Z.debug('tag ' + tag + ' found for item ' + value['id'] + ' : expiring', 4);
 			delete store[value['id']];
 			delete registry[value['id']];

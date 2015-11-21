@@ -28,7 +28,8 @@ Zotero.Collections.prototype.initSecondaryData = function(){
 	
 	//rebuild collectionsArray
 	collections.collectionsArray = [];
-	J.each(collections.collectionObjects, function(ind, collection){
+	Object.keys(collections.collectionObjects).forEach(function(key){
+		var collection = collections.collectionObjects[key];
 		collections.collectionsArray.push(collection);
 	});
 	
@@ -48,7 +49,7 @@ Zotero.Collections.prototype.addCollectionsFromJson = function(jsonBody){
 	Z.debug(jsonBody);
 	var collections = this;
 	var collectionsAdded = [];
-	J.each(jsonBody, function(ind, collectionObj) {
+	jsonBody.forEach(function(collectionObj){
 		var collection = new Zotero.Collection(collectionObj);
 		collections.addObject(collection);
 		collectionsAdded.push(collection);
@@ -60,14 +61,14 @@ Zotero.Collections.prototype.assignDepths = function(depth, cArray){
 	Z.debug("Zotero.Collections.assignDepths", 3);
 	var collections = this;
 	var insertchildren = function(depth, children){
-		J.each(children, function(index, col){
+		children.forEach(function(col){
 			col.nestingDepth = depth;
 			if(col.hasChildren){
 				insertchildren((depth + 1), col.children);
 			}
 		});
 	};
-	J.each(collections.collectionsArray, function(index, collection){
+	collections.collectionsArray.forEach(function(collection){
 		if(collection.topLevel){
 			collection.nestingDepth = 1;
 			if(collection.hasChildren){
@@ -82,14 +83,14 @@ Zotero.Collections.prototype.nestedOrderingArray = function(){
 	var collections = this;
 	var nested = [];
 	var insertchildren = function(a, children){
-		J.each(children, function(index, col){
+		children.forEach(function(col){
 			a.push(col);
 			if(col.hasChildren){
 				insertchildren(a, col.children);
 			}
 		});
 	};
-	J.each(collections.collectionsArray, function(index, collection){
+	collections.collectionsArray.forEach(function(collection){
 		if(collection.topLevel){
 			nested.push(collection);
 			if(collection.hasChildren){
@@ -130,12 +131,12 @@ Zotero.Collections.prototype.removeLocalCollections = function(collectionKeys){
 Zotero.Collections.prototype.nestCollections = function(){
 	var collections = this;
 	//clear out all child references so we don't duplicate
-	J.each(collections.collectionsArray, function(ind, collection){
+	collections.collectionsArray.forEach(function(collection){
 		collection.children = [];
 	});
 	
 	collections.collectionsArray.sort(Zotero.ApiObject.prototype.fieldComparer('name'));
-	J.each(collections.collectionsArray, function(ind, collection){
+	collections.collectionsArray.forEach(function(collection){
 		collection.nestCollection(collections.collectionObjects);
 	});
 };
@@ -171,7 +172,6 @@ Zotero.Collections.prototype.writeCollections = function(collectionsArray){
 	//update collections with server response if successful
 	var writeCollectionsSuccessCallback = function(response){
 		Z.debug("writeCollections successCallback", 3);
-		//pull vars out of this context so they're accessible in J.each context
 		var library = this.library;
 		var writeChunk = this.writeChunk;
 		library.collections.updateObjectsFromWriteResponse(this.writeChunk, response);
@@ -220,7 +220,7 @@ Zotero.Collections.prototype.writeCollections = function(collectionsArray){
 		Z.debug("Done with writeCollections sequentialRequests promise", 3);
 		collections.initSecondaryData();
 		
-		J.each(responses, function(ind, response){
+		responses.forEach(function(response){
 			if(response.isError || (response.data.hasOwnProperty('failed') && Object.keys(response.data.failed).length > 0) ){
 				throw new Error("failure when writing collections");
 			}

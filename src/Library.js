@@ -96,12 +96,6 @@ Zotero.Library = function(type, libraryID, libraryUrlIdentifier, apiKey){
 					Z.debug("Library Constructor: Library.items.itemsVersion: " + library.items.itemsVersion, 3);
 					Z.debug("Library Constructor: Library.collections.collectionsVersion: " + library.collections.collectionsVersion, 3);
 					Z.debug("Library Constructor: Library.tags.tagsVersion: " + library.tags.tagsVersion, 3);
-					/*
-					J.each(library.tags.tagObjects, function(key, tag){
-						Z.debug("Library Constructor: tag.version:" + tag.version);
-						Z.debug("Library Constructor: tag.version:" + tag.apiObj.version);
-					});
-					*/
 					Z.debug("Library Constructor: Triggering cachedDataLoaded", 3);
 					library.trigger('cachedDataLoaded');
 				},
@@ -263,9 +257,10 @@ Zotero.Library.prototype.websiteUrl = function(urlvars){
 	var library = this;
 	
 	var urlVarsArray = [];
-	J.each(urlvars, function(index, value){
+	Object.keys(urlvars).forEach(function(key){
+		var value = urlvars[key];
 		if(value === '') return;
-		urlVarsArray.push(index + '/' + value);
+		urlVarsArray.push(key + '/' + value);
 	});
 	urlVarsArray.sort();
 	Z.debug(urlVarsArray, 4);
@@ -308,7 +303,8 @@ Zotero.Library.prototype.loadUpdatedItems = function(){
 		var itemVersions = response.data;
 		library.itemVersions = itemVersions;
 		var itemKeys = [];
-		J.each(itemVersions, function(key, val){
+		Object.keys(itemVersions).forEach(function(key){
+			var val = itemVersions[key];
 			var item = library.items.getItem(key);
 			if((!item) || (item.apiObj.key != val)){
 				itemKeys.push(key);
@@ -347,7 +343,8 @@ Zotero.Library.prototype.loadUpdatedCollections = function(){
 		var collectionVersions = response.data;
 		library.collectionVersions = collectionVersions;
 		var collectionKeys = [];
-		J.each(collectionVersions, function(key, val){
+		Object.keys(collectionVersions).forEach(function(key){
+			var val = collectionVersions[key];
 			var c = library.collections.getCollection(key);
 			if((!c) || (c.apiObj.version != val)){
 				collectionKeys.push(key);
@@ -691,7 +688,7 @@ Zotero.Library.prototype.loadFromKeys = function(keys, objectType){
 	}
 	
 	var requestObjects = [];
-	J.each(keyslices, function(ind, keyslice){
+	keyslices.forEach(function(keyslice){
 		var keystring = keyslice.join(',');
 		switch (objectType) {
 			case "items":

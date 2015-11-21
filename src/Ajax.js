@@ -33,7 +33,8 @@ Zotero.ajax.activeRequests = [];
 Zotero.ajax.apiRequestUrl = function(params){
 	Z.debug('Zotero.ajax.apiRequestUrl', 4);
 	Z.debug(params, 4);
-	J.each(params, function(key, val){
+	Object.keys(params).forEach(function(key){
+		var val = params[key];
 		//should probably figure out exactly why I'm doing this, is it just to make sure no hashes snuck in?
 		//if so the new validation below takes care of that instead
 		if(typeof val == 'string'){
@@ -151,7 +152,8 @@ Zotero.ajax.apiQueryString = function(passedParams, useConfigKey){
 		useConfigKey = true;
 	}
 	
-	J.each(passedParams, function(key, val){
+	Object.keys(passedParams).forEach(function(key){
+		var val = passedParams[key];
 		if(typeof val == 'string'){
 			val = val.split('#', 1);
 			passedParams[key] = val[0];
@@ -208,7 +210,7 @@ Zotero.ajax.apiQueryString = function(passedParams, useConfigKey){
 	queryParamOptions.sort();
 	//build simple api query parameters object
 	var queryParams = {};
-	J.each(queryParamOptions, function(i, val){
+	queryParamOptions.forEach(function(val){
 		if(passedParams.hasOwnProperty(val) && (passedParams[val] !== '')){
 			queryParams[val] = passedParams[val];
 		}
@@ -229,20 +231,21 @@ Zotero.ajax.apiQueryString = function(passedParams, useConfigKey){
 	}
 	
 	//add each of the found queryParams onto array
-	J.each(queryParams, function(index, value){
-		if(value instanceof Array){
-			J.each(value, function(i, v){
-				if(index == "tag" && v[0] == "-"){
+	Object.keys(queryParams).forEach(function(key){
+		var value = queryParams[key];
+		if(Array.isArray(value)){
+			value.forEach(function(v){
+				if(key == "tag" && v[0] == "-"){
 					v = "\\" + v;
 				}
-				queryParamsArray.push(encodeURIComponent(index) + '=' + encodeURIComponent(v));
+				queryParamsArray.push(encodeURIComponent(key) + '=' + encodeURIComponent(v));
 			});
 		}
 		else{
-			if(index == "tag" && value[0] == "-"){
+			if(key == "tag" && value[0] == "-"){
 				value = "\\" + value;
 			}
-			queryParamsArray.push(encodeURIComponent(index) + '=' + encodeURIComponent(value));
+			queryParamsArray.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
 		}
 	});
 	

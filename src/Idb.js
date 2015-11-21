@@ -73,10 +73,10 @@ Zotero.Idb.Library.prototype.init = function(){
 				Z.debug(JSON.stringify(tagStore.indexNames), 3);
 				
 				// Create index to search/sort items by each attribute
-				J.each(Zotero.Item.prototype.fieldMap, function(key, val){
+				Object.keys(Zotero.Item.prototype.fieldMap).forEach(function(key){
 					Z.debug("Creating index on " + key, 3);
 					itemStore.createIndex(key, "data." + key, { unique: false });
-				});
+				})
 				
 				//itemKey index was created above with all other item fields
 				//itemStore.createIndex("itemKey", "itemKey", { unique: false });

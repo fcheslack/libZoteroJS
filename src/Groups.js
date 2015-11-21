@@ -10,8 +10,8 @@ Zotero.Groups.prototype.fetchGroup = function(groupID, apikey){
 Zotero.Groups.prototype.addGroupsFromJson = function(jsonBody){
 	var groups = this;
 	var groupsAdded = [];
-	J.each(jsonBody, function(index, groupObj){
-		Z.debug(groupObj);
+	jsonBody.forEach(function(groupObj){
+		Z.debug(groupObj, 3);
 		var group = new Zotero.Group(groupObj);
 		groups.groupsArray.push(group);
 		groupsAdded.push(group);

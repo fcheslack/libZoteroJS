@@ -150,36 +150,6 @@ Zotero.utils = {
 		return null;
 	},
 	
-	compareObs: function(ob1, ob2, checkVars){
-		var loopOn = checkVars;
-		var useIndex = false;
-		var differences = [];
-
-		if(checkVars === undefined){
-			loopOn = ob1;
-			useIndex = true;
-		}
-		
-		J.each(loopOn, function(index, Val){
-			var compindex = Val;
-			if(useIndex) compindex = index;
-			
-			if(typeof(ob1[index]) == 'object'){
-				if (Zotero.utils.compareObs(ob1[compindex], ob2[compindex]).length ) {
-					differences.push(compindex);
-				}
-				//case 'function':
-				//    if (typeof(x[p])=='undefined' || (p != 'equals' && this[p].toString() != x[p].toString())) { return false; }; break;
-			}
-			else{
-				if (ob1[compindex] != ob2[compindex]) {
-					differences.push(compindex);
-				}
-			}
-		});
-		return differences;
-	},
-	
 	/**
 	 * Translate common mimetypes to user friendly versions
 	 *

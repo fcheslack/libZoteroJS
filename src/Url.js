@@ -150,7 +150,7 @@ Zotero.url.exportUrls = function(config){
 	Z.debug("Zotero.url.exportUrls", 3);
 	var exportUrls = {};
 	var exportConfig = {};
-	J.each(Zotero.config.exportFormats, function(index, format){
+	Zotero.config.exportFormats.forEach(function(format){
 		exportConfig = J.extend(config, {'format':format});
 		exportUrls[format] = Zotero.ajax.apiRequestUrl(exportConfig) + Zotero.ajax.apiQueryString({format:format, limit:'25'});
 	});
