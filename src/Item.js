@@ -746,7 +746,7 @@ Zotero.Item.prototype.addToCollection = function(collectionKey){
 			collectionKey = collectionKey.key;
 		}
 	}
-	if(J.inArray(collectionKey, item.apiObj.data.collections) === -1){
+	if(item.apiObj.data.collections.indexOf(collectionKey) === -1){
 		item.apiObj.data.collections.push(collectionKey);
 	}
 	return;
@@ -760,7 +760,7 @@ Zotero.Item.prototype.removeFromCollection = function(collectionKey){
 			collectionKey = collectionKey.key;
 		}
 	}
-	var index = J.inArray(collectionKey, item.apiObj.data.collections);
+	var index = item.apiObj.data.collections.indexOf(collectionKey);
 	if(index != -1){
 		item.apiObj.data.collections.splice(index, 1);
 	}

@@ -152,7 +152,7 @@ Zotero.Items.prototype.findItems = function(config){
 	var matchingItems = [];
 	Object.keys(item.itemObjects).forEach(function(key){
 		var item = item.itemObjects[key];
-		if(config.collectionKey && (item.apiObj.collections.inArray(config.collectionKey) === -1) ){
+		if(config.collectionKey && (item.apiObj.collections.indexOf(config.collectionKey) === -1) ){
 			return;
 		}
 		matchingItems.push(items.itemObjects[key]);
