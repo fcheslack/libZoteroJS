@@ -20,7 +20,7 @@ Zotero.utils = {
 	},
 	
 	slugify: function(name){
-		var slug = J.trim(name);
+		var slug = name.trim();
 		slug = slug.toLowerCase();
 		slug = slug.replace( /[^a-z0-9 ._-]/g , "");
 		slug = slug.replace(/\s/g, "_");

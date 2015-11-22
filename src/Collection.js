@@ -126,7 +126,7 @@ Zotero.Collection.prototype.getMemberItemKeys = function(){
 	.then(function(response){
 		Z.debug('getMemberItemKeys proxied callback', 3);
 		var result = response.data;
-		var keys = J.trim(result).split(/[\s]+/);
+		var keys = result.trim().split(/[\s]+/);
 		collection.itemKeys = keys;
 		return keys;
 	});
