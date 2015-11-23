@@ -30,7 +30,7 @@ Zotero.Net.prototype.queueRequest = function(requestObject){
 	var net = this;
 	var resultPromise;
 	
-	if(J.isArray(requestObject)){
+	if(Array.isArray(requestObject)){
 		resultPromise = net.queueDeferred().then(function(){
 			Z.debug("running sequential after queued deferred resolved", 4);
 			return net.runSequential(requestObject);
@@ -156,7 +156,7 @@ Zotero.Net.prototype.checkDelay = function(response){
 	Z.debug(response);
 	var net = this;
 	var wait = 0;
-	if(J.isArray(response)){
+	if(Array.isArray(response)){
 		for(var i = 0; i < response.length; i++){
 			iwait = net.checkDelay(response[i]);
 			if(iwait > wait){

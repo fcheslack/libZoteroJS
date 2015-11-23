@@ -296,7 +296,7 @@ Zotero.Cache.prototype.objectCacheString = function(params){
 //should use setItem and getItem if I extend that to the case where no Storage object is available in the browser
 Zotero.Cache.prototype.save = function(params, object, cachetags){
 	//cachetags for expiring entries
-	if(!J.isArray(cachetags)){
+	if(!Array.isArray(cachetags)){
 		cachetags = [];
 	}
 	//get registry object from storage
