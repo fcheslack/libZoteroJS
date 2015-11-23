@@ -266,39 +266,8 @@ Zotero.utils = {
 		
 		return Zotero.ajaxRequest(requestUrl)
 		.then(function(response){
-			var keyNode = J(response.data).find('key');
-			var keyObject = Zotero.utils.parseKey(keyNode);
+			var keyObject = JSON.parse(response.data);
 			return keyObject;
 		});
 	},
-	
-	/**
-	 * Parse a key response into an array
-	 *
-	 * @param keyNode jQuery Dom collection from key response
-	 * @return array $keyPermissions
-	 */
-	parseKey: function(keyNode){
-		var key = [];
-		var keyPerms = {"library":"0", "notes":"0", "write":"0", 'groups':{}};
-		var accessEls = keyNode.find('access');
-		accessEls.each(function(){
-			var access = J(this);
-			if(access.attr('library')){
-				keyPerms['library'] = access.attr('library');
-			}
-			if(access.attr('notes')){
-				keyPerms['notes'] = access.attr('notes');
-			}
-			if(access.attr('group')){
-				var groupPermission = access.attr('write') == '1' ? 'write' : 'read';
-				keyPerms['groups'][access.attr('group')] = groupPermission;
-			}
-			else if(access.attr('write')){
-				keyPerms['write'] = access.attr('write');
-			}
-		});
-		return keyPerms;
-	}
-	
 };

@@ -423,12 +423,7 @@ var re=/([0-9]+)-([0-9]+)-([0-9]+)T([0-9]+):([0-9]+):([0-9]+)Z/;var matches=re.e
 	 * @param int|string $userID
 	 * @param string $key
 	 * @return array $keyPermissions
-	 */getKeyPermissions:function getKeyPermissions(userID,key){if(!userID){return false;}if(!key){return false;}var urlconfig={'target':'key','libraryType':'user','libraryID':userID,'apiKey':key};var requestUrl=Zotero.ajax.apiRequestString(urlconfig);return Zotero.ajaxRequest(requestUrl).then(function(response){var keyNode=J(response.data).find('key');var keyObject=Zotero.utils.parseKey(keyNode);return keyObject;});}, /**
-	 * Parse a key response into an array
-	 *
-	 * @param keyNode jQuery Dom collection from key response
-	 * @return array $keyPermissions
-	 */parseKey:function parseKey(keyNode){var key=[];var keyPerms={"library":"0","notes":"0","write":"0",'groups':{}};var accessEls=keyNode.find('access');accessEls.each(function(){var access=J(this);if(access.attr('library')){keyPerms['library'] = access.attr('library');}if(access.attr('notes')){keyPerms['notes'] = access.attr('notes');}if(access.attr('group')){var groupPermission=access.attr('write') == '1'?'write':'read';keyPerms['groups'][access.attr('group')] = groupPermission;}else if(access.attr('write')){keyPerms['write'] = access.attr('write');}});return keyPerms;}}; // Url.js - construct certain urls and links locally that may depend on the
+	 */getKeyPermissions:function getKeyPermissions(userID,key){if(!userID){return false;}if(!key){return false;}var urlconfig={'target':'key','libraryType':'user','libraryID':userID,'apiKey':key};var requestUrl=Zotero.ajax.apiRequestString(urlconfig);return Zotero.ajaxRequest(requestUrl).then(function(response){var keyObject=JSON.parse(response.data);return keyObject;});}}; // Url.js - construct certain urls and links locally that may depend on the
 // current website's routing scheme etc. Not necessarily pointing to zotero.org
 // - href for a particular item's local representation
 // - link with appropriate text, to download file or view framed snapshot
