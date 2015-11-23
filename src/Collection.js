@@ -47,8 +47,8 @@ Zotero.Collection.prototype.parseJsonCollection = function(apiObj) {
 	var collection = this;
 	collection.key = apiObj.key;
 	collection.version = apiObj.version;
-	collection.apiObj = J.extend({}, apiObj);
-	collection.pristineData = J.extend({}, apiObj.data);
+	collection.apiObj = Z.extend({}, apiObj);
+	collection.pristineData = Z.extend({}, apiObj.data);
 
 	collection.parentCollection = false;
 	collection.topLevel = true;
@@ -177,7 +177,7 @@ Zotero.Collection.prototype.update = function(name, parentKey){
 
 Zotero.Collection.prototype.writeApiObj = function(){
 	var collection = this;
-	var writeObj = J.extend({}, collection.pristineData, collection.apiObj.data);
+	var writeObj = Z.extend({}, collection.pristineData, collection.apiObj.data);
 	return writeObj;
 };
 

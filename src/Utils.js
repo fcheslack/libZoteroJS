@@ -292,3 +292,17 @@ Zotero.utils = {
 		return q;
 	},
 };
+
+Zotero.extend = function() {
+	var res = {};
+	for(var i = 0; i < arguments.length; i++){
+		var a = arguments[i];
+		if(typeof a != "object"){
+			continue;
+		}
+		Object.keys(a).forEach(function(key){
+			res[key] = a[key];
+		});
+	}
+	return res;
+};

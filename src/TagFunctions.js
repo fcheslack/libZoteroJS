@@ -7,8 +7,8 @@ Zotero.Library.prototype.fetchTags = function(config){
 		sort:'asc',
 		limit: 100
 	};
-	var newConfig = J.extend({}, defaultConfig, config);
-	var urlconfig = J.extend({
+	var newConfig = Z.extend({}, defaultConfig, config);
+	var urlconfig = Z.extend({
 		'target':'tags',
 		'libraryType':this.libraryType,
 		'libraryID':this.libraryID
@@ -61,13 +61,13 @@ Zotero.Library.prototype.loadAllTags = function(config={}){
 					 };
 	
 	//Build config object that should be displayed next and compare to currently displayed
-	var newConfig = J.extend({}, defaultConfig, config);
-	var urlconfig = J.extend({}, newConfig);
+	var newConfig = Z.extend({}, defaultConfig, config);
+	var urlconfig = Z.extend({}, newConfig);
 	var requestUrl = Zotero.ajax.apiRequestString(urlconfig);
 	var tags = library.tags;
 	
 	//check if already loaded tags are okay to use
-	var loadedConfig = J.extend({}, defaultConfig, tags.loadedConfig);
+	var loadedConfig = Z.extend({}, defaultConfig, tags.loadedConfig);
 	var loadedConfigRequestUrl = tags.loadedRequestUrl;
 	Z.debug("requestUrl: " + requestUrl, 4);
 	Z.debug('loadedConfigRequestUrl: ' + loadedConfigRequestUrl, 4);
@@ -87,7 +87,7 @@ Zotero.Library.prototype.loadAllTags = function(config={}){
 				
 				var nextLink = tags.nextLink;
 				var nextLinkConfig = Zotero.utils.parseQuery(Zotero.utils.querystring(nextLink));
-				var newConfig = J.extend({}, config);
+				var newConfig = Z.extend({}, config);
 				newConfig.start = nextLinkConfig.start;
 				newConfig.limit = nextLinkConfig.limit;
 				return library.loadTags(newConfig).then(continueLoadingCallback);

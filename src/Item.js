@@ -29,8 +29,8 @@ Zotero.Item.prototype.parseJsonItem = function (apiObj) {
 	var item = this;
 	item.version = apiObj.version;
 	item.key = apiObj.key;
-	item.apiObj = J.extend({}, apiObj);
-	item.pristineData = J.extend({}, apiObj.data);
+	item.apiObj = Z.extend({}, apiObj);
+	item.pristineData = Z.extend({}, apiObj.data);
 	if(!item.apiObj._supplement){
 		item.apiObj._supplement = {};
 	}
@@ -118,7 +118,7 @@ Zotero.Item.prototype.initEmptyFromTemplate = function(template){
 	item.version = 0;
 	
 	item.key = '';
-	item.pristineData = J.extend({}, template);
+	item.pristineData = Z.extend({}, template);
 	item.apiObj = {
 		key: '',
 		version: 0,
@@ -195,7 +195,7 @@ Zotero.Item.prototype.writeApiObj = function(){
 	
 	//copy apiObj, extend with pristine to make sure required fields are present
 	//and remove unwriteable fields(?)
-	var writeApiObj = J.extend({}, item.pristineData, item.apiObj.data);
+	var writeApiObj = Z.extend({}, item.pristineData, item.apiObj.data);
 	return writeApiObj;
 };
 

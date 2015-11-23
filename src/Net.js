@@ -193,8 +193,8 @@ Zotero.Net.prototype.ajaxRequest = function(requestConfig){
 		},
 		//cache:false
 	};
-	var headers = J.extend({}, defaultConfig.headers, requestConfig.headers);
-	var config = J.extend({}, defaultConfig, requestConfig);
+	var headers = Z.extend({}, defaultConfig.headers, requestConfig.headers);
+	var config = Z.extend({}, defaultConfig, requestConfig);
 	config.headers = headers;
 	if(typeof config.url == 'object'){
 		config.url = Zotero.ajax.apiRequestString(config.url);

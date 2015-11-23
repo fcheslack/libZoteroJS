@@ -2,7 +2,7 @@
 Zotero.Library.prototype.fetchItemKeys = function(config={}){
 	Z.debug("Zotero.Library.fetchItemKeys", 3);
 	var library = this;
-	var urlconfig = J.extend(true, {
+	var urlconfig = Z.extend(true, {
 		'target':'items',
 		'libraryType':this.libraryType,
 		'libraryID':this.libraryID,
@@ -64,10 +64,10 @@ Zotero.Library.prototype.loadItems = function(config){
 					 };
 	
 	//Build config object that should be displayed next and compare to currently displayed
-	var newConfig = J.extend({}, defaultConfig, config);
+	var newConfig = Z.extend({}, defaultConfig, config);
 	//newConfig.start = parseInt(newConfig.limit, 10) * (parseInt(newConfig.itemPage, 10) - 1);
 	
-	var urlconfig = J.extend({
+	var urlconfig = Z.extend({
 		'target':'items',
 		'libraryType':library.libraryType,
 		'libraryID':library.libraryID
@@ -108,9 +108,9 @@ Zotero.Library.prototype.loadPublications = function(config){
 					 };
 	
 	//Build config object that should be displayed next and compare to currently displayed
-	var newConfig = J.extend({}, defaultConfig, config);
+	var newConfig = Z.extend({}, defaultConfig, config);
 	
-	var urlconfig = J.extend({
+	var urlconfig = Z.extend({
 		'target':'publications',
 		'libraryType':library.libraryType,
 		'libraryID':library.libraryID
@@ -233,10 +233,10 @@ Zotero.Library.prototype.fetchGlobalItems = function(config){
 					 };
 	
 	//Build config object that should be displayed next and compare to currently displayed
-	var newConfig = J.extend({}, defaultConfig, config);
+	var newConfig = Z.extend({}, defaultConfig, config);
 	//newConfig.start = parseInt(newConfig.limit, 10) * (parseInt(newConfig.itemPage, 10) - 1);
 	
-	var urlconfig = J.extend({'target':'items', 'libraryType': ''}, newConfig);
+	var urlconfig = Z.extend({'target':'items', 'libraryType': ''}, newConfig);
 	var requestUrl = Zotero.ajax.apiRequestString(urlconfig);
 	
 	return library.ajaxRequest(requestUrl, "GET", {dataType:'json'})
@@ -254,8 +254,8 @@ Zotero.Library.prototype.fetchGlobalItem = function(globalKey){
 	var defaultConfig = {target:'item'};
 	
 	//Build config object that should be displayed next and compare to currently displayed
-	var newConfig = J.extend({}, defaultConfig);
-	var urlconfig = J.extend({
+	var newConfig = Z.extend({}, defaultConfig);
+	var urlconfig = Z.extend({
 		'target':'item',
 		'libraryType': '',
 		'itemKey': globalKey

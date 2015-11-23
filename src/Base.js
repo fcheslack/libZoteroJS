@@ -373,7 +373,7 @@ Zotero.ajaxRequest = function(url, type, options){
 		url: url,
 		type: type,
 	};
-	requestObject = J.extend({}, requestObject, options);
+	requestObject = Z.extend({}, requestObject, options);
 	Z.debug(requestObject, 3);
 	return Zotero.net.queueRequest(requestObject);
 };

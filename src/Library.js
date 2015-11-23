@@ -219,7 +219,7 @@ Zotero.Library.prototype.ajaxRequest = function(url, type, options){
 		url: url,
 		type: type,
 	};
-	requestObject = J.extend({}, requestObject, options);
+	requestObject = Z.extend({}, requestObject, options);
 	Z.debug(requestObject, 3);
 	return Zotero.net.queueRequest(requestObject);
 };
@@ -597,7 +597,7 @@ Zotero.Library.prototype.sendToLibrary = function(items, foreignLibrary){
 	for(var i = 0; i < items.length; i++){
 		var item = items[i];
 		var transferData = item.emptyJsonItem();
-		transferData.data = J.extend({}, items[i].apiObj.data);
+		transferData.data = Z.extend({}, items[i].apiObj.data);
 		//clear data that shouldn't be transferred:itemKey, collections
 		transferData.data.key = '';
 		transferData.data.version = 0;
@@ -607,7 +607,7 @@ Zotero.Library.prototype.sendToLibrary = function(items, foreignLibrary){
 		
 		var newForeignItem = new Zotero.Item(transferData);
 		
-		newForeignItem.pristine = J.extend({}, newForeignItem.apiObj);
+		newForeignItem.pristine = Z.extend({}, newForeignItem.apiObj);
 		newForeignItem.initSecondaryData();
 		
 		//set relationship to tie to old item

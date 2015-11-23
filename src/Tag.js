@@ -15,7 +15,7 @@ Zotero.Tag.prototype = new Zotero.ApiObject();
 
 Zotero.Tag.prototype.parseJsonTag = function(tagObj) {
 	var tag = this;
-	tag.apiObj = J.extend({}, tagObj);
+	tag.apiObj = Z.extend({}, tagObj);
 	tag.urlencodedtag = encodeURIComponent(tag.apiObj.tag);
 	tag.version = tag.apiObj.version;
 };
