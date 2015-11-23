@@ -12,7 +12,7 @@ asyncTest( "Create item", function(){
     var item = new Zotero.Item();
     item.associateWithLibrary(library);
     var d = item.initEmpty('conferencePaper');
-    d.done(J.proxy(function(item){
+    d.done(function(item){
         item.set('title', 'GurunGo: coupling personal computers and mobile devices through mobile data types');
         item.set('conferenceName', 'Eleventh Workshop on Mobile Computing Systems & Applications');
         
@@ -28,5 +28,5 @@ asyncTest( "Create item", function(){
                 start();
             });
         });
-    }, this) );
+    }.bind(this) );
 });

@@ -242,7 +242,7 @@ Zotero.Items.prototype.writeItems = function(itemsArray){
 			type: 'POST',
 			data: requestData,
 			processData: false,
-			success: J.proxy(writeItemsSuccessCallback, successContext),
+			success: writeItemsSuccessCallback.bind(successContext),
 		});
 	}
 	

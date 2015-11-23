@@ -233,7 +233,7 @@ Zotero.Net.prototype.ajaxRequest = function(requestConfig){
 			reject(r);
 		});
 	})
-	.then(J.proxy(net.individualRequestDone, net))
+	.then(net.individualRequestDone.bind(net))
 	.then(function(response){
 		//now that we're done handling, reject
 		if(response.isError){

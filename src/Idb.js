@@ -220,7 +220,7 @@ Zotero.Idb.Library.prototype.getOrderedItemKeys = function(field, order){
 		
 		var cursorRequest = index.openKeyCursor(null, cursorDirection);
 		var itemKeys = [];
-		cursorRequest.onsuccess = J.proxy(function(event) {
+		cursorRequest.onsuccess = function(event) {
 			var cursor = event.target.result;
 			if (cursor) {
 				itemKeys.push(cursor.primaryKey);
@@ -230,11 +230,11 @@ Zotero.Idb.Library.prototype.getOrderedItemKeys = function(field, order){
 				Z.debug("No more cursor: done. Resolving deferred.", 3);
 				resolve(itemKeys);
 			}
-		}, this);
+		}.bind(this);
 		
-		cursorRequest.onfailure = J.proxy(function(event){
+		cursorRequest.onfailure = function(event){
 			reject();
-		}, this);
+		}.bind(this);
 	});
 };
 
@@ -257,7 +257,7 @@ Zotero.Idb.Library.prototype.filterItems = function(field, value){
 		
 		var range = IDBKeyRange.only(value);
 		var cursorRequest = index.openKeyCursor(range, cursorDirection);
-		cursorRequest.onsuccess = J.proxy(function(event) {
+		cursorRequest.onsuccess = function(event) {
 			var cursor = event.target.result;
 			if (cursor) {
 				itemKeys.push(cursor.primaryKey);
@@ -267,11 +267,11 @@ Zotero.Idb.Library.prototype.filterItems = function(field, value){
 				Z.debug("No more cursor: done. Resolving deferred.", 3);
 				resolve(itemKeys);
 			}
-		}, this);
+		}.bind(this);
 		
-		cursorRequest.onfailure = J.proxy(function(event){
+		cursorRequest.onfailure = function(event){
 			reject();
-		}, this);
+		}.bind(this);
 	});
 };
 

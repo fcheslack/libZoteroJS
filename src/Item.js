@@ -203,9 +203,9 @@ Zotero.Item.prototype.createChildNotes = function(notes){
 	var item = this;
 	var childItems = [];
 	var childItemPromises = [];
-	var initDone = J.proxy(function(templateItem){
+	var initDone = function(templateItem){
 		childItems.push(templateItem);
-	}, this);
+	}.bind(this);
 	
 	notes.forEach(function(note){
 		var childItem = new Zotero.Item();

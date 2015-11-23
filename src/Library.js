@@ -702,7 +702,7 @@ Zotero.Library.prototype.loadFromKeys = function(keys, objectType){
 						'libraryID':library.libraryID,
 					},
 					type: 'GET',
-					success: J.proxy(library.processLoadedItems, library),
+					success: library.processLoadedItems.bind(library),
 				});
 				break;
 			case "collections":
@@ -716,7 +716,7 @@ Zotero.Library.prototype.loadFromKeys = function(keys, objectType){
 						'libraryID':library.libraryID,
 					},
 					type: 'GET',
-					success: J.proxy(library.processLoadedCollections, library),
+					success: library.processLoadedCollections.bind(library),
 				});
 				break;
 			case "searches":
@@ -730,7 +730,7 @@ Zotero.Library.prototype.loadFromKeys = function(keys, objectType){
 						'libraryID':library.libraryID,
 					},
 					type: 'GET',
-					//success: J.proxy(library.processLoadedSearches, library)
+					//success: library.processLoadedSearches.bind(library)
 				});
 				break;
 		}

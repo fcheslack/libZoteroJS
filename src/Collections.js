@@ -211,7 +211,7 @@ Zotero.Collections.prototype.writeCollections = function(collectionsArray){
 				//'If-Unmodified-Since-Version': collections.version,
 				//'Content-Type': 'application/json'
 			},
-			success: J.proxy(writeCollectionsSuccessCallback, successContext),
+			success: writeCollectionsSuccessCallback.bind(successContext),
 		});
 	}
 

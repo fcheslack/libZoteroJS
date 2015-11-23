@@ -6,7 +6,7 @@ asyncTest( "Fetch Groups", function(){
     
     var d = library.groups.fetchUserGroups(0);
     
-    d.done(J.proxy(function(){
+    d.done(function(){
         ok(library.groups.groupsArray.length > 0, "non-empty groups array");
         console.log("num groups: " + library.groups.groupsArray.length);
         console.log(library.groups.groupsArray);
@@ -16,5 +16,5 @@ asyncTest( "Fetch Groups", function(){
         }
         
         start();
-    }, this ) );
+    }.bind(this) );
 });
