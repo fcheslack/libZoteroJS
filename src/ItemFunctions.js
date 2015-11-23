@@ -1,10 +1,7 @@
 //make request for item keys and return jquery ajax promise
-Zotero.Library.prototype.fetchItemKeys = function(config){
+Zotero.Library.prototype.fetchItemKeys = function(config={}){
 	Z.debug("Zotero.Library.fetchItemKeys", 3);
 	var library = this;
-	if(typeof config == 'undefined'){
-		config = {};
-	}
 	var urlconfig = J.extend(true, {
 		'target':'items',
 		'libraryType':this.libraryType,

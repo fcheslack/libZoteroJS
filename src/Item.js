@@ -324,14 +324,10 @@ Zotero.Item.prototype.getItemFields = function (locale) {
 	);
 };
 
-Zotero.Item.prototype.getItemTemplate = function (itemType, linkMode) {
+Zotero.Item.prototype.getItemTemplate = function (itemType="document", linkMode="") {
 	Z.debug("Zotero.Item.prototype.getItemTemplate", 3);
-	if(typeof itemType == 'undefined') itemType = 'document';
-	if(itemType == 'attachment' && typeof linkMode == 'undefined'){
+	if(itemType == 'attachment' && linkMode == ''){
 		throw new Error("attachment template requested with no linkMode");
-	}
-	if(typeof linkMode == "undefined"){
-		linkMode = '';
 	}
 	
 	var query = Zotero.ajax.apiQueryString({itemType:itemType, linkMode:linkMode});

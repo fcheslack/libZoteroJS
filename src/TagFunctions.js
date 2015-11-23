@@ -17,13 +17,9 @@ Zotero.Library.prototype.fetchTags = function(config){
 	return Zotero.ajaxRequest(urlconfig);
 };
 
-Zotero.Library.prototype.loadTags = function(config){
+Zotero.Library.prototype.loadTags = function(config={}){
 	Z.debug("Zotero.Library.loadTags", 3);
 	var library = this;
-	
-	if(typeof config == 'undefined'){
-		config = {};
-	}
 	
 	if(config.showAutomaticTags && config.collectionKey){
 		delete config.collectionKey;
@@ -53,13 +49,9 @@ Zotero.Library.prototype.loadTags = function(config){
 };
 
 
-Zotero.Library.prototype.loadAllTags = function(config){
+Zotero.Library.prototype.loadAllTags = function(config={}){
 	Z.debug("Zotero.Library.loadAllTags", 3);
 	var library = this;
-	if(typeof config == 'undefined'){
-		config = {};
-	}
-	
 	var defaultConfig = {target:'tags',
 						 order:'title',
 						 sort:'asc',

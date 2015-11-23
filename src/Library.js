@@ -637,15 +637,9 @@ Zotero.Library.prototype.sendToLibrary = function(items, foreignLibrary){
 // process deleted
 // checkConcurrentUpdates (compare Last-Modified-Version from collections?newer request to one from /deleted request)
 
-Zotero.Library.prototype.updatedVersions = function(target, version){
+Zotero.Library.prototype.updatedVersions = function(target="items", version=this.libraryVersion){
 	Z.debug("Library.updatedVersions", 3);
 	var library = this;
-	if(typeof target === "undefined"){
-		target = "items";
-	}
-	if(typeof version === "undefined" || (version === null) ){
-		version = library.libraryVersion;
-	}
 	var urlconf = {
 		target: target,
 		format: 'versions',
