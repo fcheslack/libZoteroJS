@@ -17,7 +17,6 @@ module.exports = function(grunt) {
 			options:{},
 			dist:{
 				src: [
-					'src/jquery.ba-bbq.min.js',
 					'src/promise-0.1.1.min.js',
 					'src/spark-md5.min.js',
 					//'IndexedDBShim.min.js',
