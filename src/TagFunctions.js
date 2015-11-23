@@ -86,7 +86,7 @@ Zotero.Library.prototype.loadAllTags = function(config={}){
 				tags.plainList = plainList;
 				
 				var nextLink = tags.nextLink;
-				var nextLinkConfig = J.deparam(J.param.querystring(nextLink));
+				var nextLinkConfig = Zotero.utils.parseQuery(Zotero.utils.querystring(nextLink));
 				var newConfig = J.extend({}, config);
 				newConfig.start = nextLinkConfig.start;
 				newConfig.limit = nextLinkConfig.limit;

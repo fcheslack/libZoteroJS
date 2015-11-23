@@ -270,4 +270,25 @@ Zotero.utils = {
 			return keyObject;
 		});
 	},
+
+	parseQuery: function(query) {
+		var params = {};
+		var match;
+		var pl = /\+/g;  // Regex for replacing addition symbol with a space
+		var search = /([^&=]+)=?([^&]*)/g;
+		var decode = function (s) {
+			return decodeURIComponent(s.replace(pl, " "));
+		};
+
+		while(match = search.exec(query)) {
+			params[decode(match[1])] = decode(match[2]);
+		}
+		return params;
+	},
+
+	querystring: function(href) {
+		var hashindex = (href.indexOf('#') != -1) ? href.indexOf('#') : undefined;
+		var q = href.substring(href.indexOf('?') + 1, hashindex);
+		return q;
+	},
 };
