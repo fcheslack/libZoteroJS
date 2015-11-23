@@ -41,7 +41,7 @@ Zotero.utils = {
 		}
 		var plen = pre.length;
 		var plower = pre.toLowerCase();
-		satisfy = J.map(source, function(n){
+		satisfy = source.map(function(n){
 			if(n.substr(0, plen).toLowerCase() == plower){
 				return n;
 			}
@@ -65,7 +65,7 @@ Zotero.utils = {
 		}
 		var plen = pre.length;
 		var plower = pre.toLowerCase();
-		satisfy = J.map(source, function(n){
+		satisfy = source.map(function(n){
 			if(n.toLowerCase().indexOf(plower) != -1){
 				return n;
 			}
