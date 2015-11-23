@@ -150,7 +150,11 @@ var Zotero = {
 	},
 
 	submitDebugLog: function(){
-		response = J.post(Zotero.config.debugLogEndpoint, {'debug_string': Zotero.debugstring}, function(data){
+		Zotero.net.ajax({
+			url: Zotero.config.debugLogEndpoint,
+			data: {'debug_string': Zotero.debugstring}
+		}).then(function(xhr){
+			var data = JSON.parse(xhr.responseText);
 			if(data.logID) {
 				alert("ZoteroWWW debug logID:" + data.logID);
 			} else if (data.error) {
@@ -256,7 +260,7 @@ var Zotero = {
 		}
 		locale = 'en-US';
 		
-		J.ajaxSettings.traditional = true;
+		//J.ajaxSettings.traditional = true;
 		
 	}
 };

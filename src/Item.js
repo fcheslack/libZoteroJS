@@ -278,15 +278,15 @@ Zotero.Item.prototype.getItemTypes = function (locale) {
 	
 	var query = Zotero.ajax.apiQueryString({locale:locale});
 	var url = Zotero.config.baseApiUrl + '/itemTypes' + query;
-	J.getJSON(Zotero.ajax.proxyWrapper(url, 'GET'),
-			{},
-			function(data, textStatus, XMLHttpRequest){
-				Z.debug("got itemTypes response", 3);
-				Z.debug(data, 4);
-				Zotero.Item.prototype.itemTypes = data;
-				Zotero.cache.save({locale:locale, target:'itemTypes'}, Zotero.Item.prototype.itemTypes);
-			}
-	);
+	Zotero.net.ajax({
+		url: Zotero.ajax.proxyWrapper(url, 'GET'),
+		type: 'GET'
+	}).then(function(xhr){
+		Z.debug("got itemTypes response", 3);
+		Z.debug(xhr.response, 4);
+		Zotero.Item.prototype.itemTypes = JSON.parse(xhr.responseText);
+		Zotero.cache.save({locale:locale, target:'itemTypes'}, Zotero.Item.prototype.itemTypes);
+	})
 };
 
 Zotero.Item.prototype.getItemFields = function (locale) {
@@ -309,19 +309,20 @@ Zotero.Item.prototype.getItemFields = function (locale) {
 	
 	var query = Zotero.ajax.apiQueryString({locale:locale});
 	var requestUrl = Zotero.config.baseApiUrl + '/itemFields' + query;
-	J.getJSON(Zotero.ajax.proxyWrapper(requestUrl),
-			{},
-			function(data, textStatus, XMLHttpRequest){
-				Z.debug("got itemTypes response", 4);
-				Zotero.Item.prototype.itemFields = data;
-				Zotero.cache.save({locale:locale, target:'itemFields'}, data);
-				//Zotero.storage.localStorage['itemFields'] = JSON.stringify(data);
-				Object.keys(Zotero.Item.prototype.itemFields).forEach(function(key){
-					var val = Zotero.Item.prototype.itemFields[key];
-					Zotero.localizations.fieldMap[val.field] = val.localized;
-				});
-			}
-	);
+	Zotero.net.ajax({
+		url: Zotero.ajax.proxyWrapper(requestUrl),
+		type: 'GET'
+	}).then(function(xhr){
+		Z.debug("got itemTypes response", 4);
+		var data = JSON.parse(xhr.responseText)
+		Zotero.Item.prototype.itemFields = data;
+		Zotero.cache.save({locale:locale, target:'itemFields'}, data);
+		//Zotero.storage.localStorage['itemFields'] = JSON.stringify(data);
+		Object.keys(Zotero.Item.prototype.itemFields).forEach(function(key){
+			var val = Zotero.Item.prototype.itemFields[key];
+			Zotero.localizations.fieldMap[val.field] = val.localized;
+		});
+	});
 };
 
 Zotero.Item.prototype.getItemTemplate = function (itemType="document", linkMode="") {

@@ -212,6 +212,39 @@ Zotero.Net.prototype.ajaxRequest = function(requestConfig){
 	delete config.success;
 	delete config.error;
 	
+	Z.debug("AJAX config");
+	Z.debug(config);
+	var ajaxpromise = new Promise(function(resolve, reject){
+		net.ajax(config)
+		.then(function(request){
+			var data;
+			switch(request.responseType){
+				case "json":
+				case "":
+					data = JSON.parse(request.response);
+					break;
+				case "text":
+				//case "":
+				default:
+					data = request.response;
+					break;
+			}
+			var r = new Zotero.ApiResponse({
+				jqxhr: request,
+				data: data,
+				textStatus: request.responseText
+			});
+			resolve(r);
+		}, function(request){
+			var r = new Zotero.ApiResponse({
+				jqxhr: request,
+				textStatus: request.responseText,
+				errorThrown: errorThrown,
+				isError: true,
+			});
+			reject(r);
+		});
+	})/*
 	var ajaxpromise = new Promise(function(resolve, reject){
 		J.ajax(config)
 		.then(function(data, textStatus, jqxhr){
@@ -232,7 +265,7 @@ Zotero.Net.prototype.ajaxRequest = function(requestConfig){
 			});
 			reject(r);
 		});
-	})
+	})*/
 	.then(net.individualRequestDone.bind(net))
 	.then(function(response){
 		//now that we're done handling, reject
@@ -246,6 +279,42 @@ Zotero.Net.prototype.ajaxRequest = function(requestConfig){
 	
 	//Zotero.ajax.activeRequests.push(ajaxpromise);
 	return ajaxpromise;
+};
+
+Zotero.Net.prototype.ajax = function(config){
+	var promise = new Promise(function(resolve, reject){
+		var req = new XMLHttpRequest();
+		var uri = config.url;
+		req.open(config.type, uri);
+		
+		if(config.headers){
+			Object.keys(config.headers).forEach(function(key){
+				var val = config.headers[key];
+				req.setRequestHeader(key, val);
+			});
+		}
+
+		req.send(config.data);
+
+		req.onload = function(){
+			Z.debug("XMLHttpRequest done");
+			Z.debug(req);
+			if (req.status >= 200 && req.status < 300) {
+				Z.debug("200-300 response: resolving Net.ajax promise");
+				// Performs the function "resolve" when this.status is equal to 2xx
+				resolve(req);
+			} else {
+				Z.debug("not 200-300 response: rejecting Net.ajax promise");
+				// Performs the function "reject" when this.status is different than 2xx
+				reject(req);
+			}
+		};
+		req.onerror = function() {
+			reject(req);
+		};
+	});
+
+	return promise;
 };
 
 Zotero.net = new Zotero.Net();
