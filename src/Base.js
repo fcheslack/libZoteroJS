@@ -378,23 +378,34 @@ Zotero.ajaxRequest = function(url, type, options){
 	return Zotero.net.queueRequest(requestObject);
 };
 
-Zotero.trigger = function(eventType, data, filter){
+//non-DOM (jquery) event management
+Zotero.eventmanager = {
+	callbacks: {}
+};
+
+Zotero.trigger = function(eventType, data={}, filter=false){
 	if(filter){
-		Z.debug("filter is not false");
+		Z.debug("filter is not false", 3);
 		eventType += "_" + filter;
 	}
 	Zotero.debug("Triggering eventful " + eventType, 3);
-	if(!data){
-		data = {};
-	}
+	
 	data.zeventful = true;
 	if(data.triggeringElement === null || data.triggeringElement === undefined){
 		data.triggeringElement = J("#eventful");
 	}
 	Zotero.debug("Triggering eventful " + eventType, 3);
-	var e = J.Event(eventType, data);
 	try{
-		J("#eventful").trigger(e);
+		if(Zotero.eventmanager.callbacks.hasOwnProperty(eventType)){
+			var callbacks = Zotero.eventmanager.callbacks[eventType];
+			callbacks.forEach(function(callback, ind){
+				var data = callback.data;
+				var e = {
+					data: data
+				};
+				callback.f(e);
+			});
+		}
 	}
 	catch(e){
 		Z.error("failed triggering:" + eventType);
@@ -403,18 +414,27 @@ Zotero.trigger = function(eventType, data, filter){
 };
 
 Zotero.listen = function(events, handler, data, filter){
+	Z.debug("Zotero.listen: " + events);
 	//append filter to event strings if it's specified
-	if(filter){
-		var eventsArray = events.split(" ");
-		if(eventsArray.length > 0){
-			for(var i = 0; i < eventsArray.length; i++){
-				eventsArray[i] += "_" + filter;
-			}
-			events = eventsArray.join(" ");
+	var eventsArray = events.split(" ");
+	if(eventsArray.length > 0 && filter){
+		for(var i = 0; i < eventsArray.length; i++){
+			eventsArray[i] += "_" + filter;
 		}
 	}
-	Z.debug("listening on " + events, 3);
-	J("#eventful").on(events, null, data, handler);
+	eventsArray.forEach(function(ev){
+		if(Zotero.eventmanager.callbacks.hasOwnProperty(ev)){
+			Zotero.eventmanager.callbacks[ev].push({
+				data: data,
+				f: handler
+			});
+		} else {
+			Zotero.eventmanager.callbacks[ev] = [{
+				data: data,
+				f: handler
+			}];
+		}
+	});
 };
 
 var Z = Zotero;
