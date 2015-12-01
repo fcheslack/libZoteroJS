@@ -394,14 +394,14 @@ Zotero.trigger = function(eventType, data={}, filter=false){
 	if(data.triggeringElement === null || data.triggeringElement === undefined){
 		data.triggeringElement = J("#eventful");
 	}
-	Zotero.debug("Triggering eventful " + eventType, 3);
+	
 	try{
 		if(Zotero.eventmanager.callbacks.hasOwnProperty(eventType)){
 			var callbacks = Zotero.eventmanager.callbacks[eventType];
 			callbacks.forEach(function(callback, ind){
-				var data = callback.data;
+				var cdata = Z.extend({}, data, callback.data);
 				var e = {
-					data: data
+					data: cdata
 				};
 				callback.f(e);
 			});
