@@ -1,12 +1,12 @@
-Zotero.Groups = function(jsonBody){
+Zotero.Groups = function(){
 	this.instance = 'Zotero.Groups';
 	this.groupsArray = [];
 };
-
+/*
 Zotero.Groups.prototype.fetchGroup = function(groupID, apikey){
-	
+	//TODO: implement
 };
-
+*/
 Zotero.Groups.prototype.addGroupsFromJson = function(jsonBody){
 	var groups = this;
 	var groupsAdded = [];
@@ -25,7 +25,7 @@ Zotero.Groups.prototype.fetchUserGroups = function(userID, apikey){
 		'target':'userGroups',
 		'libraryType':'user',
 		'libraryID': userID,
-		'order':'title'
+		'order':'title',
 	};
 	
 	if(apikey){
@@ -38,7 +38,7 @@ Zotero.Groups.prototype.fetchUserGroups = function(userID, apikey){
 	return Zotero.ajaxRequest(aparams)
 	.then(function(response){
 		Z.debug('fetchUserGroups proxied callback', 3);
-		fetchedGroups = groups.addGroupsFromJson(response.data);
+		var fetchedGroups = groups.addGroupsFromJson(response.data);
 		response.fetchedGroups = fetchedGroups;
 		return response;
 	});
