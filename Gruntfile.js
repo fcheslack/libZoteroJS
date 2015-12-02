@@ -59,20 +59,80 @@ module.exports = function(grunt) {
 			options: {
 				banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
 			},
-			build: {
+			dist: {
 				src: 'build/<%= pkg.name %>.js',
 				dest: 'build/<%= pkg.name %>.min.js'
 			}
 		},
-
+		"string-replace": {
+			dist: {
+				src: 'build/<%= pkg.name %>.js',
+				dest: 'build/<%= pkg.name %>.js',
+				options: {
+					replacements: [
+						{
+							pattern: "https://apidev.zotero.org",
+							replacement: "https://api.zotero.org"
+						},
+						{
+							pattern: "http://test.zotero.net",
+							replacement: "http://zotero.org"
+						},
+						{
+							pattern: "https://test.zotero.net",
+							replacement: "https://zotero.org"
+						},
+						{
+							pattern: "http://test.zotero.net",
+							replacement: "http://www.zotero.org"
+						},
+						{
+							pattern: "https://test.zotero.net",
+							replacement: "https://www.zotero.org"
+						},
+					]
+				}
+			},
+			dev: {
+				src: 'build/<%= pkg.name %>.js',
+				dest: 'build/<%= pkg.name %>.js',
+				options: {
+					replacements: [
+						{
+							pattern: "https://api.zotero.org",
+							replacement: "https://apidev.zotero.org"
+						},
+						{
+							pattern: "http://zotero.org",
+							replacement: "http://test.zotero.net"
+						},
+						{
+							pattern: "https://zotero.org",
+							replacement: "https://test.zotero.net"
+						},
+						{
+							pattern: "http://www.zotero.org",
+							replacement: "http://test.zotero.net"
+						},
+						{
+							pattern: "https://www.zotero.org",
+							replacement: "https://test.zotero.net"
+						},
+					]
+				}
+			}
+			
+		}
 	});
 
 	grunt.loadNpmTasks('grunt-babel');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	// Load the plugin that provides the "uglify" task.
 	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-string-replace');
 
 	// Default task(s).
-	grunt.registerTask('default', ['concat', 'babel', 'uglify']);
-
+	grunt.registerTask('default', ['concat', 'string-replace:dist', 'babel', 'uglify']);
+	grunt.registerTask('dist', ['concat', 'string-replace:dist', 'babel', 'uglify']);
+	grunt.registerTask('dev', ['concat', 'string-replace:dev', 'babel', 'uglify']);
 };
