@@ -61,6 +61,7 @@ Zotero.Container.prototype.getObjects = function(keys){
 };
 
 Zotero.Container.prototype.removeObject = function(key){
+	var container = this;
 	if(container.objectMap.hasOwnProperty(key)){
 		delete container.objectmap[key];
 		container.initSecondaryData();
@@ -85,7 +86,7 @@ Zotero.Container.prototype.writeObjects = function(objects){
 //generate keys for objects about to be written if they are new
 Zotero.Container.prototype.assignKeys = function(objectsArray){
 	var object;
-	for(i = 0; i < objectsArray.length; i++){
+	for(var i = 0; i < objectsArray.length; i++){
 		object = objectsArray[i];
 		var key = object.get('key');
 		if(!key) {
@@ -102,7 +103,7 @@ Zotero.Container.prototype.chunkObjectsArray = function(objectsArray){
 	var chunkSize = 50;
 	var writeChunks = [];
 	
-	for(i = 0; i < objectsArray.length; i = i + chunkSize){
+	for(var i = 0; i < objectsArray.length; i = i + chunkSize){
 		writeChunks.push(objectsArray.slice(i, i+chunkSize));
 	}
 	
@@ -112,7 +113,7 @@ Zotero.Container.prototype.chunkObjectsArray = function(objectsArray){
 Zotero.Container.prototype.rawChunks = function(chunks){
 	var rawChunkObjects = [];
 	
-	for(i = 0; i < chunks.length; i++){
+	for(var i = 0; i < chunks.length; i++){
 		rawChunkObjects[i] = [];
 		for(var j = 0; j < chunks[i].length; j++){
 			rawChunkObjects[i].push(chunks[i][j].writeApiObj());
@@ -232,7 +233,7 @@ Zotero.Container.prototype.updateObjectsFromWriteResponse = function(objectsArra
 			});
 		}
 	}
-	else if(responsexhr.status == 204){
+	else if(response.status == 204){
 		//single item put response, this probably should never go to this function
 		objectsArray[0].synced = true;
 	}

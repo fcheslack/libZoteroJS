@@ -184,29 +184,29 @@ Zotero.ajax.apiQueryString = function(passedParams, useConfigKey){
 	var queryString = '?';
 	var queryParamsArray = [];
 	var queryParamOptions = ['start',
-							 'limit',
-							 'order',
-							 'sort',
-							 'content',
-							 'include',
-							 'format',
-							 'q',
-							 'fq',
-							 'itemType',
-							 'itemKey',
-							 'collectionKey',
-							 'searchKey',
-							 'locale',
-							 'tag',
-							 'tagType',
-							 'key',
-							 'style',
-							 'linkMode',
-							 'linkwrap',
-							 'session',
-							 'newer',
-							 'since'
-							 ];
+							'limit',
+							'order',
+							'sort',
+							'content',
+							'include',
+							'format',
+							'q',
+							'fq',
+							'itemType',
+							'itemKey',
+							'collectionKey',
+							'searchKey',
+							'locale',
+							'tag',
+							'tagType',
+							'key',
+							'style',
+							'linkMode',
+							'linkwrap',
+							'session',
+							'newer',
+							'since'
+	];
 	queryParamOptions.sort();
 	//build simple api query parameters object
 	var queryParams = {};

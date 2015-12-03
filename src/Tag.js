@@ -26,8 +26,8 @@ Zotero.Tag.prototype.templateApiObj = function(tagString) {
 		links: {},
 		meta: {
 			type:0,
-			numItems:1,
-		},
+			numItems:1
+		}
 	};
 };
 

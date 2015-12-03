@@ -52,13 +52,14 @@ Zotero.Library.prototype.loadTags = function(config={}){
 Zotero.Library.prototype.loadAllTags = function(config={}){
 	Z.debug("Zotero.Library.loadAllTags", 3);
 	var library = this;
-	var defaultConfig = {target:'tags',
-						 order:'title',
-						 sort:'asc',
-						 limit: 100,
-						 libraryType:library.libraryType,
-						 libraryID:library.libraryID
-					 };
+	var defaultConfig = {
+		target:'tags',
+		order:'title',
+		sort:'asc',
+		limit: 100,
+		libraryType:library.libraryType,
+		libraryID:library.libraryID
+	};
 	
 	//Build config object that should be displayed next and compare to currently displayed
 	var newConfig = Z.extend({}, defaultConfig, config);

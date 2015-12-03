@@ -145,7 +145,6 @@ Zotero.Collections.prototype.writeCollections = function(collectionsArray){
 	Z.debug('Zotero.Collections.writeCollections', 3);
 	var collections = this;
 	var library = collections.owningLibrary;
-	var writeCollections = [];
 	var i;
 	
 	var config = {
@@ -198,10 +197,10 @@ Zotero.Collections.prototype.writeCollections = function(collectionsArray){
 	for(i = 0; i < writeChunks.length; i++){
 		var successContext = {
 			writeChunk: writeChunks[i],
-			library: library,
+			library: library
 		};
 		
-		requestData = JSON.stringify(rawChunkObjects[i]);
+		var requestData = JSON.stringify(rawChunkObjects[i]);
 		requestObjects.push({
 			url: requestUrl,
 			type: 'POST',
@@ -211,7 +210,7 @@ Zotero.Collections.prototype.writeCollections = function(collectionsArray){
 				//'If-Unmodified-Since-Version': collections.version,
 				//'Content-Type': 'application/json'
 			},
-			success: writeCollectionsSuccessCallback.bind(successContext),
+			success: writeCollectionsSuccessCallback.bind(successContext)
 		});
 	}
 

@@ -25,7 +25,7 @@ Zotero.Groups.prototype.fetchUserGroups = function(userID, apikey){
 		'target':'userGroups',
 		'libraryType':'user',
 		'libraryID': userID,
-		'order':'title',
+		'order':'title'
 	};
 	
 	if(apikey){

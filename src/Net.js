@@ -104,7 +104,7 @@ Zotero.Net.prototype.individualRequestDone = function(response){
 	//check if we need to back off before making more requests
 	var wait = net.checkDelay(response);
 	if(wait > 0){
-		waitms = wait * 1000;
+		var waitms = wait * 1000;
 		net.backingOff = true;
 		var waitExpiration = Date.now() + waitms;
 		if(waitExpiration > net.waitingExpires){
@@ -158,7 +158,7 @@ Zotero.Net.prototype.checkDelay = function(response){
 	var wait = 0;
 	if(Array.isArray(response)){
 		for(var i = 0; i < response.length; i++){
-			iwait = net.checkDelay(response[i]);
+			var iwait = net.checkDelay(response[i]);
 			if(iwait > wait){
 				wait = iwait;
 			}
@@ -182,7 +182,7 @@ Zotero.Net.prototype.ajaxRequest = function(requestConfig){
 		type:'GET',
 		headers:{
 			'Zotero-API-Version': Zotero.config.apiVersion,
-			'Content-Type': 'application/json',
+			'Content-Type': 'application/json'
 		},
 		success: function(response){
 			return response;
@@ -190,7 +190,7 @@ Zotero.Net.prototype.ajaxRequest = function(requestConfig){
 		error: function(response){
 			Z.error("ajaxRequest rejected:" + response.jqxhr.statusCode() + " - " + response.jqxhr.responseText);
 			return response;
-		},
+		}
 		//cache:false
 	};
 	var headers = Z.extend({}, defaultConfig.headers, requestConfig.headers);
@@ -239,8 +239,7 @@ Zotero.Net.prototype.ajaxRequest = function(requestConfig){
 			var r = new Zotero.ApiResponse({
 				jqxhr: request,
 				textStatus: request.responseText,
-				errorThrown: errorThrown,
-				isError: true,
+				isError: true
 			});
 			reject(r);
 		});

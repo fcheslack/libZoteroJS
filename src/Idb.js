@@ -20,7 +20,6 @@ Zotero.Idb.Library.prototype.init = function(){
 		
 		// Now we can open our database
 		Z.debug("requesting indexedDb from browser", 3);
-		var db;
 		var request = indexedDB.open("Zotero_" + idbLibrary.libraryString, 4);
 		request.onerror = function(e){
 			Zotero.error("ERROR OPENING INDEXED DB");
@@ -76,7 +75,7 @@ Zotero.Idb.Library.prototype.init = function(){
 				Object.keys(Zotero.Item.prototype.fieldMap).forEach(function(key){
 					Z.debug("Creating index on " + key, 3);
 					itemStore.createIndex(key, "data." + key, { unique: false });
-				})
+				});
 				
 				//itemKey index was created above with all other item fields
 				//itemStore.createIndex("itemKey", "itemKey", { unique: false });
@@ -142,7 +141,7 @@ Zotero.Idb.Library.prototype.getObjectStore = function (store_name, mode) {
 
 Zotero.Idb.Library.prototype.clearObjectStore = function (store_name) {
 	var idbLibrary = this;
-	var store = getObjectStore(store_name, 'readwrite');
+	var store = idbLibrary.getObjectStore(store_name, 'readwrite');
 	return new Promise(function(resolve, reject){
 		var req = store.clear();
 		req.onsuccess = function(evt) {
@@ -402,7 +401,7 @@ Zotero.Idb.Library.prototype.removeObjects = function(objects, type){
 		var reqSuccess = function(event){
 			Zotero.debug("Removed Object " + event.target.result, 4);
 		};
-		for (var i in collections) {
+		for (var i in objects) {
 			var request = objectStore.delete(objects[i].key);
 			request.onsuccess = reqSuccess;
 		}
@@ -411,9 +410,6 @@ Zotero.Idb.Library.prototype.removeObjects = function(objects, type){
 
 Zotero.Idb.Library.prototype.getAllObjects = function(type){
 	var idbLibrary = this;
-	if(!type){
-		type = idbLibrary.inferType(objects[0]);
-	}
 	return new Promise(function(resolve, reject){
 		var objects = [];
 		var objectStore = idbLibrary.db.transaction(type + 's').objectStore(type + 's');
@@ -580,7 +576,7 @@ Zotero.Idb.Library.prototype.deleteFile = function(itemKey){
 		var reqSuccess = function(event){
 			Zotero.debug("Deleted File" + event.target.result, 4);
 		};
-		var request = fileStore.delete(key);
+		var request = fileStore.delete(itemKey);
 		request.onsuccess = reqSuccess;
 	});
 };

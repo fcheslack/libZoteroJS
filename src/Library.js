@@ -176,7 +176,7 @@ Zotero.Library.prototype.displayableColumns = ['title',
  * @type {Array}
  */
 Zotero.Library.prototype.groupOnlyColumns = ['addedBy'
-											 /*'modifiedBy'*/];
+											/*'modifiedBy'*/];
 
 /**
  * Sort function that converts strings to locale lower case before comparing,
@@ -217,7 +217,7 @@ Zotero.Library.prototype.ajaxRequest = function(url, type, options){
 	}
 	var requestObject = {
 		url: url,
-		type: type,
+		type: type
 	};
 	requestObject = Z.extend({}, requestObject, options);
 	Z.debug(requestObject, 3);
@@ -414,11 +414,12 @@ Zotero.Library.prototype.loadUpdatedTags = function(){
 Zotero.Library.prototype.getDeleted = function(version) {
 	Z.debug("Zotero.Library.getDeleted", 3);
 	var library = this;
-	var urlconf = {target:'deleted',
-				   libraryType:library.libraryType,
-				   libraryID:library.libraryID,
-				   since:version
-			   };
+	var urlconf = {
+		target:'deleted',
+		libraryType:library.libraryType,
+		libraryID:library.libraryID,
+		since:version
+	};
 	
 	//if there is already a request working, create a new promise to resolve
 	//when the actual request finishes
@@ -507,7 +508,6 @@ Zotero.Library.prototype.loadItemBib = function(itemKey, style) {
 		urlconfig['style'] = style;
 	}
 	
-	var requestUrl = Zotero.ajax.apiRequestString(urlconfig);
 	var itemBibPromise = library.ajaxRequest(urlconfig)
 	.then(function(response){
 		var item = new Zotero.Item(response.data);
@@ -693,10 +693,10 @@ Zotero.Library.prototype.loadFromKeys = function(keys, objectType){
 						'itemKey':keystring,
 						'limit':50,
 						'libraryType':library.libraryType,
-						'libraryID':library.libraryID,
+						'libraryID':library.libraryID
 					},
 					type: 'GET',
-					success: library.processLoadedItems.bind(library),
+					success: library.processLoadedItems.bind(library)
 				});
 				break;
 			case "collections":
@@ -707,10 +707,10 @@ Zotero.Library.prototype.loadFromKeys = function(keys, objectType){
 						'collectionKey':keystring,
 						'limit':50,
 						'libraryType':library.libraryType,
-						'libraryID':library.libraryID,
+						'libraryID':library.libraryID
 					},
 					type: 'GET',
-					success: library.processLoadedCollections.bind(library),
+					success: library.processLoadedCollections.bind(library)
 				});
 				break;
 			case "searches":
@@ -721,9 +721,9 @@ Zotero.Library.prototype.loadFromKeys = function(keys, objectType){
 						'searchKey':keystring,
 						'limit':50,
 						'libraryType':library.libraryType,
-						'libraryID':library.libraryID,
+						'libraryID':library.libraryID
 					},
-					type: 'GET',
+					type: 'GET'
 					//success: library.processLoadedSearches.bind(library)
 				});
 				break;
@@ -754,7 +754,6 @@ Zotero.Library.prototype.buildItemDisplayView = function(params) {
 		return Promise.resolve([]);
 	}
 	
-	var itemKeys;
 	var filterPromises = [];
 	if(params.collectionKey){
 		if(params.collectionKey == 'trash'){
@@ -788,7 +787,7 @@ Zotero.Library.prototype.buildItemDisplayView = function(params) {
 			Z.debug(results[i], 3);
 		}
 		var finalItemKeys = library.idbLibrary.intersectAll(results);
-		itemsArray = library.items.getItems(finalItemKeys);
+		var itemsArray = library.items.getItems(finalItemKeys);
 		
 		Z.debug("All filters applied - Down to " + itemsArray.length + ' items displayed', 3);
 		

@@ -23,7 +23,7 @@ var Zotero = {
 			SPACE: 32,
 			TAB: 9,
 			UP: 38
-		},
+		}
 	},
 	url: {},
 	utils: {},
@@ -94,7 +94,7 @@ var Zotero = {
 				'rdf_dc': 'Unqualified Dublin Core RDF',
 				'rdf_zotero': 'Zotero RDF',
 				'ris': 'RIS',
-				'wikipedia': 'Wikipedia Citation Templates',
+				'wikipedia': 'Wikipedia Citation Templates'
 			},
 			defaultApiArgs: {
 				'order': 'title',
@@ -283,7 +283,7 @@ Zotero.Cache.prototype.objectCacheString = function(params){
 		var value = params[index];
 		if(!value) { return; }
 		else if(Array.isArray(value)){
-			value.forEach(function(v, i){
+			value.forEach(function(v){
 				paramVarsArray.push(index + '/' + encodeURIComponent(v) );
 			});
 		}
@@ -371,7 +371,7 @@ Zotero.ajaxRequest = function(url, type, options){
 	}
 	var requestObject = {
 		url: url,
-		type: type,
+		type: type
 	};
 	requestObject = Z.extend({}, requestObject, options);
 	Z.debug(requestObject, 3);
@@ -389,6 +389,7 @@ Zotero.trigger = function(eventType, data={}, filter=false){
 		eventType += "_" + filter;
 	}
 	Zotero.debug("Triggering eventful " + eventType, 3);
+	Z.debug(data);
 	
 	data.zeventful = true;
 	if(data.triggeringElement === null || data.triggeringElement === undefined){
@@ -398,7 +399,7 @@ Zotero.trigger = function(eventType, data={}, filter=false){
 	try{
 		if(Zotero.eventmanager.callbacks.hasOwnProperty(eventType)){
 			var callbacks = Zotero.eventmanager.callbacks[eventType];
-			callbacks.forEach(function(callback, ind){
+			callbacks.forEach(function(callback){
 				var cdata = Z.extend({}, data, callback.data);
 				var e = {
 					data: cdata

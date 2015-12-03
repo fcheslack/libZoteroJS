@@ -45,8 +45,8 @@ Zotero.Group.prototype.isWritable = function(userID){
 		case (group.apiObj.data.admins && (group.apiObj.data.admins.indexOf(userID) != -1) ):
 			return true;
 		case ((group.apiObj.data.libraryEditing == 'members') &&
-			  (group.apiObj.data.members) &&
-			  (group.apiObj.data.members.indexOf(userID) != -1)):
+			(group.apiObj.data.members) &&
+			(group.apiObj.data.members.indexOf(userID) != -1)):
 			return true;
 		default:
 			return false;
@@ -60,11 +60,17 @@ Zotero.Group.prototype.typeMap = {
 };
 
 Zotero.Group.prototype.accessMap = {
-	'all'     : {'members' : 'Anyone can view, only members can edit',
-					   'admins'  : 'Anyone can view, only admins can edit'},
-	'members' : {'members' : 'Only members can view and edit',
-					   'admins'  : 'Only members can view, only admins can edit'},
-	'admins'  : {'members' : 'Only admins can view, only members can edit',
-					   'admins'  : 'Only admins can view and edit'}
+	'all'     : {
+		'members' : 'Anyone can view, only members can edit',
+		'admins'  : 'Anyone can view, only admins can edit'
+	},
+	'members' : {
+		'members' : 'Only members can view and edit',
+		'admins'  : 'Only members can view, only admins can edit'
+	},
+	'admins'  : {
+		'members' : 'Only admins can view, only members can edit',
+		'admins'  : 'Only admins can view and edit'
+	}
 };
 

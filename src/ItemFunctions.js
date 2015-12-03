@@ -21,7 +21,7 @@ Zotero.Library.prototype.getTrashKeys = function(){
 		'libraryType': library.libraryType,
 		'libraryID': library.libraryID,
 		'format': 'keys',
-		'collectionKey': 'trash',
+		'collectionKey': 'trash'
 	};
 	
 	return library.ajaxRequest(urlconfig);
@@ -55,13 +55,14 @@ Zotero.Library.prototype.loadItems = function(config){
 		config = {};
 	}
 	
-	var defaultConfig = {target:'items',
-						 targetModifier: 'top',
-						 start: 0,
-						 limit: 25,
-						 order: Zotero.config.defaultSortColumn,
-						 sort: Zotero.config.defaultSortOrder
-					 };
+	var defaultConfig = {
+		target:'items',
+		targetModifier: 'top',
+		start: 0,
+		limit: 25,
+		order: Zotero.config.defaultSortColumn,
+		sort: Zotero.config.defaultSortOrder
+	};
 	
 	//Build config object that should be displayed next and compare to currently displayed
 	var newConfig = Z.extend({}, defaultConfig, config);
@@ -99,13 +100,14 @@ Zotero.Library.prototype.loadPublications = function(config){
 		config = {};
 	}
 	
-	var defaultConfig = {target:'publications',
-						 start: 0,
-						 limit: 50,
-						 order: Zotero.config.defaultSortColumn,
-						 sort: Zotero.config.defaultSortOrder,
-						 include: 'bib',
-					 };
+	var defaultConfig = {
+		target:'publications',
+		start: 0,
+		limit: 50,
+		order: Zotero.config.defaultSortColumn,
+		sort: Zotero.config.defaultSortOrder,
+		include: 'bib'
+	};
 	
 	//Build config object that should be displayed next and compare to currently displayed
 	var newConfig = Z.extend({}, defaultConfig, config);
@@ -120,8 +122,8 @@ Zotero.Library.prototype.loadPublications = function(config){
 	return library.ajaxRequest(requestUrl)
 	.then(function(response){
 		Z.debug('loadPublications proxied callback', 3);
-		publicationItems = [];
-		parsedItemJson = response.data;
+		var publicationItems = [];
+		var parsedItemJson = response.data;
 		parsedItemJson.forEach(function(itemObj){
 			var item = new Zotero.Item(itemObj);
 			publicationItems.push(item);
@@ -160,7 +162,7 @@ Zotero.Library.prototype.loadItem = function(itemKey) {
 		'target':'item',
 		'libraryType':library.libraryType,
 		'libraryID':library.libraryID,
-		'itemKey':itemKey,
+		'itemKey':itemKey
 	};
 	
 	return library.ajaxRequest(urlconfig)
@@ -226,11 +228,11 @@ Zotero.Library.prototype.fetchGlobalItems = function(config){
 		config = {};
 	}
 	
-	var defaultConfig = {target:'items',
-						 start: 0,
-						 //itemPage: 1,
-						 limit: 25,
-					 };
+	var defaultConfig = {
+		target:'items',
+		start: 0,
+		limit: 25
+	};
 	
 	//Build config object that should be displayed next and compare to currently displayed
 	var newConfig = Z.extend({}, defaultConfig, config);

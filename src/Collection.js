@@ -18,7 +18,7 @@ Zotero.Collection = function(collectionObj){
 			'name': '',
 			'parentCollection': false,
 			'relations':{}
-		},
+		}
 	};
 	this.children = [];
 	this.topLevel = true;
@@ -104,11 +104,10 @@ Zotero.Collection.prototype.addItems = function(itemKeys){
 	var requestUrl = Zotero.ajax.apiRequestUrl(config) + Zotero.ajax.apiQueryString(config);
 	var requestData = itemKeys.join(' ');
 	
-	return Zotero.ajaxRequest(requestUrl, 'POST',
-		{data: requestData,
-		 processData: false
-		}
-	);
+	return Zotero.ajaxRequest(requestUrl, 'POST', {
+		data: requestData,
+		processData: false
+	});
 };
 
 Zotero.Collection.prototype.getMemberItemKeys = function(){
@@ -141,11 +140,10 @@ Zotero.Collection.prototype.removeItem = function(itemKey){
 		'collectionKey':collection.key,
 		'itemKey':itemKey
 	};
-	return Zotero.ajaxRequest(config, 'DELETE',
-		{processData: false,
-		 cache:false
-		}
-	);
+	return Zotero.ajaxRequest(config, 'DELETE', {
+		processData: false,
+		cache:false
+	});
 };
 
 Zotero.Collection.prototype.update = function(name, parentKey){
@@ -164,15 +162,14 @@ Zotero.Collection.prototype.update = function(name, parentKey){
 	var writeObject = collection.writeApiObj();
 	var requestData = JSON.stringify(writeObject);
 	
-	return Zotero.ajaxRequest(config, 'PUT',
-		{data: requestData,
-		 processData: false,
-		 headers:{
-			 'If-Unmodified-Since-Version': collection.version
-		 },
-		 cache:false
-		}
-	);
+	return Zotero.ajaxRequest(config, 'PUT', {
+		data: requestData,
+		processData: false,
+		headers:{
+			'If-Unmodified-Since-Version': collection.version
+		},
+		cache:false
+	});
 };
 
 Zotero.Collection.prototype.writeApiObj = function(){
@@ -192,14 +189,13 @@ Zotero.Collection.prototype.remove = function(){
 		'collectionKey':collection.key
 	};
 	
-	return Zotero.ajaxRequest(config, 'DELETE',
-		{processData: false,
-		 headers:{
+	return Zotero.ajaxRequest(config, 'DELETE', {
+		processData: false,
+		headers:{
 			'If-Unmodified-Since-Version': collection.version
-		 },
-		 cache:false
-		}
-	).then(function(){
+		},
+		cache:false
+	}).then(function(){
 		Z.debug("done deleting collection. remove local copy.", 3);
 		owningLibrary.collections.removeLocalCollection(collection.key);
 		owningLibrary.trigger("libraryCollectionsUpdated");

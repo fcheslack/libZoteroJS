@@ -197,9 +197,7 @@ Zotero.utils = {
 			
 			case 'image/tif':
 			case 'image/tiff':
-			case 'image/tif':
 			case 'image/x-tif':
-			case 'image/tiff':
 			case 'image/x-tiff':
 			case 'application/tif':
 			case 'application/x-tif':
@@ -290,7 +288,7 @@ Zotero.utils = {
 		var hashindex = (href.indexOf('#') != -1) ? href.indexOf('#') : undefined;
 		var q = href.substring(href.indexOf('?') + 1, hashindex);
 		return q;
-	},
+	}
 };
 
 Zotero.extend = function() {

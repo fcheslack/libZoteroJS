@@ -49,10 +49,10 @@ Zotero.Item.prototype.emptyJsonItem = function(){
 			creators:[],
 			collections:[],
 			tags:[],
-			relations:{},
+			relations:{}
 		},
 		meta: {},
-		_supplement: {},
+		_supplement: {}
 	};
 };
 
@@ -82,6 +82,7 @@ Zotero.Item.prototype.initSecondaryData = function(){
 	item.synced = false;
 
 	item.updateTagStrings();
+	Z.debug("done with initSecondaryData", 3);
 };
 
 Zotero.Item.prototype.updateTagStrings = function(){
@@ -126,7 +127,7 @@ Zotero.Item.prototype.initEmptyFromTemplate = function(template){
 		links: {},
 		data: template,
 		meta: {},
-		_supplement: {},
+		_supplement: {}
 	};
 	
 	item.initSecondaryData();
@@ -203,9 +204,6 @@ Zotero.Item.prototype.createChildNotes = function(notes){
 	var item = this;
 	var childItems = [];
 	var childItemPromises = [];
-	var initDone = function(templateItem){
-		childItems.push(templateItem);
-	}.bind(this);
 	
 	notes.forEach(function(note){
 		var childItem = new Zotero.Item();
@@ -286,7 +284,7 @@ Zotero.Item.prototype.getItemTypes = function (locale) {
 		Z.debug(xhr.response, 4);
 		Zotero.Item.prototype.itemTypes = JSON.parse(xhr.responseText);
 		Zotero.cache.save({locale:locale, target:'itemTypes'}, Zotero.Item.prototype.itemTypes);
-	})
+	});
 };
 
 Zotero.Item.prototype.getItemFields = function (locale) {
@@ -314,7 +312,7 @@ Zotero.Item.prototype.getItemFields = function (locale) {
 		type: 'GET'
 	}).then(function(xhr){
 		Z.debug("got itemTypes response", 4);
-		var data = JSON.parse(xhr.responseText)
+		var data = JSON.parse(xhr.responseText);
 		Zotero.Item.prototype.itemFields = data;
 		Zotero.cache.save({locale:locale, target:'itemFields'}, data);
 		//Zotero.storage.localStorage['itemFields'] = JSON.stringify(data);
@@ -363,7 +361,7 @@ Zotero.Item.prototype.getUploadAuthorization = function(fileinfo){
 		'itemKey':item.key
 	};
 	var headers = {
-		'Content-Type': 'application/x-www-form-urlencoded',
+		'Content-Type': 'application/x-www-form-urlencoded'
 	};
 	var oldmd5 = item.get('md5');
 	if(oldmd5){
@@ -814,7 +812,7 @@ Zotero.Item.prototype.uploadFile = function(fileInfo, progressCallback){
 	.then(function(response){
 		Z.debug("uploadAuth callback", 3);
 		var upAuthOb;
-		if(typeof response.data == "string"){upAuthOb = JSON.parse(data);}
+		if(typeof response.data == "string"){upAuthOb = JSON.parse(response.data);}
 		else{upAuthOb = response.data;}
 		if(upAuthOb.exists == 1){
 			return {'message':"File Exists"};
@@ -832,7 +830,7 @@ Zotero.Item.prototype.uploadFile = function(fileInfo, progressCallback){
 							"code": response.status,
 							"serverMessage": response.jqxhr.responseText,
 							'response': response
-						}
+						};
 						Z.error(e);
 						throw e;
 					} else {
@@ -866,7 +864,7 @@ Zotero.Item.prototype.cslItem = function(){
 			zoteroItem.get("pages") &&
 			zoteroItem.citePaperJournalArticleURL);
 	
-	cslItem = {'type': cslType};
+	var cslItem = {'type': cslType};
 	if(zoteroItem.owningLibrary){
 		cslItem['id'] = zoteroItem.apiObj.library.id + "/" + zoteroItem.get("key");
 	} else {

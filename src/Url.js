@@ -77,7 +77,6 @@ Zotero.url.apiDownloadUrl = function(item){
 };
 
 Zotero.url.proxyDownloadUrl = function(item){
-	var urlString = '';
 	if(item.apiObj.links['enclosure']){
 		if(Zotero.config.proxyDownloads){
 			return Zotero.config.baseDownloadUrl + "?itemkey=" + item.get('key');
@@ -92,7 +91,6 @@ Zotero.url.proxyDownloadUrl = function(item){
 };
 
 Zotero.url.wwwDownloadUrl = function(item){
-	var urlString = '';
 	if(item.apiObj.links['enclosure']){
 		return Zotero.config.baseZoteroWebsiteUrl + Zotero.config.librarySettings.libraryPathString + "/" + item.get('key') + "/file/view";
 	}

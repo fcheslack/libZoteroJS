@@ -71,9 +71,9 @@ Zotero.Items.prototype.deleteItem = function(itemKey){
 		'itemKey':item.key
 	};
 	var requestConfig = {
-		url: Zotero.ajax.apiRequestString(config),
+		url: Zotero.ajax.apiRequestString(urlconfig),
 		type: 'DELETE',
-		headers:{"If-Unmodified-Since-Version":item.get('version')},
+		headers:{"If-Unmodified-Since-Version":item.get('version')}
 	};
 	
 	return Zotero.net.ajaxRequest(requestConfig);
@@ -111,15 +111,17 @@ Zotero.Items.prototype.deleteItems = function(deleteItems, version){
 	var requestObjects = [];
 	for(i = 0; i < deleteChunks.length; i++){
 		var deleteKeysString = deleteChunks[i].join(',');
-		var urlconfig = {'target':'items',
-					  'libraryType':items.owningLibrary.libraryType,
-					  'libraryID':items.owningLibrary.libraryID,
-					  'itemKey': deleteKeysString};
+		var urlconfig = {
+			'target':'items',
+			'libraryType':items.owningLibrary.libraryType,
+			'libraryID':items.owningLibrary.libraryID,
+			'itemKey': deleteKeysString
+		};
 		//headers['If-Unmodified-Since-Version'] = version;
 		
 		var requestConfig = {
 			url: urlconfig,
-			type: 'DELETE',
+			type: 'DELETE'
 		};
 		requestObjects.push(requestConfig);
 	}
@@ -150,7 +152,7 @@ Zotero.Items.prototype.untrashItems = function(itemsArray){
 Zotero.Items.prototype.findItems = function(config){
 	var items = this;
 	var matchingItems = [];
-	Object.keys(item.itemObjects).forEach(function(key){
+	Object.keys(items.itemObjects).forEach(function(key){
 		var item = item.itemObjects[key];
 		if(config.collectionKey && (item.apiObj.collections.indexOf(config.collectionKey) === -1) ){
 			return;
@@ -205,7 +207,7 @@ Zotero.Items.prototype.writeItems = function(itemsArray){
 	var config = {
 		'target':'items',
 		'libraryType':items.owningLibrary.libraryType,
-		'libraryID':items.owningLibrary.libraryID,
+		'libraryID':items.owningLibrary.libraryID
 	};
 	var requestUrl = Zotero.ajax.apiRequestString(config);
 	
@@ -233,16 +235,16 @@ Zotero.Items.prototype.writeItems = function(itemsArray){
 	for(i = 0; i < writeChunks.length; i++){
 		var successContext = {
 			writeChunk: writeChunks[i],
-			library: library,
+			library: library
 		};
 		
-		requestData = JSON.stringify(rawChunkObjects[i]);
+		var requestData = JSON.stringify(rawChunkObjects[i]);
 		requestObjects.push({
 			url: requestUrl,
 			type: 'POST',
 			data: requestData,
 			processData: false,
-			success: writeItemsSuccessCallback.bind(successContext),
+			success: writeItemsSuccessCallback.bind(successContext)
 		});
 	}
 	
