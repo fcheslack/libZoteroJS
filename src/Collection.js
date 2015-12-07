@@ -101,12 +101,10 @@ Zotero.Collection.prototype.addItems = function(itemKeys){
 		'libraryID':collection.apiObj.library.id,
 		'collectionKey':collection.key
 	};
-	var requestUrl = Zotero.ajax.apiRequestUrl(config) + Zotero.ajax.apiQueryString(config);
 	var requestData = itemKeys.join(' ');
 	
-	return Zotero.ajaxRequest(requestUrl, 'POST', {
-		data: requestData,
-		processData: false
+	return Zotero.ajaxRequest(config, 'POST', {
+		data: requestData
 	});
 };
 

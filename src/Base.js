@@ -47,13 +47,10 @@ var Zotero = {
 			sessionAuth: false,
 			proxy: false,
 			apiKey: '',
-			ajax: 1,
 			apiVersion: 3,
-			eventful: false,
 			locale: 'en-US',
 			cacheStoreType: 'localStorage',
 			preloadCachedLibrary: true,
-			mobile:0,
 			sortOrdering: {
 				'dateAdded': 'desc',
 				'dateModified': 'desc',

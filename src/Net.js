@@ -99,7 +99,6 @@ Zotero.Net.prototype.runSequential = function(requestObjects){
 Zotero.Net.prototype.individualRequestDone = function(response){
 	Z.debug("Zotero.Net.individualRequestDone", 3);
 	var net = this;
-	var nowms = Date.now();
 	
 	//check if we need to back off before making more requests
 	var wait = net.checkDelay(response);
@@ -221,7 +220,11 @@ Zotero.Net.prototype.ajaxRequest = function(requestConfig){
 			switch(request.responseType){
 				case "json":
 				case "":
-					data = JSON.parse(request.response);
+					try{
+						data = JSON.parse(request.response);
+					} catch(err) {
+						data = request.response;
+					}
 					break;
 				case "text":
 				//case "":
@@ -243,28 +246,7 @@ Zotero.Net.prototype.ajaxRequest = function(requestConfig){
 			});
 			reject(r);
 		});
-	})/*
-	var ajaxpromise = new Promise(function(resolve, reject){
-		J.ajax(config)
-		.then(function(data, textStatus, jqxhr){
-			Z.debug("library.ajaxRequest jqxhr resolved. resolving Promise", 3);
-			var r = new Zotero.ApiResponse({
-				jqxhr: jqxhr,
-				data: data,
-				textStatus: textStatus
-			});
-			resolve(r);
-		}, function(jqxhr, textStatus, errorThrown){
-			Z.debug("library.ajaxRequest jqxhr rejected. rejecting Promise", 3);
-			var r = new Zotero.ApiResponse({
-				jqxhr: jqxhr,
-				textStatus: textStatus,
-				errorThrown: errorThrown,
-				isError: true,
-			});
-			reject(r);
-		});
-	})*/
+	})
 	.then(net.individualRequestDone.bind(net))
 	.then(function(response){
 		//now that we're done handling, reject
@@ -276,7 +258,6 @@ Zotero.Net.prototype.ajaxRequest = function(requestConfig){
 	})
 	.then(config.zsuccess, config.zerror);
 	
-	//Zotero.ajax.activeRequests.push(ajaxpromise);
 	return ajaxpromise;
 };
 
