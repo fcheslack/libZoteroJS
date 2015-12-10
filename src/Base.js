@@ -37,6 +37,7 @@ var Zotero = {
 			baseFeedUrl: 'https://api.zotero.org',
 			baseZoteroWebsiteUrl: 'https://www.zotero.org',
 			baseDownloadUrl: 'https://www.zotero.org',
+			nonparsedBaseUrl: "",
 			debugLogEndpoint: '',
 			storeDebug: true,
 			directDownloads: true,
