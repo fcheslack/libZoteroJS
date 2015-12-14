@@ -187,7 +187,7 @@ Zotero.Net.prototype.ajaxRequest = function(requestConfig){
 			return response;
 		},
 		error: function(response){
-			Z.error("ajaxRequest rejected:" + response.jqxhr.statusCode() + " - " + response.jqxhr.responseText);
+			Z.error("ajaxRequest rejected:" + response.jqxhr.status + " - " + response.jqxhr.responseText);
 			return response;
 		}
 		//cache:false
@@ -262,6 +262,7 @@ Zotero.Net.prototype.ajaxRequest = function(requestConfig){
 };
 
 Zotero.Net.prototype.ajax = function(config){
+	config = Zotero.extend({type:'GET'}, config);
 	var promise = new Promise(function(resolve, reject){
 		var req = new XMLHttpRequest();
 		var uri = config.url;
