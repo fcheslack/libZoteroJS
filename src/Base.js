@@ -257,9 +257,6 @@ var Zotero = {
 			locale = Zotero.config.locale;
 		}
 		locale = 'en-US';
-		
-		//J.ajaxSettings.traditional = true;
-		
 	}
 };
 
