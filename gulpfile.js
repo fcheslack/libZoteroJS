@@ -12,7 +12,7 @@ const filter = require('gulp-filter');
 const gulpif = require('gulp-if');
 
 const sources = [
-	'src/promise-0.1.1.min.js',
+	'src/es6-promise.min.js',
 	'src/spark-md5.min.js',
 	//'IndexedDBShim.min.js',
 	'src/Base.js',
@@ -45,7 +45,7 @@ const sources = [
 	'src/TagFunctions.js',
 	'src/LibraryCache.js',
 	'src/Preferences.js',
-	'src/*.js',
+	//'src/*.js',
 ];
 
 const replacements = [
