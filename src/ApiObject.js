@@ -1,5 +1,5 @@
 Zotero.ApiObject = function(){
-	this.instance = "Zotero.ApiObject";
+	this.instance = 'Zotero.ApiObject';
 	this.version = 0;
 };
 
@@ -7,7 +7,7 @@ Zotero.ApiObject = function(){
 Zotero.ApiObject.prototype.associateWithLibrary = function(library){
 	var apiObject = this;
 	apiObject.owningLibrary = library;
-	if(typeof this.apiObj.library == "object"){
+	if(typeof this.apiObj.library == 'object'){
 		this.apiObj.library.type = library.type;
 		this.apiObj.library.id = library.libraryID;
 	}

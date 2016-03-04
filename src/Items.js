@@ -1,5 +1,5 @@
 Zotero.Items = function(jsonBody){
-	this.instance = "Zotero.Items";
+	this.instance = 'Zotero.Items';
 	//represent items as array for ordering purposes
 	this.itemsVersion = 0;
 	this.syncState = {
@@ -32,13 +32,13 @@ Zotero.Items.prototype.addItem = function(item){
 };
 
 Zotero.Items.prototype.addItemsFromJson = function(jsonBody){
-	Z.debug("addItemsFromJson", 3);
+	Z.debug('addItemsFromJson', 3);
 	var items = this;
 	var parsedItemJson = jsonBody;
 	var itemsAdded = [];
-	Z.debug("looping");
+	Z.debug('looping');
 	parsedItemJson.forEach(function(itemObj){
-		Z.debug("creating new Item");
+		Z.debug('creating new Item');
 		var item = new Zotero.Item(itemObj);
 		items.addItem(item);
 		itemsAdded.push(item);
@@ -56,7 +56,7 @@ Zotero.Items.prototype.removeLocalItems = function(keys){
 };
 
 Zotero.Items.prototype.deleteItem = function(itemKey){
-	Z.debug("Zotero.Items.deleteItem", 3);
+	Z.debug('Zotero.Items.deleteItem', 3);
 	var items = this;
 	var item;
 	
@@ -73,7 +73,7 @@ Zotero.Items.prototype.deleteItem = function(itemKey){
 	var requestConfig = {
 		url: Zotero.ajax.apiRequestString(urlconfig),
 		type: 'DELETE',
-		headers:{"If-Unmodified-Since-Version":item.get('version')}
+		headers:{'If-Unmodified-Since-Version':item.get('version')}
 	};
 	
 	return Zotero.net.ajaxRequest(requestConfig);
@@ -81,7 +81,7 @@ Zotero.Items.prototype.deleteItem = function(itemKey){
 
 Zotero.Items.prototype.deleteItems = function(deleteItems, version){
 	//TODO: split into multiple requests if necessary
-	Z.debug("Zotero.Items.deleteItems", 3);
+	Z.debug('Zotero.Items.deleteItems', 3);
 	var items = this;
 	var deleteKeys = [];
 	var i;
@@ -174,10 +174,10 @@ Zotero.Items.prototype.atomizeItems = function(itemsArray){
 		item = itemsArray[i];
 		//generate an itemKey if the item does not already have one
 		var itemKey = item.get('key');
-		if(itemKey === "" || itemKey === null) {
+		if(itemKey === '' || itemKey === null) {
 			var newItemKey = Zotero.utils.getKey();
-			item.set("key", newItemKey);
-			item.set("version", 0);
+			item.set('key', newItemKey);
+			item.set('version', 0);
 		}
 		//items that already have item key always in first pass, as are their children
 		writeItems.push(item);
@@ -216,20 +216,20 @@ Zotero.Items.prototype.writeItems = function(itemsArray){
 	
 	//update item with server response if successful
 	var writeItemsSuccessCallback = function(response){
-		Z.debug("writeItem successCallback", 3);
+		Z.debug('writeItem successCallback', 3);
 		items.updateObjectsFromWriteResponse(this.writeChunk, response);
 		//save updated items to IDB
 		if(Zotero.config.useIndexedDB){
 			this.library.idbLibrary.updateItems(this.writeChunk);
 		}
 		
-		Zotero.trigger("itemsChanged", {library:this.library});
+		Zotero.trigger('itemsChanged', {library:this.library});
 		response.returnItems = this.writeChunk;
 		return response;
 	};
 	
-	Z.debug("items.itemsVersion: " + items.itemsVersion, 3);
-	Z.debug("items.libraryVersion: " + items.libraryVersion, 3);
+	Z.debug('items.itemsVersion: ' + items.itemsVersion, 3);
+	Z.debug('items.libraryVersion: ' + items.libraryVersion, 3);
 	
 	var requestObjects = [];
 	for(i = 0; i < writeChunks.length; i++){
@@ -250,7 +250,7 @@ Zotero.Items.prototype.writeItems = function(itemsArray){
 	
 	return library.sequentialRequests(requestObjects)
 	.then(function(responses){
-		Z.debug("Done with writeItems sequentialRequests promise", 3);
+		Z.debug('Done with writeItems sequentialRequests promise', 3);
 		return responses;
 	});
 };

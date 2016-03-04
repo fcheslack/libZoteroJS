@@ -1,5 +1,5 @@
 Zotero.Library.prototype.fetchTags = function(config){
-	Z.debug("Zotero.Library.fetchTags", 3);
+	Z.debug('Zotero.Library.fetchTags', 3);
 	var library = this;
 	var defaultConfig = {
 		target:'tags',
@@ -18,7 +18,7 @@ Zotero.Library.prototype.fetchTags = function(config){
 };
 
 Zotero.Library.prototype.loadTags = function(config={}){
-	Z.debug("Zotero.Library.loadTags", 3);
+	Z.debug('Zotero.Library.loadTags', 3);
 	var library = this;
 	
 	if(config.showAutomaticTags && config.collectionKey){
@@ -43,14 +43,14 @@ Zotero.Library.prototype.loadTags = function(config={}){
 			library.tags.hasNextLink = false;
 			library.tags.nextLink = null;
 		}
-		library.trigger("tagsChanged", {library:library});
+		library.trigger('tagsChanged', {library:library});
 		return library.tags;
 	});
 };
 
 
 Zotero.Library.prototype.loadAllTags = function(config={}){
-	Z.debug("Zotero.Library.loadAllTags", 3);
+	Z.debug('Zotero.Library.loadAllTags', 3);
 	var library = this;
 	var defaultConfig = {
 		target:'tags',
@@ -70,17 +70,17 @@ Zotero.Library.prototype.loadAllTags = function(config={}){
 	//check if already loaded tags are okay to use
 	var loadedConfig = Z.extend({}, defaultConfig, tags.loadedConfig);
 	var loadedConfigRequestUrl = tags.loadedRequestUrl;
-	Z.debug("requestUrl: " + requestUrl, 4);
+	Z.debug('requestUrl: ' + requestUrl, 4);
 	Z.debug('loadedConfigRequestUrl: ' + loadedConfigRequestUrl, 4);
 	return new Promise(function(resolve, reject){
 		var continueLoadingCallback = function(tags){
-			Z.debug("loadAllTags continueLoadingCallback", 3);
+			Z.debug('loadAllTags continueLoadingCallback', 3);
 			var plainList = Zotero.Tags.prototype.plainTagsList(tags.tagsArray);
 			plainList.sort(Zotero.Library.prototype.comparer());
 			tags.plainList = plainList;
 			
 			if(tags.hasNextLink){
-				Z.debug("still has next link.", 3);
+				Z.debug('still has next link.', 3);
 				tags.tagsArray.sort(Zotero.Tag.prototype.tagComparer());
 				plainList = Zotero.Tags.prototype.plainTagsList(tags.tagsArray);
 				plainList.sort(Zotero.Library.prototype.comparer());
@@ -94,13 +94,13 @@ Zotero.Library.prototype.loadAllTags = function(config={}){
 				return library.loadTags(newConfig).then(continueLoadingCallback);
 			}
 			else{
-				Z.debug("no next in tags link", 3);
+				Z.debug('no next in tags link', 3);
 				tags.updateSyncedVersion();
 				tags.tagsArray.sort(Zotero.Tag.prototype.tagComparer());
 				plainList = Zotero.Tags.prototype.plainTagsList(tags.tagsArray);
 				plainList.sort(Zotero.Library.prototype.comparer());
 				tags.plainList = plainList;
-				Z.debug("resolving loadTags deferred", 3);
+				Z.debug('resolving loadTags deferred', 3);
 				library.tagsLoaded = true;
 				library.tags.loaded = true;
 				tags.loadedConfig = config;
@@ -111,7 +111,7 @@ Zotero.Library.prototype.loadAllTags = function(config={}){
 					tags.tagsArray[i].apiObj.version = tags.tagsVersion;
 				}
 				
-				library.trigger("tagsChanged", {library:library});
+				library.trigger('tagsChanged', {library:library});
 				return tags;
 			}
 		};

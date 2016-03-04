@@ -1,6 +1,6 @@
 Zotero.Group = function (groupObj) {
 	var group = this;
-	group.instance = "Zotero.Group";
+	group.instance = 'Zotero.Group';
 	if(groupObj){
 		this.parseJsonGroup(groupObj);
 	}

@@ -1,6 +1,6 @@
 //load objects from indexedDB
 Zotero.Library.prototype.loadIndexedDBCache = function(){
-	Zotero.debug("Zotero.Library.loadIndexedDBCache", 3);
+	Zotero.debug('Zotero.Library.loadIndexedDBCache', 3);
 	
 	var library = this;
 	
@@ -9,7 +9,7 @@ Zotero.Library.prototype.loadIndexedDBCache = function(){
 	var tagsPromise = library.idbLibrary.getAllTags();
 	
 	itemsPromise.then(function(itemsArray){
-		Z.debug("loadIndexedDBCache itemsD done", 3);
+		Z.debug('loadIndexedDBCache itemsD done', 3);
 		//create itemsDump from array of item objects
 		var latestItemVersion = 0;
 		for(var i = 0; i < itemsArray.length; i++){
@@ -24,11 +24,11 @@ Zotero.Library.prototype.loadIndexedDBCache = function(){
 		//TODO: add itemsVersion as last version in any of these items?
 		//or store it somewhere else for indexedDB cache purposes
 		library.items.loaded = true;
-		Z.debug("Done loading indexedDB items promise into library", 3);
+		Z.debug('Done loading indexedDB items promise into library', 3);
 	});
 	
 	collectionsPromise.then(function(collectionsArray){
-		Z.debug("loadIndexedDBCache collectionsD done", 3);
+		Z.debug('loadIndexedDBCache collectionsD done', 3);
 		//create collectionsDump from array of collection objects
 		var latestCollectionVersion = 0;
 		for(var i = 0; i < collectionsArray.length; i++){
@@ -47,7 +47,7 @@ Zotero.Library.prototype.loadIndexedDBCache = function(){
 	});
 	
 	tagsPromise.then(function(tagsArray){
-		Z.debug("loadIndexedDBCache tagsD done", 3);
+		Z.debug('loadIndexedDBCache tagsD done', 3);
 		Z.debug(tagsArray);
 		//create tagsDump from array of tag objects
 		var latestVersion = 0;

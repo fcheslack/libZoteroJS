@@ -26,26 +26,26 @@ Zotero.Net.prototype.queueDeferred = function(){
 };
 
 Zotero.Net.prototype.queueRequest = function(requestObject){
-	Z.debug("Zotero.Net.queueRequest", 3);
+	Z.debug('Zotero.Net.queueRequest', 3);
 	var net = this;
 	var resultPromise;
 	
 	if(Array.isArray(requestObject)){
 		resultPromise = net.queueDeferred().then(function(){
-			Z.debug("running sequential after queued deferred resolved", 4);
+			Z.debug('running sequential after queued deferred resolved', 4);
 			return net.runSequential(requestObject);
 		}).then(function(response){
-			Z.debug("runSequential done", 3);
+			Z.debug('runSequential done', 3);
 			net.queuedRequestDone();
 			return response;
 		});
 	}
 	else {
 		resultPromise = net.queueDeferred().then(function(){
-			Z.debug("running concurrent after queued deferred resolved", 4);
+			Z.debug('running concurrent after queued deferred resolved', 4);
 			return net.runConcurrent(requestObject);
 		}).then(function(response){
-			Z.debug("done with queuedRequest");
+			Z.debug('done with queuedRequest');
 			net.queuedRequestDone();
 			return response;
 		});
@@ -53,15 +53,15 @@ Zotero.Net.prototype.queueRequest = function(requestObject){
 	
 	net.runNext();
 	return resultPromise.catch(function(error){
-		Z.error("Error before leaving Zotero.Net");
+		Z.error('Error before leaving Zotero.Net');
 		Z.error(error);
 	});
 };
 
 Zotero.Net.prototype.runConcurrent = function(requestObject){
-	Z.debug("Zotero.Net.runConcurrent", 3);
+	Z.debug('Zotero.Net.runConcurrent', 3);
 	return this.ajaxRequest(requestObject).then(function(response){
-		Z.debug("done with runConcurrent request");
+		Z.debug('done with runConcurrent request');
 		return response;
 	});
 };
@@ -71,7 +71,7 @@ Zotero.Net.prototype.runConcurrent = function(requestObject){
 //adding the previous response to a responses array that will be
 //returned via promise to the caller when all requests are complete
 Zotero.Net.prototype.runSequential = function(requestObjects){
-	Z.debug("Zotero.Net.runSequential", 3);
+	Z.debug('Zotero.Net.runSequential', 3);
 	var net = this;
 	var responses = [];
 	var seqPromise = Promise.resolve();
@@ -89,7 +89,7 @@ Zotero.Net.prototype.runSequential = function(requestObjects){
 	}
 	
 	return seqPromise.then(function(){
-		Z.debug("done with sequential aggregator promise - returning responses");
+		Z.debug('done with sequential aggregator promise - returning responses');
 		return responses;
 	});
 };
@@ -97,7 +97,7 @@ Zotero.Net.prototype.runSequential = function(requestObjects){
 //when one concurrent call, or a sequential series finishes, subtract it from the running
 //count and run the next if there is something waiting to be run
 Zotero.Net.prototype.individualRequestDone = function(response){
-	Z.debug("Zotero.Net.individualRequestDone", 3);
+	Z.debug('Zotero.Net.individualRequestDone', 3);
 	var net = this;
 	
 	//check if we need to back off before making more requests
@@ -124,14 +124,14 @@ Zotero.Net.prototype.queuedRequestDone = function(response){
 };
 
 Zotero.Net.prototype.runNext = function(){
-	Z.debug("Zotero.Net.runNext", 3);
+	Z.debug('Zotero.Net.runNext', 3);
 	var net = this;
 	var nowms = Date.now();
 	
 	//check if we're backing off and need to remain backing off,
 	//or if we should now continue
 	if(net.backingOff && (net.waitingExpires > (nowms - 100)) ){
-		Z.debug("currently backing off", 3);
+		Z.debug('currently backing off', 3);
 		var waitms = net.waitingExpires - nowms;
 		window.setTimeout(net.runNext, waitms);
 		return;
@@ -141,12 +141,12 @@ Zotero.Net.prototype.runNext = function(){
 	}
 	
 	//continue making requests up to the concurrent limit
-	Z.debug(net.numRunning + "/" + net.numConcurrent + " Running. " + net.deferredQueue.length + " queued.", 3);
+	Z.debug(net.numRunning + '/' + net.numConcurrent + ' Running. ' + net.deferredQueue.length + ' queued.', 3);
 	while((net.deferredQueue.length > 0) && (net.numRunning < net.numConcurrent)){
 		net.numRunning++;
 		var nextD = net.deferredQueue.shift();
 		nextD.resolve();
-		Z.debug(net.numRunning + "/" + net.numConcurrent + " Running. " + net.deferredQueue.length + " queued.", 3);
+		Z.debug(net.numRunning + '/' + net.numConcurrent + ' Running. ' + net.deferredQueue.length + ' queued.', 3);
 	}
 };
 
@@ -175,7 +175,7 @@ Zotero.Net.prototype.checkDelay = function(response){
 };
 
 Zotero.Net.prototype.ajaxRequest = function(requestConfig){
-	Z.debug("Zotero.Net.ajaxRequest", 3);
+	Z.debug('Zotero.Net.ajaxRequest', 3);
 	var net = this;
 	var defaultConfig = {
 		type:'GET',
@@ -187,7 +187,7 @@ Zotero.Net.prototype.ajaxRequest = function(requestConfig){
 			return response;
 		},
 		error: function(response){
-			Z.error("ajaxRequest rejected:" + response.jqxhr.status + " - " + response.jqxhr.responseText);
+			Z.error('ajaxRequest rejected:' + response.jqxhr.status + ' - ' + response.jqxhr.responseText);
 			return response;
 		}
 		//cache:false
@@ -201,7 +201,7 @@ Zotero.Net.prototype.ajaxRequest = function(requestConfig){
 	config.url = Zotero.ajax.proxyWrapper(config.url, config.type);
 	
 	if(!config.url){
-		throw "No url specified in Zotero.Net.ajaxRequest";
+		throw 'No url specified in Zotero.Net.ajaxRequest';
 	}
 	//rename success/error callbacks so J.ajax does not actually use them
 	//and we can use them as es6 promise result functions with expected
@@ -211,22 +211,22 @@ Zotero.Net.prototype.ajaxRequest = function(requestConfig){
 	delete config.success;
 	delete config.error;
 	
-	Z.debug("AJAX config");
+	Z.debug('AJAX config');
 	Z.debug(config);
 	var ajaxpromise = new Promise(function(resolve, reject){
 		net.ajax(config)
 		.then(function(request){
 			var data;
 			switch(request.responseType){
-				case "json":
-				case "":
+				case 'json':
+				case '':
 					try{
 						data = JSON.parse(request.response);
 					} catch(err) {
 						data = request.response;
 					}
 					break;
-				case "text":
+				case 'text':
 				//case "":
 				default:
 					data = request.response;
@@ -251,7 +251,7 @@ Zotero.Net.prototype.ajaxRequest = function(requestConfig){
 	.then(function(response){
 		//now that we're done handling, reject
 		if(response.isError){
-			Z.error("re-throwing ApiResponse that was a rejection");
+			Z.error('re-throwing ApiResponse that was a rejection');
 			throw response;
 		}
 		return response;
@@ -278,14 +278,14 @@ Zotero.Net.prototype.ajax = function(config){
 		req.send(config.data);
 
 		req.onload = function(){
-			Z.debug("XMLHttpRequest done");
+			Z.debug('XMLHttpRequest done');
 			Z.debug(req);
 			if (req.status >= 200 && req.status < 300) {
-				Z.debug("200-300 response: resolving Net.ajax promise");
+				Z.debug('200-300 response: resolving Net.ajax promise');
 				// Performs the function "resolve" when this.status is equal to 2xx
 				resolve(req);
 			} else {
-				Z.debug("not 200-300 response: rejecting Net.ajax promise");
+				Z.debug('not 200-300 response: rejecting Net.ajax promise');
 				// Performs the function "reject" when this.status is different than 2xx
 				reject(req);
 			}

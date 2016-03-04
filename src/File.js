@@ -3,7 +3,7 @@ Zotero.file = {};
 Zotero.file.getFileInfo = function(file){
 	//fileInfo: md5, filename, filesize, mtime, zip, contentType, charset
 	if(typeof FileReader === 'undefined'){
-		return Promise.reject(new Error("FileReader not supported"));
+		return Promise.reject(new Error('FileReader not supported'));
 	}
 	
 	return new Promise(function(resolve, reject){
@@ -28,7 +28,7 @@ Zotero.file.getFileInfo = function(file){
 };
 
 Zotero.file.uploadFile = function(uploadInfo, fileInfo){
-	Z.debug("Zotero.file.uploadFile", 3);
+	Z.debug('Zotero.file.uploadFile', 3);
 	Z.debug(uploadInfo, 4);
 	
 	var formData = new FormData();
@@ -48,15 +48,15 @@ Zotero.file.uploadFile = function(uploadInfo, fileInfo){
 		xhr.onload = function(evt){
 			Z.debug('uploadFile onload event', 3);
 			if(this.status == 201){
-				Z.debug("successful upload - 201", 3);
+				Z.debug('successful upload - 201', 3);
 				resolve();
 			}
 			else {
 				Z.error('uploadFile failed - ' + xhr.status);
 				reject({
-					"message": "Failure uploading file.",
-					"code": xhr.status,
-					"serverMessage": xhr.responseText
+					'message': 'Failure uploading file.',
+					'code': xhr.status,
+					'serverMessage': xhr.responseText
 				});
 			}
 		};

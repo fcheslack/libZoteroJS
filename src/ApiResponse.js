@@ -1,5 +1,5 @@
 Zotero.ApiResponse = function(response) {
-	Z.debug("Zotero.ApiResponse", 3);
+	Z.debug('Zotero.ApiResponse', 3);
 	this.totalResults = 0;
 	this.apiVersion = null;
 	this.lastModifiedVersion = 0;
@@ -19,18 +19,18 @@ Zotero.ApiResponse = function(response) {
 };
 
 Zotero.ApiResponse.prototype.parseResponse = function(response){
-	Z.debug("parseResponse");
+	Z.debug('parseResponse');
 	var apiResponse = this;
 	apiResponse.jqxhr = response.jqxhr;
 	apiResponse.status = response.jqxhr.status;
 	//keep track of relevant headers
-	apiResponse.lastModifiedVersion = response.jqxhr.getResponseHeader("Last-Modified-Version");
-	apiResponse.apiVersion = response.jqxhr.getResponseHeader("Zotero-API-Version");
-	apiResponse.backoff = response.jqxhr.getResponseHeader("Backoff");
-	apiResponse.retryAfter = response.jqxhr.getResponseHeader("Retry-After");
-	apiResponse.contentType = response.jqxhr.getResponseHeader("Content-Type");
-	apiResponse.linkHeader = response.jqxhr.getResponseHeader("Link");
-	apiResponse.totalResults = response.jqxhr.getResponseHeader("Total-Results");
+	apiResponse.lastModifiedVersion = response.jqxhr.getResponseHeader('Last-Modified-Version');
+	apiResponse.apiVersion = response.jqxhr.getResponseHeader('Zotero-API-Version');
+	apiResponse.backoff = response.jqxhr.getResponseHeader('Backoff');
+	apiResponse.retryAfter = response.jqxhr.getResponseHeader('Retry-After');
+	apiResponse.contentType = response.jqxhr.getResponseHeader('Content-Type');
+	apiResponse.linkHeader = response.jqxhr.getResponseHeader('Link');
+	apiResponse.totalResults = response.jqxhr.getResponseHeader('Total-Results');
 	if(apiResponse.backoff){
 		apiResponse.backoff = parseInt(apiResponse.backoff, 10);
 	}
@@ -38,7 +38,7 @@ Zotero.ApiResponse.prototype.parseResponse = function(response){
 		apiResponse.retryAfter = parseInt(apiResponse.retryAfter, 10);
 	}
 	//TODO: parse link header into individual links
-	Z.debug("parse link header");
+	Z.debug('parse link header');
 	Z.debug(apiResponse.linkHeader);
 	if(apiResponse.linkHeader){
 		var links = apiResponse.linkHeader.split(',');
@@ -52,5 +52,5 @@ Zotero.ApiResponse.prototype.parseResponse = function(response){
 		}
 		apiResponse.parsedLinks = parsedLinks;
 	}
-	Z.debug("done parsing response");
+	Z.debug('done parsing response');
 };

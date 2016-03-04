@@ -7,7 +7,7 @@ Zotero.Container.prototype.initSecondaryData = function(){
 };
 
 Zotero.Container.prototype.addObject = function(object){
-	Zotero.debug("Zotero.Container.addObject", 4);
+	Zotero.debug('Zotero.Container.addObject', 4);
 	var container = this;
 	container.objectArray.push(object);
 	container.objectMap[object.key] = object;
@@ -91,8 +91,8 @@ Zotero.Container.prototype.assignKeys = function(objectsArray){
 		var key = object.get('key');
 		if(!key) {
 			var newObjectKey = Zotero.utils.getKey();
-			object.set("key", newObjectKey);
-			object.set("version", 0);
+			object.set('key', newObjectKey);
+			object.set('version', 0);
 		}
 	}
 	return objectsArray;
@@ -134,10 +134,10 @@ Zotero.Container.prototype.rawChunks = function(chunks){
  */
 Zotero.Container.prototype.updateSyncState = function(version) {
 	var container = this;
-	Z.debug("updateSyncState: " + version, 3);
+	Z.debug('updateSyncState: ' + version, 3);
 	if(!container.hasOwnProperty('syncState')){
-		Z.debug("no syncState property");
-		throw new Error("Attempt to update sync state of object with no syncState property");
+		Z.debug('no syncState property');
+		throw new Error('Attempt to update sync state of object with no syncState property');
 	}
 	if(container.syncState.earliestVersion === null){
 		container.syncState.earliestVersion = version;
@@ -151,7 +151,7 @@ Zotero.Container.prototype.updateSyncState = function(version) {
 	if(version > container.syncState.latestVersion){
 		container.syncState.latestVersion = version;
 	}
-	Z.debug("done updating sync state", 3);
+	Z.debug('done updating sync state', 3);
 };
 
 Zotero.Container.prototype.updateSyncedVersion = function(versionField) {
@@ -197,11 +197,11 @@ Zotero.Container.prototype.processDeletions = function(deletedKeys) {
 //  calling code should check for writeFailure after the written objects
 //  are returned
 Zotero.Container.prototype.updateObjectsFromWriteResponse = function(objectsArray, response){
-	Z.debug("Zotero.Container.updateObjectsFromWriteResponse", 3);
-	Z.debug("statusCode: " + response.status, 3);
+	Z.debug('Zotero.Container.updateObjectsFromWriteResponse', 3);
+	Z.debug('statusCode: ' + response.status, 3);
 	var data = response.data;
 	if(response.status == 200){
-		Z.debug("newLastModifiedVersion: " + response.lastModifiedVersion, 3);
+		Z.debug('newLastModifiedVersion: ' + response.lastModifiedVersion, 3);
 		//make sure writes were actually successful and
 		//update the itemKey for the parent
 		if(data.hasOwnProperty('success')){
@@ -211,8 +211,8 @@ Zotero.Container.prototype.updateObjectsFromWriteResponse = function(objectsArra
 				var key = data.success[ind];
 				var object = objectsArray[i];
 				//throw error if objectKey mismatch
-				if(object.key !== "" && object.key !== key){
-					throw new Error("object key mismatch in multi-write response");
+				if(object.key !== '' && object.key !== key){
+					throw new Error('object key mismatch in multi-write response');
 				}
 				if(object.key === ''){
 					object.updateObjectKey(key);
@@ -223,10 +223,10 @@ Zotero.Container.prototype.updateObjectsFromWriteResponse = function(objectsArra
 			});
 		}
 		if(data.hasOwnProperty('failed')){
-			Z.debug("updating objects with failed writes", 3);
+			Z.debug('updating objects with failed writes', 3);
 			Object.keys(data.failed).forEach(function(ind){
 				var failure = data.failed[ind];
-				Z.error("failed write " + ind + " - " + failure);
+				Z.error('failed write ' + ind + ' - ' + failure);
 				var i = parseInt(ind, 10);
 				var object = objectsArray[i];
 				object.writeFailure = failure;

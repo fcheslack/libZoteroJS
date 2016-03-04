@@ -1,5 +1,5 @@
 Zotero.Tag = function (tagObj) {
-	this.instance = "Zotero.Tag";
+	this.instance = 'Zotero.Tag';
 	this.color = null;
 	this.version = 0;
 	if( typeof tagObj == 'object'){
@@ -61,8 +61,8 @@ Zotero.Tag.prototype.set = function(key, val){
 	}
 	
 	switch (key) {
-		case "tagVersion":
-		case "version":
+		case 'tagVersion':
+		case 'version':
 			tag.version = val;
 			tag.apiObj.version = val;
 			break;

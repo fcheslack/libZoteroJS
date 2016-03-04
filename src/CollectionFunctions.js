@@ -3,7 +3,7 @@ Zotero.Library.prototype.processLoadedCollections = function(response){
 	var library = this;
 	
 	//clear out display items
-	Z.debug("adding collections to library.collections");
+	Z.debug('adding collections to library.collections');
 	var collectionsAdded = library.collections.addCollectionsFromJson(response.data);
 	for (var i = 0; i < collectionsAdded.length; i++) {
 		collectionsAdded[i].associateWithLibrary(library);
@@ -11,13 +11,13 @@ Zotero.Library.prototype.processLoadedCollections = function(response){
 	//update sync state
 	library.collections.updateSyncState(response.lastModifiedVersion);
 	
-	Zotero.trigger("loadedCollectionsProcessed", {library:library, collectionsAdded:collectionsAdded});
+	Zotero.trigger('loadedCollectionsProcessed', {library:library, collectionsAdded:collectionsAdded});
 	return response;
 };
 
 //create+write a collection given a name and optional parentCollectionKey
 Zotero.Library.prototype.addCollection = function(name, parentCollection){
-	Z.debug("Zotero.Library.addCollection", 3);
+	Z.debug('Zotero.Library.addCollection', 3);
 	var library = this;
 	
 	var collection = new Zotero.Collection();

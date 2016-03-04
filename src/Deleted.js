@@ -1,5 +1,5 @@
 Zotero.Deleted = function(data){
-	this.instance = "Zotero.Deleted";
+	this.instance = 'Zotero.Deleted';
 	if(typeof data === 'string'){
 		this.deletedData = JSON.parse(data);
 	}

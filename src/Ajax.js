@@ -146,7 +146,7 @@ Zotero.ajax.apiRequestUrl = function(params){
 };
 
 Zotero.ajax.apiQueryString = function(passedParams, useConfigKey){
-	Z.debug("Zotero.ajax.apiQueryString", 4);
+	Z.debug('Zotero.ajax.apiQueryString', 4);
 	Z.debug(passedParams, 4);
 	if(useConfigKey === null || typeof useConfigKey === 'undefined'){
 		useConfigKey = true;
@@ -235,15 +235,15 @@ Zotero.ajax.apiQueryString = function(passedParams, useConfigKey){
 		var value = queryParams[key];
 		if(Array.isArray(value)){
 			value.forEach(function(v){
-				if(key == "tag" && v[0] == "-"){
-					v = "\\" + v;
+				if(key == 'tag' && v[0] == '-'){
+					v = '\\' + v;
 				}
 				queryParamsArray.push(encodeURIComponent(key) + '=' + encodeURIComponent(v));
 			});
 		}
 		else{
-			if(key == "tag" && value[0] == "-"){
-				value = "\\" + value;
+			if(key == 'tag' && value[0] == '-'){
+				value = '\\' + value;
 			}
 			queryParamsArray.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
 		}
@@ -264,7 +264,7 @@ Zotero.ajax.proxyWrapper = function(requestUrl, method){
 		if(!method){
 			method = 'GET';
 		}
-		return Zotero.config.proxyPath + "?requestMethod=" + method + "&requestUrl=" + encodeURIComponent(requestUrl);
+		return Zotero.config.proxyPath + '?requestMethod=' + method + '&requestUrl=' + encodeURIComponent(requestUrl);
 	}
 	else{
 		return requestUrl;
@@ -284,12 +284,12 @@ Zotero.ajax.downloadBlob = function(url){
 		var xhr = new XMLHttpRequest();
 		var blob;
 		
-		xhr.open("GET", url, true);
-		xhr.responseType = "blob";
+		xhr.open('GET', url, true);
+		xhr.responseType = 'blob';
 		
-		xhr.addEventListener("load", function () {
+		xhr.addEventListener('load', function () {
 			if (xhr.status === 200) {
-				Z.debug("downloadBlob Image retrieved. resolving", 3);
+				Z.debug('downloadBlob Image retrieved. resolving', 3);
 				resolve(xhr.response);
 			}
 			else {

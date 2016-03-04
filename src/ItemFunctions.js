@@ -1,6 +1,6 @@
 //make request for item keys and return jquery ajax promise
 Zotero.Library.prototype.fetchItemKeys = function(config={}){
-	Z.debug("Zotero.Library.fetchItemKeys", 3);
+	Z.debug('Zotero.Library.fetchItemKeys', 3);
 	var library = this;
 	var urlconfig = Z.extend(true, {
 		'target':'items',
@@ -14,7 +14,7 @@ Zotero.Library.prototype.fetchItemKeys = function(config={}){
 
 //get keys of all items marked for deletion
 Zotero.Library.prototype.getTrashKeys = function(){
-	Z.debug("Zotero.Library.getTrashKeys", 3);
+	Z.debug('Zotero.Library.getTrashKeys', 3);
 	var library = this;
 	var urlconfig = {
 		'target': 'items',
@@ -28,17 +28,17 @@ Zotero.Library.prototype.getTrashKeys = function(){
 };
 
 Zotero.Library.prototype.emptyTrash = function(){
-	Z.debug("Zotero.Library.emptyTrash", 3);
+	Z.debug('Zotero.Library.emptyTrash', 3);
 	var library = this;
 	return library.getTrashKeys()
 	.then(function(response){
-		var trashedItemKeys = response.data.split("\n");
+		var trashedItemKeys = response.data.split('\n');
 		return library.items.deleteItems(trashedItemKeys, response.lastModifiedVersion);
 	});
 };
 
 Zotero.Library.prototype.loadItemKeys = function(config){
-	Z.debug("Zotero.Library.loadItemKeys", 3);
+	Z.debug('Zotero.Library.loadItemKeys', 3);
 	var library = this;
 	return this.fetchItemKeys(config)
 	.then(function(response){
@@ -49,7 +49,7 @@ Zotero.Library.prototype.loadItemKeys = function(config){
 };
 
 Zotero.Library.prototype.loadItems = function(config){
-	Z.debug("Zotero.Library.loadItems", 3);
+	Z.debug('Zotero.Library.loadItems', 3);
 	var library = this;
 	if(!config){
 		config = {};
@@ -82,19 +82,19 @@ Zotero.Library.prototype.loadItems = function(config){
 		var items = library.items;
 		//clear out display items
 		var loadedItemsArray = items.addItemsFromJson(response.data);
-		Z.debug("Looping over loadedItemsArray");
+		Z.debug('Looping over loadedItemsArray');
 		for (let i = 0; i < loadedItemsArray.length; i++) {
 			loadedItemsArray[i].associateWithLibrary(library);
 		}
 		
 		response.loadedItems = loadedItemsArray;
-		Zotero.trigger("itemsChanged", {library:library});
+		Zotero.trigger('itemsChanged', {library:library});
 		return response;
 	});
 };
 
 Zotero.Library.prototype.loadPublications = function(config){
-	Z.debug("Zotero.Library.loadPublications", 3);
+	Z.debug('Zotero.Library.loadPublications', 3);
 	var library = this;
 	if(!config){
 		config = {};
@@ -147,12 +147,12 @@ Zotero.Library.prototype.processLoadedItems = function(response){
 	//update sync state
 	library.items.updateSyncState(response.lastModifiedVersion);
 	
-	Zotero.trigger("itemsChanged", {library:library, loadedItems:loadedItemsArray});
+	Zotero.trigger('itemsChanged', {library:library, loadedItems:loadedItemsArray});
 	return response;
 };
 
 Zotero.Library.prototype.loadItem = function(itemKey) {
-	Z.debug("Zotero.Library.loadItem", 3);
+	Z.debug('Zotero.Library.loadItem', 3);
 	var library = this;
 	if(!config){
 		var config = {};
@@ -167,15 +167,15 @@ Zotero.Library.prototype.loadItem = function(itemKey) {
 	
 	return library.ajaxRequest(urlconfig)
 	.then(function(response){
-		Z.debug("Got loadItem response");
+		Z.debug('Got loadItem response');
 		var item = new Zotero.Item(response.data);
 		item.owningLibrary = library;
 		library.items.itemObjects[item.key] = item;
-		Zotero.trigger("itemsChanged", {library:library});
+		Zotero.trigger('itemsChanged', {library:library});
 		return(item);
 	},
 	function(response){
-		Z.debug("Error loading Item");
+		Z.debug('Error loading Item');
 	});
 };
 
@@ -185,7 +185,7 @@ Zotero.Library.prototype.trashItem = function(itemKey){
 };
 
 Zotero.Library.prototype.untrashItem = function(itemKey){
-	Z.debug("Zotero.Library.untrashItem", 3);
+	Z.debug('Zotero.Library.untrashItem', 3);
 	if(!itemKey) return false;
 	
 	var item = this.items.getItem(itemKey);
@@ -194,13 +194,13 @@ Zotero.Library.prototype.untrashItem = function(itemKey){
 };
 
 Zotero.Library.prototype.deleteItem = function(itemKey){
-	Z.debug("Zotero.Library.deleteItem", 3);
+	Z.debug('Zotero.Library.deleteItem', 3);
 	var library = this;
 	return library.items.deleteItem(itemKey);
 };
 
 Zotero.Library.prototype.deleteItems = function(itemKeys){
-	Z.debug("Zotero.Library.deleteItems", 3);
+	Z.debug('Zotero.Library.deleteItems', 3);
 	var library = this;
 	return library.items.deleteItems(itemKeys);
 };
@@ -218,11 +218,11 @@ Zotero.Library.prototype.addNote = function(itemKey, note){
 	var requestUrl = Zotero.ajax.apiRequestString(config);
 	var item = this.items.getItem(itemKey);
 	
-	return library.ajaxRequest(requestUrl, "POST", {processData: false});
+	return library.ajaxRequest(requestUrl, 'POST', {processData: false});
 };
 
 Zotero.Library.prototype.fetchGlobalItems = function(config){
-	Z.debug("Zotero.Library.fetchGlobalItems", 3);
+	Z.debug('Zotero.Library.fetchGlobalItems', 3);
 	var library = this;
 	if(!config){
 		config = {};
@@ -241,7 +241,7 @@ Zotero.Library.prototype.fetchGlobalItems = function(config){
 	var urlconfig = Z.extend({'target':'items', 'libraryType': ''}, newConfig);
 	var requestUrl = Zotero.ajax.apiRequestString(urlconfig);
 	
-	return library.ajaxRequest(requestUrl, "GET", {dataType:'json'})
+	return library.ajaxRequest(requestUrl, 'GET', {dataType:'json'})
 	.then(function(response){
 		Z.debug('globalItems callback', 3);
 		return(response.data);
@@ -249,7 +249,7 @@ Zotero.Library.prototype.fetchGlobalItems = function(config){
 };
 
 Zotero.Library.prototype.fetchGlobalItem = function(globalKey){
-	Z.debug("Zotero.Library.fetchGlobalItem", 3);
+	Z.debug('Zotero.Library.fetchGlobalItem', 3);
 	Z.debug(globalKey);
 	var library = this;
 	
@@ -264,7 +264,7 @@ Zotero.Library.prototype.fetchGlobalItem = function(globalKey){
 	}, newConfig);
 	var requestUrl = Zotero.ajax.apiRequestString(urlconfig);
 	
-	return library.ajaxRequest(requestUrl, "GET", {dataType:"json"})
+	return library.ajaxRequest(requestUrl, 'GET', {dataType:'json'})
 	.then(function(response){
 		Z.debug('globalItem callback', 3);
 		return(response.data);

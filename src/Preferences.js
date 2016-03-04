@@ -23,8 +23,8 @@ Zotero.Preferences.prototype.setPref = function(key, value) {
 
 Zotero.Preferences.prototype.setPrefs = function(newPrefs) {
 	var preferences = this;
-	if(typeof(newPrefs) != "object") {
-		throw new Error("Preferences must be an object");
+	if(typeof(newPrefs) != 'object') {
+		throw new Error('Preferences must be an object');
 	}
 	preferences.preferencesObject = newPrefs;
 	preferences.persist();

@@ -1,5 +1,5 @@
 Zotero.Tags = function(jsonBody){
-	this.instance = "Zotero.Tags";
+	this.instance = 'Zotero.Tags';
 	//represent collections as array for ordering purposes
 	this.tagsVersion = 0;
 	this.syncState = {
@@ -50,7 +50,7 @@ Zotero.Tags.prototype.removeTags = function(tagnames){
 };
 
 Zotero.Tags.prototype.plainTagsList = function(tagsArray){
-	Z.debug("Zotero.Tags.plainTagsList", 3);
+	Z.debug('Zotero.Tags.plainTagsList', 3);
 	var plainList = [];
 	tagsArray.forEach(function(tag){
 		plainList.push(tag.apiObj.tag);
@@ -59,7 +59,7 @@ Zotero.Tags.prototype.plainTagsList = function(tagsArray){
 };
 
 Zotero.Tags.prototype.clear = function(){
-	Z.debug("Zotero.Tags.clear", 3);
+	Z.debug('Zotero.Tags.clear', 3);
 	this.tagsVersion = 0;
 	this.syncState.earliestVersion = null;
 	this.syncState.latestVersion = null;
@@ -70,7 +70,7 @@ Zotero.Tags.prototype.clear = function(){
 };
 
 Zotero.Tags.prototype.updateSecondaryData = function(){
-	Z.debug("Zotero.Tags.updateSecondaryData", 3);
+	Z.debug('Zotero.Tags.updateSecondaryData', 3);
 	var tags = this;
 	tags.tagsArray = [];
 	Object.keys(tags.tagObjects).forEach(function(key){

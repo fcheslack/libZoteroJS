@@ -37,7 +37,7 @@ var Zotero = {
 			baseFeedUrl: 'https://api.zotero.org',
 			baseZoteroWebsiteUrl: 'https://www.zotero.org',
 			baseDownloadUrl: 'https://www.zotero.org',
-			nonparsedBaseUrl: "",
+			nonparsedBaseUrl: '',
 			debugLogEndpoint: '',
 			storeDebug: true,
 			directDownloads: true,
@@ -106,13 +106,13 @@ var Zotero = {
 		var prefLevel = 3;
 		if(Zotero.config.storeDebug){
 			if(level <= prefLevel){
-				Zotero.debugstring += "DEBUG:" + debugstring + "\n";
+				Zotero.debugstring += 'DEBUG:' + debugstring + '\n';
 			}
 		}
 		if(typeof console == 'undefined'){
 			return;
 		}
-		if(typeof(level) !== "number"){
+		if(typeof(level) !== 'number'){
 			level = 1;
 		}
 		if(Zotero.preferences !== undefined){
@@ -125,7 +125,7 @@ var Zotero = {
 	
 	warn: function(warnstring){
 		if(Zotero.config.storeDebug){
-			Zotero.debugstring += "WARN:" + warnstring + "\n";
+			Zotero.debugstring += 'WARN:' + warnstring + '\n';
 		}
 		if(typeof console == 'undefined' || typeof console.warn == 'undefined'){
 			this.debug(warnstring);
@@ -137,7 +137,7 @@ var Zotero = {
 	
 	error: function(errorstring){
 		if(Zotero.config.storeDebug){
-			Zotero.debugstring += "ERROR:" + errorstring + "\n";
+			Zotero.debugstring += 'ERROR:' + errorstring + '\n';
 		}
 		if(typeof console == 'undefined' || typeof console.error == 'undefined'){
 			this.debug(errorstring);
@@ -154,9 +154,9 @@ var Zotero = {
 		}).then(function(xhr){
 			var data = JSON.parse(xhr.responseText);
 			if(data.logID) {
-				alert("ZoteroWWW debug logID:" + data.logID);
+				alert('ZoteroWWW debug logID:' + data.logID);
 			} else if (data.error) {
-				alert("Error submitting ZoteroWWW debug log:" + data.error);
+				alert('Error submitting ZoteroWWW debug log:' + data.error);
 			}
 		});
 	},
@@ -198,14 +198,14 @@ var Zotero = {
 		},
 		
 		validate: function(arg, type){
-			Z.debug("Zotero.validate", 4);
+			Z.debug('Zotero.validate', 4);
 			if(arg === ''){
 				return null;
 			}
 			else if(arg === null){
 				return true;
 			}
-			Z.debug(arg + " " + type, 4);
+			Z.debug(arg + ' ' + type, 4);
 			var patterns = this.patterns;
 			
 			if(patterns.hasOwnProperty(type)){
@@ -314,13 +314,13 @@ Zotero.Cache.prototype.save = function(params, object, cachetags){
 };
 
 Zotero.Cache.prototype.load = function(params){
-	Z.debug("Zotero.Cache.load", 3);
+	Z.debug('Zotero.Cache.load', 3);
 	var objectCacheString = this.objectCacheString(params);
 	Z.debug(objectCacheString, 4);
 	try{
 		var s = this.store[objectCacheString];
 		if(!s){
-			Z.warn("No value found in cache store - " + objectCacheString, 3);
+			Z.warn('No value found in cache store - ' + objectCacheString, 3);
 			return null;
 		}
 		else{
@@ -334,7 +334,7 @@ Zotero.Cache.prototype.load = function(params){
 };
 
 Zotero.Cache.prototype.expireCacheTag = function(tag){
-	Z.debug("Zotero.Cache.expireCacheTag", 3);
+	Z.debug('Zotero.Cache.expireCacheTag', 3);
 	var registry = JSON.parse(this.store._registry);
 	var store = this.store;
 	Object.keys(registry).forEach(function(index){
@@ -357,7 +357,7 @@ Zotero.Cache.prototype.clear = function(){
 };
 
 Zotero.ajaxRequest = function(url, type, options){
-	Z.debug("Zotero.ajaxRequest ==== " + url, 3);
+	Z.debug('Zotero.ajaxRequest ==== ' + url, 3);
 	if(!type){
 		type = 'GET';
 	}
@@ -380,15 +380,15 @@ Zotero.eventmanager = {
 
 Zotero.trigger = function(eventType, data={}, filter=false){
 	if(filter){
-		Z.debug("filter is not false", 3);
-		eventType += "_" + filter;
+		Z.debug('filter is not false', 3);
+		eventType += '_' + filter;
 	}
-	Zotero.debug("Triggering eventful " + eventType, 3);
+	Zotero.debug('Triggering eventful ' + eventType, 3);
 	Z.debug(data);
 	
 	data.zeventful = true;
 	if(data.triggeringElement === null || data.triggeringElement === undefined){
-		data.triggeringElement = J("#eventful");
+		data.triggeringElement = J('#eventful');
 	}
 	
 	try{
@@ -404,18 +404,18 @@ Zotero.trigger = function(eventType, data={}, filter=false){
 		}
 	}
 	catch(e){
-		Z.error("failed triggering:" + eventType);
+		Z.error('failed triggering:' + eventType);
 		Z.error(e);
 	}
 };
 
 Zotero.listen = function(events, handler, data, filter){
-	Z.debug("Zotero.listen: " + events);
+	Z.debug('Zotero.listen: ' + events);
 	//append filter to event strings if it's specified
-	var eventsArray = events.split(" ");
+	var eventsArray = events.split(' ');
 	if(eventsArray.length > 0 && filter){
 		for(var i = 0; i < eventsArray.length; i++){
-			eventsArray[i] += "_" + filter;
+			eventsArray[i] += '_' + filter;
 		}
 	}
 	eventsArray.forEach(function(ev){

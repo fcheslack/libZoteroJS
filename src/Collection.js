@@ -1,5 +1,5 @@
 Zotero.Collection = function(collectionObj){
-	this.instance = "Zotero.Collection";
+	this.instance = 'Zotero.Collection';
 	this.libraryUrlIdentifier = '';
 	this.itemKeys = false;
 	this.key = '';
@@ -28,7 +28,7 @@ Zotero.Collection = function(collectionObj){
 };
 
 Zotero.Collection.prototype = new Zotero.ApiObject();
-Zotero.Collection.prototype.instance = "Zotero.Collection";
+Zotero.Collection.prototype.instance = 'Zotero.Collection';
 
 Zotero.Collection.prototype.updateObjectKey = function(collectionKey){
 	this.updateCollectionKey(collectionKey);
@@ -43,7 +43,7 @@ Zotero.Collection.prototype.updateCollectionKey = function(collectionKey){
 };
 
 Zotero.Collection.prototype.parseJsonCollection = function(apiObj) {
-	Z.debug("parseJsonCollection", 4);
+	Z.debug('parseJsonCollection', 4);
 	var collection = this;
 	collection.key = apiObj.key;
 	collection.version = apiObj.version;
@@ -77,7 +77,7 @@ Zotero.Collection.prototype.initSecondaryData = function() {
 };
 
 Zotero.Collection.prototype.nestCollection = function(collectionsObject) {
-	Z.debug("Zotero.Collection.nestCollection", 4);
+	Z.debug('Zotero.Collection.nestCollection', 4);
 	var collection = this;
 	var parentCollectionKey = collection.get('parentCollection');
 	if(parentCollectionKey !== false){
@@ -177,7 +177,7 @@ Zotero.Collection.prototype.writeApiObj = function(){
 };
 
 Zotero.Collection.prototype.remove = function(){
-	Z.debug("Zotero.Collection.delete", 3);
+	Z.debug('Zotero.Collection.delete', 3);
 	var collection = this;
 	var owningLibrary = collection.owningLibrary;
 	var config = {
@@ -194,9 +194,9 @@ Zotero.Collection.prototype.remove = function(){
 		},
 		cache:false
 	}).then(function(){
-		Z.debug("done deleting collection. remove local copy.", 3);
+		Z.debug('done deleting collection. remove local copy.', 3);
 		owningLibrary.collections.removeLocalCollection(collection.key);
-		owningLibrary.trigger("libraryCollectionsUpdated");
+		owningLibrary.trigger('libraryCollectionsUpdated');
 	});
 };
 
