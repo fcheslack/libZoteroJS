@@ -8,7 +8,7 @@
  * @param {string} libraryUrlIdentifier identifier used in urls, could be library id or user/group slug
  * @param {string} apiKey               key to use for API requests
  */
-Zotero.Library = function(type, libraryID, libraryUrlIdentifier, apiKey){
+var Library = function(type, libraryID, libraryUrlIdentifier, apiKey){
 	Z.debug('Zotero.Library constructor', 3);
 	Z.debug('Library Constructor: ' + type + ' ' + libraryID + ' ', 3);
 	var library = this;
@@ -131,7 +131,7 @@ Zotero.Library = function(type, libraryID, libraryUrlIdentifier, apiKey){
  * Items columns for which sorting is supported
  * @type {Array}
  */
-Zotero.Library.prototype.sortableColumns = ['title',
+Library.prototype.sortableColumns = ['title',
 											'creator',
 											'itemType',
 											'date',
@@ -153,7 +153,7 @@ Zotero.Library.prototype.sortableColumns = ['title',
  * Columns that can be displayed in an items table UI
  * @type {Array}
  */
-Zotero.Library.prototype.displayableColumns = ['title',
+Library.prototype.displayableColumns = ['title',
 											'creator',
 											'itemType',
 											'date',
@@ -175,7 +175,7 @@ Zotero.Library.prototype.displayableColumns = ['title',
  * Items columns that only apply to group libraries
  * @type {Array}
  */
-Zotero.Library.prototype.groupOnlyColumns = ['addedBy'
+Library.prototype.groupOnlyColumns = ['addedBy'
 											/*'modifiedBy'*/];
 
 /**
@@ -187,9 +187,9 @@ Zotero.Library.prototype.groupOnlyColumns = ['addedBy'
  * @param  {string} b [description]
  * @return {int}   [description]
  */
-Zotero.Library.prototype.comparer = function(){
-	if(window.Intl){
-		return new window.Intl.Collator().compare;
+Library.prototype.comparer = function(){
+	if(Intl){
+		return new Intl.Collator().compare;
 	} else {
 		return function(a, b){
 			if(a.toLocaleLowerCase() == b.toLocaleLowerCase()){
@@ -207,7 +207,7 @@ Zotero.Library.prototype.comparer = function(){
 //@url String url to request or object for input to apiRequestUrl and query string
 //@type request method
 //@options jquery options that are not the default for Zotero requests
-Zotero.Library.prototype.ajaxRequest = function(url, type, options){
+Library.prototype.ajaxRequest = function(url, type, options){
 	Z.debug('Library.ajaxRequest', 3);
 	if(!type){
 		type = 'GET';
@@ -239,7 +239,7 @@ Zotero.Library.prototype.ajaxRequest = function(url, type, options){
  * @param  {[] Objects} requests Array of objects specifying requests to be made
  * @return {Promise}          Promise that resolves/rejects along with requests
  */
-Zotero.Library.prototype.sequentialRequests = function(requests){
+Library.prototype.sequentialRequests = function(requests){
 	Z.debug('Zotero.Library.sequentialRequests', 3);
 	var library = this;
 	return Zotero.net.queueRequest(requests);
@@ -251,7 +251,7 @@ Zotero.Library.prototype.sequentialRequests = function(requests){
  * @param  {Object} urlvars Dictionary of key/value variables
  * @return {string}         website url
  */
-Zotero.Library.prototype.websiteUrl = function(urlvars){
+Library.prototype.websiteUrl = function(urlvars){
 	Z.debug('Zotero.library.websiteUrl', 3);
 	Z.debug(urlvars, 4);
 	var library = this;
@@ -270,7 +270,7 @@ Zotero.Library.prototype.websiteUrl = function(urlvars){
 };
 
 
-Zotero.Library.prototype.synchronize = function(){
+Library.prototype.synchronize = function(){
 	//get updated group metadata if applicable
 	//  (this is an individual library method, so only necessary if this is
 	//  a group library and we want to keep info about it)
@@ -288,7 +288,7 @@ Zotero.Library.prototype.synchronize = function(){
  * if configured to use it.
  * @return {Promise} Promise
  */
-Zotero.Library.prototype.loadUpdatedItems = function(){
+Library.prototype.loadUpdatedItems = function(){
 	Z.debug('Zotero.Library.loadUpdatedItems', 3);
 	var library = this;
 	//sync from the libraryVersion if it exists, otherwise use the itemsVersion, which is likely
@@ -325,7 +325,7 @@ Zotero.Library.prototype.loadUpdatedItems = function(){
 	});
 };
 
-Zotero.Library.prototype.loadUpdatedCollections = function(){
+Library.prototype.loadUpdatedCollections = function(){
 	Z.debug('Zotero.Library.loadUpdatedCollections', 3);
 	var library = this;
 	//sync from the libraryVersion if it exists, otherwise use the collectionsVersion, which is likely
@@ -389,7 +389,7 @@ Zotero.Library.prototype.loadUpdatedCollections = function(){
 	});
 };
 
-Zotero.Library.prototype.loadUpdatedTags = function(){
+Library.prototype.loadUpdatedTags = function(){
 	Z.debug('Zotero.Library.loadUpdatedTags', 3);
 	var library = this;
 	Z.debug('tagsVersion: ' + library.tags.tagsVersion, 3);
@@ -411,7 +411,7 @@ Zotero.Library.prototype.loadUpdatedTags = function(){
 	});
 };
 
-Zotero.Library.prototype.getDeleted = function(version) {
+Library.prototype.getDeleted = function(version) {
 	Z.debug('Zotero.Library.getDeleted', 3);
 	var library = this;
 	var urlconf = {
@@ -458,7 +458,7 @@ Zotero.Library.prototype.getDeleted = function(version) {
 	return library.deleted.pendingPromise;
 };
 
-Zotero.Library.prototype.processDeletions = function(deletions){
+Library.prototype.processDeletions = function(deletions){
 	var library = this;
 	//process deleted collections
 	library.collections.processDeletions(deletions.collections);
@@ -467,7 +467,7 @@ Zotero.Library.prototype.processDeletions = function(deletions){
 };
 
 //Get a full bibliography from the API for web based citating
-Zotero.Library.prototype.loadFullBib = function(itemKeys, style){
+Library.prototype.loadFullBib = function(itemKeys, style){
 	var library = this;
 	var itemKeyString = itemKeys.join(',');
 	var urlconfig = {
@@ -494,7 +494,7 @@ Zotero.Library.prototype.loadFullBib = function(itemKeys, style){
 };
 
 //load bib for a single item from the API
-Zotero.Library.prototype.loadItemBib = function(itemKey, style) {
+Library.prototype.loadItemBib = function(itemKey, style) {
 	Z.debug('Zotero.Library.loadItemBib', 3);
 	var library = this;
 	var urlconfig = {
@@ -520,7 +520,7 @@ Zotero.Library.prototype.loadItemBib = function(itemKey, style) {
 
 //load library settings from Zotero API and return a promise that gets resolved with
 //the Zotero.Preferences object for this library
-Zotero.Library.prototype.loadSettings = function() {
+Library.prototype.loadSettings = function() {
 	Z.debug('Zotero.Library.loadSettings', 3);
 	var library = this;
 	var urlconfig = {
@@ -563,7 +563,7 @@ Zotero.Library.prototype.loadSettings = function() {
 
 //take an array of tags and return subset of tags that should be colored, along with
 //the colors they should be
-Zotero.Library.prototype.matchColoredTags = function(tags) {
+Library.prototype.matchColoredTags = function(tags) {
 	var library = this;
 	var i;
 	var tagColorsSettings = library.preferences.getPref('tagColors');
@@ -592,7 +592,7 @@ Zotero.Library.prototype.matchColoredTags = function(tags) {
  * @param  {Zotero.Library} foreignLibrary
  * @return {Promise.Zotero.Item[]} - newly created items
  */
-Zotero.Library.prototype.sendToLibrary = function(items, foreignLibrary){
+Library.prototype.sendToLibrary = function(items, foreignLibrary){
 	var foreignItems = [];
 	for(var i = 0; i < items.length; i++){
 		var item = items[i];
@@ -637,7 +637,7 @@ Zotero.Library.prototype.sendToLibrary = function(items, foreignLibrary){
 // process deleted
 // checkConcurrentUpdates (compare Last-Modified-Version from collections?newer request to one from /deleted request)
 
-Zotero.Library.prototype.updatedVersions = function(target='items', version=this.libraryVersion){
+Library.prototype.updatedVersions = function(target='items', version=this.libraryVersion){
 	Z.debug('Library.updatedVersions', 3);
 	var library = this;
 	var urlconf = {
@@ -652,27 +652,27 @@ Zotero.Library.prototype.updatedVersions = function(target='items', version=this
 
 //Download and save information about every item in the library
 //keys is an array of itemKeys from this library that we need to download
-Zotero.Library.prototype.loadItemsFromKeys = function(keys){
+Library.prototype.loadItemsFromKeys = function(keys){
 	Zotero.debug('Zotero.Library.loadItemsFromKeys', 3);
 	var library = this;
 	return library.loadFromKeys(keys, 'items');
 };
 
 //keys is an array of collectionKeys from this library that we need to download
-Zotero.Library.prototype.loadCollectionsFromKeys = function(keys){
+Library.prototype.loadCollectionsFromKeys = function(keys){
 	Zotero.debug('Zotero.Library.loadCollectionsFromKeys', 3);
 	var library = this;
 	return library.loadFromKeys(keys, 'collections');
 };
 
 //keys is an array of searchKeys from this library that we need to download
-Zotero.Library.prototype.loadSeachesFromKeys = function(keys){
+Library.prototype.loadSeachesFromKeys = function(keys){
 	Zotero.debug('Zotero.Library.loadSearchesFromKeys', 3);
 	var library = this;
 	return library.loadFromKeys(keys, 'searches');
 };
 
-Zotero.Library.prototype.loadFromKeys = function(keys, objectType){
+Library.prototype.loadFromKeys = function(keys, objectType){
 	Zotero.debug('Zotero.Library.loadFromKeys', 3);
 	if(!objectType) objectType = 'items';
 	var library = this;
@@ -743,7 +743,7 @@ Zotero.Library.prototype.loadFromKeys = function(keys, objectType){
 //publishes: displayedItemsUpdated
 //assume we have up to date information about items in indexeddb.
 //build a list of indexedDB filter requests to then intersect to get final result
-Zotero.Library.prototype.buildItemDisplayView = function(params) {
+Library.prototype.buildItemDisplayView = function(params) {
 	Z.debug('Zotero.Library.buildItemDisplayView', 3);
 	Z.debug(params, 4);
 	//start with list of all items if we don't have collectionKey
@@ -831,13 +831,531 @@ Zotero.Library.prototype.buildItemDisplayView = function(params) {
 	});
 };
 
-Zotero.Library.prototype.trigger = function(eventType, data){
+Library.prototype.trigger = function(eventType, data){
 	var library = this;
 	Zotero.trigger(eventType, data, library.libraryString);
 };
 
-Zotero.Library.prototype.listen = function(events, handler, data){
+Library.prototype.listen = function(events, handler, data){
 	var library = this;
 	var filter = library.libraryString;
 	Zotero.listen(events, handler, data, filter);
 };
+
+//CollectionFunctions
+Library.prototype.processLoadedCollections = function(response){
+	Z.debug('processLoadedCollections', 3);
+	var library = this;
+	
+	//clear out display items
+	Z.debug('adding collections to library.collections');
+	var collectionsAdded = library.collections.addCollectionsFromJson(response.data);
+	for (var i = 0; i < collectionsAdded.length; i++) {
+		collectionsAdded[i].associateWithLibrary(library);
+	}
+	//update sync state
+	library.collections.updateSyncState(response.lastModifiedVersion);
+	
+	Zotero.trigger('loadedCollectionsProcessed', {library:library, collectionsAdded:collectionsAdded});
+	return response;
+};
+
+//create+write a collection given a name and optional parentCollectionKey
+Library.prototype.addCollection = function(name, parentCollection){
+	Z.debug('Zotero.Library.addCollection', 3);
+	var library = this;
+	
+	var collection = new Zotero.Collection();
+	collection.associateWithLibrary(library);
+	collection.set('name', name);
+	collection.set('parentCollection', parentCollection);
+	
+	return library.collections.writeCollections([collection]);
+};
+
+//ItemFunctions
+//make request for item keys and return jquery ajax promise
+Library.prototype.fetchItemKeys = function(config={}){
+	Z.debug('Zotero.Library.fetchItemKeys', 3);
+	var library = this;
+	var urlconfig = Z.extend(true, {
+		'target':'items',
+		'libraryType':this.libraryType,
+		'libraryID':this.libraryID,
+		'format':'keys'
+	}, config);
+	
+	return library.ajaxRequest(urlconfig);
+};
+
+//get keys of all items marked for deletion
+Library.prototype.getTrashKeys = function(){
+	Z.debug('Zotero.Library.getTrashKeys', 3);
+	var library = this;
+	var urlconfig = {
+		'target': 'items',
+		'libraryType': library.libraryType,
+		'libraryID': library.libraryID,
+		'format': 'keys',
+		'collectionKey': 'trash'
+	};
+	
+	return library.ajaxRequest(urlconfig);
+};
+
+Library.prototype.emptyTrash = function(){
+	Z.debug('Zotero.Library.emptyTrash', 3);
+	var library = this;
+	return library.getTrashKeys()
+	.then(function(response){
+		var trashedItemKeys = response.data.split('\n');
+		return library.items.deleteItems(trashedItemKeys, response.lastModifiedVersion);
+	});
+};
+
+Library.prototype.loadItemKeys = function(config){
+	Z.debug('Zotero.Library.loadItemKeys', 3);
+	var library = this;
+	return this.fetchItemKeys(config)
+	.then(function(response){
+		Z.debug('loadItemKeys proxied callback', 3);
+		var keys = response.data.split(/[\s]+/);
+		library.itemKeys = keys;
+	});
+};
+
+Library.prototype.loadItems = function(config){
+	Z.debug('Zotero.Library.loadItems', 3);
+	var library = this;
+	if(!config){
+		config = {};
+	}
+	
+	var defaultConfig = {
+		target:'items',
+		targetModifier: 'top',
+		start: 0,
+		limit: 25,
+		order: Zotero.config.defaultSortColumn,
+		sort: Zotero.config.defaultSortOrder
+	};
+	
+	//Build config object that should be displayed next and compare to currently displayed
+	var newConfig = Z.extend({}, defaultConfig, config);
+	//newConfig.start = parseInt(newConfig.limit, 10) * (parseInt(newConfig.itemPage, 10) - 1);
+	
+	var urlconfig = Z.extend({
+		'target':'items',
+		'libraryType':library.libraryType,
+		'libraryID':library.libraryID
+	}, newConfig);
+	var requestUrl = Zotero.ajax.apiRequestString(urlconfig);
+	
+	return library.ajaxRequest(requestUrl)
+	.then(function(response){
+		Z.debug('loadItems proxied callback', 3);
+		//var library = this;
+		var items = library.items;
+		//clear out display items
+		var loadedItemsArray = items.addItemsFromJson(response.data);
+		Z.debug('Looping over loadedItemsArray');
+		for (let i = 0; i < loadedItemsArray.length; i++) {
+			loadedItemsArray[i].associateWithLibrary(library);
+		}
+		
+		response.loadedItems = loadedItemsArray;
+		Zotero.trigger('itemsChanged', {library:library});
+		return response;
+	});
+};
+
+Library.prototype.loadPublications = function(config){
+	Z.debug('Zotero.Library.loadPublications', 3);
+	var library = this;
+	if(!config){
+		config = {};
+	}
+	
+	var defaultConfig = {
+		target:'publications',
+		start: 0,
+		limit: 50,
+		order: Zotero.config.defaultSortColumn,
+		sort: Zotero.config.defaultSortOrder,
+		include: 'bib'
+	};
+	
+	//Build config object that should be displayed next and compare to currently displayed
+	var newConfig = Z.extend({}, defaultConfig, config);
+	
+	var urlconfig = Z.extend({
+		'target':'publications',
+		'libraryType':library.libraryType,
+		'libraryID':library.libraryID
+	}, newConfig);
+	var requestUrl = Zotero.ajax.apiRequestString(urlconfig);
+	
+	return library.ajaxRequest(requestUrl)
+	.then(function(response){
+		Z.debug('loadPublications proxied callback', 3);
+		var publicationItems = [];
+		var parsedItemJson = response.data;
+		parsedItemJson.forEach(function(itemObj){
+			var item = new Zotero.Item(itemObj);
+			publicationItems.push(item);
+		});
+		
+		response.publicationItems = publicationItems;
+		return response;
+	});
+};
+
+Library.prototype.processLoadedItems = function(response){
+	Z.debug('processLoadedItems', 3);
+	var library = this;
+	var items = library.items;
+	//clear out display items
+	var loadedItemsArray = items.addItemsFromJson(response.data);
+	for (var i = 0; i < loadedItemsArray.length; i++) {
+		loadedItemsArray[i].associateWithLibrary(library);
+	}
+	
+	//update sync state
+	library.items.updateSyncState(response.lastModifiedVersion);
+	
+	Zotero.trigger('itemsChanged', {library:library, loadedItems:loadedItemsArray});
+	return response;
+};
+
+Library.prototype.loadItem = function(itemKey) {
+	Z.debug('Zotero.Library.loadItem', 3);
+	var library = this;
+	if(!config){
+		var config = {};
+	}
+	
+	var urlconfig = {
+		'target':'item',
+		'libraryType':library.libraryType,
+		'libraryID':library.libraryID,
+		'itemKey':itemKey
+	};
+	
+	return library.ajaxRequest(urlconfig)
+	.then(function(response){
+		Z.debug('Got loadItem response');
+		var item = new Zotero.Item(response.data);
+		item.owningLibrary = library;
+		library.items.itemObjects[item.key] = item;
+		Zotero.trigger('itemsChanged', {library:library});
+		return(item);
+	},
+	function(response){
+		Z.debug('Error loading Item');
+	});
+};
+
+Library.prototype.trashItem = function(itemKey){
+	var library = this;
+	return library.items.trashItems([library.items.getItem(itemKey)]);
+};
+
+Library.prototype.untrashItem = function(itemKey){
+	Z.debug('Zotero.Library.untrashItem', 3);
+	if(!itemKey) return false;
+	
+	var item = this.items.getItem(itemKey);
+	item.apiObj.deleted = 0;
+	return item.writeItem();
+};
+
+Library.prototype.deleteItem = function(itemKey){
+	Z.debug('Zotero.Library.deleteItem', 3);
+	var library = this;
+	return library.items.deleteItem(itemKey);
+};
+
+Library.prototype.deleteItems = function(itemKeys){
+	Z.debug('Zotero.Library.deleteItems', 3);
+	var library = this;
+	return library.items.deleteItems(itemKeys);
+};
+
+Library.prototype.addNote = function(itemKey, note){
+	Z.debug('Zotero.Library.prototype.addNote', 3);
+	var library = this;
+	var config = {
+		'target':'children',
+		'libraryType':library.libraryType,
+		'libraryID':library.libraryID,
+		'itemKey':itemKey
+	};
+	
+	var requestUrl = Zotero.ajax.apiRequestString(config);
+	var item = this.items.getItem(itemKey);
+	
+	return library.ajaxRequest(requestUrl, 'POST', {processData: false});
+};
+
+Library.prototype.fetchGlobalItems = function(config){
+	Z.debug('Zotero.Library.fetchGlobalItems', 3);
+	var library = this;
+	if(!config){
+		config = {};
+	}
+	
+	var defaultConfig = {
+		target:'items',
+		start: 0,
+		limit: 25
+	};
+	
+	//Build config object that should be displayed next and compare to currently displayed
+	var newConfig = Z.extend({}, defaultConfig, config);
+	//newConfig.start = parseInt(newConfig.limit, 10) * (parseInt(newConfig.itemPage, 10) - 1);
+	
+	var urlconfig = Z.extend({'target':'items', 'libraryType': ''}, newConfig);
+	var requestUrl = Zotero.ajax.apiRequestString(urlconfig);
+	
+	return library.ajaxRequest(requestUrl, 'GET', {dataType:'json'})
+	.then(function(response){
+		Z.debug('globalItems callback', 3);
+		return(response.data);
+	});
+};
+
+Library.prototype.fetchGlobalItem = function(globalKey){
+	Z.debug('Zotero.Library.fetchGlobalItem', 3);
+	Z.debug(globalKey);
+	var library = this;
+	
+	var defaultConfig = {target:'item'};
+	
+	//Build config object that should be displayed next and compare to currently displayed
+	var newConfig = Z.extend({}, defaultConfig);
+	var urlconfig = Z.extend({
+		'target':'item',
+		'libraryType': '',
+		'itemKey': globalKey
+	}, newConfig);
+	var requestUrl = Zotero.ajax.apiRequestString(urlconfig);
+	
+	return library.ajaxRequest(requestUrl, 'GET', {dataType:'json'})
+	.then(function(response){
+		Z.debug('globalItem callback', 3);
+		return(response.data);
+	});
+};
+
+//TagFunctions
+Library.prototype.fetchTags = function(config){
+	Z.debug('Zotero.Library.fetchTags', 3);
+	var library = this;
+	var defaultConfig = {
+		target:'tags',
+		order:'title',
+		sort:'asc',
+		limit: 100
+	};
+	var newConfig = Z.extend({}, defaultConfig, config);
+	var urlconfig = Z.extend({
+		'target':'tags',
+		'libraryType':this.libraryType,
+		'libraryID':this.libraryID
+	}, newConfig);
+	
+	return Zotero.ajaxRequest(urlconfig);
+};
+
+Library.prototype.loadTags = function(config={}){
+	Z.debug('Zotero.Library.loadTags', 3);
+	var library = this;
+	
+	if(config.showAutomaticTags && config.collectionKey){
+		delete config.collectionKey;
+	}
+	
+	library.tags.displayTagsArray = [];
+	return library.fetchTags(config)
+	.then(function(response){
+		Z.debug('loadTags proxied callback', 3);
+		var updatedVersion = response.lastModifiedVersion;
+		library.tags.updateSyncState(updatedVersion);
+		var addedTags = library.tags.addTagsFromJson(response.data);
+		library.tags.updateTagsVersion(updatedVersion);
+		library.tags.rebuildTagsArray();
+		
+		if(response.parsedLinks.hasOwnProperty('next')){
+			library.tags.hasNextLink = true;
+			library.tags.nextLink = response.parsedLinks['next'];
+		}
+		else{
+			library.tags.hasNextLink = false;
+			library.tags.nextLink = null;
+		}
+		library.trigger('tagsChanged', {library:library});
+		return library.tags;
+	});
+};
+
+
+Library.prototype.loadAllTags = function(config={}){
+	Z.debug('Zotero.Library.loadAllTags', 3);
+	var library = this;
+	var defaultConfig = {
+		target:'tags',
+		order:'title',
+		sort:'asc',
+		limit: 100,
+		libraryType:library.libraryType,
+		libraryID:library.libraryID
+	};
+	
+	//Build config object that should be displayed next and compare to currently displayed
+	var newConfig = Z.extend({}, defaultConfig, config);
+	var urlconfig = Z.extend({}, newConfig);
+	var requestUrl = Zotero.ajax.apiRequestString(urlconfig);
+	var tags = library.tags;
+	
+	//check if already loaded tags are okay to use
+	var loadedConfig = Z.extend({}, defaultConfig, tags.loadedConfig);
+	var loadedConfigRequestUrl = tags.loadedRequestUrl;
+	Z.debug('requestUrl: ' + requestUrl, 4);
+	Z.debug('loadedConfigRequestUrl: ' + loadedConfigRequestUrl, 4);
+	return new Promise(function(resolve, reject){
+		var continueLoadingCallback = function(tags){
+			Z.debug('loadAllTags continueLoadingCallback', 3);
+			var plainList = Zotero.Tags.prototype.plainTagsList(tags.tagsArray);
+			plainList.sort(Library.prototype.comparer());
+			tags.plainList = plainList;
+			
+			if(tags.hasNextLink){
+				Z.debug('still has next link.', 3);
+				tags.tagsArray.sort(Zotero.Tag.prototype.tagComparer());
+				plainList = Zotero.Tags.prototype.plainTagsList(tags.tagsArray);
+				plainList.sort(Library.prototype.comparer());
+				tags.plainList = plainList;
+				
+				var nextLink = tags.nextLink;
+				var nextLinkConfig = Zotero.utils.parseQuery(Zotero.utils.querystring(nextLink));
+				var newConfig = Z.extend({}, config);
+				newConfig.start = nextLinkConfig.start;
+				newConfig.limit = nextLinkConfig.limit;
+				return library.loadTags(newConfig).then(continueLoadingCallback);
+			}
+			else{
+				Z.debug('no next in tags link', 3);
+				tags.updateSyncedVersion();
+				tags.tagsArray.sort(Zotero.Tag.prototype.tagComparer());
+				plainList = Zotero.Tags.prototype.plainTagsList(tags.tagsArray);
+				plainList.sort(Library.prototype.comparer());
+				tags.plainList = plainList;
+				Z.debug('resolving loadTags deferred', 3);
+				library.tagsLoaded = true;
+				library.tags.loaded = true;
+				tags.loadedConfig = config;
+				tags.loadedRequestUrl = requestUrl;
+				
+				//update all tags with tagsVersion
+				for (var i = 0; i < library.tags.tagsArray.length; i++) {
+					tags.tagsArray[i].apiObj.version = tags.tagsVersion;
+				}
+				
+				library.trigger('tagsChanged', {library:library});
+				return tags;
+			}
+		};
+		
+		resolve( library.loadTags(urlconfig)
+		.then(continueLoadingCallback));
+	});
+};
+
+//LibraryCache
+//load objects from indexedDB
+Library.prototype.loadIndexedDBCache = function(){
+	Zotero.debug('Zotero.Library.loadIndexedDBCache', 3);
+	
+	var library = this;
+	
+	var itemsPromise = library.idbLibrary.getAllItems();
+	var collectionsPromise = library.idbLibrary.getAllCollections();
+	var tagsPromise = library.idbLibrary.getAllTags();
+	
+	itemsPromise.then(function(itemsArray){
+		Z.debug('loadIndexedDBCache itemsD done', 3);
+		//create itemsDump from array of item objects
+		var latestItemVersion = 0;
+		for(var i = 0; i < itemsArray.length; i++){
+			var item = new Zotero.Item(itemsArray[i]);
+			library.items.addItem(item);
+			if(item.version > latestItemVersion){
+				latestItemVersion = item.version;
+			}
+		}
+		library.items.itemsVersion = latestItemVersion;
+		
+		//TODO: add itemsVersion as last version in any of these items?
+		//or store it somewhere else for indexedDB cache purposes
+		library.items.loaded = true;
+		Z.debug('Done loading indexedDB items promise into library', 3);
+	});
+	
+	collectionsPromise.then(function(collectionsArray){
+		Z.debug('loadIndexedDBCache collectionsD done', 3);
+		//create collectionsDump from array of collection objects
+		var latestCollectionVersion = 0;
+		for(var i = 0; i < collectionsArray.length; i++){
+			var collection = new Zotero.Collection(collectionsArray[i]);
+			library.collections.addCollection(collection);
+			if(collection.version > latestCollectionVersion){
+				latestCollectionVersion = collection.version;
+			}
+		}
+		library.collections.collectionsVersion = latestCollectionVersion;
+		
+		//TODO: add collectionsVersion as last version in any of these items?
+		//or store it somewhere else for indexedDB cache purposes
+		library.collections.initSecondaryData();
+		library.collections.loaded = true;
+	});
+	
+	tagsPromise.then(function(tagsArray){
+		Z.debug('loadIndexedDBCache tagsD done', 3);
+		Z.debug(tagsArray);
+		//create tagsDump from array of tag objects
+		var latestVersion = 0;
+		var tagsVersion = 0;
+		for(var i = 0; i < tagsArray.length; i++){
+			var tag = new Zotero.Tag(tagsArray[i]);
+			library.tags.addTag(tag);
+			if(tagsArray[i].version > latestVersion){
+				latestVersion = tagsArray[i].version;
+			}
+		}
+		tagsVersion = latestVersion;
+		library.tags.tagsVersion = tagsVersion;
+
+		//TODO: add tagsVersion as last version in any of these items?
+		//or store it somewhere else for indexedDB cache purposes
+		library.tags.loaded = true;
+	});
+	
+	
+	//resolve the overall deferred when all the child deferreds are finished
+	return Promise.all([itemsPromise, collectionsPromise, tagsPromise]);
+};
+
+Library.prototype.saveIndexedDB = function(){
+	var library = this;
+	
+	var saveItemsPromise = library.idbLibrary.updateItems(library.items.itemsArray);
+	var saveCollectionsPromise = library.idbLibrary.updateCollections(library.collections.collectionsArray);
+	var saveTagsPromise = library.idbLibrary.updateTags(library.tags.tagsArray);
+	
+	//resolve the overall deferred when all the child deferreds are finished
+	return Promise.all([saveItemsPromise, saveCollectionsPromise, saveTagsPromise]);
+};
+
+module.exports = Library;
+

@@ -1,10 +1,10 @@
-Zotero.ApiObject = function(){
+module.exports = function(){
 	this.instance = 'Zotero.ApiObject';
 	this.version = 0;
 };
 
 //associate Entry with a library so we can update it on the server
-Zotero.ApiObject.prototype.associateWithLibrary = function(library){
+module.exports.prototype.associateWithLibrary = function(library){
 	var apiObject = this;
 	apiObject.owningLibrary = library;
 	if(typeof this.apiObj.library == 'object'){
@@ -14,9 +14,9 @@ Zotero.ApiObject.prototype.associateWithLibrary = function(library){
 	return apiObject;
 };
 
-Zotero.ApiObject.prototype.fieldComparer = function(attr){
-	if(window.Intl){
-		var collator = new window.Intl.Collator();
+module.exports.prototype.fieldComparer = function(attr){
+	if(Intl){
+		var collator = new Intl.Collator();
 		return function(a, b){
 			return collator.compare(a.apiObj.data[attr], b.apiObj.data[attr]);
 		};

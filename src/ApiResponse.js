@@ -1,4 +1,4 @@
-Zotero.ApiResponse = function(response) {
+module.exports = function(response) {
 	Z.debug('Zotero.ApiResponse', 3);
 	this.totalResults = 0;
 	this.apiVersion = null;
@@ -18,7 +18,7 @@ Zotero.ApiResponse = function(response) {
 	}
 };
 
-Zotero.ApiResponse.prototype.parseResponse = function(response){
+module.exports.prototype.parseResponse = function(response){
 	Z.debug('parseResponse');
 	var apiResponse = this;
 	apiResponse.jqxhr = response.jqxhr;

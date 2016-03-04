@@ -1,4 +1,4 @@
-Zotero.Collection = function(collectionObj){
+ module.exports = function(collectionObj){
 	this.instance = 'Zotero.Collection';
 	this.libraryUrlIdentifier = '';
 	this.itemKeys = false;
@@ -27,14 +27,14 @@ Zotero.Collection = function(collectionObj){
 	}
 };
 
-Zotero.Collection.prototype = new Zotero.ApiObject();
-Zotero.Collection.prototype.instance = 'Zotero.Collection';
+ module.exports.prototype = new Zotero.ApiObject();
+ module.exports.prototype.instance = 'Zotero.Collection';
 
-Zotero.Collection.prototype.updateObjectKey = function(collectionKey){
+ module.exports.prototype.updateObjectKey = function(collectionKey){
 	this.updateCollectionKey(collectionKey);
 };
 
-Zotero.Collection.prototype.updateCollectionKey = function(collectionKey){
+ module.exports.prototype.updateCollectionKey = function(collectionKey){
 	var collection = this;
 	collection.key = collectionKey;
 	collection.apiObj.key = collectionKey;
@@ -42,7 +42,7 @@ Zotero.Collection.prototype.updateCollectionKey = function(collectionKey){
 	return collection;
 };
 
-Zotero.Collection.prototype.parseJsonCollection = function(apiObj) {
+ module.exports.prototype.parseJsonCollection = function(apiObj) {
 	Z.debug('parseJsonCollection', 4);
 	var collection = this;
 	collection.key = apiObj.key;
@@ -56,7 +56,7 @@ Zotero.Collection.prototype.parseJsonCollection = function(apiObj) {
 	collection.initSecondaryData();
 };
 
-Zotero.Collection.prototype.initSecondaryData = function() {
+ module.exports.prototype.initSecondaryData = function() {
 	var collection = this;
 	
 	if(collection.apiObj.data['parentCollection']){
@@ -76,7 +76,7 @@ Zotero.Collection.prototype.initSecondaryData = function() {
 	
 };
 
-Zotero.Collection.prototype.nestCollection = function(collectionsObject) {
+ module.exports.prototype.nestCollection = function(collectionsObject) {
 	Z.debug('Zotero.Collection.nestCollection', 4);
 	var collection = this;
 	var parentCollectionKey = collection.get('parentCollection');
@@ -92,7 +92,7 @@ Zotero.Collection.prototype.nestCollection = function(collectionsObject) {
 	return false;
 };
 
-Zotero.Collection.prototype.addItems = function(itemKeys){
+ module.exports.prototype.addItems = function(itemKeys){
 	Z.debug('Zotero.Collection.addItems', 3);
 	var collection = this;
 	var config = {
@@ -108,7 +108,7 @@ Zotero.Collection.prototype.addItems = function(itemKeys){
 	});
 };
 
-Zotero.Collection.prototype.getMemberItemKeys = function(){
+ module.exports.prototype.getMemberItemKeys = function(){
 	Z.debug('Zotero.Collection.getMemberItemKeys', 3);
 	var collection = this;
 	var config = {
@@ -129,7 +129,7 @@ Zotero.Collection.prototype.getMemberItemKeys = function(){
 	});
 };
 
-Zotero.Collection.prototype.removeItem = function(itemKey){
+ module.exports.prototype.removeItem = function(itemKey){
 	var collection = this;
 	var config = {
 		'target':'item',
@@ -144,7 +144,7 @@ Zotero.Collection.prototype.removeItem = function(itemKey){
 	});
 };
 
-Zotero.Collection.prototype.update = function(name, parentKey){
+ module.exports.prototype.update = function(name, parentKey){
 	var collection = this;
 	if(!parentKey) parentKey = false;
 	var config = {
@@ -170,13 +170,13 @@ Zotero.Collection.prototype.update = function(name, parentKey){
 	});
 };
 
-Zotero.Collection.prototype.writeApiObj = function(){
+ module.exports.prototype.writeApiObj = function(){
 	var collection = this;
 	var writeObj = Z.extend({}, collection.pristineData, collection.apiObj.data);
 	return writeObj;
 };
 
-Zotero.Collection.prototype.remove = function(){
+ module.exports.prototype.remove = function(){
 	Z.debug('Zotero.Collection.delete', 3);
 	var collection = this;
 	var owningLibrary = collection.owningLibrary;
@@ -200,7 +200,7 @@ Zotero.Collection.prototype.remove = function(){
 	});
 };
 
-Zotero.Collection.prototype.get = function(key){
+ module.exports.prototype.get = function(key){
 	var collection = this;
 	switch(key) {
 		case 'title':
@@ -229,7 +229,7 @@ Zotero.Collection.prototype.get = function(key){
 	return null;
 };
 /*
-Zotero.Collection.prototype.get = function(key){
+ module.exports.prototype.get = function(key){
 	var collection = this;
 	switch(key) {
 		case 'title':
@@ -259,7 +259,7 @@ Zotero.Collection.prototype.get = function(key){
 };
 */
 
-Zotero.Collection.prototype.set = function(key, val){
+ module.exports.prototype.set = function(key, val){
 	var collection = this;
 	if(key in collection.apiObj.data){
 		collection.apiObj.data[key] = val;

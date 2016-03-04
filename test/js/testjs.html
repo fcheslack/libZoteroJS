@@ -9,16 +9,16 @@
     <div id="qunit"></div>
     <div id="qunit-fixture"></div>
     <script src="./qunit/qunit-1.11.0.js"></script>
-    <script src="../../lib/js/jquery-1.8.0.min.js"></script>
-    <script src="../../build/libZoteroSingle.js"></script>
+    <script src="../../node_modules/jquery/dist/jquery.js"></script>
+    <script src="../../build/libzoterojs.js"></script>
     <script src="../config.js"></script>
     <script>
+        var J = jQuery.noConflict();
         Zotero.testing = {
             libraryID: 0,
             libraryType: 'user'
         };
         Zotero.init();
-        J = jQuery.noConflict();
     </script>
     <script src="tests/apistring.js"></script>
     

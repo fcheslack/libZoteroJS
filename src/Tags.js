@@ -1,4 +1,4 @@
-Zotero.Tags = function(jsonBody){
+module.exports = function(jsonBody){
 	this.instance = 'Zotero.Tags';
 	//represent collections as array for ordering purposes
 	this.tagsVersion = 0;
@@ -16,9 +16,9 @@ Zotero.Tags = function(jsonBody){
 	}
 };
 
-Zotero.Tags.prototype = new Zotero.Container();
+module.exports.prototype = new Zotero.Container();
 
-Zotero.Tags.prototype.addTag = function(tag){
+module.exports.prototype.addTag = function(tag){
 	var tags = this;
 	tags.tagObjects[tag.apiObj.tag] = tag;
 	tags.tagsArray.push(tag);
@@ -27,7 +27,7 @@ Zotero.Tags.prototype.addTag = function(tag){
 	}
 };
 
-Zotero.Tags.prototype.getTag = function(tagname){
+module.exports.prototype.getTag = function(tagname){
 	var tags = this;
 	if(tags.tagObjects.hasOwnProperty(tagname)){
 		return this.tagObjects[tagname];
@@ -35,13 +35,13 @@ Zotero.Tags.prototype.getTag = function(tagname){
 	return null;
 };
 
-Zotero.Tags.prototype.removeTag = function(tagname){
+module.exports.prototype.removeTag = function(tagname){
 	var tags = this;
 	delete tags.tagObjects[tagname];
 	tags.updateSecondaryData();
 };
 
-Zotero.Tags.prototype.removeTags = function(tagnames){
+module.exports.prototype.removeTags = function(tagnames){
 	var tags = this;
 	tagnames.forEach(function(tagname){
 		delete tags.tagObjects[tagname];
@@ -49,7 +49,7 @@ Zotero.Tags.prototype.removeTags = function(tagnames){
 	tags.updateSecondaryData();
 };
 
-Zotero.Tags.prototype.plainTagsList = function(tagsArray){
+module.exports.prototype.plainTagsList = function(tagsArray){
 	Z.debug('Zotero.Tags.plainTagsList', 3);
 	var plainList = [];
 	tagsArray.forEach(function(tag){
@@ -58,7 +58,7 @@ Zotero.Tags.prototype.plainTagsList = function(tagsArray){
 	return plainList;
 };
 
-Zotero.Tags.prototype.clear = function(){
+module.exports.prototype.clear = function(){
 	Z.debug('Zotero.Tags.clear', 3);
 	this.tagsVersion = 0;
 	this.syncState.earliestVersion = null;
@@ -69,7 +69,7 @@ Zotero.Tags.prototype.clear = function(){
 	this.tagsArray = [];
 };
 
-Zotero.Tags.prototype.updateSecondaryData = function(){
+module.exports.prototype.updateSecondaryData = function(){
 	Z.debug('Zotero.Tags.updateSecondaryData', 3);
 	var tags = this;
 	tags.tagsArray = [];
@@ -83,7 +83,7 @@ Zotero.Tags.prototype.updateSecondaryData = function(){
 	tags.plainList = plainList;
 };
 
-Zotero.Tags.prototype.updateTagsVersion = function(tagsVersion) {
+module.exports.prototype.updateTagsVersion = function(tagsVersion) {
 	var tags = this;
 	Object.keys(tags.tagObjects).forEach(function(key){
 		var tag = tags.tagObjects[key];
@@ -91,7 +91,7 @@ Zotero.Tags.prototype.updateTagsVersion = function(tagsVersion) {
 	});
 };
 
-Zotero.Tags.prototype.rebuildTagsArray = function() {
+module.exports.prototype.rebuildTagsArray = function() {
 	var tags = this;
 	tags.tagsArray = [];
 	Object.keys(tags.tagObjects).forEach(function(key){
@@ -100,7 +100,7 @@ Zotero.Tags.prototype.rebuildTagsArray = function() {
 	});
 };
 
-Zotero.Tags.prototype.addTagsFromJson = function(jsonBody){
+module.exports.prototype.addTagsFromJson = function(jsonBody){
 	Z.debug('Zotero.Tags.addTagsFromJson', 3);
 	var tags = this;
 	var tagsAdded = [];

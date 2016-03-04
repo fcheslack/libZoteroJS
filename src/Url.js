@@ -8,8 +8,10 @@
 // - list of urls for supported export formats
 // 
 
+var Url = {};
+
 //locally construct a url for the item on the current website
-Zotero.url.itemHref = function(item){
+Url.itemHref = function(item){
 	var href = '';
 	href += Zotero.config.librarySettings.libraryPathString + '/itemKey/' + item.get('key');
 	return href;
@@ -17,7 +19,7 @@ Zotero.url.itemHref = function(item){
 
 //construct a download link for an item's enclosure file that takes into
 //account size and whether the file is a snapshot
-Zotero.url.attachmentDownloadLink = function(item){
+Url.attachmentDownloadLink = function(item){
 	var retString = '';
 	var downloadUrl = item.attachmentDownloadUrl;
 	var contentType = item.get('contentType');
@@ -56,33 +58,33 @@ Zotero.url.attachmentDownloadLink = function(item){
 	return retString;
 };
 
-Zotero.url.attachmentDownloadUrl = function(item){
+Url.attachmentDownloadUrl = function(item){
 	if(item.apiObj.links && item.apiObj.links['enclosure']){
 		if(Zotero.config.proxyDownloads){
 			//we have a proxy for downloads at baseDownloadUrl so just pass an itemkey to that
-			return Zotero.url.wwwDownloadUrl(item);
+			return Url.wwwDownloadUrl(item);
 		}
 		else {
-			return Zotero.url.apiDownloadUrl(item);
+			return Url.apiDownloadUrl(item);
 		}
 	}
 	return false;
 };
 
-Zotero.url.apiDownloadUrl = function(item){
+Url.apiDownloadUrl = function(item){
 	if(item.apiObj.links['enclosure']){
 		return item.apiObj.links['enclosure']['href'];
 	}
 	return false;
 };
 
-Zotero.url.proxyDownloadUrl = function(item){
+Url.proxyDownloadUrl = function(item){
 	if(item.apiObj.links['enclosure']){
 		if(Zotero.config.proxyDownloads){
 			return Zotero.config.baseDownloadUrl + '?itemkey=' + item.get('key');
 		}
 		else{
-			return Zotero.url.apiDownloadUrl(item);
+			return Url.apiDownloadUrl(item);
 		}
 	}
 	else {
@@ -90,7 +92,7 @@ Zotero.url.proxyDownloadUrl = function(item){
 	}
 };
 
-Zotero.url.wwwDownloadUrl = function(item){
+Url.wwwDownloadUrl = function(item){
 	if(item.apiObj.links['enclosure']){
 		return Zotero.config.baseZoteroWebsiteUrl + Zotero.config.librarySettings.libraryPathString + '/' + item.get('key') + '/file/view';
 	}
@@ -99,14 +101,14 @@ Zotero.url.wwwDownloadUrl = function(item){
 	}
 };
 
-Zotero.url.publicationsDownloadUrl = function(item){
+Url.publicationsDownloadUrl = function(item){
 	if(item.apiObj.links['enclosure']){
 		return item.apiObj.links['enclosure']['href'];
 	}
 	return false;
 };
 
-Zotero.url.attachmentFileDetails = function(item){
+Url.attachmentFileDetails = function(item){
 	//file: offer download
 	if(!item.apiObj.links['enclosure']) return '';
 	var enctype = Zotero.utils.translateMimeType(item.apiObj.links['enclosure'].type);
@@ -131,11 +133,11 @@ Zotero.url.attachmentFileDetails = function(item){
 	}
 };
 
-Zotero.url.userWebLibrary = function(slug) {
+Url.userWebLibrary = function(slug) {
 	return [Zotero.config.baseWebsiteUrl, slug, 'items'].join('/');
 };
 
-Zotero.url.groupWebLibrary = function(group) {
+Url.groupWebLibrary = function(group) {
 	if(group.type == 'Private'){
 		return [Zotero.config.baseWebsiteUrl, 'groups', group.get('id'), 'items'].join('/');
 	}
@@ -144,7 +146,7 @@ Zotero.url.groupWebLibrary = function(group) {
 	}
 };
 
-Zotero.url.exportUrls = function(config){
+Url.exportUrls = function(config){
 	Z.debug('Zotero.url.exportUrls', 3);
 	var exportUrls = {};
 	var exportConfig = {};
@@ -155,6 +157,8 @@ Zotero.url.exportUrls = function(config){
 	return exportUrls;
 };
 
-Zotero.url.relationUrl = function(libraryType, libraryID, itemKey){
+Url.relationUrl = function(libraryType, libraryID, itemKey){
 	return 'http://zotero.org/' + libraryType + 's/' + libraryID + '/items/' + itemKey;
 };
+
+module.exports = Url;

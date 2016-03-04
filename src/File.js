@@ -1,6 +1,8 @@
-Zotero.file = {};
+var SparkMD5 = require('spark-md5');
 
-Zotero.file.getFileInfo = function(file){
+module.exports = {};
+
+module.exports.getFileInfo = function(file){
 	//fileInfo: md5, filename, filesize, mtime, zip, contentType, charset
 	if(typeof FileReader === 'undefined'){
 		return Promise.reject(new Error('FileReader not supported'));
@@ -27,7 +29,7 @@ Zotero.file.getFileInfo = function(file){
 	});
 };
 
-Zotero.file.uploadFile = function(uploadInfo, fileInfo){
+module.exports.uploadFile = function(uploadInfo, fileInfo){
 	Z.debug('Zotero.file.uploadFile', 3);
 	Z.debug(uploadInfo, 4);
 	

@@ -1,4 +1,6 @@
-Zotero.Item.prototype.fieldMap = {
+var ItemMaps = {};
+
+ItemMaps.fieldMap = {
 	'itemType'				: 'Item Type',
 	'title'					: 'Title',
 	'dateAdded'				: 'Date Added',
@@ -113,9 +115,7 @@ Zotero.Item.prototype.fieldMap = {
 	'creator'				: 'Creator'
 };
 
-Zotero.localizations.fieldMap = Zotero.Item.prototype.fieldMap;
-
-Zotero.Item.prototype.typeMap = {
+ItemMaps.typeMap = {
 	'note'					: 'Note',
 	'attachment'			: 'Attachment',
 	'book'					: 'Book',
@@ -154,9 +154,7 @@ Zotero.Item.prototype.typeMap = {
 	'dictionaryEntry'		: 'Dictionary Entry'
 };
 
-Zotero.localizations.typeMap = Zotero.Item.prototype.typeMap;
-
-Zotero.Item.prototype.creatorMap = {
+ItemMaps.creatorMap = {
 	'author'			: 'Author',
 	'contributor'		: 'Contributor',
 	'editor'			: 'Editor',
@@ -186,7 +184,7 @@ Zotero.Item.prototype.creatorMap = {
 	'podcaster'			: 'Podcaster'
 };
 
-Zotero.Item.prototype.hideFields = [
+ItemMaps.hideFields = [
 	'mimeType',
 	'linkMode',
 	'charset',
@@ -202,7 +200,7 @@ Zotero.Item.prototype.hideFields = [
 	'tags'
 ];
 
-Zotero.Item.prototype.noEditFields = [
+ItemMaps.noEditFields = [
 	'accessDate',
 	'modified',
 	'filename',
@@ -210,9 +208,7 @@ Zotero.Item.prototype.noEditFields = [
 	'dateModified'
 ];
 
-Zotero.localizations.creatorMap = Zotero.Item.prototype.creatorMap;
-
-Zotero.Item.prototype.itemTypeImageSrc = {
+ItemMaps.itemTypeImageSrc = {
 	'note'					: 'note',
 	'attachment'			: 'attachment-pdf',
 	'attachmentPdf'			: 'attachment-pdf',
@@ -256,7 +252,7 @@ Zotero.Item.prototype.itemTypeImageSrc = {
 	'dictionaryEntry'		: 'page_white'
 };
 
-Zotero.Item.prototype.cslNameMap = {
+ItemMaps.cslNameMap = {
 	'author': 'author',
 	'editor': 'editor',
 	'bookAuthor': 'container-author',
@@ -267,7 +263,7 @@ Zotero.Item.prototype.cslNameMap = {
 	'translator': 'translator'
 };
 
-Zotero.Item.prototype.cslFieldMap = {
+ItemMaps.cslFieldMap = {
 	'title': ['title'],
 	'container-title': ['publicationTitle',  'reporter', 'code'], /* reporter and code should move to SQL mapping tables */
 	'collection-title': ['seriesTitle', 'series'],
@@ -302,12 +298,12 @@ Zotero.Item.prototype.cslFieldMap = {
 	'language': ['language']
 };
 
-Zotero.Item.prototype.cslDateMap = {
+ItemMaps.cslDateMap = {
 	'issued': 'date',
 	'accessed': 'accessDate'
 };
 
-Zotero.Item.prototype.cslTypeMap = {
+ItemMaps.cslTypeMap = {
 	'book': 'book',
 	'bookSection': 'chapter',
 	'journalArticle': 'article-journal',
@@ -343,4 +339,6 @@ Zotero.Item.prototype.cslTypeMap = {
 	'computerProgram': 'book'     // ??
 };
 
-Zotero.Item.prototype.citePaperJournalArticleURL = false;
+ItemMaps.citePaperJournalArticleURL = false;
+
+module.exports = ItemMaps;

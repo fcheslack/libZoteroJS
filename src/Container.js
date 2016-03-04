@@ -1,12 +1,12 @@
-Zotero.Container = function(){
+module.exports = function(){
 	
 };
 
-Zotero.Container.prototype.initSecondaryData = function(){
+module.exports.prototype.initSecondaryData = function(){
 	
 };
 
-Zotero.Container.prototype.addObject = function(object){
+module.exports.prototype.addObject = function(object){
 	Zotero.debug('Zotero.Container.addObject', 4);
 	var container = this;
 	container.objectArray.push(object);
@@ -18,9 +18,9 @@ Zotero.Container.prototype.addObject = function(object){
 	return container;
 };
 
-Zotero.Container.prototype.fieldComparer = function(field){
-	if(window.Intl){
-		var collator = new window.Intl.Collator();
+module.exports.prototype.fieldComparer = function(field){
+	if(Intl){
+		var collator = new Intl.Collator();
 		return function(a, b){
 			return collator.compare(a.apiObj.data[field], b.apiObj.data[field]);
 		};
@@ -37,7 +37,7 @@ Zotero.Container.prototype.fieldComparer = function(field){
 	}
 };
 
-Zotero.Container.prototype.getObject = function(key){
+module.exports.prototype.getObject = function(key){
 	var container = this;
 	if(container.objectMap.hasOwnProperty(key)){
 		return container.objectMap[key];
@@ -47,7 +47,7 @@ Zotero.Container.prototype.getObject = function(key){
 	}
 };
 
-Zotero.Container.prototype.getObjects = function(keys){
+module.exports.prototype.getObjects = function(keys){
 	var container = this;
 	var objects = [];
 	var object;
@@ -60,7 +60,7 @@ Zotero.Container.prototype.getObjects = function(keys){
 	return objects;
 };
 
-Zotero.Container.prototype.removeObject = function(key){
+module.exports.prototype.removeObject = function(key){
 	var container = this;
 	if(container.objectMap.hasOwnProperty(key)){
 		delete container.objectmap[key];
@@ -68,7 +68,7 @@ Zotero.Container.prototype.removeObject = function(key){
 	}
 };
 
-Zotero.Container.prototype.removeObjects = function(keys){
+module.exports.prototype.removeObjects = function(keys){
 	var container = this;
 	//delete Objects from objectMap;
 	for(var i = 0; i < keys.length; i++){
@@ -79,12 +79,12 @@ Zotero.Container.prototype.removeObjects = function(keys){
 	container.initSecondaryData();
 };
 
-Zotero.Container.prototype.writeObjects = function(objects){
+module.exports.prototype.writeObjects = function(objects){
 	//TODO:implement
 };
 
 //generate keys for objects about to be written if they are new
-Zotero.Container.prototype.assignKeys = function(objectsArray){
+module.exports.prototype.assignKeys = function(objectsArray){
 	var object;
 	for(var i = 0; i < objectsArray.length; i++){
 		object = objectsArray[i];
@@ -99,7 +99,7 @@ Zotero.Container.prototype.assignKeys = function(objectsArray){
 };
 
 //split an array of objects into chunks to write over multiple api requests
-Zotero.Container.prototype.chunkObjectsArray = function(objectsArray){
+module.exports.prototype.chunkObjectsArray = function(objectsArray){
 	var chunkSize = 50;
 	var writeChunks = [];
 	
@@ -110,7 +110,7 @@ Zotero.Container.prototype.chunkObjectsArray = function(objectsArray){
 	return writeChunks;
 };
 
-Zotero.Container.prototype.rawChunks = function(chunks){
+module.exports.prototype.rawChunks = function(chunks){
 	var rawChunkObjects = [];
 	
 	for(var i = 0; i < chunks.length; i++){
@@ -128,11 +128,10 @@ Zotero.Container.prototype.rawChunks = function(chunks){
  * Set latestVersion to MAX(latestVersion, version).
  * This should be called with the modifiedVersion header for each response tied to this container
  * during a sync process.
- * @param  {Zotero.Container} container
  * @param  {int} version
  * @return {null}
  */
-Zotero.Container.prototype.updateSyncState = function(version) {
+module.exports.prototype.updateSyncState = function(version) {
 	var container = this;
 	Z.debug('updateSyncState: ' + version, 3);
 	if(!container.hasOwnProperty('syncState')){
@@ -154,7 +153,7 @@ Zotero.Container.prototype.updateSyncState = function(version) {
 	Z.debug('done updating sync state', 3);
 };
 
-Zotero.Container.prototype.updateSyncedVersion = function(versionField) {
+module.exports.prototype.updateSyncedVersion = function(versionField) {
 	var container = this;
 	if(container.syncState.earliestVersion !== null &&
 		(container.syncState.earliestVersion == container.syncState.latestVersion) ){
@@ -166,7 +165,7 @@ Zotero.Container.prototype.updateSyncedVersion = function(versionField) {
 	}
 };
 
-Zotero.Container.prototype.processDeletions = function(deletedKeys) {
+module.exports.prototype.processDeletions = function(deletedKeys) {
 	var container = this;
 	for(var i = 0; i < deletedKeys.length; i++){
 		var localObject = container.get(deletedKeys[i]);
@@ -196,7 +195,7 @@ Zotero.Container.prototype.processDeletions = function(deletedKeys) {
 //  don't mark as synced
 //  calling code should check for writeFailure after the written objects
 //  are returned
-Zotero.Container.prototype.updateObjectsFromWriteResponse = function(objectsArray, response){
+module.exports.prototype.updateObjectsFromWriteResponse = function(objectsArray, response){
 	Z.debug('Zotero.Container.updateObjectsFromWriteResponse', 3);
 	Z.debug('statusCode: ' + response.status, 3);
 	var data = response.data;
@@ -241,7 +240,7 @@ Zotero.Container.prototype.updateObjectsFromWriteResponse = function(objectsArra
 
 //return the key as a string when passed an argument that 
 //could be either a string key or an object with a key property
-Zotero.Container.prototype.extractKey = function(object){
+module.exports.prototype.extractKey = function(object){
 	if(typeof object == 'string'){
 		return object;
 	}

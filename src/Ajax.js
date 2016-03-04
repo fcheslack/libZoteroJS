@@ -1,21 +1,6 @@
-/*
-Zotero.ajax.error = function(event, request, settings, exception){
-	//Zotero.ui.jsNotificationMessage("Error requesting " + settings.url, 'error');
-	//J("#js-message-list").append("<li>Error requesting " + settings.url + "</li>");
-	Z.debug("Exception: " + exception);
-	//Z.exception = exception;
-};
-*/
-/*
-Zotero.ajax.errorCallback = function(jqxhr, textStatus, errorThrown){
-	Z.debug("ajax error callback", 2);
-	Z.debug('textStatus: ' + textStatus, 2);
-	Z.debug('errorThrown: ', 2);
-	Z.debug(errorThrown, 2);
-	Z.debug(jqxhr, 2);
-};
-*/
-Zotero.ajax.errorCallback = function(response){
+var Ajax = {};
+
+Ajax.errorCallback = function(response){
 	Z.error(response);
 	Z.debug('ajax error callback', 2);
 	Z.debug('textStatus: ' + response.textStatus, 2);
@@ -24,14 +9,14 @@ Zotero.ajax.errorCallback = function(response){
 	Z.debug(response.jqxhr, 2);
 };
 
-Zotero.ajax.error = Zotero.ajax.errorCallback;
-Zotero.ajax.activeRequests = [];
+Ajax.error = Ajax.errorCallback;
+Ajax.activeRequests = [];
 
 /*
  * Requires {target:items|collections|tags, libraryType:user|group, libraryID:<>}
  */
-Zotero.ajax.apiRequestUrl = function(params){
-	Z.debug('Zotero.ajax.apiRequestUrl', 4);
+Ajax.apiRequestUrl = function(params){
+	Z.debug('Zotero.Ajax.apiRequestUrl', 4);
 	Z.debug(params, 4);
 	Object.keys(params).forEach(function(key){
 		var val = params[key];
@@ -145,8 +130,8 @@ Zotero.ajax.apiRequestUrl = function(params){
 	return url;
 };
 
-Zotero.ajax.apiQueryString = function(passedParams, useConfigKey){
-	Z.debug('Zotero.ajax.apiQueryString', 4);
+Ajax.apiQueryString = function(passedParams, useConfigKey){
+	Z.debug('Zotero.Ajax.apiQueryString', 4);
 	Z.debug(passedParams, 4);
 	if(useConfigKey === null || typeof useConfigKey === 'undefined'){
 		useConfigKey = true;
@@ -255,11 +240,11 @@ Zotero.ajax.apiQueryString = function(passedParams, useConfigKey){
 	return queryString;
 };
 
-Zotero.ajax.apiRequestString = function(config){
-	return Zotero.ajax.apiRequestUrl(config) + Zotero.ajax.apiQueryString(config);
+Ajax.apiRequestString = function(config){
+	return Ajax.apiRequestUrl(config) + Ajax.apiQueryString(config);
 };
 
-Zotero.ajax.proxyWrapper = function(requestUrl, method){
+Ajax.proxyWrapper = function(requestUrl, method){
 	if(Zotero.config.proxy){
 		if(!method){
 			method = 'GET';
@@ -271,15 +256,15 @@ Zotero.ajax.proxyWrapper = function(requestUrl, method){
 	}
 };
 
-Zotero.ajax.parseQueryString = function(query){
+Ajax.parseQueryString = function(query){
 	
 };
 
-Zotero.ajax.webUrl = function(args){
+Ajax.webUrl = function(args){
 	
 };
 
-Zotero.ajax.downloadBlob = function(url){
+Ajax.downloadBlob = function(url){
 	return new Promise(function(resolve, reject){
 		var xhr = new XMLHttpRequest();
 		var blob;
@@ -301,3 +286,4 @@ Zotero.ajax.downloadBlob = function(url){
 	});
 };
 
+module.exports = Ajax;

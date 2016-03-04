@@ -1,4 +1,4 @@
-Zotero.utils = {
+var Utils = {
 	randomString:function(len, chars) {
 		if (!chars) {
 			chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -16,7 +16,7 @@ Zotero.utils = {
 	
 	getKey: function() {
 		var baseString = '23456789ABCDEFGHIJKMNPQRSTUVWXZ';
-		return Zotero.utils.randomString(8, baseString);
+		return Utils.randomString(8, baseString);
 	},
 	
 	slugify: function(name){
@@ -291,16 +291,4 @@ Zotero.utils = {
 	}
 };
 
-Zotero.extend = function() {
-	var res = {};
-	for(var i = 0; i < arguments.length; i++){
-		var a = arguments[i];
-		if(typeof a != 'object'){
-			continue;
-		}
-		Object.keys(a).forEach(function(key){
-			res[key] = a[key];
-		});
-	}
-	return res;
-};
+module.exports = Utils;

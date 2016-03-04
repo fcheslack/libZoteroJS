@@ -1,4 +1,4 @@
-Zotero.Group = function (groupObj) {
+module.exports = function (groupObj) {
 	var group = this;
 	group.instance = 'Zotero.Group';
 	if(groupObj){
@@ -6,14 +6,14 @@ Zotero.Group = function (groupObj) {
 	}
 };
 
-Zotero.Group.prototype = new Zotero.ApiObject();
+module.exports.prototype = new Zotero.ApiObject();
 
-Zotero.Group.prototype.parseJsonGroup = function(groupObj) {
+module.exports.prototype.parseJsonGroup = function(groupObj) {
 	var group = this;
 	group.apiObj = groupObj;
 };
 
-Zotero.Group.prototype.get = function(key) {
+module.exports.prototype.get = function(key) {
 	var group = this;
 	switch(key) {
 		case 'title':
@@ -37,7 +37,7 @@ Zotero.Group.prototype.get = function(key) {
 	return null;
 };
 
-Zotero.Group.prototype.isWritable = function(userID){
+module.exports.prototype.isWritable = function(userID){
 	var group = this;
 	switch(true){
 		case group.get('owner') == userID:
@@ -53,13 +53,13 @@ Zotero.Group.prototype.isWritable = function(userID){
 	}
 };
 
-Zotero.Group.prototype.typeMap = {
+module.exports.prototype.typeMap = {
 	'Private': 'Private',
 	'PublicOpen': 'Public, Open Membership',
 	'PublicClosed': 'Public, Closed Membership'
 };
 
-Zotero.Group.prototype.accessMap = {
+module.exports.prototype.accessMap = {
 	'all'     : {
 		'members' : 'Anyone can view, only members can edit',
 		'admins'  : 'Anyone can view, only admins can edit'
