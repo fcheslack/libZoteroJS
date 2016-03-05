@@ -67,7 +67,10 @@ var Library = function(type, libraryID, libraryUrlIdentifier, apiKey){
 	//initialize preferences object
 	library.preferences = new Zotero.Preferences(Zotero.store, library.libraryString);
 	
-	if(typeof window !== 'undefined') {
+	if(typeof window === 'undefined') {
+		Zotero.config.useIndexedDB = false;
+		Zotero.warn('Node detected; disabling indexedDB');
+	} else {
 		//initialize indexedDB if we're supposed to use it
 		//detect safari until they fix their shit
 		var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
@@ -83,7 +86,7 @@ var Library = function(type, libraryID, libraryUrlIdentifier, apiKey){
 		}
 	}
 
-	if(Zotero.config.useIndexedDB === true){
+	if(Zotero.config.useIndexedDB === true) {
 		Z.debug('Library Constructor: indexedDB init', 3);
 		var idbLibrary = new Zotero.Idb.Library(library.libraryString);
 		idbLibrary.owningLibrary = this;

@@ -1,9 +1,5 @@
 'use strict';
 
-if(typeof window === 'undefined') {
-	var indexedDB = require('fake-indexeddb');
-}
-
 module.exports = {};
 
 //Initialize an indexedDB for the specified library user or group + id

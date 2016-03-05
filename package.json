@@ -32,7 +32,6 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
-    "fake-indexeddb": "^1.0.3",
     "w3c-xmlhttprequest": "^2.1.0",
     "deferred-js": "^1.0.2",
     "striptags": "^2.1.1",
