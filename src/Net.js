@@ -1,7 +1,7 @@
 'use strict';
 
 if(typeof window === 'undefined') {
-	var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+	var XMLHttpRequest = require('w3c-xmlhttprequest').XMLHttpRequest;
 }
 
 var Deferred = require('deferred-js');
@@ -224,6 +224,13 @@ Net.prototype.ajaxRequest = function(requestConfig){
 		net.ajax(config)
 		.then(function(request){
 			var data;
+
+			if(request.responseType === '') {
+				if(request.getResponseHeader('content-type') === 'application/json') {
+					request.responseType = 'json';
+				}
+			}
+
 			switch(request.responseType){
 				case 'json':
 				case '':

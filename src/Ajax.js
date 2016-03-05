@@ -1,7 +1,7 @@
 'use strict';
 
 if(typeof window === 'undefined') {
-	var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+	var XMLHttpRequest = require('w3c-xmlhttprequest').XMLHttpRequest;
 }
 
 var Ajax = {};

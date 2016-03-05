@@ -40,7 +40,7 @@ function getBuild(dev) {
         		'presets': ['es2015']
     		}]
 		]
-	}).ignore('fake-indexeddb').ignore('xmlhttprequest');
+	}).ignore('fake-indexeddb').ignore('w3c-xmlhttprequest');
 
 	return b.bundle()
 		.pipe(source('./libzoterojs.js'))
