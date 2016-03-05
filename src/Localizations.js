@@ -1,3 +1,5 @@
+'use strict';
+
 var ItemMaps = require('./ItemMaps.js');
 
 module.exports.fieldMap = ItemMaps.fieldMap;

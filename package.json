@@ -2,7 +2,7 @@
   "name": "libzoterojs",
   "version": "0.1.0",
   "description": "javascript libZotero",
-  "main": "index.js",
+  "main": "libzoterojs.js",
   "scripts": {
     "build": "./node_modules/.bin/gulp",
     "dev": "./node_modules/.bin/gulp dev"
@@ -19,7 +19,6 @@
     "browserify": "^13.0.0",
     "deferred-js": "^1.0.2",
     "es6-promise": "^3.1.2",
-    "fake-indexeddb": "^1.0.3",
     "gulp": "3.9.0",
     "gulp-babel": "6.1.1",
     "gulp-concat": "2.6.0",
@@ -35,5 +34,9 @@
     "striptags": "^2.1.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "xmlhttprequest": "^1.8.0",
+    "fake-indexeddb": "^1.0.3"
   }
 }

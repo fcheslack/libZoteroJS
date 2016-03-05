@@ -1,4 +1,6 @@
- module.exports = function(data){
+'use strict';
+
+module.exports = function(data){
 	this.instance = 'Zotero.Deleted';
 	if(typeof data === 'string'){
 		this.deletedData = JSON.parse(data);
@@ -14,6 +16,6 @@
 
 //create, save referece, and return a Promise that will be resolved
 //the next time we finish a deleted request
- module.exports.prototype.addWaiter = function(){
+module.exports.prototype.addWaiter = function(){
 	
 };

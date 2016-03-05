@@ -1,3 +1,9 @@
+'use strict';
+
+if(typeof window === 'undefined') {
+	var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+}
+
 var Ajax = {};
 
 Ajax.errorCallback = function(response){

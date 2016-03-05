@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function(jsonBody){
 	this.instance = 'Zotero.Tags';
 	//represent collections as array for ordering purposes

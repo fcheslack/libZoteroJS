@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * A user or group Zotero library. This is generally the top level object
  * through which interactions should happen. It houses containers for
@@ -65,18 +67,20 @@ var Library = function(type, libraryID, libraryUrlIdentifier, apiKey){
 	//initialize preferences object
 	library.preferences = new Zotero.Preferences(Zotero.store, library.libraryString);
 	
-	//initialize indexedDB if we're supposed to use it
-	//detect safari until they fix their shit
-	var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
-	var is_explorer = navigator.userAgent.indexOf('MSIE') > -1;
-	var is_firefox = navigator.userAgent.indexOf('Firefox') > -1;
-	var is_safari = navigator.userAgent.indexOf('Safari') > -1;
-	var is_opera = navigator.userAgent.toLowerCase().indexOf('op') > -1;
-	if ((is_chrome)&&(is_safari)) {is_safari=false;}
-	if ((is_chrome)&&(is_opera)) {is_chrome=false;}
-	if(is_safari) {
-		Zotero.config.useIndexedDB = false;
-		Zotero.warn('Safari detected; disabling indexedDB');
+	if(typeof window !== 'undefined') {
+		//initialize indexedDB if we're supposed to use it
+		//detect safari until they fix their shit
+		var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
+		var is_explorer = navigator.userAgent.indexOf('MSIE') > -1;
+		var is_firefox = navigator.userAgent.indexOf('Firefox') > -1;
+		var is_safari = navigator.userAgent.indexOf('Safari') > -1;
+		var is_opera = navigator.userAgent.toLowerCase().indexOf('op') > -1;
+		if ((is_chrome)&&(is_safari)) {is_safari=false;}
+		if ((is_chrome)&&(is_opera)) {is_chrome=false;}
+		if(is_safari) {
+			Zotero.config.useIndexedDB = false;
+			Zotero.warn('Safari detected; disabling indexedDB');
+		}
 	}
 
 	if(Zotero.config.useIndexedDB === true){

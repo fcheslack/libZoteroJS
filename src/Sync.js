@@ -1,3 +1,5 @@
+'use strict';
+
 //sync pull:
 //upload changed data
 // get updatedVersions for collections

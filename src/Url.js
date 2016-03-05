@@ -1,3 +1,5 @@
+'use strict';
+
 // Url.js - construct certain urls and links locally that may depend on the
 // current website's routing scheme etc. Not necessarily pointing to zotero.org
 // - href for a particular item's local representation

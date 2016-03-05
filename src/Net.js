@@ -1,3 +1,9 @@
+'use strict';
+
+if(typeof window === 'undefined') {
+	var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+}
+
 var Deferred = require('deferred-js');
 /*
  * Make concurrent and sequential network requests, respecting backoff/retry-after
@@ -12,21 +18,21 @@ var Deferred = require('deferred-js');
  * 
  */
 
-module.exports = function(){
+var Net = function() {
 	this.deferredQueue = [];
 	this.numRunning = 0;
 	this.numConcurrent = 3;
 	this.backingOff = false;
 };
 
-module.exports.prototype.queueDeferred = function(){
+Net.prototype.queueDeferred = function(){
 	var net = this;
 	var d = new Deferred();
 	net.deferredQueue.push(d);
 	return Promise.resolve(d);
 };
 
-module.exports.prototype.queueRequest = function(requestObject){
+Net.prototype.queueRequest = function(requestObject){
 	Z.debug('Zotero.Net.queueRequest', 3);
 	var net = this;
 	var resultPromise;
@@ -59,7 +65,7 @@ module.exports.prototype.queueRequest = function(requestObject){
 	});
 };
 
-module.exports.prototype.runConcurrent = function(requestObject){
+Net.prototype.runConcurrent = function(requestObject){
 	Z.debug('Zotero.Net.runConcurrent', 3);
 	return this.ajaxRequest(requestObject).then(function(response){
 		Z.debug('done with runConcurrent request');
@@ -71,7 +77,7 @@ module.exports.prototype.runConcurrent = function(requestObject){
 //chaining each request onto the .then of the previous one, after
 //adding the previous response to a responses array that will be
 //returned via promise to the caller when all requests are complete
-module.exports.prototype.runSequential = function(requestObjects){
+Net.prototype.runSequential = function(requestObjects){
 	Z.debug('Zotero.Net.runSequential', 3);
 	var net = this;
 	var responses = [];
@@ -97,7 +103,7 @@ module.exports.prototype.runSequential = function(requestObjects){
 
 //when one concurrent call, or a sequential series finishes, subtract it from the running
 //count and run the next if there is something waiting to be run
-module.exports.prototype.individualRequestDone = function(response){
+Net.prototype.individualRequestDone = function(response){
 	Z.debug('Zotero.Net.individualRequestDone', 3);
 	var net = this;
 	
@@ -116,7 +122,7 @@ module.exports.prototype.individualRequestDone = function(response){
 	return response;
 };
 
-module.exports.prototype.queuedRequestDone = function(response){
+Net.prototype.queuedRequestDone = function(response){
 	Z.debug('queuedRequestDone', 3);
 	var net = this;
 	net.numRunning--;
@@ -124,7 +130,7 @@ module.exports.prototype.queuedRequestDone = function(response){
 	return response;
 };
 
-module.exports.prototype.runNext = function(){
+Net.prototype.runNext = function(){
 	Z.debug('Zotero.Net.runNext', 3);
 	var net = this;
 	var nowms = Date.now();
@@ -151,7 +157,7 @@ module.exports.prototype.runNext = function(){
 	}
 };
 
-module.exports.prototype.checkDelay = function(response){
+Net.prototype.checkDelay = function(response){
 	Z.debug('Zotero.Net.checkDelay');
 	Z.debug(response);
 	var net = this;
@@ -175,7 +181,7 @@ module.exports.prototype.checkDelay = function(response){
 	return wait;
 };
 
-module.exports.prototype.ajaxRequest = function(requestConfig){
+Net.prototype.ajaxRequest = function(requestConfig){
 	Z.debug('Zotero.Net.ajaxRequest', 3);
 	var net = this;
 	var defaultConfig = {
@@ -262,7 +268,7 @@ module.exports.prototype.ajaxRequest = function(requestConfig){
 	return ajaxpromise;
 };
 
-module.exports.prototype.ajax = function(config){
+Net.prototype.ajax = function(config){
 	config = Zotero.extend({type:'GET'}, config);
 	var promise = new Promise(function(resolve, reject){
 		var req = new XMLHttpRequest();
@@ -298,3 +304,5 @@ module.exports.prototype.ajax = function(config){
 
 	return promise;
 };
+
+module.exports = new Net();

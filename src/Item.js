@@ -1,3 +1,5 @@
+'use strict';
+
 var striptags = require('striptags');
 var ItemMaps = require('./ItemMaps.js');
 

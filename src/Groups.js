@@ -1,13 +1,15 @@
- module.exports = function(){
-	this.instance = 'Zotero.Groups';
-	this.groupsArray = [];
-};
+'use strict';
+
+module.exports = function(){
+ 	this.instance = 'Zotero.Groups';
+ 	this.groupsArray = [];
+ };
 /*
  module.exports.prototype.fetchGroup = function(groupID, apikey){
 	//TODO: implement
 };
 */
- module.exports.prototype.addGroupsFromJson = function(jsonBody){
+module.exports.prototype.addGroupsFromJson = function(jsonBody){
 	var groups = this;
 	var groupsAdded = [];
 	jsonBody.forEach(function(groupObj){
@@ -19,7 +21,7 @@
 	return groupsAdded;
 };
 
- module.exports.prototype.fetchUserGroups = function(userID, apikey){
+module.exports.prototype.fetchUserGroups = function(userID, apikey){
 	var groups = this;
 	var aparams = {
 		'target':'userGroups',

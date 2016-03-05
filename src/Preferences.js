@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function(store, idString) {
 	this.store = store;
 	this.idString = idString;

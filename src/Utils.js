@@ -1,3 +1,5 @@
+'use strict';
+
 var Utils = {
 	randomString:function(len, chars) {
 		if (!chars) {

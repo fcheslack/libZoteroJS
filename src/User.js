@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function () {this.instance = 'Zotero.User';};
 module.exports.prototype = new Zotero.ApiObject();
 module.exports.prototype.loadObject = function(ob){

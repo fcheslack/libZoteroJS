@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function (groupObj) {
 	var group = this;
 	group.instance = 'Zotero.Group';

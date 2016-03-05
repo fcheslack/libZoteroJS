@@ -1,4 +1,6 @@
- module.exports = function(collectionObj){
+'use strict';
+
+module.exports = function(collectionObj){
 	this.instance = 'Zotero.Collection';
 	this.libraryUrlIdentifier = '';
 	this.itemKeys = false;
@@ -27,14 +29,14 @@
 	}
 };
 
- module.exports.prototype = new Zotero.ApiObject();
- module.exports.prototype.instance = 'Zotero.Collection';
+module.exports.prototype = new Zotero.ApiObject();
+module.exports.prototype.instance = 'Zotero.Collection';
 
- module.exports.prototype.updateObjectKey = function(collectionKey){
+module.exports.prototype.updateObjectKey = function(collectionKey){
 	this.updateCollectionKey(collectionKey);
 };
 
- module.exports.prototype.updateCollectionKey = function(collectionKey){
+module.exports.prototype.updateCollectionKey = function(collectionKey){
 	var collection = this;
 	collection.key = collectionKey;
 	collection.apiObj.key = collectionKey;
@@ -42,7 +44,7 @@
 	return collection;
 };
 
- module.exports.prototype.parseJsonCollection = function(apiObj) {
+module.exports.prototype.parseJsonCollection = function(apiObj) {
 	Z.debug('parseJsonCollection', 4);
 	var collection = this;
 	collection.key = apiObj.key;
@@ -56,7 +58,7 @@
 	collection.initSecondaryData();
 };
 
- module.exports.prototype.initSecondaryData = function() {
+module.exports.prototype.initSecondaryData = function() {
 	var collection = this;
 	
 	if(collection.apiObj.data['parentCollection']){
@@ -76,7 +78,7 @@
 	
 };
 
- module.exports.prototype.nestCollection = function(collectionsObject) {
+module.exports.prototype.nestCollection = function(collectionsObject) {
 	Z.debug('Zotero.Collection.nestCollection', 4);
 	var collection = this;
 	var parentCollectionKey = collection.get('parentCollection');
@@ -92,7 +94,7 @@
 	return false;
 };
 
- module.exports.prototype.addItems = function(itemKeys){
+module.exports.prototype.addItems = function(itemKeys){
 	Z.debug('Zotero.Collection.addItems', 3);
 	var collection = this;
 	var config = {
@@ -108,7 +110,7 @@
 	});
 };
 
- module.exports.prototype.getMemberItemKeys = function(){
+module.exports.prototype.getMemberItemKeys = function(){
 	Z.debug('Zotero.Collection.getMemberItemKeys', 3);
 	var collection = this;
 	var config = {
@@ -129,7 +131,7 @@
 	});
 };
 
- module.exports.prototype.removeItem = function(itemKey){
+module.exports.prototype.removeItem = function(itemKey){
 	var collection = this;
 	var config = {
 		'target':'item',
@@ -144,7 +146,7 @@
 	});
 };
 
- module.exports.prototype.update = function(name, parentKey){
+module.exports.prototype.update = function(name, parentKey){
 	var collection = this;
 	if(!parentKey) parentKey = false;
 	var config = {
@@ -170,13 +172,13 @@
 	});
 };
 
- module.exports.prototype.writeApiObj = function(){
+module.exports.prototype.writeApiObj = function(){
 	var collection = this;
 	var writeObj = Z.extend({}, collection.pristineData, collection.apiObj.data);
 	return writeObj;
 };
 
- module.exports.prototype.remove = function(){
+module.exports.prototype.remove = function(){
 	Z.debug('Zotero.Collection.delete', 3);
 	var collection = this;
 	var owningLibrary = collection.owningLibrary;
@@ -200,20 +202,20 @@
 	});
 };
 
- module.exports.prototype.get = function(key){
+module.exports.prototype.get = function(key){
 	var collection = this;
 	switch(key) {
 		case 'title':
 		case 'name':
-			return collection.apiObj.data.name;
+		return collection.apiObj.data.name;
 		case 'collectionKey':
 		case 'key':
-			return collection.apiObj.key || collection.key;
+		return collection.apiObj.key || collection.key;
 		case 'collectionVersion':
 		case 'version':
-			return collection.apiObj.version;
+		return collection.apiObj.version;
 		case 'parentCollection':
-			return collection.apiObj.data.parentCollection;
+		return collection.apiObj.data.parentCollection;
 	}
 	
 	if(key in collection.apiObj.data){
@@ -259,7 +261,7 @@
 };
 */
 
- module.exports.prototype.set = function(key, val){
+module.exports.prototype.set = function(key, val){
 	var collection = this;
 	if(key in collection.apiObj.data){
 		collection.apiObj.data[key] = val;
@@ -267,23 +269,23 @@
 	switch(key){
 		case 'title':
 		case 'name':
-			collection.apiObj.data['name'] = val;
-			break;
+		collection.apiObj.data['name'] = val;
+		break;
 		case 'collectionKey':
 		case 'key':
-			collection.key = val;
-			collection.apiObj.key = val;
-			collection.apiObj.data.key = val;
-			break;
+		collection.key = val;
+		collection.apiObj.key = val;
+		collection.apiObj.data.key = val;
+		break;
 		case 'parentCollection':
-			collection.apiObj.data['parentCollection'] = val;
-			break;
+		collection.apiObj.data['parentCollection'] = val;
+		break;
 		case 'collectionVersion':
 		case 'version':
-			collection.version = val;
-			collection.apiObj.version = val;
-			collection.apiObj.data.version = val;
-			break;
+		collection.version = val;
+		collection.apiObj.version = val;
+		collection.apiObj.data.version = val;
+		break;
 	}
 	
 	if(collection.hasOwnProperty(key)) {

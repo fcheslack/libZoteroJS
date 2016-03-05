@@ -1,4 +1,10 @@
+'use strict';
+
 var SparkMD5 = require('spark-md5');
+
+if(typeof window === 'undefined') {
+	var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+}
 
 module.exports = {};
 

@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function(){
 	this.instance = 'Zotero.ApiObject';
 	this.version = 0;

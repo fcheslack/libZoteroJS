@@ -1,8 +1,9 @@
+// use strict;
 if(typeof window === 'undefined') {
 	var globalScope = global;
 } else {
 	var globalScope = window;
-	require('es6-promise').polyfill();
+	require('es6-promise').polyfill();	
 }
 
 var Zotero = require('./src/Base.js');

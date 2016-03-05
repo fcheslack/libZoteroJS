@@ -1,4 +1,6 @@
- module.exports = function(){
+'use strict';
+
+module.exports = function(){
 	this.instance = 'Zotero.Searches';
 	this.searchObjects = {};
 	this.syncState = {

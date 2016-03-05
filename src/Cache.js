@@ -1,3 +1,5 @@
+'use strict';
+
 //build a consistent string from an object to use as a cache key
 //put object key/value pairs into array, sort array, and concatenate
 //array with '/'

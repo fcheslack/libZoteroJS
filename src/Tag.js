@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function (tagObj) {
 	this.instance = 'Zotero.Tag';
 	this.color = null;

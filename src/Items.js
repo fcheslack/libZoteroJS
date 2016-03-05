@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function(jsonBody){
 	this.instance = 'Zotero.Items';
 	//represent items as array for ordering purposes

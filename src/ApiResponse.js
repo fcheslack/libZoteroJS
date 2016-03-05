@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function(response) {
 	Z.debug('Zotero.ApiResponse', 3);
 	this.totalResults = 0;

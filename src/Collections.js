@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function(jsonBody){
 	var collections = this;
 	this.instance = 'Zotero.Collections';
