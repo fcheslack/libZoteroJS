@@ -2436,8 +2436,8 @@ process.umask = function() { return 0; };
 },{}],8:[function(require,module,exports){
 'use strict';
 
-if (typeof window === 'undefined') {
-	var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+if (typeof window === 'undefined' && typeof XMLHttpRequest === 'undefined') {
+	var XMLHttpRequest = require('w3c-xmlhttprequest').XMLHttpRequest;
 }
 
 var Ajax = {};
@@ -2691,7 +2691,7 @@ Ajax.downloadBlob = function (url) {
 
 module.exports = Ajax;
 
-},{"xmlhttprequest":2}],9:[function(require,module,exports){
+},{"w3c-xmlhttprequest":2}],9:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -4021,8 +4021,8 @@ module.exports.prototype.addWaiter = function () {};
 
 var SparkMD5 = require('spark-md5');
 
-if (typeof window === 'undefined') {
-	var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+if (typeof window === 'undefined' && typeof XMLHttpRequest === 'undefined') {
+	var XMLHttpRequest = require('w3c-xmlhttprequest').XMLHttpRequest;
 }
 
 module.exports = {};
@@ -4100,7 +4100,7 @@ module.exports.uploadFile = function (uploadInfo, fileInfo) {
 	//from JS)
 };
 
-},{"spark-md5":6,"xmlhttprequest":2}],18:[function(require,module,exports){
+},{"spark-md5":6,"w3c-xmlhttprequest":2}],18:[function(require,module,exports){
 'use strict';
 
 module.exports = function (groupObj) {
@@ -4226,10 +4226,6 @@ module.exports.prototype.fetchUserGroups = function (userID, apikey) {
 
 },{}],20:[function(require,module,exports){
 'use strict';
-
-if (typeof window === 'undefined') {
-	var indexedDB = require('fake-indexeddb');
-}
 
 module.exports = {};
 
@@ -4833,7 +4829,7 @@ module.exports.Library.prototype.intersectAll = function (arrs) {
 	return result;
 };
 
-},{"fake-indexeddb":2}],21:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 'use strict';
 
 var striptags = require('striptags');
@@ -6385,7 +6381,10 @@ var Library = function Library(type, libraryID, libraryUrlIdentifier, apiKey) {
 	//initialize preferences object
 	library.preferences = new Zotero.Preferences(Zotero.store, library.libraryString);
 
-	if (typeof window !== 'undefined') {
+	if (typeof window === 'undefined') {
+		Zotero.config.useIndexedDB = false;
+		Zotero.warn('Node detected; disabling indexedDB');
+	} else {
 		//initialize indexedDB if we're supposed to use it
 		//detect safari until they fix their shit
 		var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
@@ -7642,8 +7641,8 @@ module.exports.creatorMap = ItemMaps.creatorMap;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-if (typeof window === 'undefined') {
-	var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+if (typeof window === 'undefined' && typeof XMLHttpRequest === 'undefined') {
+	var XMLHttpRequest = require('w3c-xmlhttprequest').XMLHttpRequest;
 }
 
 var Deferred = require('deferred-js');
@@ -7860,6 +7859,13 @@ Net.prototype.ajaxRequest = function (requestConfig) {
 	var ajaxpromise = new Promise(function (resolve, reject) {
 		net.ajax(config).then(function (request) {
 			var data;
+
+			if (request.responseType === '') {
+				if (request.getResponseHeader('content-type') === 'application/json') {
+					request.responseType = 'json';
+				}
+			}
+
 			switch (request.responseType) {
 				case 'json':
 				case '':
@@ -7940,7 +7946,7 @@ Net.prototype.ajax = function (config) {
 
 module.exports = new Net();
 
-},{"deferred-js":3,"xmlhttprequest":2}],27:[function(require,module,exports){
+},{"deferred-js":3,"w3c-xmlhttprequest":2}],27:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
