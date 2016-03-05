@@ -5,9 +5,14 @@
 // use strict;
 if (typeof window === 'undefined') {
 	var globalScope = global;
+	if (!globalScope.XMLHttpRequest) {
+		globalScope.XMLHttpRequest = require('w3c-xmlhttprequest').XMLHttpRequest;
+	}
 } else {
 	var globalScope = window;
-	require('es6-promise').polyfill();
+	if (typeof Promise === 'undefined') {
+		require('es6-promise').polyfill();
+	}
 }
 
 var Zotero = require('./src/Base.js');
@@ -42,384 +47,2694 @@ module.exports = Zotero;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./src/Ajax.js":8,"./src/ApiObject.js":9,"./src/ApiResponse.js":10,"./src/Base.js":11,"./src/Cache.js":12,"./src/Collection.js":13,"./src/Collections.js":14,"./src/Container":15,"./src/Deleted.js":16,"./src/File.js":17,"./src/Group.js":18,"./src/Groups.js":19,"./src/Idb.js":20,"./src/Item.js":21,"./src/Items.js":23,"./src/Library.js":24,"./src/Localizations.js":25,"./src/Net.js":26,"./src/Preferences.js":27,"./src/Search.js":28,"./src/Searches.js":29,"./src/Tag.js":30,"./src/Tags.js":31,"./src/Url.js":32,"./src/User.js":33,"./src/Utils.js":34,"es6-promise":4}],2:[function(require,module,exports){
+},{"./src/Ajax.js":97,"./src/ApiObject.js":98,"./src/ApiResponse.js":99,"./src/Base.js":100,"./src/Cache.js":101,"./src/Collection.js":102,"./src/Collections.js":103,"./src/Container":104,"./src/Deleted.js":105,"./src/File.js":106,"./src/Group.js":107,"./src/Groups.js":108,"./src/Idb.js":109,"./src/Item.js":110,"./src/Items.js":112,"./src/Library.js":113,"./src/Localizations.js":114,"./src/Net.js":115,"./src/Preferences.js":116,"./src/Search.js":117,"./src/Searches.js":118,"./src/Tag.js":119,"./src/Tags.js":120,"./src/Url.js":121,"./src/User.js":122,"./src/Utils.js":123,"es6-promise":83,"w3c-xmlhttprequest":2}],2:[function(require,module,exports){
 
 },{}],3:[function(require,module,exports){
-// deferred/deferred
-module.exports = (function(window) {
-    var deferId = 0,
-        defNum = 0,
-        isArray = function(arr) {
-		  return Object.prototype.toString.call(arr) === '[object Array]';
-	   };    
-    
-	function foreach(arr, handler) {
-		if (isArray(arr)) {
-			for (var i = 0; i < arr.length; i++) {
-				handler(arr[i]);
-			}
-		}
-		else
-			handler(arr);
+'use strict';
+
+var assign        = require('es5-ext/object/assign')
+  , normalizeOpts = require('es5-ext/object/normalize-options')
+  , isCallable    = require('es5-ext/object/is-callable')
+  , contains      = require('es5-ext/string/#/contains')
+
+  , d;
+
+d = module.exports = function (dscr, value/*, options*/) {
+	var c, e, w, options, desc;
+	if ((arguments.length < 2) || (typeof dscr !== 'string')) {
+		options = value;
+		value = dscr;
+		dscr = null;
+	} else {
+		options = arguments[2];
 	}
-    
-	function D(fn) {
-		var status = 'pending',
-			doneFuncs = [],
-			failFuncs = [],
-			progressFuncs = [],
-            lastNotify = null,
-			resultArgs = null,
-            thisId = deferId++,
+	if (dscr == null) {
+		c = w = true;
+		e = false;
+	} else {
+		c = contains.call(dscr, 'c');
+		e = contains.call(dscr, 'e');
+		w = contains.call(dscr, 'w');
+	}
 
-		promise = {
-			done: function() {
-				for (var i = 0; i < arguments.length; i++) {
-					// skip any undefined or null arguments
-					if (!arguments[i]) {
-						continue;
-					}
+	desc = { value: value, configurable: c, enumerable: e, writable: w };
+	return !options ? desc : assign(normalizeOpts(options), desc);
+};
 
-					if (isArray(arguments[i])) {
-						var arr = arguments[i];
-						for (var j = 0; j < arr.length; j++) {
-							// immediately call the function if the deferred has been resolved
-							if (status === 'resolved') {
-								arr[j].apply(this === deferred ? promise : this, resultArgs);
-							}
+d.gs = function (dscr, get, set/*, options*/) {
+	var c, e, options, desc;
+	if (typeof dscr !== 'string') {
+		options = set;
+		set = get;
+		get = dscr;
+		dscr = null;
+	} else {
+		options = arguments[3];
+	}
+	if (get == null) {
+		get = undefined;
+	} else if (!isCallable(get)) {
+		options = get;
+		get = set = undefined;
+	} else if (set == null) {
+		set = undefined;
+	} else if (!isCallable(set)) {
+		options = set;
+		set = undefined;
+	}
+	if (dscr == null) {
+		c = true;
+		e = false;
+	} else {
+		c = contains.call(dscr, 'c');
+		e = contains.call(dscr, 'e');
+	}
 
-							doneFuncs.push(arr[j].bind(this === deferred ? promise : this));
-						}
-					}
-					else {
-						// immediately call the function if the deferred has been resolved
-						if (status === 'resolved') {
-							arguments[i].apply(this === deferred ? promise : this, resultArgs);
-						}
+	desc = { get: get, set: set, configurable: c, enumerable: e };
+	return !options ? desc : assign(normalizeOpts(options), desc);
+};
 
-						doneFuncs.push(arguments[i].bind(this === deferred ? promise : this));
-					}
+},{"es5-ext/object/assign":60,"es5-ext/object/is-callable":65,"es5-ext/object/normalize-options":71,"es5-ext/string/#/contains":75}],4:[function(require,module,exports){
+'use strict';
+
+var callable   = require('es5-ext/object/valid-callable')
+  , d          = require('d')
+  , isCallable = require('es5-ext/object/is-callable')
+  , ee         = require('event-emitter')
+  , isPromise  = require('./is-promise')
+
+  , create = Object.create, defineProperty = Object.defineProperty
+  , deferred, resolve, reject;
+
+module.exports = exports = function (name, unres, onres, res) {
+	name = String(name);
+	(callable(res) && ((onres == null) || callable(onres)) && callable(unres));
+	defineProperty(exports._unresolved, name, d(unres));
+	exports._onresolve[name] = onres;
+	defineProperty(exports._resolved, name, d(res));
+	exports._names.push(name);
+};
+
+exports._names = ['done', 'then', 'valueOf'];
+
+exports._unresolved = ee(create(Function.prototype, {
+	then: d(function (win, fail) {
+		var def;
+		if (!this.pending) this.pending = [];
+		def = deferred();
+		this.pending.push('then', [win, fail, def.resolve, def.reject]);
+		return def.promise;
+	}),
+	done: d(function (win, fail) {
+		((win == null) || callable(win));
+		((fail == null) || callable(fail));
+		if (!this.pending) this.pending = [];
+		this.pending.push('done', arguments);
+	}),
+	resolved: d(false),
+	returnsPromise: d(true),
+	valueOf: d(function () { return this; })
+}));
+
+exports._onresolve = {
+	then: function (win, fail, resolve, reject) {
+		var value, cb = this.failed ? fail : win;
+		if (cb == null) {
+			if (this.failed) reject(this.value);
+			else resolve(this.value);
+			return;
+		}
+		if (isCallable(cb)) {
+			if (isPromise(cb)) {
+				if (cb.resolved) {
+					if (cb.failed) reject(cb.value);
+					else resolve(cb.value);
+					return;
 				}
-				
-				return this;
-			},
+				cb.done(resolve, reject);
+				return;
+			}
+			try { value = cb(this.value); } catch (e) {
+				reject(e);
+				return;
+			}
+			resolve(value);
+			return;
+		}
+		resolve(cb);
+	},
+	done: function (win, fail) {
+		if (this.failed) {
+			if (fail) {
+				fail(this.value);
+				return;
+			}
+			throw this.value;
+		}
+		if (win) win(this.value);
+	}
+};
 
-			fail: function() {
-				for (var i = 0; i < arguments.length; i++) {
-					// skip any undefined or null arguments
-					if (!arguments[i]) {
-						continue;
-					}
+exports._resolved = ee(create(Function.prototype, {
+	then: d(function (win, fail) {
+		var value, cb = this.failed ? fail : win;
+		if (cb == null) return this;
+		if (isCallable(cb)) {
+			if (isPromise(cb)) return cb;
+			try { value = cb(this.value); } catch (e) { return reject(e); }
+			return resolve(value);
+		}
+		return resolve(cb);
+	}),
+	done: d(function (win, fail) {
+		((win == null) || callable(win));
+		((fail == null) || callable(fail));
+		if (this.failed) {
+			if (fail) {
+				fail(this.value);
+				return;
+			}
+			throw this.value;
+		}
+		if (win) win(this.value);
+	}),
+	resolved: d(true),
+	returnsPromise: d(true),
+	valueOf: d(function () { return this.value; })
+}));
 
-					if (isArray(arguments[i])) {
-						var arr = arguments[i];
-						for (var j = 0; j < arr.length; j++) {
-							// immediately call the function if the deferred has been resolved
-							if (status === 'rejected') {
-								arr[j].apply(this === deferred ? promise : this, resultArgs);
-							}
+deferred = require('./deferred');
+resolve = deferred.resolve;
+reject = deferred.reject;
+deferred.extend = exports;
 
-							failFuncs.push(arr[j].bind(this === deferred ? promise : this));
-						}
-					}
-					else {
-						// immediately call the function if the deferred has been resolved
-						if (status === 'rejected') {
-							arguments[i].apply(this === deferred ? promise : this, resultArgs);
-						}
+},{"./deferred":6,"./is-promise":33,"d":3,"es5-ext/object/is-callable":65,"es5-ext/object/valid-callable":72,"event-emitter":89}],5:[function(require,module,exports){
+// Assimilate eventual foreign promise
 
-						failFuncs.push(arguments[i].bind(this === deferred ? promise : this));
-					}
-				}
-				
-				return this;
-			},
+'use strict';
 
-			always: function() {
-//				return promise.done.apply(this, arguments).fail.apply(this, arguments);
-                promise.done.apply(promise, arguments).fail.apply(promise, arguments);
-                
-                return this;
-			},
+var isObject  = require('es5-ext/object/is-object')
+  , isPromise = require('./is-promise')
+  , deferred  = require('./deferred')
+  , nextTick  = require('next-tick')
 
-			progress: function() {
-				for (var i = 0; i < arguments.length; i++) {
-					// skip any undefined or null arguments
-					if (!arguments[i]) {
-						continue;
-					}
+  , getPrototypeOf = Object.getPrototypeOf;
 
-					if (isArray(arguments[i])) {
-						var arr = arguments[i];
-						for (var j = 0; j < arr.length; j++) {
-							// immediately call the function if the deferred has been resolved/rejected
-							if (status === 'pending') {
-				                progressFuncs.push(arr[j]);
-							}
-                            if (lastNotify !== null){
-                               arr[j].apply(deferred, lastNotify);
-                            }                            
-						}
-					}
-					else {
-						// immediately call the function if the deferred has been resolved/rejected
-						if (status === 'pending') {    
-                            progressFuncs.push(arguments[i]);
-							}
-                            if (lastNotify !== null){
-					           arguments[i].apply(deferred, lastNotify);
-                            }                                                
-					   }
-				}
+module.exports = function self(value) {
+	var then, done, def, resolve, reject;
+	if (!value) return value;
+	try {
+		then = value.then;
+	} catch (e) {
+		return value;
+	}
+	if (typeof then !== 'function') return value;
+	if (isPromise(value)) return value;
+	if (!isObject(value)) return value;
+	if (!getPrototypeOf(value)) return value;
+	try {
+		done = value.done;
+	} catch (ignore) {}
+	def = deferred();
+	resolve = function (value) { def.resolve(self(value)); };
+	reject = function (value) { def.reject(value); };
+	if (typeof done === 'function') {
+		try {
+			done.call(value, resolve, reject);
+		} catch (e) {
+			return def.reject(e);
+		}
+		return def.promise;
+	}
+	try {
+		then.call(value, function (value) { nextTick(function () {
+			resolve(value);
+		}); }, function (value) { nextTick(function () {
+			reject(value);
+		}); });
+	} catch (e) {
+		return def.reject(e);
+	}
+	return def.promise;
+};
 
-//                if (status !== 'pending' && lastNotify !== null) {
-//                    deferred.notifyWith.apply(deferred, lastNotify);
-//                }
-                
-				return this;
-			},
-
-//			then: function() {
-//				// fail callbacks
-//				if (arguments.length > 1 && arguments[1]) {
-//					this.fail(arguments[1]);
-//				}
+},{"./deferred":6,"./is-promise":33,"es5-ext/object/is-object":66,"next-tick":91}],6:[function(require,module,exports){
+// Returns function that returns deferred or promise object.
 //
-//				// done callbacks
-//				if (arguments.length > 0 && arguments[0]) {
-//					this.done(arguments[0]);
-//				}
-//
-//				// notify callbacks
-//				if (arguments.length > 2 && arguments[2]) {
-//					this.progress(arguments[2]);
-//				}
-//                
-//                return this;
-//			},
+// 1. If invoked without arguments then deferred object is returned
+//    Deferred object consist of promise (unresolved) function and resolve
+//    function through which we resolve promise
+// 2. If invoked with one argument then promise is returned which resolved value
+//    is given argument. Argument may be any value (even undefined),
+//    if it's promise then same promise is returned
+// 3. If invoked with more than one arguments then promise that resolves with
+//    array of all resolved arguments is returned.
 
-			promise: function(obj) {
-				if (obj == null) {
-					return promise;
+'use strict';
+
+var isError    = require('es5-ext/error/is-error')
+  , noop       = require('es5-ext/function/noop')
+  , isPromise  = require('./is-promise')
+
+  , every = Array.prototype.every, push = Array.prototype.push
+
+  , Deferred, createDeferred, count = 0, timeout, extendShim, ext
+  , protoSupported = Boolean(isPromise.__proto__)
+  , resolve, assimilate;
+
+extendShim = function (promise) {
+	ext._names.forEach(function (name) {
+		promise[name] = function () {
+			return promise.__proto__[name].apply(promise, arguments);
+		};
+	});
+	promise.returnsPromise = true;
+	promise.resolved = promise.__proto__.resolved;
+};
+
+resolve = function (value, failed) {
+	var promise = function (win, fail) { return promise.then(win, fail); };
+	promise.value = value;
+	promise.failed = failed;
+	promise.__proto__ = ext._resolved;
+	if (!protoSupported) { extendShim(promise); }
+	if (createDeferred._profile) createDeferred._profile(true);
+	return promise;
+};
+
+Deferred = function () {
+	var promise = function (win, fail) { return promise.then(win, fail); };
+	if (!count) timeout = setTimeout(noop, 1e9);
+	++count;
+	if (createDeferred._monitor) promise.monitor = createDeferred._monitor();
+	promise.__proto__ = ext._unresolved;
+	if (!protoSupported) extendShim(promise);
+	(createDeferred._profile && createDeferred._profile());
+	this.promise = promise;
+	this.resolve = this.resolve.bind(this);
+	this.reject = this.reject.bind(this);
+};
+
+Deferred.prototype = {
+	resolved: false,
+	_settle: function (value) {
+		var i, name, data, deps, dPromise, nuDeps;
+		this.promise.value = value;
+		this.promise.__proto__ = ext._resolved;
+		if (!protoSupported) this.promise.resolved = true;
+		deps = this.promise.dependencies;
+		delete this.promise.dependencies;
+		while (deps) {
+			for (i = 0; (dPromise = deps[i]); ++i) {
+				dPromise.value = value;
+				dPromise.failed = this.failed;
+				dPromise.__proto__ = ext._resolved;
+				if (!protoSupported) dPromise.resolved = true;
+				delete dPromise.pending;
+				if (dPromise.dependencies) {
+					if (!nuDeps) nuDeps = dPromise.dependencies;
+					else push.apply(nuDeps, dPromise.dependencies);
+					delete dPromise.dependencies;
+				}
+			}
+			deps = nuDeps;
+			nuDeps = null;
+		}
+		if ((data = this.promise.pending)) {
+			for (i = 0; (name = data[i]); ++i) {
+				ext._onresolve[name].apply(this.promise, data[++i]);
+			}
+			delete this.promise.pending;
+		}
+		return this.promise;
+	},
+	resolve: function (value) {
+		if (this.resolved) return this.promise;
+		this.resolved = true;
+		if (!--count) clearTimeout(timeout);
+		if (this.promise.monitor) clearTimeout(this.promise.monitor);
+		value = assimilate(value);
+		if (isPromise(value)) {
+			if (!value.resolved) {
+				if (!value.dependencies) {
+					value.dependencies = [];
+				}
+				value.dependencies.push(this.promise);
+				if (this.promise.pending) {
+					if (value.pending) {
+						push.apply(value.pending, this.promise.pending);
+						this.promise.pending = value.pending;
+						if (this.promise.dependencies) {
+							this.promise.dependencies.forEach(function self(dPromise) {
+								dPromise.pending = value.pending;
+								if (dPromise.dependencies) {
+									dPromise.dependencies.forEach(self);
+								}
+							});
+						}
+					} else {
+						value.pending = this.promise.pending;
+					}
+				} else if (value.pending) {
+					this.promise.pending = value.pending;
 				} else {
-					for (var i in promise) {
-						obj[i] = promise[i];
-					}
-					return obj;
+					this.promise.pending = value.pending = [];
 				}
-			},
+				return this.promise;
+			}
+			this.promise.failed = value.failed;
+			value = value.value;
+		}
+		return this._settle(value);
+	},
+	reject: function (error) {
+		if (this.resolved) return this.promise;
+		this.resolved = true;
+		if (!--count) clearTimeout(timeout);
+		if (this.promise.monitor) clearTimeout(this.promise.monitor);
+		this.promise.failed = true;
+		return this._settle(error);
+	}
+};
 
-			state: function() {
-				return status;
-			},
-
-			debug: function() {
-                console.log('id', thisId);
-				console.log('[debug]', doneFuncs, failFuncs, status);
-			},
-
-			isRejected: function() {
-				return status === 'rejected';
-			},
-
-			isResolved: function() {
-				return status === 'resolved';
-			},
-
-			pipe: function(done, fail, progress) {
-				var newDef = D(function(def) {
-                    var that = this;
-					foreach(done || null, function(func) {
-						// filter function
-						if (typeof func === 'function') {
-							deferred.done(function() {
-								var returnval = func.apply(this, arguments);
-								// if a new deferred/promise is returned, its state is passed to the current deferred/promise
-								if (returnval && typeof returnval.promise === 'function') {
-									returnval.promise().done(def.resolve).fail(def.reject).progress(def.notify);
-								}
-								else {	// if new return val is passed, it is passed to the piped done
-									def.resolveWith(this === promise ? def.promise() : this, [returnval]);
-								}
-							}.bind(that));
-						} else {
-							deferred.done(def.resolve);
-						}
-					});
-
-					foreach(fail || null, function(func) {
-						if (typeof func === 'function') {
-							deferred.fail(function() {
-								var returnval = func.apply(this, arguments);
-								
-								if (returnval && typeof returnval.promise === 'function') {
-									returnval.promise().done(def.resolve).fail(def.reject).progress(def.notify);
-								} else {
-									def.rejectWith(this === promise ? def.promise() : this, [returnval]);
-								}
-							}.bind(that));
-						}
-						else {
-							deferred.fail(def.reject);
-						}
-					});
-                    
-					foreach(progress || null, function(func) {
-						if (typeof func === 'function') {
-							deferred.progress(function() {
-								var returnval = func.apply(this, arguments);
-								
-								if (returnval && typeof returnval.promise === 'function') {
-									returnval.promise().done(def.resolve).fail(def.reject).progress(def.notify);
-								} else {
-									def.notifyWith(this === promise ? def.promise() : this, [returnval]);
-								}
-							}.bind(that));
-						}
-						else {
-							deferred.progress(def.notify);
-						}
-					});
-				});
-                
-                return newDef.promise();
-			},
-            
-            getContext: function() {
-                return context;
-            },
-            
-            getId: function() {
-                return thisId;
-            }
-		},
-
-		deferred = {
-			resolveWith: function(ctx) {
-				if (status === 'pending') {
-					status = 'resolved';
-					var args = resultArgs = (arguments.length > 1) ? arguments[1] : [];
-					for (var i = 0; i < doneFuncs.length; i++) {
-						doneFuncs[i].apply(ctx, args);
-					}
+module.exports = createDeferred = function (value) {
+	var l = arguments.length, d, waiting, initialized, result;
+	if (!l) return new Deferred();
+	if (l > 1) {
+		d = new Deferred();
+		waiting = 0;
+		result = new Array(l);
+		every.call(arguments, function (value, index) {
+			value = assimilate(value);
+			if (!isPromise(value)) {
+				result[index] = value;
+				return true;
+			}
+			if (value.resolved) {
+				if (value.failed) {
+					d.reject(value.value);
+					return false;
 				}
-                
-                // context = ctx;                
-                
-				return this;
-			},
+				result[index] = value.value;
+				return true;
+			}
+			++waiting;
+			value.done(function (value) {
+				result[index] = value;
+				if (!--waiting && initialized) d.resolve(result);
+			}, d.reject);
+			return true;
+		});
+		initialized = true;
+		if (!waiting) d.resolve(result);
+		return d.promise;
+	}
+	value = assimilate(value);
+	if (isPromise(value)) return value;
+	return resolve(value, isError(value));
+};
 
-			rejectWith: function(ctx) {
-				if (status === 'pending') {
-					status = 'rejected';
-					var args = resultArgs = (arguments.length > 1) ? arguments[1] : [];
-					for (var i = 0; i < failFuncs.length; i++) {
-						failFuncs[i].apply(ctx, args);
-					}
-				}
-                
-                // context = ctx;                
-                
-				return this;
-			},
+createDeferred.Deferred = Deferred;
+createDeferred.reject = function (value) { return resolve(value, true); };
+createDeferred.resolve = function (value) {
+	value = assimilate(value);
+	if (isPromise(value)) return value;
+	return resolve(value, false);
+};
+ext = require('./_ext');
+assimilate = require('./assimilate');
 
-			notifyWith: function(ctx) {
-				var args;
-                
-                if (status === 'pending') {                
-                    args = lastNotify = (arguments.length > 1) ? arguments[1] : [];
-                    for (var i = 0; i < progressFuncs.length; i++) {    
-                        progressFuncs[i].apply(ctx, args);
-                    }
-                    
-                    // context = ctx;
-                }
-                
-				return this;
-			},
+},{"./_ext":4,"./assimilate":5,"./is-promise":33,"es5-ext/error/is-error":45,"es5-ext/function/noop":51}],7:[function(require,module,exports){
+// Dynamic queue handler
+// Allows to create a promise queue, where new promises can be added to queue until last promise in
+// a queue resolves. Queue promise resolves with `undefined` value, when last promises resolves.
 
-			resolve: function() {
-				var ret = deferred.resolveWith(this === deferred ? promise : this, arguments);
-                return this !== deferred ? this : ret;
-			},
+'use strict';
 
-			reject: function() {
-				var ret = deferred.rejectWith(this === deferred ? promise : this, arguments);
-                return this !== deferred ? this : ret;                    
-			},
+var aFrom          = require('es5-ext/array/from')
+  , ensureIterable = require('es5-ext/iterable/validate-object')
+  , assign         = require('es5-ext/object/assign')
+  , deferred       = require('./deferred')
+  , isPromise      = require('./is-promise')
+  , assimilate     = require('./assimilate')
 
-			notify: function() {
-				var ret = deferred.notifyWith(this === deferred ? promise : this, arguments);
-                return this !== deferred ? this : ret;                    
+  , DynamicQueue;
+
+module.exports = DynamicQueue = function (list) {
+	if (!(this instanceof DynamicQueue)) return new DynamicQueue(list);
+	list = aFrom(ensureIterable(list));
+
+	assign(this, deferred());
+	list.every(this.add, this);
+	if (!this.waiting) {
+		this.resolve();
+		return;
+	}
+	this.initialized = true;
+};
+
+DynamicQueue.prototype = {
+	waiting: 0,
+	initialized: false,
+	add: function (value) {
+		if (this.promise.resolved) throw new Error("Queue was already resolved");
+		++this.waiting;
+		value = assimilate(value);
+		if (isPromise(value)) {
+			if (!value.resolved) {
+				value.done(this._processValue.bind(this), this.reject);
+				return true;
+			}
+			if (value.failed) {
+				this.reject(value.value);
+				return false;
 			}
 		}
+		return this._processValue();
+	},
+	_processValue: function () {
+		if (this.promise.resolved) return;
+		if (!--this.waiting && this.initialized) this.resolve();
+		return true;
+	}
+};
 
-        promise.then = promise.pipe;
-                    
-		var obj = promise.promise(deferred);
-        
-        context = obj;
-        
-        obj.id = deferred.id = thisId;
+},{"./assimilate":5,"./deferred":6,"./is-promise":33,"es5-ext/array/from":38,"es5-ext/iterable/validate-object":53,"es5-ext/object/assign":60}],8:[function(require,module,exports){
+'use strict';
 
-		if (fn) {
-			fn.apply(obj, [obj]);
+var arrayOf    = require('es5-ext/array/of')
+  , deferred   = require('../deferred')
+  , isPromise  = require('../is-promise')
+  , assimilate = require('../assimilate')
+
+  , push = Array.prototype.push, slice = Array.prototype.slice;
+
+module.exports = function (args, length) {
+	var i, l, arg;
+	if ((length != null) && (args.length !== length)) {
+		args = slice.call(args, 0, length);
+		if (args.length < length) {
+			push.apply(args, new Array(length - args.length));
 		}
-        
-		return obj;
+	}
+	for (i = 0, l = args.length; i < l; ++i) {
+		arg = assimilate(args[i]);
+		if (isPromise(arg)) {
+			if (!arg.resolved) {
+				if (l > 1) return deferred.apply(null, args);
+				return arg(arrayOf);
+			}
+			if (arg.failed) return arg;
+			args[i] = arg.value;
+		}
+	}
+	return args;
+};
+
+},{"../assimilate":5,"../deferred":6,"../is-promise":33,"es5-ext/array/of":41}],9:[function(require,module,exports){
+// Promise aware Array's every
+
+'use strict';
+
+module.exports = require('../../lib/some-every')(false);
+
+},{"../../lib/some-every":34}],10:[function(require,module,exports){
+// Promise aware Array's find
+// Additionally differs from some that it returns *first in order* item that matches constraint
+
+'use strict';
+
+var assign     = require('es5-ext/object/assign')
+  , value      = require('es5-ext/object/valid-value')
+  , callable   = require('es5-ext/object/valid-callable')
+  , deferred   = require('../../deferred')
+  , isPromise  = require('../../is-promise')
+  , assimilate = require('../../assimilate')
+
+  , call = Function.prototype.call
+  , resolve = deferred.resolve
+  , Find;
+
+Find = function (list, cb, context) {
+	this.list = list;
+	this.cb = cb;
+	this.context = context;
+	this.length = list.length >>> 0;
+
+	while (this.current < this.length) {
+		if (this.current in list) {
+			assign(this, deferred());
+			this.processCb = this.processCb.bind(this);
+			this.process();
+			return this.promise;
+		}
+		++this.current;
+	}
+	return resolve(undefined);
+};
+
+Find.prototype = {
+	current: 0,
+	process: function () {
+		var value = assimilate(this.list[this.current]);
+		if (isPromise(value)) {
+			if (!value.resolved) {
+				value.done(this.processCb, this.reject);
+				return;
+			}
+			if (value.failed) {
+				this.reject(value.value);
+				return;
+			}
+			value = value.value;
+		}
+		this.processCb(value);
+	},
+	processCb: function (listValue) {
+		var value;
+		if (this.cb) {
+			try {
+				value = call.call(this.cb, this.context, listValue, this.current, this.list);
+			} catch (e) {
+				this.reject(e);
+				return;
+			}
+			value = assimilate(value);
+			if (isPromise(value)) {
+				if (!value.resolved) {
+					value.done(this.processValue.bind(this, listValue), this.reject);
+					return;
+				}
+				if (value.failed) {
+					this.reject(value.value);
+					return;
+				}
+				value = value.value;
+			}
+		} else {
+			value = listValue;
+		}
+		this.processValue(listValue, value);
+	},
+	processValue: function (listValue, value) {
+		if (value) {
+			this.resolve(listValue);
+			return;
+		}
+		while (++this.current < this.length) {
+			if (this.current in this.list) {
+				this.process();
+				return;
+			}
+		}
+		this.resolve(undefined);
+	}
+};
+
+module.exports = function (cb/*, thisArg*/) {
+	value(this);
+	((cb == null) || callable(cb));
+
+	return new Find(this, cb, arguments[1]);
+};
+
+},{"../../assimilate":5,"../../deferred":6,"../../is-promise":33,"es5-ext/object/assign":60,"es5-ext/object/valid-callable":72,"es5-ext/object/valid-value":74}],11:[function(require,module,exports){
+// Promise aware Array's map
+
+'use strict';
+
+var assign     = require('es5-ext/object/assign')
+  , value      = require('es5-ext/object/valid-value')
+  , callable   = require('es5-ext/object/valid-callable')
+  , deferred   = require('../../deferred')
+  , isPromise  = require('../../is-promise')
+  , assimilate = require('../../assimilate')
+
+  , every = Array.prototype.every
+  , call = Function.prototype.call
+
+  , DMap;
+
+DMap = function (list, cb, context) {
+	this.list = list;
+	this.cb = cb;
+	this.context = context;
+	this.result = new Array(list.length >>> 0);
+
+	assign(this, deferred());
+	every.call(list, this.process, this);
+	if (!this.waiting) return this.resolve(this.result);
+	this.initialized = true;
+
+	return this.promise;
+};
+
+DMap.prototype = {
+	waiting: 0,
+	initialized: false,
+	process: function (value, index) {
+		++this.waiting;
+		value = assimilate(value);
+		if (isPromise(value)) {
+			if (!value.resolved) {
+				value.done(this.processCb.bind(this, index), this.reject);
+				return true;
+			}
+			if (value.failed) {
+				this.reject(value.value);
+				return false;
+			}
+			value = value.value;
+		}
+		return this.processCb(index, value);
+	},
+	processCb: function (index, value) {
+		if (this.promise.resolved) return false;
+		if (this.cb) {
+			try {
+				value = call.call(this.cb, this.context, value, index, this.list);
+			} catch (e) {
+				this.reject(e);
+				return false;
+			}
+			value = assimilate(value);
+			if (isPromise(value)) {
+				if (!value.resolved) {
+					value.done(this.processValue.bind(this, index), this.reject);
+					return true;
+				}
+				if (value.failed) {
+					this.reject(value.value);
+					return false;
+				}
+				value = value.value;
+			}
+		}
+		this.processValue(index, value);
+		return true;
+	},
+	processValue: function (index, value) {
+		if (this.promise.resolved) return;
+		this.result[index] = value;
+		if (!--this.waiting && this.initialized) this.resolve(this.result);
+	}
+};
+
+module.exports = function (cb/*, thisArg*/) {
+	value(this);
+	((cb == null) || callable(cb));
+
+	return new DMap(this, cb, arguments[1]);
+};
+
+},{"../../assimilate":5,"../../deferred":6,"../../is-promise":33,"es5-ext/object/assign":60,"es5-ext/object/valid-callable":72,"es5-ext/object/valid-value":74}],12:[function(require,module,exports){
+// Promise aware Array's reduce
+
+'use strict';
+
+var assign     = require('es5-ext/object/assign')
+  , value      = require('es5-ext/object/valid-value')
+  , callable   = require('es5-ext/object/valid-callable')
+  , deferred   = require('../../deferred')
+  , isPromise  = require('../../is-promise')
+  , assimilate = require('../../assimilate')
+
+  , call = Function.prototype.call
+  , hasOwnProperty = Object.prototype.hasOwnProperty
+  , resolve = deferred.resolve
+  , Reduce;
+
+Reduce = function (list, cb, initial, initialized) {
+	this.list = list;
+	this.cb = cb;
+	this.initialized = initialized;
+	this.length = list.length >>> 0;
+
+	initial = assimilate(initial);
+	if (isPromise(initial)) {
+		if (!initial.resolved) {
+			assign(this, deferred());
+			initial.done(function (initial) {
+				this.value = initial;
+				this.init();
+			}.bind(this), this.reject);
+			return this.promise;
+		}
+		this.value = initial.value;
+		if (initial.failed) return initial;
+	} else {
+		this.value = initial;
+	}
+
+	return this.init();
+};
+
+Reduce.prototype = {
+	current: 0,
+	state: false,
+	init: function () {
+		while (this.current < this.length) {
+			if (hasOwnProperty.call(this.list, this.current)) break;
+			++this.current;
+		}
+		if (this.current === this.length) {
+			if (!this.initialized) {
+				throw new Error("Reduce of empty array with no initial value");
+			}
+			return this.resolve ? this.resolve(this.value) : resolve(this.value);
+		}
+		if (!this.promise) assign(this, deferred());
+		this.processCb = this.processCb.bind(this);
+		this.processValue = this.processValue.bind(this);
+		this.continue();
+		return this.promise;
+	},
+	continue: function () {
+		var result;
+		while (!this.state) {
+			result = this.process();
+			if (this.state !== 'cb') break;
+			result = this.processCb(result);
+			if (this.state !== 'value') break;
+			this.processValue(result);
+		}
+	},
+	process: function () {
+		var value = assimilate(this.list[this.current]);
+		if (isPromise(value)) {
+			if (!value.resolved) {
+				value.done(function (result) {
+					result = this.processCb(result);
+					if (this.state !== 'value') return;
+					this.processValue(result);
+					if (!this.state) this.continue();
+				}.bind(this), this.reject);
+				return;
+			}
+			if (value.failed) {
+				this.reject(value.value);
+				return;
+			}
+			value = value.value;
+		}
+		this.state = 'cb';
+		return value;
+	},
+	processCb: function (value) {
+		if (!this.initialized) {
+			this.initialized = true;
+			this.state = 'value';
+			return value;
+		}
+		if (this.cb) {
+			try {
+				value = call.call(this.cb, undefined, this.value, value, this.current,
+					this.list);
+			} catch (e) {
+				this.reject(e);
+				return;
+			}
+			value = assimilate(value);
+			if (isPromise(value)) {
+				if (!value.resolved) {
+					value.done(function (result) {
+						this.state = 'value';
+						this.processValue(result);
+						if (!this.state) this.continue();
+					}.bind(this), this.reject);
+					return;
+				}
+				if (value.failed) {
+					this.reject(value.value);
+					return;
+				}
+				value = value.value;
+			}
+		}
+		this.state = 'value';
+		return value;
+	},
+	processValue: function (value) {
+		this.value = value;
+		while (++this.current < this.length) {
+			if (hasOwnProperty.call(this.list, this.current)) {
+				this.state = false;
+				return;
+			}
+		}
+		this.resolve(this.value);
+	}
+};
+
+module.exports = function (cb/*, initial*/) {
+	value(this);
+	((cb == null) || callable(cb));
+
+	return new Reduce(this, cb, arguments[1], arguments.length > 1);
+};
+
+},{"../../assimilate":5,"../../deferred":6,"../../is-promise":33,"es5-ext/object/assign":60,"es5-ext/object/valid-callable":72,"es5-ext/object/valid-value":74}],13:[function(require,module,exports){
+// Promise aware Array's some
+
+'use strict';
+
+module.exports = require('../../lib/some-every')(true);
+
+},{"../../lib/some-every":34}],14:[function(require,module,exports){
+// Call asynchronous function
+
+'use strict';
+
+var toArray          = require('es5-ext/array/to-array')
+  , callable         = require('es5-ext/object/valid-callable')
+  , deferred         = require('../../deferred')
+  , isPromise        = require('../../is-promise')
+  , processArguments = require('../_process-arguments')
+
+  , slice = Array.prototype.slice, apply = Function.prototype.apply
+
+  , applyFn, callAsync;
+
+applyFn = function (fn, args, def) {
+	args = toArray(args);
+	apply.call(fn,  this, args.concat(function (error, result) {
+		if (error == null) {
+			def.resolve((arguments.length > 2) ? slice.call(arguments, 1) : result);
+		} else {
+			def.reject(error);
+		}
+	}));
+};
+
+callAsync = function (fn, length, context, args) {
+	var def;
+	args = processArguments(args, length);
+	if (isPromise(args)) {
+		if (args.failed) return args;
+		def = deferred();
+		args.done(function (args) {
+			if (fn.returnsPromise) return apply.call(fn, context, args);
+			try {
+				applyFn.call(context, fn, args, def);
+			} catch (e) { def.reject(e); }
+		}, def.reject);
+		return def.promise;
+	}
+	if (fn.returnsPromise) return apply.call(fn, context, args);
+	def = deferred();
+	try {
+		applyFn.call(context, fn, args, def);
+	} catch (e) {
+		def.reject(e);
+		throw e;
+	}
+	return def.promise;
+};
+
+module.exports = exports = function (context/*, …args*/) {
+	return callAsync(callable(this), null, context, slice.call(arguments, 1));
+};
+
+Object.defineProperty(exports, '_base', { configurable: true,
+	enumerable: false, writable: true, value: callAsync });
+
+},{"../../deferred":6,"../../is-promise":33,"../_process-arguments":8,"es5-ext/array/to-array":44,"es5-ext/object/valid-callable":72}],15:[function(require,module,exports){
+// Delay function execution, return promise for delayed function result
+
+'use strict';
+
+var callable      = require('es5-ext/object/valid-callable')
+  , nextTick      = require('next-tick')
+  , ensureTimeout = require('timers-ext/valid-timeout')
+  , deferred      = require('../../deferred')
+
+  , apply    = Function.prototype.apply
+  , delayed;
+
+delayed = function (fn, args, resolve, reject) {
+	var value;
+	try {
+		value = apply.call(fn, this, args);
+	} catch (e) {
+		reject(e);
+		return;
+	}
+	resolve(value);
+};
+
+module.exports = function (timeout) {
+	var fn, result, delay;
+	fn = callable(this);
+	if (timeout == null) {
+		delay = nextTick;
+	} else {
+		timeout = ensureTimeout(timeout);
+		delay = setTimeout;
+	}
+	result = function () {
+		var def = deferred();
+		delay(delayed.bind(this, fn, arguments, def.resolve, def.reject), timeout);
+		return def.promise;
+	};
+	result.returnsPromise = true;
+	return result;
+};
+
+},{"../../deferred":6,"es5-ext/object/valid-callable":72,"next-tick":91,"timers-ext/valid-timeout":96}],16:[function(require,module,exports){
+// Limit number of concurrent function executions (to cLimit number).
+// Limited calls are queued. Optionaly maximum queue length can also be
+// controlled with qLimit value, any calls that would reach over that limit
+// would be discarded (its promise would resolve with "Too many calls" error)
+
+'use strict';
+
+var toPosInt   = require('es5-ext/number/to-pos-integer')
+  , callable   = require('es5-ext/object/valid-callable')
+  , eeUnify    = require('event-emitter/unify')
+  , deferred   = require('../../deferred')
+  , isPromise  = require('../../is-promise')
+  , assimilate = require('../../assimilate')
+
+  , resolve = deferred.resolve, reject = deferred.reject
+  , apply = Function.prototype.apply, max = Math.max
+  , gateReject;
+
+require('../promise/finally');
+
+gateReject = function () {
+	var e = new Error("Too many calls");
+	e.type = 'deferred-gate-rejected';
+	return reject(e);
+};
+
+module.exports = function (cLimit, qLimit) {
+	var fn, count, decrement, unload, queue, run, result;
+	fn = callable(this);
+	cLimit = max(toPosInt(cLimit), 1);
+	qLimit = ((qLimit == null) || isNaN(qLimit)) ? Infinity : toPosInt(qLimit);
+	count = 0;
+	queue = [];
+
+	run = function (thisArg, args, def) {
+		var r;
+		try {
+			r = apply.call(fn, thisArg, args);
+		} catch (e) {
+			if (!def) return reject(e);
+			def.reject(e);
+			unload();
+			return;
+		}
+		r = assimilate(r);
+		if (isPromise(r)) {
+			if (def) eeUnify(def.promise, r);
+			if (!r.resolved) {
+				++count;
+				if (def) def.resolve(r);
+				return r.finally(decrement);
+			}
+			r = r.value;
+		}
+		if (!def) return resolve(r);
+		def.resolve(r);
+		unload();
 	};
 
-	D.when = function() {
-		if (arguments.length < 2) {
-			var obj = arguments.length ? arguments[0] : undefined;
-			if (obj && (typeof obj.isResolved === 'function' && typeof obj.isRejected === 'function')) {
-				return obj.promise();			
+	decrement = function () {
+		--count;
+		unload();
+	};
+
+	unload = function () {
+		var data;
+		if ((data = queue.shift())) run.apply(null, data);
+	};
+
+	result = function () {
+		var def;
+		if (count >= cLimit) {
+			if (queue.length < qLimit) {
+				def = deferred();
+				queue.push([this, arguments, def]);
+				return def.promise;
 			}
-			else {
-				return D().resolveWith(window, [obj]).promise();
+			return gateReject();
+		}
+		return run(this, arguments);
+	};
+	result.returnsPromise = true;
+	return result;
+};
+
+},{"../../assimilate":5,"../../deferred":6,"../../is-promise":33,"../promise/finally":23,"es5-ext/number/to-pos-integer":58,"es5-ext/object/valid-callable":72,"event-emitter/unify":90}],17:[function(require,module,exports){
+// Promisify synchronous function
+
+'use strict';
+
+var callable         = require('es5-ext/object/valid-callable')
+  , deferred         = require('../../deferred')
+  , isPromise        = require('../../is-promise')
+  , processArguments = require('../_process-arguments')
+
+  , apply = Function.prototype.apply
+
+  , applyFn;
+
+applyFn = function (fn, args, resolve, reject) {
+	var value;
+	try {
+		value = apply.call(fn, this, args);
+	} catch (e) {
+		reject(e);
+		return;
+	}
+	resolve(value);
+};
+
+module.exports = function (length) {
+	var fn, result;
+	fn = callable(this);
+	if (fn.returnsPromise) return fn;
+	if (length != null) length = length >>> 0;
+	result = function () {
+		var args, def;
+		args = processArguments(arguments, length);
+
+		if (isPromise(args)) {
+			if (args.failed) return args;
+			def = deferred();
+			args.done(function (args) {
+				applyFn.call(this, fn, args, def.resolve, def.reject);
+			}.bind(this), def.reject);
+		} else {
+			def = deferred();
+			applyFn.call(this, fn, args, def.resolve, def.reject);
+		}
+
+		return def.promise;
+	};
+	result.returnsPromise = true;
+	return result;
+};
+
+},{"../../deferred":6,"../../is-promise":33,"../_process-arguments":8,"es5-ext/object/valid-callable":72}],18:[function(require,module,exports){
+// Promisify asynchronous function
+
+'use strict';
+
+var callable  = require('es5-ext/object/valid-callable')
+  , callAsync = require('./call-async')._base;
+
+module.exports = function (length) {
+	var fn, result;
+	fn = callable(this);
+	if (fn.returnsPromise) return fn;
+	if (length != null) length = length >>> 0;
+	result = function () { return callAsync(fn, length, this, arguments); };
+	result.returnsPromise = true;
+	return result;
+};
+
+},{"./call-async":14,"es5-ext/object/valid-callable":72}],19:[function(require,module,exports){
+// Used by promise extensions that are based on array extensions.
+
+'use strict';
+
+var callable = require('es5-ext/object/valid-callable')
+  , deferred = require('../../deferred')
+
+  , reject = deferred.reject;
+
+module.exports = function (name, ext) {
+	deferred.extend(name, function (cb) {
+		var def;
+		((cb == null) || callable(cb));
+		if (!this.pending) this.pending = [];
+		def = deferred();
+		this.pending.push(name, [arguments, def.resolve, def.reject]);
+		return def.promise;
+	}, function (args, resolve, reject) {
+		var result;
+		if (this.failed) {
+			reject(this.value);
+			return;
+		}
+		try {
+			result = ext.apply(this.value, args);
+		} catch (e) {
+			reject(e);
+			return;
+		}
+		resolve(result);
+	}, function (cb) {
+		((cb == null) || callable(cb));
+		if (this.failed) return this;
+		try {
+			return ext.apply(this.value, arguments);
+		} catch (e) {
+			return reject(e);
+		}
+	});
+};
+
+},{"../../deferred":6,"es5-ext/object/valid-callable":72}],20:[function(require,module,exports){
+// 'aside' - Promise extension
+//
+// promise.aside(win, fail)
+//
+// Works in analogous way as promise function itself (or `then`)
+// but instead of adding promise to promise chain it returns context promise and
+// lets callback carry on with other processing logic
+
+'use strict';
+
+var callable = require('es5-ext/object/valid-callable')
+  , deferred = require('../../deferred');
+
+deferred.extend('aside', function (win, fail) {
+	((win == null) || callable(win));
+	((fail == null) || callable(fail));
+	if (win || fail) {
+		if (!this.pending) {
+			this.pending = [];
+		}
+		this.pending.push('aside', arguments);
+	}
+	return this;
+}, function (win, fail) {
+	var cb = this.failed ? fail : win;
+	if (cb) {
+		cb(this.value);
+	}
+}, function (win, fail) {
+	var cb;
+	((win == null) || callable(win));
+	((fail == null) || callable(fail));
+	cb = this.failed ? fail : win;
+	if (cb) {
+		cb(this.value);
+	}
+	return this;
+});
+
+},{"../../deferred":6,"es5-ext/object/valid-callable":72}],21:[function(require,module,exports){
+// 'catch' - Promise extension
+//
+// promise.catch(cb)
+//
+// Same as `then` but accepts only onFail callback
+
+'use strict';
+
+var isCallable = require('es5-ext/object/is-callable')
+  , validValue = require('es5-ext/object/valid-value')
+  , deferred   = require('../../deferred')
+  , isPromise  = require('../../is-promise')
+
+  , resolve = deferred.resolve, reject = deferred.reject;
+
+deferred.extend('catch', function (cb) {
+	var def;
+	validValue(cb);
+	if (!this.pending) this.pending = [];
+	def = deferred();
+	this.pending.push('catch', [cb, def.resolve, def.reject]);
+	return def.promise;
+}, function (cb, resolve, reject) {
+	var value;
+	if (!this.failed) {
+		resolve(this.value);
+		return;
+	}
+	if (isCallable(cb)) {
+		if (isPromise(cb)) {
+			if (cb.resolved) {
+				if (cb.failed) reject(cb.value);
+				else resolve(cb.value);
+			} else {
+				cb.done(resolve, reject);
+			}
+			return;
+		}
+		try { value = cb(this.value); } catch (e) {
+			reject(e);
+			return;
+		}
+		resolve(value);
+		return;
+	}
+	resolve(cb);
+}, function (cb) {
+	var value;
+	validValue(cb);
+	if (!this.failed) return this;
+	if (isCallable(cb)) {
+		if (isPromise(cb)) return cb;
+		try { value = cb(this.value); } catch (e) {
+			return reject(e);
+		}
+		return resolve(value);
+	}
+	return resolve(cb);
+});
+
+},{"../../deferred":6,"../../is-promise":33,"es5-ext/object/is-callable":65,"es5-ext/object/valid-value":74}],22:[function(require,module,exports){
+// 'cb' - Promise extension
+//
+// promise.cb(cb)
+//
+// Handles asynchronous function style callback (which is run in next event loop
+// the earliest). Returns self promise. Callback is optional.
+//
+// Useful when we want to configure typical asynchronous function which logic is
+// internally configured with promises.
+//
+// Extension can be used as follows:
+//
+// var foo = function (arg1, arg2, cb) {
+//     var d = deferred();
+//     // ... implementation
+//     return d.promise.cb(cb);
+// };
+//
+// `cb` extension returns promise and handles eventual callback (optional)
+
+'use strict';
+
+var callable   = require('es5-ext/object/valid-callable')
+  , nextTick   = require('next-tick')
+  , deferred   = require('../../deferred');
+
+deferred.extend('cb', function (cb) {
+	if (cb == null) return this;
+	callable(cb);
+	nextTick(function () {
+		if (this.resolved) {
+			if (this.failed) cb(this.value);
+			else cb(null, this.value);
+		} else {
+			if (!this.pending) this.pending = [];
+			this.pending.push('cb', [cb]);
+		}
+	}.bind(this));
+	return this;
+}, function (cb) {
+	if (this.failed) cb(this.value);
+	else cb(null, this.value);
+}, function (cb) {
+	if (cb == null) return this;
+	callable(cb);
+	nextTick(function () {
+		if (this.failed) cb(this.value);
+		else cb(null, this.value);
+	}.bind(this));
+	return this;
+});
+
+},{"../../deferred":6,"es5-ext/object/valid-callable":72,"next-tick":91}],23:[function(require,module,exports){
+// 'finally' - Promise extension
+//
+// promise.finally(cb)
+//
+// Called on promise resolution returns same promise, doesn't pass any values to
+// provided callback
+
+'use strict';
+
+var callable = require('es5-ext/object/valid-callable')
+  , deferred = require('../../deferred');
+
+deferred.extend('finally', function (cb) {
+	callable(cb);
+	if (!this.pending) this.pending = [];
+	this.pending.push('finally', arguments);
+	return this;
+}, function (cb) { cb(); }, function (cb) {
+	callable(cb)();
+	return this;
+});
+
+},{"../../deferred":6,"es5-ext/object/valid-callable":72}],24:[function(require,module,exports){
+// 'get' - Promise extension
+//
+// promise.get(name)
+//
+// Resolves with property of resolved object
+
+'use strict';
+
+var value    = require('es5-ext/object/valid-value')
+  , deferred = require('../../deferred')
+
+  , reduce = Array.prototype.reduce
+  , resolve = deferred.resolve, reject = deferred.reject;
+
+deferred.extend('get', function (/*…name*/) {
+	var def;
+	if (!this.pending) this.pending = [];
+	def = deferred();
+	this.pending.push('get', [arguments, def.resolve, def.reject]);
+	return def.promise;
+
+}, function (args, resolve, reject) {
+	var result;
+	if (this.failed) reject(this.value);
+	try {
+		result = reduce.call(args, function (obj, key) {
+			return value(obj)[String(key)];
+		}, this.value);
+	} catch (e) {
+		reject(e);
+		return;
+	}
+	resolve(result);
+}, function (/*…name*/) {
+	var result;
+	if (this.failed) return this;
+	try {
+		result = reduce.call(arguments, function (obj, key) {
+			return value(obj)[String(key)];
+		}, this.value);
+	} catch (e) {
+		return reject(e);
+	}
+	return resolve(result);
+});
+
+},{"../../deferred":6,"es5-ext/object/valid-value":74}],25:[function(require,module,exports){
+// 'invokeAsync' - Promise extension
+//
+// promise.invokeAsync(name[, arg0[, arg1[, ...]]])
+//
+// On resolved object calls asynchronous method that takes callback
+// (Node.js style).
+// Do not pass callback, it's handled by internal implementation.
+// 'name' can be method name or method itself.
+
+'use strict';
+
+var toArray          = require('es5-ext/array/to-array')
+  , isCallable       = require('es5-ext/object/is-callable')
+  , deferred         = require('../../deferred')
+  , isPromise        = require('../../is-promise')
+  , processArguments = require('../_process-arguments')
+
+  , slice = Array.prototype.slice, apply = Function.prototype.apply
+  , reject = deferred.reject
+
+  , applyFn;
+
+applyFn = function (fn, args, resolve, reject) {
+	var result;
+	if (fn.returnsPromise) {
+		try {
+			result = apply.call(fn, this, args);
+		} catch (e) {
+			reject(e);
+			return;
+		}
+		return resolve(result);
+	}
+	args = toArray(args).concat(function (error, result) {
+		if (error == null) {
+			resolve((arguments.length > 2) ? slice.call(arguments, 1) : result);
+		} else {
+			reject(error);
+		}
+	});
+	try {
+		apply.call(fn, this, args);
+	} catch (e2) {
+		reject(e2);
+	}
+};
+
+deferred.extend('invokeAsync', function (method/*, …args*/) {
+	var def;
+	if (!this.pending) this.pending = [];
+	def = deferred();
+	this.pending.push('invokeAsync', [arguments, def.resolve, def.reject]);
+	return def.promise;
+}, function (args, resolve, reject) {
+	var fn;
+	if (this.failed) {
+		reject(this.value);
+		return;
+	}
+
+	if (this.value == null) {
+		reject(new TypeError("Cannot use null or undefined"));
+		return;
+	}
+
+	fn = args[0];
+	if (!isCallable(fn)) {
+		fn = String(fn);
+		if (!isCallable(this.value[fn])) {
+			reject(new TypeError(fn + " is not a function"));
+			return;
+		}
+		fn = this.value[fn];
+	}
+
+	args = processArguments(slice.call(args, 1));
+	if (isPromise(args)) {
+		if (args.failed) {
+			reject(args.value);
+			return;
+		}
+		args.done(function (args) {
+			applyFn.call(this, fn, args, resolve, reject);
+		}.bind(this.value), reject);
+	} else {
+		applyFn.call(this.value, fn, args, resolve, reject);
+	}
+}, function (method/*, …args*/) {
+	var args, def;
+	if (this.failed) return this;
+
+	if (this.value == null) {
+		return reject(new TypeError("Cannot use null or undefined"));
+	}
+
+	if (!isCallable(method)) {
+		method = String(method);
+		if (!isCallable(this.value[method])) {
+			return reject(new TypeError(method + " is not a function"));
+		}
+		method = this.value[method];
+	}
+
+	args = processArguments(slice.call(arguments, 1));
+	if (isPromise(args)) {
+		if (args.failed) return args;
+		def = deferred();
+		args.done(function (args) {
+			applyFn.call(this, method, args, def.resolve, def.reject);
+		}.bind(this.value), def.reject);
+	} else if (!method.returnsPromise) {
+		def = deferred();
+		applyFn.call(this.value, method, args, def.resolve, def.reject);
+	} else {
+		return applyFn.call(this.value, method, args, deferred, reject);
+	}
+	return def.promise;
+});
+
+},{"../../deferred":6,"../../is-promise":33,"../_process-arguments":8,"es5-ext/array/to-array":44,"es5-ext/object/is-callable":65}],26:[function(require,module,exports){
+// 'invoke' - Promise extension
+//
+// promise.invoke(name[, arg0[, arg1[, ...]]])
+//
+// On resolved object calls method that returns immediately.
+// 'name' can be method name or method itself.
+
+'use strict';
+
+var isCallable       = require('es5-ext/object/is-callable')
+  , deferred         = require('../../deferred')
+  , isPromise        = require('../../is-promise')
+  , processArguments = require('../_process-arguments')
+
+  , slice = Array.prototype.slice, apply = Function.prototype.apply
+  , reject = deferred.reject
+  , applyFn;
+
+applyFn = function (fn, args, resolve, reject) {
+	var value;
+	try {
+		value = apply.call(fn, this, args);
+	} catch (e) {
+		return reject(e);
+	}
+	return resolve(value);
+};
+
+deferred.extend('invoke', function (method/*, …args*/) {
+	var def;
+	if (!this.pending) this.pending = [];
+	def = deferred();
+	this.pending.push('invoke', [arguments, def.resolve, def.reject]);
+	return def.promise;
+}, function (args, resolve, reject) {
+	var fn;
+	if (this.failed) {
+		reject(this.value);
+		return;
+	}
+
+	if (this.value == null) {
+		reject(new TypeError("Cannot use null or undefined"));
+		return;
+	}
+
+	fn = args[0];
+	if (!isCallable(fn)) {
+		fn = String(fn);
+		if (!isCallable(this.value[fn])) {
+			reject(new TypeError(fn + " is not a function"));
+			return;
+		}
+		fn = this.value[fn];
+	}
+
+	args = processArguments(slice.call(args, 1));
+	if (isPromise(args)) {
+		if (args.failed) {
+			reject(args.value);
+			return;
+		}
+		args.done(function (args) {
+			applyFn.call(this, fn, args, resolve, reject);
+		}.bind(this.value), reject);
+	} else {
+		applyFn.call(this.value, fn, args, resolve, reject);
+	}
+}, function (method/*, …args*/) {
+	var args, def;
+	if (this.failed) return this;
+
+	if (this.value == null) {
+		return reject(new TypeError("Cannot use null or undefined"));
+	}
+
+	if (!isCallable(method)) {
+		method = String(method);
+		if (!isCallable(this.value[method])) {
+			return reject(new TypeError(method + " is not a function"));
+		}
+		method = this.value[method];
+	}
+
+	args = processArguments(slice.call(arguments, 1));
+	if (isPromise(args)) {
+		if (args.failed) return args;
+		def = deferred();
+		args.done(function (args) {
+			applyFn.call(this, method, args, def.resolve, def.reject);
+		}.bind(this.value), def.reject);
+		return def.promise;
+	}
+	return applyFn.call(this.value, method, args, deferred, reject);
+});
+
+},{"../../deferred":6,"../../is-promise":33,"../_process-arguments":8,"es5-ext/object/is-callable":65}],27:[function(require,module,exports){
+// 'map' - Promise extension
+//
+// promise.map(fn[, thisArg[, concurrentLimit]])
+//
+// Promise aware map for array-like results
+
+'use strict';
+
+require('./_array')('map', require('../array/map'));
+
+},{"../array/map":11,"./_array":19}],28:[function(require,module,exports){
+// 'reduce' - Promise extension
+//
+// promise.reduce(fn[, initial])
+//
+// Promise aware reduce for array-like results
+
+'use strict';
+
+require('./_array')('reduce', require('../array/reduce'));
+
+},{"../array/reduce":12,"./_array":19}],29:[function(require,module,exports){
+// 'some' - Promise extension
+//
+// promise.some(fn[, thisArg])
+//
+// Promise aware some for array-like results
+
+'use strict';
+
+require('./_array')('some', require('../array/some'));
+
+},{"../array/some":13,"./_array":19}],30:[function(require,module,exports){
+// 'spread' - Promise extensions
+//
+// promise.spread(onsuccess, onerror)
+//
+// Matches eventual list result onto function arguments,
+// otherwise works same as 'then' (promise function itself)
+
+'use strict';
+
+var spread     = require('es5-ext/function/#/spread')
+  , callable   = require('es5-ext/object/valid-callable')
+  , isCallable = require('es5-ext/object/is-callable')
+  , isPromise  = require('../../is-promise')
+  , deferred   = require('../../deferred')
+
+  , resolve = deferred.resolve, reject = deferred.reject;
+
+deferred.extend('spread', function (win, fail) {
+	var def;
+	((win == null) || callable(win));
+	if (!win && (fail == null)) return this;
+	if (!this.pending) this.pending = [];
+	def = deferred();
+	this.pending.push('spread', [win, fail, def.resolve, def.reject]);
+	return def.promise;
+}, function (win, fail, resolve, reject) {
+	var cb, value;
+	cb = this.failed ? fail : win;
+	if (cb == null) {
+		if (this.failed) reject(this.value);
+		else resolve(this.value);
+	}
+	if (isCallable(cb)) {
+		if (isPromise(cb)) {
+			if (cb.resolved) {
+				if (cb.failed) reject(cb.value);
+				else resolve(cb.value);
+			} else {
+				cb.done(resolve, reject);
+			}
+			return;
+		}
+		if (!this.failed) cb = spread.call(cb);
+		try {
+			value = cb(this.value);
+		} catch (e) {
+			reject(e);
+			return;
+		}
+		resolve(value);
+	} else {
+		resolve(cb);
+	}
+}, function (win, fail) {
+	var cb, value;
+	cb = this.failed ? fail : win;
+	if (cb == null) return this;
+	if (isCallable(cb)) {
+		if (isPromise(cb)) return cb;
+		if (!this.failed) cb = spread.call(cb);
+		try {
+			value = cb(this.value);
+		} catch (e) {
+			return reject(e);
+		}
+		return resolve(value);
+	}
+	return resolve(cb);
+});
+
+},{"../../deferred":6,"../../is-promise":33,"es5-ext/function/#/spread":47,"es5-ext/object/is-callable":65,"es5-ext/object/valid-callable":72}],31:[function(require,module,exports){
+// This construct deferred with all needed goodies that are being exported
+// when we import 'deferred' by main name.
+// All available promise extensions are also initialized.
+
+'use strict';
+
+var call   = Function.prototype.call
+  , assign = require('es5-ext/object/assign');
+
+module.exports = assign(require('./deferred'), {
+	invokeAsync:   require('./invoke-async'),
+	isPromise:     require('./is-promise'),
+	dynamicQueue:  require('./dynamic-queue'),
+	validPromise:  require('./valid-promise'),
+	callAsync:     call.bind(require('./ext/function/call-async')),
+	delay:         call.bind(require('./ext/function/delay')),
+	gate:          call.bind(require('./ext/function/gate')),
+	monitor:       require('./monitor'),
+	promisify:     call.bind(require('./ext/function/promisify')),
+	promisifySync: call.bind(require('./ext/function/promisify-sync')),
+	every:         call.bind(require('./ext/array/every')),
+	find:          call.bind(require('./ext/array/find')),
+	map:           call.bind(require('./ext/array/map')),
+	reduce:        call.bind(require('./ext/array/reduce')),
+	some:          call.bind(require('./ext/array/some'))
+}, require('./profiler'));
+
+require('./ext/promise/aside');
+require('./ext/promise/catch');
+require('./ext/promise/cb');
+require('./ext/promise/finally');
+require('./ext/promise/get');
+require('./ext/promise/invoke');
+require('./ext/promise/invoke-async');
+require('./ext/promise/map');
+require('./ext/promise/spread');
+require('./ext/promise/some');
+require('./ext/promise/reduce');
+
+},{"./deferred":6,"./dynamic-queue":7,"./ext/array/every":9,"./ext/array/find":10,"./ext/array/map":11,"./ext/array/reduce":12,"./ext/array/some":13,"./ext/function/call-async":14,"./ext/function/delay":15,"./ext/function/gate":16,"./ext/function/promisify":18,"./ext/function/promisify-sync":17,"./ext/promise/aside":20,"./ext/promise/catch":21,"./ext/promise/cb":22,"./ext/promise/finally":23,"./ext/promise/get":24,"./ext/promise/invoke":26,"./ext/promise/invoke-async":25,"./ext/promise/map":27,"./ext/promise/reduce":28,"./ext/promise/some":29,"./ext/promise/spread":30,"./invoke-async":32,"./is-promise":33,"./monitor":35,"./profiler":36,"./valid-promise":37,"es5-ext/object/assign":60}],32:[function(require,module,exports){
+// Invoke asynchronous function
+
+'use strict';
+
+var isCallable = require('es5-ext/object/is-callable')
+  , callable   = require('es5-ext/object/valid-callable')
+  , value      = require('es5-ext/object/valid-value')
+  , callAsync  = require('./ext/function/call-async')._base
+
+  , slice = Array.prototype.slice;
+
+module.exports = function (obj, fn/*, …args*/) {
+	value(obj);
+	if (!isCallable(fn)) fn = callable(obj[fn]);
+	return callAsync(fn, null, obj, slice.call(arguments, 2));
+};
+
+},{"./ext/function/call-async":14,"es5-ext/object/is-callable":65,"es5-ext/object/valid-callable":72,"es5-ext/object/valid-value":74}],33:[function(require,module,exports){
+// Whether given object is a promise
+
+'use strict';
+
+module.exports = function (o) {
+	return (typeof o === 'function') && (typeof o.then === 'function') && (o.end !== o.done);
+};
+
+},{}],34:[function(require,module,exports){
+// Promise aware Array's some
+
+'use strict';
+
+var assign     = require('es5-ext/object/assign')
+  , value      = require('es5-ext/object/valid-value')
+  , callable   = require('es5-ext/object/valid-callable')
+  , deferred   = require('../deferred')
+  , isPromise  = require('../is-promise')
+  , assimilate = require('../assimilate')
+
+  , call = Function.prototype.call
+  , resolve = deferred.resolve;
+
+module.exports = function (resolvent) {
+	var Iterator = function (list, cb, context) {
+		this.list = list;
+		this.cb = cb;
+		this.context = context;
+		this.length = list.length >>> 0;
+
+		while (this.current < this.length) {
+			if (this.current in list) {
+				assign(this, deferred());
+				this.processCb = this.processCb.bind(this);
+				this.processValue = this.processValue.bind(this);
+				this.continue();
+				return this.promise;
+			}
+			++this.current;
+		}
+		return resolve(!resolvent);
+	};
+
+	Iterator.prototype = {
+		current: 0,
+		state: false,
+		continue: function () {
+			var result;
+			while (!this.state) {
+				result = this.process();
+				if (this.state !== 'cb') break;
+				result = this.processCb(result);
+				if (this.state !== 'value') break;
+				this.processValue(result);
+			}
+		},
+		process: function () {
+			var value = assimilate(this.list[this.current]);
+			if (isPromise(value)) {
+				if (!value.resolved) {
+					value.done(function (result) {
+						result = this.processCb(result);
+						if (this.state !== 'value') return;
+						this.processValue(result);
+						if (!this.state) this.continue();
+					}.bind(this), this.reject);
+					return;
+				}
+				if (value.failed) {
+					this.reject(value.value);
+					return;
+				}
+				value = value.value;
+			}
+			this.state = 'cb';
+			return value;
+		},
+		processCb: function (value) {
+			if (this.cb) {
+				try {
+					value = call.call(this.cb, this.context, value, this.current, this.list);
+				} catch (e) {
+					this.reject(e);
+					return;
+				}
+				value = assimilate(value);
+				if (isPromise(value)) {
+					if (!value.resolved) {
+						value.done(function (result) {
+							this.state = 'value';
+							this.processValue(result);
+							if (!this.state) this.continue();
+						}.bind(this), this.reject);
+						return;
+					}
+					if (value.failed) {
+						this.reject(value.value);
+						return;
+					}
+					value = value.value;
+				}
+			}
+			this.state = 'value';
+			return value;
+		},
+		processValue: function (value) {
+			if (Boolean(value) === resolvent) {
+				this.resolve(resolvent);
+				return;
+			}
+			while (++this.current < this.length) {
+				if (this.current in this.list) {
+					this.state = false;
+					return;
+				}
+			}
+			this.resolve(!resolvent);
+		}
+	};
+
+	return function (cb/*, thisArg*/) {
+		value(this);
+		((cb == null) || callable(cb));
+
+		return new Iterator(this, cb, arguments[1]);
+	};
+};
+
+},{"../assimilate":5,"../deferred":6,"../is-promise":33,"es5-ext/object/assign":60,"es5-ext/object/valid-callable":72,"es5-ext/object/valid-value":74}],35:[function(require,module,exports){
+// Run if you want to monitor unresolved promises (in properly working
+// application there should be no promises that are never resolved)
+
+'use strict';
+
+var max        = Math.max
+  , callable   = require('es5-ext/object/valid-callable')
+  , isCallable = require('es5-ext/object/is-callable')
+  , toPosInt   = require('es5-ext/number/to-pos-integer')
+  , deferred   = require('./deferred');
+
+exports = module.exports = function (timeout, cb) {
+	if (timeout === false) {
+		// Cancel monitor
+		delete deferred._monitor;
+		delete exports.timeout;
+		delete exports.callback;
+		return;
+	}
+	exports.timeout = timeout = max(toPosInt(timeout) || 5000, 50);
+	if (cb == null) {
+		if ((typeof console !== 'undefined') && console &&
+				isCallable(console.error)) {
+			cb = function (e) {
+				console.error(((e.stack && e.stack.toString()) ||
+					"Unresolved promise: no stack available"));
+			};
+		}
+	} else {
+		callable(cb);
+	}
+	exports.callback = cb;
+
+	deferred._monitor = function () {
+		var e = new Error("Unresolved promise");
+		return setTimeout(function () {
+			if (cb) cb(e);
+		}, timeout);
+	};
+};
+
+},{"./deferred":6,"es5-ext/number/to-pos-integer":58,"es5-ext/object/is-callable":65,"es5-ext/object/valid-callable":72}],36:[function(require,module,exports){
+'use strict';
+
+var partial  = require('es5-ext/function/#/partial')
+  , forEach  = require('es5-ext/object/for-each')
+  , pad      = require('es5-ext/string/#/pad')
+  , deferred = require('./deferred')
+
+  , resolved, rStats, unresolved, uStats, profile;
+
+exports.profile = function () {
+	resolved = 0;
+	rStats = {};
+	unresolved = 0;
+	uStats = {};
+	deferred._profile = profile;
+};
+
+profile = function (isResolved) {
+	var stack, data;
+
+	if (isResolved) {
+		++resolved;
+		data = rStats;
+	} else {
+		++unresolved;
+		data = uStats;
+	}
+
+	stack = (new Error()).stack;
+	if (!stack.split('\n').slice(3).some(function (line) {
+			if ((line.search(/[\/\\]deferred[\/\\]/) === -1) &&
+					(line.search(/[\/\\]es5-ext[\/\\]/) === -1) &&
+					(line.indexOf(' (native)') === -1)) {
+				line = line.replace(/\n/g, "\\n").trim();
+				if (!data[line]) {
+					data[line] = { count: 0 };
+				}
+				++data[line].count;
+				return true;
+			}
+		})) {
+		if (!data.unknown) {
+			data.unknown = { count: 0, stack: stack };
+		}
+		++data.unknown.count;
+	}
+};
+
+exports.profileEnd = function () {
+	var total, lpad, log = '';
+
+	if (!deferred._profile) {
+		throw new Error("Deferred profiler was not initialized");
+	}
+	delete deferred._profile;
+
+	log += "------------------------------------------------------------\n";
+	log += "Deferred usage statistics:\n\n";
+
+	total = String(resolved + unresolved);
+	lpad = partial.call(pad, " ", total.length);
+	log += total + " Total promises initialized\n";
+	log += lpad.call(unresolved) + " Initialized as Unresolved\n";
+	log += lpad.call(resolved) + " Initialized as Resolved\n";
+
+	if (unresolved) {
+		log += "\nUnresolved promises were initialized at:\n";
+		forEach(uStats, function (data, name) {
+			log += lpad.call(data.count) + " " + name + "\n";
+		}, null, function (a, b) {
+			return this[b].count - this[a].count;
+		});
+	}
+
+	if (resolved) {
+		log += "\nResolved promises were initialized at:\n";
+		forEach(rStats, function (data, name) {
+			log += lpad.call(data.count) + " " + name + "\n";
+		}, null, function (a, b) {
+			return this[b].count - this[a].count;
+		});
+	}
+	log += "------------------------------------------------------------\n";
+
+	return {
+		log: log,
+		resolved: { count: resolved, stats: rStats },
+		unresolved: { count: unresolved, stats: uStats }
+	};
+};
+
+},{"./deferred":6,"es5-ext/function/#/partial":46,"es5-ext/object/for-each":63,"es5-ext/string/#/pad":78}],37:[function(require,module,exports){
+'use strict';
+
+var isPromise = require('./is-promise');
+
+module.exports = function (x) {
+	if (!isPromise(x)) {
+		throw new TypeError(x + " is not a promise object");
+	}
+	return x;
+};
+
+},{"./is-promise":33}],38:[function(require,module,exports){
+'use strict';
+
+module.exports = require('./is-implemented')()
+	? Array.from
+	: require('./shim');
+
+},{"./is-implemented":39,"./shim":40}],39:[function(require,module,exports){
+'use strict';
+
+module.exports = function () {
+	var from = Array.from, arr, result;
+	if (typeof from !== 'function') return false;
+	arr = ['raz', 'dwa'];
+	result = from(arr);
+	return Boolean(result && (result !== arr) && (result[1] === 'dwa'));
+};
+
+},{}],40:[function(require,module,exports){
+'use strict';
+
+var iteratorSymbol = require('es6-symbol').iterator
+  , isArguments    = require('../../function/is-arguments')
+  , isFunction     = require('../../function/is-function')
+  , toPosInt       = require('../../number/to-pos-integer')
+  , callable       = require('../../object/valid-callable')
+  , validValue     = require('../../object/valid-value')
+  , isString       = require('../../string/is-string')
+
+  , isArray = Array.isArray, call = Function.prototype.call
+  , desc = { configurable: true, enumerable: true, writable: true, value: null }
+  , defineProperty = Object.defineProperty;
+
+module.exports = function (arrayLike/*, mapFn, thisArg*/) {
+	var mapFn = arguments[1], thisArg = arguments[2], Constructor, i, j, arr, l, code, iterator
+	  , result, getIterator, value;
+
+	arrayLike = Object(validValue(arrayLike));
+
+	if (mapFn != null) callable(mapFn);
+	if (!this || (this === Array) || !isFunction(this)) {
+		// Result: Plain array
+		if (!mapFn) {
+			if (isArguments(arrayLike)) {
+				// Source: Arguments
+				l = arrayLike.length;
+				if (l !== 1) return Array.apply(null, arrayLike);
+				arr = new Array(1);
+				arr[0] = arrayLike[0];
+				return arr;
+			}
+			if (isArray(arrayLike)) {
+				// Source: Array
+				arr = new Array(l = arrayLike.length);
+				for (i = 0; i < l; ++i) arr[i] = arrayLike[i];
+				return arr;
 			}
 		}
-		else {
-			return (function(args){
-				var df = D(),
-					size = args.length,
-					done = 0,
-					rp = new Array(size),	// resolve params: params of each resolve, we need to track down them to be able to pass them in the correct order if the master needs to be resolved
-                    pp = new Array(size),
-                    whenContext = [];
+		arr = [];
+	} else {
+		// Result: Non plain array
+		Constructor = this;
+	}
 
-				for (var i = 0; i < args.length; i++) {
-                    whenContext[i] = args[i] && args[i].promise ? args[i].promise() : undefined;
-					(function(j) {
-                        var obj = null;
-                        
-                        if (args[j].done) {
-                            args[j].done(function() { rp[j] = (arguments.length < 2) ? arguments[0] : arguments; if (++done == size) { df.resolve.apply(whenContext, rp); }})
-                            .fail(function() { df.reject.apply(whenContext, arguments); });
-                        } else {
-                            obj = args[j];
-                            args[j] = new Deferred();
-                            
-                            args[j].done(function() { rp[j] = (arguments.length < 2) ? arguments[0] : arguments; if (++done == size) { df.resolve.apply(whenContext, rp); }})
-                            .fail(function() { df.reject.apply(whenContext, arguments); }).resolve(obj);
-                        }
-                        
-                        console.log('execing progress');
-                        args[j].progress(function() {
-                            pp[j] = (arguments.length < 2) ? arguments[0] : arguments;
-                            df.notify.apply(whenContext, pp);
-                        });
-					})(i);
+	if (!isArray(arrayLike)) {
+		if ((getIterator = arrayLike[iteratorSymbol]) !== undefined) {
+			// Source: Iterator
+			iterator = callable(getIterator).call(arrayLike);
+			if (Constructor) arr = new Constructor();
+			result = iterator.next();
+			i = 0;
+			while (!result.done) {
+				value = mapFn ? call.call(mapFn, thisArg, result.value, i) : result.value;
+				if (!Constructor) {
+					arr[i] = value;
+				} else {
+					desc.value = value;
+					defineProperty(arr, i, desc);
 				}
-
-				return df.promise();
-			})(arguments);
+				result = iterator.next();
+				++i;
+			}
+			l = i;
+		} else if (isString(arrayLike)) {
+			// Source: String
+			l = arrayLike.length;
+			if (Constructor) arr = new Constructor();
+			for (i = 0, j = 0; i < l; ++i) {
+				value = arrayLike[i];
+				if ((i + 1) < l) {
+					code = value.charCodeAt(0);
+					if ((code >= 0xD800) && (code <= 0xDBFF)) value += arrayLike[++i];
+				}
+				value = mapFn ? call.call(mapFn, thisArg, value, j) : value;
+				if (!Constructor) {
+					arr[j] = value;
+				} else {
+					desc.value = value;
+					defineProperty(arr, j, desc);
+				}
+				++j;
+			}
+			l = j;
 		}
 	}
-    
-    return D;
-})({});
-},{}],4:[function(require,module,exports){
+	if (l === undefined) {
+		// Source: array or array-like
+		l = toPosInt(arrayLike.length);
+		if (Constructor) arr = new Constructor(l);
+		for (i = 0; i < l; ++i) {
+			value = mapFn ? call.call(mapFn, thisArg, arrayLike[i], i) : arrayLike[i];
+			if (!Constructor) {
+				arr[i] = value;
+			} else {
+				desc.value = value;
+				defineProperty(arr, i, desc);
+			}
+		}
+	}
+	if (Constructor) {
+		desc.value = null;
+		arr.length = l;
+	}
+	return arr;
+};
+
+},{"../../function/is-arguments":49,"../../function/is-function":50,"../../number/to-pos-integer":58,"../../object/valid-callable":72,"../../object/valid-value":74,"../../string/is-string":82,"es6-symbol":84}],41:[function(require,module,exports){
+'use strict';
+
+module.exports = require('./is-implemented')()
+	? Array.of
+	: require('./shim');
+
+},{"./is-implemented":42,"./shim":43}],42:[function(require,module,exports){
+'use strict';
+
+module.exports = function () {
+	var of = Array.of, result;
+	if (typeof of !== 'function') return false;
+	result = of('foo', 'bar');
+	return Boolean(result && (result[1] === 'bar'));
+};
+
+},{}],43:[function(require,module,exports){
+'use strict';
+
+var isFunction = require('../../function/is-function')
+
+  , slice = Array.prototype.slice, defineProperty = Object.defineProperty
+  , desc = { configurable: true, enumerable: true, writable: true, value: null };
+
+module.exports = function (/*…items*/) {
+	var result, i, l;
+	if (!this || (this === Array) || !isFunction(this)) return slice.call(arguments);
+	result = new this(l = arguments.length);
+	for (i = 0; i < l; ++i) {
+		desc.value = arguments[i];
+		defineProperty(result, i, desc);
+	}
+	desc.value = null;
+	result.length = l;
+	return result;
+};
+
+},{"../../function/is-function":50}],44:[function(require,module,exports){
+'use strict';
+
+var from = require('./from')
+
+  , isArray = Array.isArray;
+
+module.exports = function (arrayLike) {
+	return isArray(arrayLike) ? arrayLike : from(arrayLike);
+};
+
+},{"./from":38}],45:[function(require,module,exports){
+'use strict';
+
+var toString = Object.prototype.toString
+
+  , id = toString.call(new Error());
+
+module.exports = function (x) {
+	return (x && ((x instanceof Error) || (toString.call(x)) === id)) || false;
+};
+
+},{}],46:[function(require,module,exports){
+'use strict';
+
+var callable     = require('../../object/valid-callable')
+  , aFrom        = require('../../array/from')
+  , defineLength = require('../_define-length')
+
+  , apply = Function.prototype.apply;
+
+module.exports = function (/*…args*/) {
+	var fn = callable(this)
+	  , args = aFrom(arguments);
+
+	return defineLength(function () {
+		return apply.call(fn, this, args.concat(aFrom(arguments)));
+	}, fn.length - args.length);
+};
+
+},{"../../array/from":38,"../../object/valid-callable":72,"../_define-length":48}],47:[function(require,module,exports){
+'use strict';
+
+var callable = require('../../object/valid-callable')
+
+  , apply = Function.prototype.apply;
+
+module.exports = function () {
+	var fn = callable(this);
+	return function (args) { return apply.call(fn, this, args); };
+};
+
+},{"../../object/valid-callable":72}],48:[function(require,module,exports){
+'use strict';
+
+var toPosInt = require('../number/to-pos-integer')
+
+  , test = function (a, b) {}, desc, defineProperty
+  , generate, mixin;
+
+try {
+	Object.defineProperty(test, 'length', { configurable: true, writable: false,
+		enumerable: false, value: 1 });
+} catch (ignore) {}
+
+if (test.length === 1) {
+	// ES6
+	desc = { configurable: true, writable: false, enumerable: false };
+	defineProperty = Object.defineProperty;
+	module.exports = function (fn, length) {
+		length = toPosInt(length);
+		if (fn.length === length) return fn;
+		desc.value = length;
+		return defineProperty(fn, 'length', desc);
+	};
+} else {
+	mixin = require('../object/mixin');
+	generate = (function () {
+		var cache = [];
+		return function (l) {
+			var args, i = 0;
+			if (cache[l]) return cache[l];
+			args = [];
+			while (l--) args.push('a' + (++i).toString(36));
+			return new Function('fn', 'return function (' + args.join(', ') +
+				') { return fn.apply(this, arguments); };');
+		};
+	}());
+	module.exports = function (src, length) {
+		var target;
+		length = toPosInt(length);
+		if (src.length === length) return src;
+		target = generate(length)(src);
+		try { mixin(target, src); } catch (ignore) {}
+		return target;
+	};
+}
+
+},{"../number/to-pos-integer":58,"../object/mixin":70}],49:[function(require,module,exports){
+'use strict';
+
+var toString = Object.prototype.toString
+
+  , id = toString.call((function () { return arguments; }()));
+
+module.exports = function (x) { return (toString.call(x) === id); };
+
+},{}],50:[function(require,module,exports){
+'use strict';
+
+var toString = Object.prototype.toString
+
+  , id = toString.call(require('./noop'));
+
+module.exports = function (f) {
+	return (typeof f === "function") && (toString.call(f) === id);
+};
+
+},{"./noop":51}],51:[function(require,module,exports){
+'use strict';
+
+module.exports = function () {};
+
+},{}],52:[function(require,module,exports){
+'use strict';
+
+var iteratorSymbol = require('es6-symbol').iterator
+  , isArrayLike    = require('../object/is-array-like');
+
+module.exports = function (x) {
+	if (x == null) return false;
+	if (typeof x[iteratorSymbol] === 'function') return true;
+	return isArrayLike(x);
+};
+
+},{"../object/is-array-like":64,"es6-symbol":84}],53:[function(require,module,exports){
+'use strict';
+
+var isObject = require('../object/is-object')
+  , is       = require('./is');
+
+module.exports = function (x) {
+	if (is(x) && isObject(x)) return x;
+	throw new TypeError(x + " is not an iterable or array-like object");
+};
+
+},{"../object/is-object":66,"./is":52}],54:[function(require,module,exports){
+'use strict';
+
+module.exports = require('./is-implemented')()
+	? Math.sign
+	: require('./shim');
+
+},{"./is-implemented":55,"./shim":56}],55:[function(require,module,exports){
+'use strict';
+
+module.exports = function () {
+	var sign = Math.sign;
+	if (typeof sign !== 'function') return false;
+	return ((sign(10) === 1) && (sign(-20) === -1));
+};
+
+},{}],56:[function(require,module,exports){
+'use strict';
+
+module.exports = function (value) {
+	value = Number(value);
+	if (isNaN(value) || (value === 0)) return value;
+	return (value > 0) ? 1 : -1;
+};
+
+},{}],57:[function(require,module,exports){
+'use strict';
+
+var sign = require('../math/sign')
+
+  , abs = Math.abs, floor = Math.floor;
+
+module.exports = function (value) {
+	if (isNaN(value)) return 0;
+	value = Number(value);
+	if ((value === 0) || !isFinite(value)) return value;
+	return sign(value) * floor(abs(value));
+};
+
+},{"../math/sign":54}],58:[function(require,module,exports){
+'use strict';
+
+var toInteger = require('./to-integer')
+
+  , max = Math.max;
+
+module.exports = function (value) { return max(0, toInteger(value)); };
+
+},{"./to-integer":57}],59:[function(require,module,exports){
+// Internal method, used by iteration functions.
+// Calls a function for each key-value pair found in object
+// Optionally takes compareFn to iterate object in specific order
+
+'use strict';
+
+var callable = require('./valid-callable')
+  , value    = require('./valid-value')
+
+  , bind = Function.prototype.bind, call = Function.prototype.call, keys = Object.keys
+  , propertyIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+module.exports = function (method, defVal) {
+	return function (obj, cb/*, thisArg, compareFn*/) {
+		var list, thisArg = arguments[2], compareFn = arguments[3];
+		obj = Object(value(obj));
+		callable(cb);
+
+		list = keys(obj);
+		if (compareFn) {
+			list.sort((typeof compareFn === 'function') ? bind.call(compareFn, obj) : undefined);
+		}
+		if (typeof method !== 'function') method = list[method];
+		return call.call(method, list, function (key, index) {
+			if (!propertyIsEnumerable.call(obj, key)) return defVal;
+			return call.call(cb, thisArg, obj[key], key, obj, index);
+		});
+	};
+};
+
+},{"./valid-callable":72,"./valid-value":74}],60:[function(require,module,exports){
+'use strict';
+
+module.exports = require('./is-implemented')()
+	? Object.assign
+	: require('./shim');
+
+},{"./is-implemented":61,"./shim":62}],61:[function(require,module,exports){
+'use strict';
+
+module.exports = function () {
+	var assign = Object.assign, obj;
+	if (typeof assign !== 'function') return false;
+	obj = { foo: 'raz' };
+	assign(obj, { bar: 'dwa' }, { trzy: 'trzy' });
+	return (obj.foo + obj.bar + obj.trzy) === 'razdwatrzy';
+};
+
+},{}],62:[function(require,module,exports){
+'use strict';
+
+var keys  = require('../keys')
+  , value = require('../valid-value')
+
+  , max = Math.max;
+
+module.exports = function (dest, src/*, …srcn*/) {
+	var error, i, l = max(arguments.length, 2), assign;
+	dest = Object(value(dest));
+	assign = function (key) {
+		try { dest[key] = src[key]; } catch (e) {
+			if (!error) error = e;
+		}
+	};
+	for (i = 1; i < l; ++i) {
+		src = arguments[i];
+		keys(src).forEach(assign);
+	}
+	if (error !== undefined) throw error;
+	return dest;
+};
+
+},{"../keys":67,"../valid-value":74}],63:[function(require,module,exports){
+'use strict';
+
+module.exports = require('./_iterate')('forEach');
+
+},{"./_iterate":59}],64:[function(require,module,exports){
+'use strict';
+
+var isFunction = require('../function/is-function')
+  , isObject   = require('./is-object');
+
+module.exports = function (x) {
+	return ((x != null) && (typeof x.length === 'number') &&
+
+		// Just checking ((typeof x === 'object') && (typeof x !== 'function'))
+		// won't work right for some cases, e.g.:
+		// type of instance of NodeList in Safari is a 'function'
+
+		((isObject(x) && !isFunction(x)) || (typeof x === "string"))) || false;
+};
+
+},{"../function/is-function":50,"./is-object":66}],65:[function(require,module,exports){
+// Deprecated
+
+'use strict';
+
+module.exports = function (obj) { return typeof obj === 'function'; };
+
+},{}],66:[function(require,module,exports){
+'use strict';
+
+var map = { function: true, object: true };
+
+module.exports = function (x) {
+	return ((x != null) && map[typeof x]) || false;
+};
+
+},{}],67:[function(require,module,exports){
+'use strict';
+
+module.exports = require('./is-implemented')()
+	? Object.keys
+	: require('./shim');
+
+},{"./is-implemented":68,"./shim":69}],68:[function(require,module,exports){
+'use strict';
+
+module.exports = function () {
+	try {
+		Object.keys('primitive');
+		return true;
+	} catch (e) { return false; }
+};
+
+},{}],69:[function(require,module,exports){
+'use strict';
+
+var keys = Object.keys;
+
+module.exports = function (object) {
+	return keys(object == null ? object : Object(object));
+};
+
+},{}],70:[function(require,module,exports){
+'use strict';
+
+var value = require('./valid-value')
+
+  , defineProperty = Object.defineProperty
+  , getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor
+  , getOwnPropertyNames = Object.getOwnPropertyNames;
+
+module.exports = function (target, source) {
+	var error;
+	target = Object(value(target));
+	getOwnPropertyNames(Object(value(source))).forEach(function (name) {
+		try {
+			defineProperty(target, name, getOwnPropertyDescriptor(source, name));
+		} catch (e) { error = e; }
+	});
+	if (error !== undefined) throw error;
+	return target;
+};
+
+},{"./valid-value":74}],71:[function(require,module,exports){
+'use strict';
+
+var forEach = Array.prototype.forEach, create = Object.create;
+
+var process = function (src, obj) {
+	var key;
+	for (key in src) obj[key] = src[key];
+};
+
+module.exports = function (options/*, …options*/) {
+	var result = create(null);
+	forEach.call(arguments, function (options) {
+		if (options == null) return;
+		process(Object(options), result);
+	});
+	return result;
+};
+
+},{}],72:[function(require,module,exports){
+'use strict';
+
+module.exports = function (fn) {
+	if (typeof fn !== 'function') throw new TypeError(fn + " is not a function");
+	return fn;
+};
+
+},{}],73:[function(require,module,exports){
+'use strict';
+
+var isObject = require('./is-object');
+
+module.exports = function (value) {
+	if (!isObject(value)) throw new TypeError(value + " is not an Object");
+	return value;
+};
+
+},{"./is-object":66}],74:[function(require,module,exports){
+'use strict';
+
+module.exports = function (value) {
+	if (value == null) throw new TypeError("Cannot use null or undefined");
+	return value;
+};
+
+},{}],75:[function(require,module,exports){
+'use strict';
+
+module.exports = require('./is-implemented')()
+	? String.prototype.contains
+	: require('./shim');
+
+},{"./is-implemented":76,"./shim":77}],76:[function(require,module,exports){
+'use strict';
+
+var str = 'razdwatrzy';
+
+module.exports = function () {
+	if (typeof str.contains !== 'function') return false;
+	return ((str.contains('dwa') === true) && (str.contains('foo') === false));
+};
+
+},{}],77:[function(require,module,exports){
+'use strict';
+
+var indexOf = String.prototype.indexOf;
+
+module.exports = function (searchString/*, position*/) {
+	return indexOf.call(this, searchString, arguments[1]) > -1;
+};
+
+},{}],78:[function(require,module,exports){
+'use strict';
+
+var toInteger = require('../../number/to-integer')
+  , value     = require('../../object/valid-value')
+  , repeat    = require('./repeat')
+
+  , abs = Math.abs, max = Math.max;
+
+module.exports = function (fill/*, length*/) {
+	var self = String(value(this))
+	  , sLength = self.length
+	  , length = arguments[1];
+
+	length = isNaN(length) ? 1 : toInteger(length);
+	fill = repeat.call(String(fill), abs(length));
+	if (length >= 0) return fill.slice(0, max(0, length - sLength)) + self;
+	return self + (((sLength + length) >= 0) ? '' : fill.slice(length + sLength));
+};
+
+},{"../../number/to-integer":57,"../../object/valid-value":74,"./repeat":79}],79:[function(require,module,exports){
+'use strict';
+
+module.exports = require('./is-implemented')()
+	? String.prototype.repeat
+	: require('./shim');
+
+},{"./is-implemented":80,"./shim":81}],80:[function(require,module,exports){
+'use strict';
+
+var str = 'foo';
+
+module.exports = function () {
+	if (typeof str.repeat !== 'function') return false;
+	return (str.repeat(2) === 'foofoo');
+};
+
+},{}],81:[function(require,module,exports){
+// Thanks: http://www.2ality.com/2014/01/efficient-string-repeat.html
+
+'use strict';
+
+var value     = require('../../../object/valid-value')
+  , toInteger = require('../../../number/to-integer');
+
+module.exports = function (count) {
+	var str = String(value(this)), result;
+	count = toInteger(count);
+	if (count < 0) throw new RangeError("Count must be >= 0");
+	if (!isFinite(count)) throw new RangeError("Count must be < ∞");
+	result = '';
+	if (!count) return result;
+	while (true) {
+		if (count & 1) result += str;
+		count >>>= 1;
+		if (count <= 0) break;
+		str += str;
+	}
+	return result;
+};
+
+},{"../../../number/to-integer":57,"../../../object/valid-value":74}],82:[function(require,module,exports){
+'use strict';
+
+var toString = Object.prototype.toString
+
+  , id = toString.call('');
+
+module.exports = function (x) {
+	return (typeof x === 'string') || (x && (typeof x === 'object') &&
+		((x instanceof String) || (toString.call(x) === id))) || false;
+};
+
+},{}],83:[function(require,module,exports){
 (function (process,global){
 /*!
  * @overview es6-promise - a tiny implementation of Promises/A+.
@@ -1378,7 +3693,413 @@ module.exports = (function(window) {
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"_process":5}],5:[function(require,module,exports){
+},{"_process":92}],84:[function(require,module,exports){
+'use strict';
+
+module.exports = require('./is-implemented')() ? Symbol : require('./polyfill');
+
+},{"./is-implemented":85,"./polyfill":87}],85:[function(require,module,exports){
+'use strict';
+
+module.exports = function () {
+	var symbol;
+	if (typeof Symbol !== 'function') return false;
+	symbol = Symbol('test symbol');
+	try { String(symbol); } catch (e) { return false; }
+	if (typeof Symbol.iterator === 'symbol') return true;
+
+	// Return 'true' for polyfills
+	if (typeof Symbol.isConcatSpreadable !== 'object') return false;
+	if (typeof Symbol.iterator !== 'object') return false;
+	if (typeof Symbol.toPrimitive !== 'object') return false;
+	if (typeof Symbol.toStringTag !== 'object') return false;
+	if (typeof Symbol.unscopables !== 'object') return false;
+
+	return true;
+};
+
+},{}],86:[function(require,module,exports){
+'use strict';
+
+module.exports = function (x) {
+	return (x && ((typeof x === 'symbol') || (x['@@toStringTag'] === 'Symbol'))) || false;
+};
+
+},{}],87:[function(require,module,exports){
+// ES2015 Symbol polyfill for environments that do not support it (or partially support it_
+
+'use strict';
+
+var d              = require('d')
+  , validateSymbol = require('./validate-symbol')
+
+  , create = Object.create, defineProperties = Object.defineProperties
+  , defineProperty = Object.defineProperty, objPrototype = Object.prototype
+  , NativeSymbol, SymbolPolyfill, HiddenSymbol, globalSymbols = create(null);
+
+if (typeof Symbol === 'function') NativeSymbol = Symbol;
+
+var generateName = (function () {
+	var created = create(null);
+	return function (desc) {
+		var postfix = 0, name, ie11BugWorkaround;
+		while (created[desc + (postfix || '')]) ++postfix;
+		desc += (postfix || '');
+		created[desc] = true;
+		name = '@@' + desc;
+		defineProperty(objPrototype, name, d.gs(null, function (value) {
+			// For IE11 issue see:
+			// https://connect.microsoft.com/IE/feedbackdetail/view/1928508/
+			//    ie11-broken-getters-on-dom-objects
+			// https://github.com/medikoo/es6-symbol/issues/12
+			if (ie11BugWorkaround) return;
+			ie11BugWorkaround = true;
+			defineProperty(this, name, d(value));
+			ie11BugWorkaround = false;
+		}));
+		return name;
+	};
+}());
+
+// Internal constructor (not one exposed) for creating Symbol instances.
+// This one is used to ensure that `someSymbol instanceof Symbol` always return false
+HiddenSymbol = function Symbol(description) {
+	if (this instanceof HiddenSymbol) throw new TypeError('TypeError: Symbol is not a constructor');
+	return SymbolPolyfill(description);
+};
+
+// Exposed `Symbol` constructor
+// (returns instances of HiddenSymbol)
+module.exports = SymbolPolyfill = function Symbol(description) {
+	var symbol;
+	if (this instanceof Symbol) throw new TypeError('TypeError: Symbol is not a constructor');
+	symbol = create(HiddenSymbol.prototype);
+	description = (description === undefined ? '' : String(description));
+	return defineProperties(symbol, {
+		__description__: d('', description),
+		__name__: d('', generateName(description))
+	});
+};
+defineProperties(SymbolPolyfill, {
+	for: d(function (key) {
+		if (globalSymbols[key]) return globalSymbols[key];
+		return (globalSymbols[key] = SymbolPolyfill(String(key)));
+	}),
+	keyFor: d(function (s) {
+		var key;
+		validateSymbol(s);
+		for (key in globalSymbols) if (globalSymbols[key] === s) return key;
+	}),
+
+	// If there's native implementation of given symbol, let's fallback to it
+	// to ensure proper interoperability with other native functions e.g. Array.from
+	hasInstance: d('', (NativeSymbol && NativeSymbol.hasInstance) || SymbolPolyfill('hasInstance')),
+	isConcatSpreadable: d('', (NativeSymbol && NativeSymbol.isConcatSpreadable) ||
+		SymbolPolyfill('isConcatSpreadable')),
+	iterator: d('', (NativeSymbol && NativeSymbol.iterator) || SymbolPolyfill('iterator')),
+	match: d('', (NativeSymbol && NativeSymbol.match) || SymbolPolyfill('match')),
+	replace: d('', (NativeSymbol && NativeSymbol.replace) || SymbolPolyfill('replace')),
+	search: d('', (NativeSymbol && NativeSymbol.search) || SymbolPolyfill('search')),
+	species: d('', (NativeSymbol && NativeSymbol.species) || SymbolPolyfill('species')),
+	split: d('', (NativeSymbol && NativeSymbol.split) || SymbolPolyfill('split')),
+	toPrimitive: d('', (NativeSymbol && NativeSymbol.toPrimitive) || SymbolPolyfill('toPrimitive')),
+	toStringTag: d('', (NativeSymbol && NativeSymbol.toStringTag) || SymbolPolyfill('toStringTag')),
+	unscopables: d('', (NativeSymbol && NativeSymbol.unscopables) || SymbolPolyfill('unscopables'))
+});
+
+// Internal tweaks for real symbol producer
+defineProperties(HiddenSymbol.prototype, {
+	constructor: d(SymbolPolyfill),
+	toString: d('', function () { return this.__name__; })
+});
+
+// Proper implementation of methods exposed on Symbol.prototype
+// They won't be accessible on produced symbol instances as they derive from HiddenSymbol.prototype
+defineProperties(SymbolPolyfill.prototype, {
+	toString: d(function () { return 'Symbol (' + validateSymbol(this).__description__ + ')'; }),
+	valueOf: d(function () { return validateSymbol(this); })
+});
+defineProperty(SymbolPolyfill.prototype, SymbolPolyfill.toPrimitive, d('',
+	function () { return validateSymbol(this); }));
+defineProperty(SymbolPolyfill.prototype, SymbolPolyfill.toStringTag, d('c', 'Symbol'));
+
+// Proper implementaton of toPrimitive and toStringTag for returned symbol instances
+defineProperty(HiddenSymbol.prototype, SymbolPolyfill.toStringTag,
+	d('c', SymbolPolyfill.prototype[SymbolPolyfill.toStringTag]));
+
+// Note: It's important to define `toPrimitive` as last one, as some implementations
+// implement `toPrimitive` natively without implementing `toStringTag` (or other specified symbols)
+// And that may invoke error in definition flow:
+// See: https://github.com/medikoo/es6-symbol/issues/13#issuecomment-164146149
+defineProperty(HiddenSymbol.prototype, SymbolPolyfill.toPrimitive,
+	d('c', SymbolPolyfill.prototype[SymbolPolyfill.toPrimitive]));
+
+},{"./validate-symbol":88,"d":3}],88:[function(require,module,exports){
+'use strict';
+
+var isSymbol = require('./is-symbol');
+
+module.exports = function (value) {
+	if (!isSymbol(value)) throw new TypeError(value + " is not a symbol");
+	return value;
+};
+
+},{"./is-symbol":86}],89:[function(require,module,exports){
+'use strict';
+
+var d        = require('d')
+  , callable = require('es5-ext/object/valid-callable')
+
+  , apply = Function.prototype.apply, call = Function.prototype.call
+  , create = Object.create, defineProperty = Object.defineProperty
+  , defineProperties = Object.defineProperties
+  , hasOwnProperty = Object.prototype.hasOwnProperty
+  , descriptor = { configurable: true, enumerable: false, writable: true }
+
+  , on, once, off, emit, methods, descriptors, base;
+
+on = function (type, listener) {
+	var data;
+
+	callable(listener);
+
+	if (!hasOwnProperty.call(this, '__ee__')) {
+		data = descriptor.value = create(null);
+		defineProperty(this, '__ee__', descriptor);
+		descriptor.value = null;
+	} else {
+		data = this.__ee__;
+	}
+	if (!data[type]) data[type] = listener;
+	else if (typeof data[type] === 'object') data[type].push(listener);
+	else data[type] = [data[type], listener];
+
+	return this;
+};
+
+once = function (type, listener) {
+	var once, self;
+
+	callable(listener);
+	self = this;
+	on.call(this, type, once = function () {
+		off.call(self, type, once);
+		apply.call(listener, this, arguments);
+	});
+
+	once.__eeOnceListener__ = listener;
+	return this;
+};
+
+off = function (type, listener) {
+	var data, listeners, candidate, i;
+
+	callable(listener);
+
+	if (!hasOwnProperty.call(this, '__ee__')) return this;
+	data = this.__ee__;
+	if (!data[type]) return this;
+	listeners = data[type];
+
+	if (typeof listeners === 'object') {
+		for (i = 0; (candidate = listeners[i]); ++i) {
+			if ((candidate === listener) ||
+					(candidate.__eeOnceListener__ === listener)) {
+				if (listeners.length === 2) data[type] = listeners[i ? 0 : 1];
+				else listeners.splice(i, 1);
+			}
+		}
+	} else {
+		if ((listeners === listener) ||
+				(listeners.__eeOnceListener__ === listener)) {
+			delete data[type];
+		}
+	}
+
+	return this;
+};
+
+emit = function (type) {
+	var i, l, listener, listeners, args;
+
+	if (!hasOwnProperty.call(this, '__ee__')) return;
+	listeners = this.__ee__[type];
+	if (!listeners) return;
+
+	if (typeof listeners === 'object') {
+		l = arguments.length;
+		args = new Array(l - 1);
+		for (i = 1; i < l; ++i) args[i - 1] = arguments[i];
+
+		listeners = listeners.slice();
+		for (i = 0; (listener = listeners[i]); ++i) {
+			apply.call(listener, this, args);
+		}
+	} else {
+		switch (arguments.length) {
+		case 1:
+			call.call(listeners, this);
+			break;
+		case 2:
+			call.call(listeners, this, arguments[1]);
+			break;
+		case 3:
+			call.call(listeners, this, arguments[1], arguments[2]);
+			break;
+		default:
+			l = arguments.length;
+			args = new Array(l - 1);
+			for (i = 1; i < l; ++i) {
+				args[i - 1] = arguments[i];
+			}
+			apply.call(listeners, this, args);
+		}
+	}
+};
+
+methods = {
+	on: on,
+	once: once,
+	off: off,
+	emit: emit
+};
+
+descriptors = {
+	on: d(on),
+	once: d(once),
+	off: d(off),
+	emit: d(emit)
+};
+
+base = defineProperties({}, descriptors);
+
+module.exports = exports = function (o) {
+	return (o == null) ? create(base) : defineProperties(Object(o), descriptors);
+};
+exports.methods = methods;
+
+},{"d":3,"es5-ext/object/valid-callable":72}],90:[function(require,module,exports){
+'use strict';
+
+var forEach    = require('es5-ext/object/for-each')
+  , validValue = require('es5-ext/object/valid-object')
+
+  , push = Array.prototype.apply, defineProperty = Object.defineProperty
+  , create = Object.create, hasOwnProperty = Object.prototype.hasOwnProperty
+  , d = { configurable: true, enumerable: false, writable: true };
+
+module.exports = function (e1, e2) {
+	var data;
+	(validValue(e1) && validValue(e2));
+	if (!hasOwnProperty.call(e1, '__ee__')) {
+		if (!hasOwnProperty.call(e2, '__ee__')) {
+			d.value = create(null);
+			defineProperty(e1, '__ee__', d);
+			defineProperty(e2, '__ee__', d);
+			d.value = null;
+			return;
+		}
+		d.value = e2.__ee__;
+		defineProperty(e1, '__ee__', d);
+		d.value = null;
+		return;
+	}
+	data = d.value = e1.__ee__;
+	if (!hasOwnProperty.call(e2, '__ee__')) {
+		defineProperty(e2, '__ee__', d);
+		d.value = null;
+		return;
+	}
+	if (data === e2.__ee__) return;
+	forEach(e2.__ee__, function (listener, name) {
+		if (!data[name]) {
+			data[name] = listener;
+			return;
+		}
+		if (typeof data[name] === 'object') {
+			if (typeof listener === 'object') push.apply(data[name], listener);
+			else data[name].push(listener);
+		} else if (typeof listener === 'object') {
+			listener.unshift(data[name]);
+			data[name] = listener;
+		} else {
+			data[name] = [data[name], listener];
+		}
+	});
+	defineProperty(e2, '__ee__', d);
+	d.value = null;
+};
+
+},{"es5-ext/object/for-each":63,"es5-ext/object/valid-object":73}],91:[function(require,module,exports){
+(function (process){
+'use strict';
+
+var callable, byObserver;
+
+callable = function (fn) {
+	if (typeof fn !== 'function') throw new TypeError(fn + " is not a function");
+	return fn;
+};
+
+byObserver = function (Observer) {
+	var node = document.createTextNode(''), queue, i = 0;
+	new Observer(function () {
+		var data;
+		if (!queue) return;
+		data = queue;
+		queue = null;
+		if (typeof data === 'function') {
+			data();
+			return;
+		}
+		data.forEach(function (fn) { fn(); });
+	}).observe(node, { characterData: true });
+	return function (fn) {
+		callable(fn);
+		if (queue) {
+			if (typeof queue === 'function') queue = [queue, fn];
+			else queue.push(fn);
+			return;
+		}
+		queue = fn;
+		node.data = (i = ++i % 2);
+	};
+};
+
+module.exports = (function () {
+	// Node.js
+	if ((typeof process !== 'undefined') && process &&
+			(typeof process.nextTick === 'function')) {
+		return process.nextTick;
+	}
+
+	// MutationObserver=
+	if ((typeof document === 'object') && document) {
+		if (typeof MutationObserver === 'function') {
+			return byObserver(MutationObserver);
+		}
+		if (typeof WebKitMutationObserver === 'function') {
+			return byObserver(WebKitMutationObserver);
+		}
+	}
+
+	// W3C Draft
+	// http://dvcs.w3.org/hg/webperf/raw-file/tip/specs/setImmediate/Overview.html
+	if (typeof setImmediate === 'function') {
+		return function (cb) { setImmediate(callable(cb)); };
+	}
+
+	// Wide available standard
+	if (typeof setTimeout === 'function') {
+		return function (cb) { setTimeout(callable(cb), 0); };
+	}
+
+	return null;
+}());
+
+}).call(this,require('_process'))
+
+},{"_process":92}],92:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -1471,7 +4192,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],6:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
 (function (factory) {
     if (typeof exports === 'object') {
         // Node/CommonJS
@@ -2176,7 +4897,7 @@ process.umask = function() { return 0; };
     return SparkMD5;
 }));
 
-},{}],7:[function(require,module,exports){
+},{}],94:[function(require,module,exports){
 'use strict';
 
 (function (root, factory) {
@@ -2433,12 +5154,25 @@ process.umask = function() { return 0; };
     return striptags;
 }));
 
-},{}],8:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 'use strict';
 
-if (typeof window === 'undefined' && typeof XMLHttpRequest === 'undefined') {
-	var XMLHttpRequest = require('w3c-xmlhttprequest').XMLHttpRequest;
-}
+module.exports = 2147483647;
+
+},{}],96:[function(require,module,exports){
+'use strict';
+
+var toPosInt   = require('es5-ext/number/to-pos-integer')
+  , maxTimeout = require('./max-timeout');
+
+module.exports = function (value) {
+	value = toPosInt(value);
+	if (value > maxTimeout) throw new TypeError(value + " exceeds maximum possible timeout");
+	return value;
+};
+
+},{"./max-timeout":95,"es5-ext/number/to-pos-integer":58}],97:[function(require,module,exports){
+'use strict';
 
 var Ajax = {};
 
@@ -2691,7 +5425,7 @@ Ajax.downloadBlob = function (url) {
 
 module.exports = Ajax;
 
-},{"w3c-xmlhttprequest":2}],9:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -2731,7 +5465,7 @@ module.exports.prototype.fieldComparer = function (attr) {
 	}
 };
 
-},{}],10:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 'use strict';
 
 module.exports = function (response) {
@@ -2791,7 +5525,7 @@ module.exports.prototype.parseResponse = function (response) {
 	Z.debug('done parsing response');
 };
 
-},{}],11:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -2823,11 +5557,11 @@ var Zotero = {
 	temp: {},
 
 	config: { librarySettings: {},
-		baseApiUrl: 'https://apidev.zotero.org',
-		baseWebsiteUrl: 'https://test.zotero.net',
-		baseFeedUrl: 'https://apidev.zotero.org',
-		baseZoteroWebsiteUrl: 'https://test.zotero.net',
-		baseDownloadUrl: 'https://test.zotero.net',
+		baseApiUrl: 'https://api.zotero.org',
+		baseWebsiteUrl: 'https://zotero.org',
+		baseFeedUrl: 'https://api.zotero.org',
+		baseZoteroWebsiteUrl: 'https://www.zotero.org',
+		baseDownloadUrl: 'https://www.zotero.org',
 		nonparsedBaseUrl: '',
 		debugLogEndpoint: '',
 		storeDebug: true,
@@ -3130,7 +5864,7 @@ Zotero.extend = function () {
 
 module.exports = Zotero;
 
-},{}],12:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 'use strict';
 
 //build a consistent string from an object to use as a cache key
@@ -3227,7 +5961,7 @@ module.exports.prototype.clear = function () {
 	}
 };
 
-},{}],13:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 'use strict';
 
 module.exports = function (collectionObj) {
@@ -3517,7 +6251,7 @@ module.exports.prototype.set = function (key, val) {
 	}
 };
 
-},{}],14:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 'use strict';
 
 module.exports = function (jsonBody) {
@@ -3753,7 +6487,7 @@ module.exports.prototype.writeCollections = function (collectionsArray) {
 	});
 };
 
-},{}],15:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
 'use strict';
 
 module.exports = function () {};
@@ -3996,7 +6730,7 @@ module.exports.prototype.extractKey = function (object) {
 	return object.get('key');
 };
 
-},{}],16:[function(require,module,exports){
+},{}],105:[function(require,module,exports){
 'use strict';
 
 module.exports = function (data) {
@@ -4016,14 +6750,10 @@ module.exports = function (data) {
 //the next time we finish a deleted request
 module.exports.prototype.addWaiter = function () {};
 
-},{}],17:[function(require,module,exports){
+},{}],106:[function(require,module,exports){
 'use strict';
 
 var SparkMD5 = require('spark-md5');
-
-if (typeof window === 'undefined' && typeof XMLHttpRequest === 'undefined') {
-	var XMLHttpRequest = require('w3c-xmlhttprequest').XMLHttpRequest;
-}
 
 module.exports = {};
 
@@ -4100,7 +6830,7 @@ module.exports.uploadFile = function (uploadInfo, fileInfo) {
 	//from JS)
 };
 
-},{"spark-md5":6,"w3c-xmlhttprequest":2}],18:[function(require,module,exports){
+},{"spark-md5":93}],107:[function(require,module,exports){
 'use strict';
 
 module.exports = function (groupObj) {
@@ -4177,7 +6907,7 @@ module.exports.prototype.accessMap = {
 	}
 };
 
-},{}],19:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 'use strict';
 
 module.exports = function () {
@@ -4224,7 +6954,7 @@ module.exports.prototype.fetchUserGroups = function (userID, apikey) {
 	});
 };
 
-},{}],20:[function(require,module,exports){
+},{}],109:[function(require,module,exports){
 'use strict';
 
 module.exports = {};
@@ -4829,7 +7559,7 @@ module.exports.Library.prototype.intersectAll = function (arrs) {
 	return result;
 };
 
-},{}],21:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 'use strict';
 
 var striptags = require('striptags');
@@ -5724,7 +8454,7 @@ Object.keys(ItemMaps).forEach(function (key) {
 
 module.exports = Item;
 
-},{"./ItemMaps.js":22,"striptags":7}],22:[function(require,module,exports){
+},{"./ItemMaps.js":111,"striptags":94}],111:[function(require,module,exports){
 'use strict';
 
 var ItemMaps = {};
@@ -6052,7 +8782,7 @@ ItemMaps.citePaperJournalArticleURL = false;
 
 module.exports = ItemMaps;
 
-},{}],23:[function(require,module,exports){
+},{}],112:[function(require,module,exports){
 'use strict';
 
 module.exports = function (jsonBody) {
@@ -6311,7 +9041,7 @@ module.exports.prototype.writeItems = function (itemsArray) {
 	});
 };
 
-},{}],24:[function(require,module,exports){
+},{}],113:[function(require,module,exports){
 'use strict';
 
 /**
@@ -7627,7 +10357,7 @@ Library.prototype.saveIndexedDB = function () {
 
 module.exports = Library;
 
-},{}],25:[function(require,module,exports){
+},{}],114:[function(require,module,exports){
 'use strict';
 
 var ItemMaps = require('./ItemMaps.js');
@@ -7636,16 +10366,12 @@ module.exports.fieldMap = ItemMaps.fieldMap;
 module.exports.typeMap = ItemMaps.typeMap;
 module.exports.creatorMap = ItemMaps.creatorMap;
 
-},{"./ItemMaps.js":22}],26:[function(require,module,exports){
+},{"./ItemMaps.js":111}],115:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-if (typeof window === 'undefined' && typeof XMLHttpRequest === 'undefined') {
-	var XMLHttpRequest = require('w3c-xmlhttprequest').XMLHttpRequest;
-}
-
-var Deferred = require('deferred-js');
+var Deferred = require('deferred');
 /*
  * Make concurrent and sequential network requests, respecting backoff/retry-after
  * headers, and keeping concurrent requests below a certain limit.
@@ -7860,27 +10586,16 @@ Net.prototype.ajaxRequest = function (requestConfig) {
 		net.ajax(config).then(function (request) {
 			var data;
 
-			if (request.responseType === '') {
-				if (request.getResponseHeader('content-type') === 'application/json') {
-					request.responseType = 'json';
+			if (request.responseType == 'json' || request.responseType === '' && request.getResponseHeader('content-type') === 'application/json') {
+				try {
+					data = JSON.parse(request.response);
+				} catch (err) {
+					data = request.response;
 				}
+			} else {
+				data = request.response;
 			}
 
-			switch (request.responseType) {
-				case 'json':
-				case '':
-					try {
-						data = JSON.parse(request.response);
-					} catch (err) {
-						data = request.response;
-					}
-					break;
-				case 'text':
-				//case "":
-				default:
-					data = request.response;
-					break;
-			}
 			var r = new Zotero.ApiResponse({
 				jqxhr: request,
 				data: data,
@@ -7946,7 +10661,7 @@ Net.prototype.ajax = function (config) {
 
 module.exports = new Net();
 
-},{"deferred-js":3,"w3c-xmlhttprequest":2}],27:[function(require,module,exports){
+},{"deferred":31}],116:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -8016,7 +10731,7 @@ module.exports.prototype.load = function () {
 	}
 };
 
-},{}],28:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 'use strict';
 
 module.exports = function () {
@@ -8024,7 +10739,7 @@ module.exports = function () {
 	this.searchObject = {};
 };
 
-},{}],29:[function(require,module,exports){
+},{}],118:[function(require,module,exports){
 'use strict';
 
 module.exports = function () {
@@ -8036,7 +10751,7 @@ module.exports = function () {
 	};
 };
 
-},{}],30:[function(require,module,exports){
+},{}],119:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -8114,7 +10829,7 @@ module.exports.prototype.set = function (key, val) {
 	return tag;
 };
 
-},{}],31:[function(require,module,exports){
+},{}],120:[function(require,module,exports){
 'use strict';
 
 module.exports = function (jsonBody) {
@@ -8231,7 +10946,7 @@ module.exports.prototype.addTagsFromJson = function (jsonBody) {
 	return tagsAdded;
 };
 
-},{}],32:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
 'use strict';
 
 // Url.js - construct certain urls and links locally that may depend on the
@@ -8382,12 +11097,12 @@ Url.exportUrls = function (config) {
 };
 
 Url.relationUrl = function (libraryType, libraryID, itemKey) {
-	return 'http://test.zotero.net/' + libraryType + 's/' + libraryID + '/items/' + itemKey;
+	return 'http://zotero.org/' + libraryType + 's/' + libraryID + '/items/' + itemKey;
 };
 
 module.exports = Url;
 
-},{}],33:[function(require,module,exports){
+},{}],122:[function(require,module,exports){
 'use strict';
 
 module.exports = function () {
@@ -8422,7 +11137,7 @@ module.exports.prototype.parseXmlUser = function (tel) {
 	}
 };
 
-},{}],34:[function(require,module,exports){
+},{}],123:[function(require,module,exports){
 'use strict';
 
 var Utils = {
