@@ -2,9 +2,6 @@
 
 var SparkMD5 = require('spark-md5');
 
-if(typeof window === 'undefined' && typeof XMLHttpRequest === 'undefined') {
-	var XMLHttpRequest = require('w3c-xmlhttprequest').XMLHttpRequest;
-}
 
 module.exports = {};
 

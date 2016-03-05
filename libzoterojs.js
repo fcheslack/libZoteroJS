@@ -1,9 +1,14 @@
 // use strict;
 if(typeof window === 'undefined') {
 	var globalScope = global;
+	if(!globalScope.XMLHttpRequest) {
+		globalScope.XMLHttpRequest = require('w3c-xmlhttprequest').XMLHttpRequest;
+	}
 } else {
 	var globalScope = window;
-	require('es6-promise').polyfill();	
+	if(typeof Promise === 'undefined') {
+		require('es6-promise').polyfill();
+	}
 }
 
 var Zotero = require('./src/Base.js');

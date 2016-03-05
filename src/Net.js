@@ -1,10 +1,6 @@
 'use strict';
 
-if(typeof window === 'undefined' && typeof XMLHttpRequest === 'undefined') {
-	var XMLHttpRequest = require('w3c-xmlhttprequest').XMLHttpRequest;
-}
-
-var Deferred = require('deferred-js');
+var Deferred = require('deferred');
 /*
  * Make concurrent and sequential network requests, respecting backoff/retry-after
  * headers, and keeping concurrent requests below a certain limit.
@@ -225,27 +221,18 @@ Net.prototype.ajaxRequest = function(requestConfig){
 		.then(function(request){
 			var data;
 
-			if(request.responseType === '') {
-				if(request.getResponseHeader('content-type') === 'application/json') {
-					request.responseType = 'json';
-				}
-			}
-
-			switch(request.responseType){
-				case 'json':
-				case '':
-					try{
+			if(request.responseType == 'json'
+				|| (request.responseType === '' && request.getResponseHeader('content-type') === 'application/json')
+			) {
+				try{
 						data = JSON.parse(request.response);
 					} catch(err) {
 						data = request.response;
 					}
-					break;
-				case 'text':
-				//case "":
-				default:
-					data = request.response;
-					break;
+			} else {
+				data = request.response;
 			}
+			
 			var r = new Zotero.ApiResponse({
 				jqxhr: request,
 				data: data,
