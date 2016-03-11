@@ -269,22 +269,22 @@ module.exports.prototype.set = function(key, val){
 	switch(key){
 		case 'title':
 		case 'name':
-		collection.apiObj.data['name'] = val;
+			collection.apiObj.data['name'] = val;
 		break;
 		case 'collectionKey':
 		case 'key':
-		collection.key = val;
-		collection.apiObj.key = val;
-		collection.apiObj.data.key = val;
+			collection.key = val;
+			collection.apiObj.key = val;
+			collection.apiObj.data.key = val;
 		break;
 		case 'parentCollection':
-		collection.apiObj.data['parentCollection'] = val;
+			collection.apiObj.data['parentCollection'] = val;
 		break;
 		case 'collectionVersion':
 		case 'version':
-		collection.version = val;
-		collection.apiObj.version = val;
-		collection.apiObj.data.version = val;
+			collection.version = val;
+			collection.apiObj.version = val;
+			collection.apiObj.data.version = val;
 		break;
 	}
 	
