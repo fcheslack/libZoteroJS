@@ -10,43 +10,9 @@ const uglify = require('gulp-uglify');
 const plumber = require('gulp-plumber');
 const filter = require('gulp-filter');
 const gulpif = require('gulp-if');
-
-const sources = [
-	'src/es6-promise.min.js',
-	'src/spark-md5.min.js',
-	//'IndexedDBShim.min.js',
-	'src/Base.js',
-	'src/Ajax.js',
-	'src/ApiObject.js',
-	'src/ApiResponse.js',
-	'src/Net.js',
-	'src/Library.js',
-	'src/Container.js',
-	'src/Collections.js',
-	'src/Items.js',
-	'src/Tags.js',
-	'src/Groups.js',
-	'src/Searches.js',
-	'src/Deleted.js',
-	'src/Collection.js',
-	'src/Item.js',
-	'src/ItemMaps.js',
-	'src/Tag.js',
-	'src/Search.js',
-	'src/Group.js',
-	'src/User.js',
-	'src/Utils.js',
-	'src/Url.js',
-	'src/File.js',
-	'src/Idb.js',
-	//sets of functions with similar purposes that should probably be combined and clarified
-	'src/CollectionFunctions.js',
-	'src/ItemFunctions.js',
-	'src/TagFunctions.js',
-	'src/LibraryCache.js',
-	'src/Preferences.js',
-	//'src/*.js',
-];
+const browserify = require('browserify');
+const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
 
 const replacements = [
 	{
@@ -65,22 +31,30 @@ function onError(err) {
 }
 
 function getBuild(dev) {
-	return gulp.src(sources)
+	var b = browserify({
+		debug: true,
+		entries: './libzoterojs.js',
+		standalone: "Zotero",
+		transform: [
+        	['babelify', {
+        		'presets': ['es2015']
+    		}]
+		]
+	}).ignore('w3c-xmlhttprequest');
+
+	return b.bundle()
+		.pipe(source('./libzoterojs.js'))
+		.pipe(buffer())
 		.pipe(plumber({errorHandler: onError}))
-		.pipe(sourcemaps.init())
+		.pipe(sourcemaps.init({loadMaps: true}))
 		.pipe(gulpif(dev, replace({
 			patterns: replacements 
 		})))
-		.pipe(babel({
-			presets:  ['es2015', 'react']
-		}))
-		.pipe(concat('libzoterojs.js'))
-		.pipe(sourcemaps.write('.'))
-		.pipe(gulp.dest('build'))
+		.pipe(sourcemaps.write('./'))
+		.pipe(gulp.dest('./build/'))
 		.pipe(filter('*.js'))
 		.pipe(uglify())
 		.pipe(rename({ extname: '.min.js' }))
-		// .pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest('build'));
 }
 
@@ -94,7 +68,6 @@ gulp.task('dev', function() {
 });
 
 module.exports = {
-	sources: sources,
 	replacements: replacements,
 	gulp: gulp
 };

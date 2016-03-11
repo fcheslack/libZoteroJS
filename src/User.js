@@ -1,6 +1,8 @@
-Zotero.User = function () {this.instance = "Zotero.User";};
-Zotero.User.prototype = new Zotero.ApiObject();
-Zotero.User.prototype.loadObject = function(ob){
+'use strict';
+
+module.exports = function () {this.instance = 'Zotero.User';};
+module.exports.prototype = new Zotero.ApiObject();
+module.exports.prototype.loadObject = function(ob){
 	this.title = ob.title;
 	this.author = ob.author;
 	this.tagID = ob.tagID;
@@ -15,14 +17,14 @@ Zotero.User.prototype.loadObject = function(ob){
 	this.key = ob.key;
 };
 
-Zotero.User.prototype.parseXmlUser = function (tel) {
+module.exports.prototype.parseXmlUser = function (tel) {
 	this.parseXmlEntry(tel);
 	
 	var tagEl = tel.find('content>tag');
 	if(tagEl.length !== 0){
 		this.tagKey = tagEl.attr('key');// find("zapi\\:itemID").text();
-		this.libraryID = tagEl.attr("libraryID");
-		this.tagName = tagEl.attr("name");
+		this.libraryID = tagEl.attr('libraryID');
+		this.tagName = tagEl.attr('name');
 		this.dateAdded = tagEl.attr('dateAdded');
 		this.dateModified = tagEl.attr('dateModified');
 	}

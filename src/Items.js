@@ -1,5 +1,7 @@
-Zotero.Items = function(jsonBody){
-	this.instance = "Zotero.Items";
+'use strict';
+
+module.exports = function(jsonBody){
+	this.instance = 'Zotero.Items';
 	//represent items as array for ordering purposes
 	this.itemsVersion = 0;
 	this.syncState = {
@@ -16,29 +18,29 @@ Zotero.Items = function(jsonBody){
 	}
 };
 
-Zotero.Items.prototype = new Zotero.Container();
+module.exports.prototype = new Zotero.Container();
 
-Zotero.Items.prototype.getItem = function(key){
+module.exports.prototype.getItem = function(key){
 	return this.getObject(key);
 };
 
-Zotero.Items.prototype.getItems = function(keys){
+module.exports.prototype.getItems = function(keys){
 	return this.getObjects(keys);
 };
 
-Zotero.Items.prototype.addItem = function(item){
+module.exports.prototype.addItem = function(item){
 	this.addObject(item);
 	return this;
 };
 
-Zotero.Items.prototype.addItemsFromJson = function(jsonBody){
-	Z.debug("addItemsFromJson", 3);
+module.exports.prototype.addItemsFromJson = function(jsonBody){
+	Z.debug('addItemsFromJson', 3);
 	var items = this;
 	var parsedItemJson = jsonBody;
 	var itemsAdded = [];
-	Z.debug("looping");
+	Z.debug('looping');
 	parsedItemJson.forEach(function(itemObj){
-		Z.debug("creating new Item");
+		Z.debug('creating new Item');
 		var item = new Zotero.Item(itemObj);
 		items.addItem(item);
 		itemsAdded.push(item);
@@ -47,16 +49,16 @@ Zotero.Items.prototype.addItemsFromJson = function(jsonBody){
 };
 
 //Remove item from local set if it has been marked as deleted by the server
-Zotero.Items.prototype.removeLocalItem = function(key){
+module.exports.prototype.removeLocalItem = function(key){
 	return this.removeObject(key);
 };
 
-Zotero.Items.prototype.removeLocalItems = function(keys){
+module.exports.prototype.removeLocalItems = function(keys){
 	return this.removeObjects(keys);
 };
 
-Zotero.Items.prototype.deleteItem = function(itemKey){
-	Z.debug("Zotero.Items.deleteItem", 3);
+module.exports.prototype.deleteItem = function(itemKey){
+	Z.debug('Zotero.Items.deleteItem', 3);
 	var items = this;
 	var item;
 	
@@ -73,15 +75,15 @@ Zotero.Items.prototype.deleteItem = function(itemKey){
 	var requestConfig = {
 		url: Zotero.ajax.apiRequestString(urlconfig),
 		type: 'DELETE',
-		headers:{"If-Unmodified-Since-Version":item.get('version')}
+		headers:{'If-Unmodified-Since-Version':item.get('version')}
 	};
 	
 	return Zotero.net.ajaxRequest(requestConfig);
 };
 
-Zotero.Items.prototype.deleteItems = function(deleteItems, version){
+module.exports.prototype.deleteItems = function(deleteItems, version){
 	//TODO: split into multiple requests if necessary
-	Z.debug("Zotero.Items.deleteItems", 3);
+	Z.debug('Zotero.Items.deleteItems', 3);
 	var items = this;
 	var deleteKeys = [];
 	var i;
@@ -129,7 +131,7 @@ Zotero.Items.prototype.deleteItems = function(deleteItems, version){
 	return Zotero.net.queueRequest(requestObjects);
 };
 
-Zotero.Items.prototype.trashItems = function(itemsArray){
+module.exports.prototype.trashItems = function(itemsArray){
 	var items = this;
 	var i;
 	for(i = 0; i < itemsArray.length; i++){
@@ -139,7 +141,7 @@ Zotero.Items.prototype.trashItems = function(itemsArray){
 	return items.writeItems(itemsArray);
 };
 
-Zotero.Items.prototype.untrashItems = function(itemsArray){
+module.exports.prototype.untrashItems = function(itemsArray){
 	var items = this;
 	var i;
 	for(i = 0; i < itemsArray.length; i++){
@@ -149,7 +151,7 @@ Zotero.Items.prototype.untrashItems = function(itemsArray){
 	return items.writeItems(itemsArray);
 };
 
-Zotero.Items.prototype.findItems = function(config){
+module.exports.prototype.findItems = function(config){
 	var items = this;
 	var matchingItems = [];
 	Object.keys(items.itemObjects).forEach(function(key){
@@ -164,7 +166,7 @@ Zotero.Items.prototype.findItems = function(config){
 
 //take an array of items and extract children into their own items
 //for writing
-Zotero.Items.prototype.atomizeItems = function(itemsArray){
+module.exports.prototype.atomizeItems = function(itemsArray){
 	//process the array of items, pulling out child notes/attachments to write
 	//separately with correct parentItem set and assign generated itemKeys to
 	//new items
@@ -174,10 +176,10 @@ Zotero.Items.prototype.atomizeItems = function(itemsArray){
 		item = itemsArray[i];
 		//generate an itemKey if the item does not already have one
 		var itemKey = item.get('key');
-		if(itemKey === "" || itemKey === null) {
+		if(itemKey === '' || itemKey === null) {
 			var newItemKey = Zotero.utils.getKey();
-			item.set("key", newItemKey);
-			item.set("version", 0);
+			item.set('key', newItemKey);
+			item.set('version', 0);
 		}
 		//items that already have item key always in first pass, as are their children
 		writeItems.push(item);
@@ -198,7 +200,7 @@ Zotero.Items.prototype.atomizeItems = function(itemsArray){
 };
 
 //accept an array of 'Zotero.Item's
-Zotero.Items.prototype.writeItems = function(itemsArray){
+module.exports.prototype.writeItems = function(itemsArray){
 	var items = this;
 	var library = items.owningLibrary;
 	var i;
@@ -216,20 +218,20 @@ Zotero.Items.prototype.writeItems = function(itemsArray){
 	
 	//update item with server response if successful
 	var writeItemsSuccessCallback = function(response){
-		Z.debug("writeItem successCallback", 3);
+		Z.debug('writeItem successCallback', 3);
 		items.updateObjectsFromWriteResponse(this.writeChunk, response);
 		//save updated items to IDB
 		if(Zotero.config.useIndexedDB){
 			this.library.idbLibrary.updateItems(this.writeChunk);
 		}
 		
-		Zotero.trigger("itemsChanged", {library:this.library});
+		Zotero.trigger('itemsChanged', {library:this.library});
 		response.returnItems = this.writeChunk;
 		return response;
 	};
 	
-	Z.debug("items.itemsVersion: " + items.itemsVersion, 3);
-	Z.debug("items.libraryVersion: " + items.libraryVersion, 3);
+	Z.debug('items.itemsVersion: ' + items.itemsVersion, 3);
+	Z.debug('items.libraryVersion: ' + items.libraryVersion, 3);
 	
 	var requestObjects = [];
 	for(i = 0; i < writeChunks.length; i++){
@@ -250,7 +252,7 @@ Zotero.Items.prototype.writeItems = function(itemsArray){
 	
 	return library.sequentialRequests(requestObjects)
 	.then(function(responses){
-		Z.debug("Done with writeItems sequentialRequests promise", 3);
+		Z.debug('Done with writeItems sequentialRequests promise', 3);
 		return responses;
 	});
 };

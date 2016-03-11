@@ -1,11 +1,16 @@
+'use strict';
+
+var striptags = require('striptags');
+var ItemMaps = require('./ItemMaps.js');
+
 /*
  * TODO: several functions should not work unless we build a fresh item with a template
  * or parsed an item from the api with json content (things that depend on apiObj)
  * There should be a flag to note whether this is the case and throwing on attempts to
  * use these functions when it is not.
  */
-Zotero.Item = function(itemObj){
-	this.instance = "Zotero.Item";
+var Item = function(itemObj){
+	this.instance = 'Zotero.Item';
 	this.version = 0;
 	this.key = '';
 	this.synced = false;
@@ -22,10 +27,10 @@ Zotero.Item = function(itemObj){
 	this.initSecondaryData();
 };
 
-Zotero.Item.prototype = new Zotero.ApiObject();
+Item.prototype = new Zotero.ApiObject();
 
-Zotero.Item.prototype.parseJsonItem = function (apiObj) {
-	Z.debug("parseJsonItem", 3);
+Item.prototype.parseJsonItem = function (apiObj) {
+	Z.debug('parseJsonItem', 3);
 	var item = this;
 	item.version = apiObj.version;
 	item.key = apiObj.key;
@@ -36,7 +41,7 @@ Zotero.Item.prototype.parseJsonItem = function (apiObj) {
 	}
 };
 
-Zotero.Item.prototype.emptyJsonItem = function(){
+Item.prototype.emptyJsonItem = function(){
 	return {
 		key: '',
 		version: 0,
@@ -57,8 +62,8 @@ Zotero.Item.prototype.emptyJsonItem = function(){
 };
 
 //populate property values derived from json content
-Zotero.Item.prototype.initSecondaryData = function(){
-	Z.debug("initSecondaryData", 3);
+Item.prototype.initSecondaryData = function(){
+	Z.debug('initSecondaryData', 3);
 	var item = this;
 	
 	item.version = item.apiObj.version;
@@ -82,10 +87,10 @@ Zotero.Item.prototype.initSecondaryData = function(){
 	item.synced = false;
 
 	item.updateTagStrings();
-	Z.debug("done with initSecondaryData", 3);
+	Z.debug('done with initSecondaryData', 3);
 };
 
-Zotero.Item.prototype.updateTagStrings = function(){
+Item.prototype.updateTagStrings = function(){
 	var item = this;
 	var tagstrings = [];
 	for (var i = 0; i < item.apiObj.data.tags.length; i++) {
@@ -94,7 +99,7 @@ Zotero.Item.prototype.updateTagStrings = function(){
 	item.apiObj._supplement.tagstrings = tagstrings;
 };
 
-Zotero.Item.prototype.initEmpty = function(itemType, linkMode){
+Item.prototype.initEmpty = function(itemType, linkMode){
 	var item = this;
 	return item.getItemTemplate(itemType, linkMode)
 	.then(function(template){
@@ -104,17 +109,17 @@ Zotero.Item.prototype.initEmpty = function(itemType, linkMode){
 };
 
 //special case note initialization to guarentee synchronous and simplify some uses
-Zotero.Item.prototype.initEmptyNote = function(){
+Item.prototype.initEmptyNote = function(){
 	var item = this;
 	item.version = 0;
-	var noteTemplate = {"itemType":"note","note":"","tags":[],"collections":[],"relations":{}};
+	var noteTemplate = {'itemType':'note','note':'','tags':[],'collections':[],'relations':{}};
 	
 	item.initEmptyFromTemplate(noteTemplate);
 	
 	return item;
 };
 
-Zotero.Item.prototype.initEmptyFromTemplate = function(template){
+Item.prototype.initEmptyFromTemplate = function(template){
 	var item = this;
 	item.version = 0;
 	
@@ -134,16 +139,16 @@ Zotero.Item.prototype.initEmptyFromTemplate = function(template){
 	return item;
 };
 
-Zotero.Item.prototype.isSupplementaryItem = function(){
+Item.prototype.isSupplementaryItem = function(){
 	var item = this;
 	var itemType = item.get('itemType');
-	if(itemType == "attachment" || itemType == "note"){
+	if(itemType == 'attachment' || itemType == 'note'){
 		return true;
 	}
 	return false;
 };
 
-Zotero.Item.prototype.isSnapshot = function(){
+Item.prototype.isSnapshot = function(){
 	var item = this;
 	if(item.apiObj.links['enclosure']){
 		var ftype = item.apiObj.links['enclosure'].type;
@@ -154,11 +159,11 @@ Zotero.Item.prototype.isSnapshot = function(){
 	return false;
 };
 
-Zotero.Item.prototype.updateObjectKey = function(objectKey){
+Item.prototype.updateObjectKey = function(objectKey){
 	return this.updateItemKey(objectKey);
 };
 
-Zotero.Item.prototype.updateItemKey = function(itemKey){
+Item.prototype.updateItemKey = function(itemKey){
 	var item = this;
 	item.key = itemKey;
 	item.apiObj.key = itemKey;
@@ -171,16 +176,16 @@ Zotero.Item.prototype.updateItemKey = function(itemKey){
  * Write updated information for the item to the api and potentiallyp
  * create new child notes (or attachments?) of this item
  */
-Zotero.Item.prototype.writeItem = function(){
+Item.prototype.writeItem = function(){
 	var item = this;
 	if(!item.owningLibrary){
-		throw new Error("Item must be associated with a library");
+		throw new Error('Item must be associated with a library');
 	}
 	return item.owningLibrary.items.writeItems([item]);
 };
 
 //get the JS object to be PUT/POSTed for write
-Zotero.Item.prototype.writeApiObj = function(){
+Item.prototype.writeApiObj = function(){
 	var item = this;
 	
 	//remove any creators that have no names
@@ -200,13 +205,13 @@ Zotero.Item.prototype.writeApiObj = function(){
 	return writeApiObj;
 };
 
-Zotero.Item.prototype.createChildNotes = function(notes){
+Item.prototype.createChildNotes = function(notes){
 	var item = this;
 	var childItems = [];
 	var childItemPromises = [];
 	
 	notes.forEach(function(note){
-		var childItem = new Zotero.Item();
+		var childItem = new Item();
 		var p = childItem.initEmpty('note')
 		.then(function(noteItem){
 			noteItem.set('note', note.note);
@@ -223,12 +228,12 @@ Zotero.Item.prototype.createChildNotes = function(notes){
 };
 
 //TODO: implement
-Zotero.Item.prototype.writePatch = function(){
+Item.prototype.writePatch = function(){
 	
 };
 
-Zotero.Item.prototype.getChildren = function(library){
-	Z.debug("Zotero.Item.getChildren");
+Item.prototype.getChildren = function(library){
+	Z.debug('Zotero.Item.getChildren');
 	var item = this;
 	return Promise.resolve()
 	.then(function(){
@@ -260,8 +265,8 @@ Zotero.Item.prototype.getChildren = function(library){
 	});
 };
 
-Zotero.Item.prototype.getItemTypes = function (locale) {
-	Z.debug("Zotero.Item.prototype.getItemTypes", 3);
+Item.prototype.getItemTypes = function (locale) {
+	Z.debug('Zotero.Item.prototype.getItemTypes', 3);
 	if(!locale){
 		locale = 'en-US';
 	}
@@ -269,8 +274,8 @@ Zotero.Item.prototype.getItemTypes = function (locale) {
 
 	var itemTypes = Zotero.cache.load({locale:locale, target:'itemTypes'});
 	if(itemTypes){
-		Z.debug("have itemTypes in localStorage", 3);
-		Zotero.Item.prototype.itemTypes = itemTypes;//JSON.parse(Zotero.storage.localStorage['itemTypes']);
+		Z.debug('have itemTypes in localStorage', 3);
+		Item.prototype.itemTypes = itemTypes;//JSON.parse(Zotero.storage.localStorage['itemTypes']);
 		return;
 	}
 	
@@ -280,15 +285,15 @@ Zotero.Item.prototype.getItemTypes = function (locale) {
 		url: Zotero.ajax.proxyWrapper(url, 'GET'),
 		type: 'GET'
 	}).then(function(xhr){
-		Z.debug("got itemTypes response", 3);
+		Z.debug('got itemTypes response', 3);
 		Z.debug(xhr.response, 4);
-		Zotero.Item.prototype.itemTypes = JSON.parse(xhr.responseText);
-		Zotero.cache.save({locale:locale, target:'itemTypes'}, Zotero.Item.prototype.itemTypes);
+		Item.prototype.itemTypes = JSON.parse(xhr.responseText);
+		Zotero.cache.save({locale:locale, target:'itemTypes'}, Item.prototype.itemTypes);
 	});
 };
 
-Zotero.Item.prototype.getItemFields = function (locale) {
-	Z.debug("Zotero.Item.prototype.getItemFields", 3);
+Item.prototype.getItemFields = function (locale) {
+	Z.debug('Zotero.Item.prototype.getItemFields', 3);
 	if(!locale){
 		locale = 'en-US';
 	}
@@ -296,10 +301,10 @@ Zotero.Item.prototype.getItemFields = function (locale) {
 	
 	var itemFields = Zotero.cache.load({locale:locale, target:'itemFields'});
 	if(itemFields){
-		Z.debug("have itemFields in localStorage", 3);
-		Zotero.Item.prototype.itemFields = itemFields;//JSON.parse(Zotero.storage.localStorage['itemFields']);
-		Object.keys(Zotero.Item.prototype.itemFields).forEach(function(key){
-			var val = Zotero.Item.prototype.itemFields[key];
+		Z.debug('have itemFields in localStorage', 3);
+		Item.prototype.itemFields = itemFields;//JSON.parse(Zotero.storage.localStorage['itemFields']);
+		Object.keys(Item.prototype.itemFields).forEach(function(key){
+			var val = Item.prototype.itemFields[key];
 			Zotero.localizations.fieldMap[val.field] = val.localized;
 		});
 		return;
@@ -311,22 +316,22 @@ Zotero.Item.prototype.getItemFields = function (locale) {
 		url: Zotero.ajax.proxyWrapper(requestUrl),
 		type: 'GET'
 	}).then(function(xhr){
-		Z.debug("got itemTypes response", 4);
+		Z.debug('got itemTypes response', 4);
 		var data = JSON.parse(xhr.responseText);
-		Zotero.Item.prototype.itemFields = data;
+		Item.prototype.itemFields = data;
 		Zotero.cache.save({locale:locale, target:'itemFields'}, data);
 		//Zotero.storage.localStorage['itemFields'] = JSON.stringify(data);
-		Object.keys(Zotero.Item.prototype.itemFields).forEach(function(key){
-			var val = Zotero.Item.prototype.itemFields[key];
+		Object.keys(Item.prototype.itemFields).forEach(function(key){
+			var val = Item.prototype.itemFields[key];
 			Zotero.localizations.fieldMap[val.field] = val.localized;
 		});
 	});
 };
 
-Zotero.Item.prototype.getItemTemplate = function (itemType="document", linkMode="") {
-	Z.debug("Zotero.Item.prototype.getItemTemplate", 3);
+Item.prototype.getItemTemplate = function (itemType='document', linkMode='') {
+	Z.debug('Zotero.Item.prototype.getItemTemplate', 3);
 	if(itemType == 'attachment' && linkMode == ''){
-		throw new Error("attachment template requested with no linkMode");
+		throw new Error('attachment template requested with no linkMode');
 	}
 	
 	var query = Zotero.ajax.apiQueryString({itemType:itemType, linkMode:linkMode});
@@ -335,22 +340,22 @@ Zotero.Item.prototype.getItemTemplate = function (itemType="document", linkMode=
 	var cacheConfig = {itemType:itemType, target:'itemTemplate'};
 	var itemTemplate = Zotero.cache.load(cacheConfig);
 	if(itemTemplate){
-		Z.debug("have itemTemplate in localStorage", 3);
+		Z.debug('have itemTemplate in localStorage', 3);
 		var template = itemTemplate;// JSON.parse(Zotero.storage.localStorage[url]);
 		return Promise.resolve(template);
 	}
 	
 	return Zotero.ajaxRequest(requestUrl, 'GET', {dataType:'json'})
 	.then(function(response){
-		Z.debug("got itemTemplate response", 3);
+		Z.debug('got itemTemplate response', 3);
 		Zotero.cache.save(cacheConfig, response.data);
 		return response.data;
 	});
 };
 
-Zotero.Item.prototype.getUploadAuthorization = function(fileinfo){
+Item.prototype.getUploadAuthorization = function(fileinfo){
 	//fileInfo: md5, filename, filesize, mtime, zip, contentType, charset
-	Z.debug("Zotero.Item.getUploadAuthorization", 3);
+	Z.debug('Zotero.Item.getUploadAuthorization', 3);
 	var item = this;
 	
 	var config = {
@@ -380,8 +385,8 @@ Zotero.Item.prototype.getUploadAuthorization = function(fileinfo){
 	);
 };
 
-Zotero.Item.prototype.registerUpload = function(uploadKey){
-	Z.debug("Zotero.Item.registerUpload", 3);
+Item.prototype.registerUpload = function(uploadKey){
+	Z.debug('Zotero.Item.registerUpload', 3);
 	var item = this;
 	var config = {
 		'target':'item',
@@ -409,14 +414,14 @@ Zotero.Item.prototype.registerUpload = function(uploadKey){
 	});
 };
 
-Zotero.Item.prototype.fullUpload = function(file){
+Item.prototype.fullUpload = function(file){
 
 };
 
-Zotero.Item.prototype.creatorTypes = {};
+Item.prototype.creatorTypes = {};
 
-Zotero.Item.prototype.getCreatorTypes = function (itemType) {
-	Z.debug("Zotero.Item.prototype.getCreatorTypes: " + itemType, 3);
+Item.prototype.getCreatorTypes = function (itemType) {
+	Z.debug('Zotero.Item.prototype.getCreatorTypes: ' + itemType, 3);
 	if(!itemType){
 		itemType = 'document';
 	}
@@ -425,73 +430,73 @@ Zotero.Item.prototype.getCreatorTypes = function (itemType) {
 	//creatorTypes maps itemType to the possible creatorTypes
 	var creatorTypes = Zotero.cache.load({target:'creatorTypes'});
 	if(creatorTypes){
-		Z.debug("have creatorTypes in localStorage", 3);
-		Zotero.Item.prototype.creatorTypes = creatorTypes;//JSON.parse(Zotero.storage.localStorage['creatorTypes']);
+		Z.debug('have creatorTypes in localStorage', 3);
+		Item.prototype.creatorTypes = creatorTypes;//JSON.parse(Zotero.storage.localStorage['creatorTypes']);
 	}
 	
-	if(Zotero.Item.prototype.creatorTypes[itemType]){
-		Z.debug("creatorTypes of requested itemType available in localStorage", 3);
-		Z.debug(Zotero.Item.prototype.creatorTypes, 4);
-		return Promise.resolve(Zotero.Item.prototype.creatorTypes[itemType]);
+	if(Item.prototype.creatorTypes[itemType]){
+		Z.debug('creatorTypes of requested itemType available in localStorage', 3);
+		Z.debug(Item.prototype.creatorTypes, 4);
+		return Promise.resolve(Item.prototype.creatorTypes[itemType]);
 	}
 	else{
-		Z.debug("sending request for creatorTypes", 3);
+		Z.debug('sending request for creatorTypes', 3);
 		var query = Zotero.ajax.apiQueryString({itemType:itemType});
 		//TODO: this probably shouldn't be using baseApiUrl directly
 		var requestUrl = Zotero.config.baseApiUrl + '/itemTypeCreatorTypes' + query;
 		
 		return Zotero.ajaxRequest(requestUrl, 'GET', {dataType:'json'})
 		.then(function(response){
-			Z.debug("got creatorTypes response", 4);
-			Zotero.Item.prototype.creatorTypes[itemType] = response.data;
-			//Zotero.storage.localStorage['creatorTypes'] = JSON.stringify(Zotero.Item.prototype.creatorTypes);
-			Zotero.cache.save({target:'creatorTypes'}, Zotero.Item.prototype.creatorTypes);
-			return Zotero.Item.prototype.creatorTypes[itemType];
+			Z.debug('got creatorTypes response', 4);
+			Item.prototype.creatorTypes[itemType] = response.data;
+			//Zotero.storage.localStorage['creatorTypes'] = JSON.stringify(Item.prototype.creatorTypes);
+			Zotero.cache.save({target:'creatorTypes'}, Item.prototype.creatorTypes);
+			return Item.prototype.creatorTypes[itemType];
 		});
 	}
 };
 
-Zotero.Item.prototype.getCreatorFields = function (locale) {
-	Z.debug("Zotero.Item.prototype.getCreatorFields", 3);
+Item.prototype.getCreatorFields = function (locale) {
+	Z.debug('Zotero.Item.prototype.getCreatorFields', 3);
 	var creatorFields = Zotero.cache.load({target:'creatorFields'});
 	if(creatorFields){
-		Z.debug("have creatorFields in localStorage", 3);
-		Zotero.Item.prototype.creatorFields = creatorFields;// JSON.parse(Zotero.storage.localStorage['creatorFields']);
+		Z.debug('have creatorFields in localStorage', 3);
+		Item.prototype.creatorFields = creatorFields;// JSON.parse(Zotero.storage.localStorage['creatorFields']);
 		return Promise.resolve(creatorFields);
 	}
 	
 	var requestUrl = Zotero.config.baseApiUrl + '/creatorFields';
 	return Zotero.ajaxRequest(requestUrl, 'GET', {dataType:'json'})
 	.then(function(response){
-		Z.debug("got itemTypes response", 4);
-		Zotero.Item.prototype.creatorFields = response.data;
+		Z.debug('got itemTypes response', 4);
+		Item.prototype.creatorFields = response.data;
 		Zotero.cache.save({target:'creatorFields'}, response.data);
 	});
 };
 
 //---Functions to manually add Zotero format data instead of fetching it from the API ---
 //To be used first with cached data for offline, could also maybe be used for custom types
-Zotero.Item.prototype.addItemTypes = function(itemTypes, locale){
+Item.prototype.addItemTypes = function(itemTypes, locale){
 	
 };
 
-Zotero.Item.prototype.addItemFields = function(itemType, itemFields){
+Item.prototype.addItemFields = function(itemType, itemFields){
 	
 };
 
-Zotero.Item.prototype.addCreatorTypes = function(itemType, creatorTypes){
+Item.prototype.addCreatorTypes = function(itemType, creatorTypes){
 	
 };
 
-Zotero.Item.prototype.addCreatorFields = function(itemType, creatorFields){
+Item.prototype.addCreatorFields = function(itemType, creatorFields){
 	
 };
 
-Zotero.Item.prototype.addItemTemplates = function(templates){
+Item.prototype.addItemTemplates = function(templates){
 	
 };
 
-Zotero.Item.prototype.itemTypeImageClass = function(){
+Item.prototype.itemTypeImageClass = function(){
 	//linkModes: imported_file,imported_url,linked_file,linked_url
 	var item = this;
 	if(item.apiObj.data.itemType == 'attachment'){
@@ -519,7 +524,7 @@ Zotero.Item.prototype.itemTypeImageClass = function(){
 	}
 };
 
-Zotero.Item.prototype.itemTypeIconClass = function(){
+Item.prototype.itemTypeIconClass = function(){
 	//linkModes: imported_file,imported_url,linked_file,linked_url
 	var item = this;
 	var defaultIcon = 'fa fa-file-text-o';
@@ -622,7 +627,7 @@ Zotero.Item.prototype.itemTypeIconClass = function(){
 	}
 };
 
-Zotero.Item.prototype.get = function(key){
+Item.prototype.get = function(key){
 	var item = this;
 	switch(key) {
 		case 'title':
@@ -638,7 +643,7 @@ Zotero.Item.prototype.get = function(key){
 			return title;
 		case 'creatorSummary':
 		case 'creator':
-			if(typeof item.apiObj.meta.creatorSummary !== "undefined"){
+			if(typeof item.apiObj.meta.creatorSummary !== 'undefined'){
 				return item.apiObj.meta.creatorSummary;
 			}
 			else {
@@ -667,7 +672,7 @@ Zotero.Item.prototype.get = function(key){
 	return null;
 };
 
-Zotero.Item.prototype.set = function(key, val){
+Item.prototype.set = function(key, val){
 	var item = this;
 	if(key in item.apiObj){
 		item.apiObj[key] = val;
@@ -680,26 +685,26 @@ Zotero.Item.prototype.set = function(key, val){
 	}
 	
 	switch (key) {
-		case "itemKey":
-		case "key":
+		case 'itemKey':
+		case 'key':
 			item.key = val;
 			item.apiObj.data.key = val;
 			break;
-		case "itemVersion":
-		case "version":
+		case 'itemVersion':
+		case 'version':
 			item.version = val;
 			item.apiObj.data.version = val;
 			break;
-		case "itemType":
+		case 'itemType':
 			item.itemType = val;
 			//TODO: translate api object to new item type
 			break;
-		case "linkMode":
+		case 'linkMode':
 			break;
-		case "deleted":
+		case 'deleted':
 			item.apiObj.data.deleted = val;
 			break;
-		case "parentItem":
+		case 'parentItem':
 			if( val === '' ){ val = false; }
 			item.apiObj.data.parentItem = val;
 			break;
@@ -709,10 +714,10 @@ Zotero.Item.prototype.set = function(key, val){
 	return item;
 };
 
-Zotero.Item.prototype.noteTitle = function(note){
+Item.prototype.noteTitle = function(note){
 	var len = 120;
-	var notetext = J(note).text();
-	var firstNewline = notetext.indexOf("\n");
+	var notetext = striptags(note);
+	var firstNewline = notetext.indexOf('\n');
 	if((firstNewline != -1) && firstNewline < len){
 		return notetext.substr(0, firstNewline);
 	}
@@ -721,7 +726,7 @@ Zotero.Item.prototype.noteTitle = function(note){
 	}
 };
 
-Zotero.Item.prototype.setParent = function(parentItemKey){
+Item.prototype.setParent = function(parentItemKey){
 	var item = this;
 	//pull out itemKey string if we were passed an item object
 	if(typeof parentItemKey != 'string' &&
@@ -733,7 +738,7 @@ Zotero.Item.prototype.setParent = function(parentItemKey){
 	return item;
 };
 
-Zotero.Item.prototype.addToCollection = function(collectionKey){
+Item.prototype.addToCollection = function(collectionKey){
 	var item = this;
 	//take out the collection key if we're passed a collection object instead
 	if(typeof collectionKey != 'string'){
@@ -747,7 +752,7 @@ Zotero.Item.prototype.addToCollection = function(collectionKey){
 	return;
 };
 
-Zotero.Item.prototype.removeFromCollection = function(collectionKey){
+Item.prototype.removeFromCollection = function(collectionKey){
 	var item = this;
 	//take out the collection key if we're passed a collection object instead
 	if(typeof collectionKey != 'string'){
@@ -762,16 +767,16 @@ Zotero.Item.prototype.removeFromCollection = function(collectionKey){
 	return;
 };
 
-Zotero.Item.prototype.uploadChildAttachment = function(childItem, fileInfo, progressCallback){
+Item.prototype.uploadChildAttachment = function(childItem, fileInfo, progressCallback){
 	/*
 	 * write child item so that it exists
 	 * get upload authorization for actual file
 	 * perform full upload
 	 */
 	var item = this;
-	Z.debug("uploadChildAttachment", 3);
+	Z.debug('uploadChildAttachment', 3);
 	if(!item.owningLibrary){
-		return Promise.reject(new Error("Item must be associated with a library"));
+		return Promise.reject(new Error('Item must be associated with a library'));
 	}
 
 	//make sure childItem has parent set
@@ -786,17 +791,17 @@ Zotero.Item.prototype.uploadChildAttachment = function(childItem, fileInfo, prog
 	}, function(response){
 		//failure during attachmentItem write
 		throw {
-			"message":"Failure during attachmentItem write.",
-			"code": response.status,
-			"serverMessage": response.jqxhr.responseText,
-			"response": response
+			'message':'Failure during attachmentItem write.',
+			'code': response.status,
+			'serverMessage': response.jqxhr.responseText,
+			'response': response
 		};
 	});
 };
 
-Zotero.Item.prototype.uploadFile = function(fileInfo, progressCallback){
+Item.prototype.uploadFile = function(fileInfo, progressCallback){
 	var item = this;
-	Z.debug("Zotero.Item.uploadFile", 3);
+	Z.debug('Zotero.Item.uploadFile', 3);
 	var uploadAuthFileData = {
 		md5:fileInfo.md5,
 		filename: item.get('title'),
@@ -805,17 +810,17 @@ Zotero.Item.prototype.uploadFile = function(fileInfo, progressCallback){
 		contentType:fileInfo.contentType,
 		params:1
 	};
-	if(fileInfo.contentType === ""){
-		uploadAuthFileData.contentType = "application/octet-stream";
+	if(fileInfo.contentType === ''){
+		uploadAuthFileData.contentType = 'application/octet-stream';
 	}
 	return item.getUploadAuthorization(uploadAuthFileData)
 	.then(function(response){
-		Z.debug("uploadAuth callback", 3);
+		Z.debug('uploadAuth callback', 3);
 		var upAuthOb;
-		if(typeof response.data == "string"){upAuthOb = JSON.parse(response.data);}
+		if(typeof response.data == 'string'){upAuthOb = JSON.parse(response.data);}
 		else{upAuthOb = response.data;}
 		if(upAuthOb.exists == 1){
-			return {'message':"File Exists"};
+			return {'message':'File Exists'};
 		}
 		else{
 			//TODO: add progress
@@ -826,9 +831,9 @@ Zotero.Item.prototype.uploadFile = function(fileInfo, progressCallback){
 				.then(function(response){
 					if(response.isError){
 						var e = {
-							"message":"Failed to register uploaded file.",
-							"code": response.status,
-							"serverMessage": response.jqxhr.responseText,
+							'message':'Failed to register uploaded file.',
+							'code': response.status,
+							'serverMessage': response.jqxhr.responseText,
 							'response': response
 						};
 						Z.error(e);
@@ -840,33 +845,33 @@ Zotero.Item.prototype.uploadFile = function(fileInfo, progressCallback){
 			});
 		}
 	}).catch(function(response){
-		Z.debug("Failure caught during upload", 3);
+		Z.debug('Failure caught during upload', 3);
 		Z.debug(response, 3);
 		throw {
-			"message":"Failure during upload.",
-			"code": response.status,
-			"serverMessage": response.jqxhr.responseText,
+			'message':'Failure during upload.',
+			'code': response.status,
+			'serverMessage': response.jqxhr.responseText,
 			'response': response
 		};
 	});
 };
 
-Zotero.Item.prototype.cslItem = function(){
+Item.prototype.cslItem = function(){
 	var zoteroItem = this;
 	
 	// don't return URL or accessed information for journal articles if a
 	// pages field exists
-	var itemType = zoteroItem.get("itemType");//Zotero_ItemTypes::getName($zoteroItem->itemTypeID);
+	var itemType = zoteroItem.get('itemType');//Zotero_ItemTypes::getName($zoteroItem->itemTypeID);
 	var cslType = zoteroItem.cslTypeMap.hasOwnProperty(itemType) ? zoteroItem.cslTypeMap[itemType] : false;
-	if (!cslType) cslType = "article";
-	var ignoreURL = ((zoteroItem.get("accessDate") || zoteroItem.get("url")) &&
-			itemType in {"journalArticle":1, "newspaperArticle":1, "magazineArticle":1} &&
-			zoteroItem.get("pages") &&
+	if (!cslType) cslType = 'article';
+	var ignoreURL = ((zoteroItem.get('accessDate') || zoteroItem.get('url')) &&
+			itemType in {'journalArticle':1, 'newspaperArticle':1, 'magazineArticle':1} &&
+			zoteroItem.get('pages') &&
 			zoteroItem.citePaperJournalArticleURL);
 	
 	var cslItem = {'type': cslType};
 	if(zoteroItem.owningLibrary){
-		cslItem['id'] = zoteroItem.apiObj.library.id + "/" + zoteroItem.get("key");
+		cslItem['id'] = zoteroItem.apiObj.library.id + '/' + zoteroItem.get('key');
 	} else {
 		cslItem['id'] = Zotero.utils.getKey();
 	}
@@ -875,7 +880,7 @@ Zotero.Item.prototype.cslItem = function(){
 	// TODO: does citeproc-js permit short forms?
 	Object.keys(zoteroItem.cslFieldMap).forEach(function(variable){
 		var fields = zoteroItem.cslFieldMap[variable];
-		if (variable == "URL" && ignoreURL) return;
+		if (variable == 'URL' && ignoreURL) return;
 		fields.forEach(function(field){
 			var value = zoteroItem.get(field);
 			if(value){
@@ -892,7 +897,7 @@ Zotero.Item.prototype.cslItem = function(){
 		if (!creatorType) return;
 		
 		var nameObj;
-		if(creator.hasOwnProperty("name")){
+		if(creator.hasOwnProperty('name')){
 			nameObj = {'literal': creator['name']};
 		}
 		else {
@@ -912,9 +917,15 @@ Zotero.Item.prototype.cslItem = function(){
 		var val = zoteroItem.cslDateMap[key];
 		var date = zoteroItem.get(val);
 		if (date) {
-			cslItem[key] = {"raw": date};
+			cslItem[key] = {'raw': date};
 		}
 	});
 	
 	return cslItem;
 };
+
+Object.keys(ItemMaps).forEach(function(key) {
+	Item.prototype[key] = ItemMaps[key];
+});
+
+module.exports = Item;

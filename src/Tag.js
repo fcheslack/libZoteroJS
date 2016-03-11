@@ -1,5 +1,7 @@
-Zotero.Tag = function (tagObj) {
-	this.instance = "Zotero.Tag";
+'use strict';
+
+module.exports = function (tagObj) {
+	this.instance = 'Zotero.Tag';
 	this.color = null;
 	this.version = 0;
 	if( typeof tagObj == 'object'){
@@ -11,16 +13,16 @@ Zotero.Tag = function (tagObj) {
 	}
 };
 
-Zotero.Tag.prototype = new Zotero.ApiObject();
+module.exports.prototype = new Zotero.ApiObject();
 
-Zotero.Tag.prototype.parseJsonTag = function(tagObj) {
+module.exports.prototype.parseJsonTag = function(tagObj) {
 	var tag = this;
 	tag.apiObj = Z.extend({}, tagObj);
 	tag.urlencodedtag = encodeURIComponent(tag.apiObj.tag);
 	tag.version = tag.apiObj.version;
 };
 
-Zotero.Tag.prototype.templateApiObj = function(tagString) {
+module.exports.prototype.templateApiObj = function(tagString) {
 	return {
 		tag: tagString,
 		links: {},
@@ -31,9 +33,9 @@ Zotero.Tag.prototype.templateApiObj = function(tagString) {
 	};
 };
 
-Zotero.Tag.prototype.tagComparer = function(){
-	if(window.Intl){
-		var collator = new window.Intl.Collator();
+module.exports.prototype.tagComparer = function(){
+	if(Intl){
+		var collator = new Intl.Collator();
 		return function(a, b){
 			return collator.compare(a.apiObj.tag, b.apiObj.tag);
 		};
@@ -50,7 +52,7 @@ Zotero.Tag.prototype.tagComparer = function(){
 	}
 };
 
-Zotero.Tag.prototype.set = function(key, val){
+module.exports.prototype.set = function(key, val){
 	var tag = this;
 	
 	if(key in tag.apiObj){
@@ -61,8 +63,8 @@ Zotero.Tag.prototype.set = function(key, val){
 	}
 	
 	switch (key) {
-		case "tagVersion":
-		case "version":
+		case 'tagVersion':
+		case 'version':
 			tag.version = val;
 			tag.apiObj.version = val;
 			break;

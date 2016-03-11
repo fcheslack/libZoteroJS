@@ -1,8 +1,6 @@
-//'use strict';
-var J = jQuery.noConflict();
+'use strict';
 
 var Zotero = {
-	ajax: {},
 	callbacks: {},
 	ui: {
 		callbacks: {},
@@ -25,11 +23,8 @@ var Zotero = {
 			UP: 38
 		}
 	},
-	url: {},
-	utils: {},
 	offline: {},
 	temp: {},
-	localizations: {},
 	
 	config: {librarySettings: {},
 			baseApiUrl: 'https://api.zotero.org',
@@ -37,7 +32,7 @@ var Zotero = {
 			baseFeedUrl: 'https://api.zotero.org',
 			baseZoteroWebsiteUrl: 'https://www.zotero.org',
 			baseDownloadUrl: 'https://www.zotero.org',
-			nonparsedBaseUrl: "",
+			nonparsedBaseUrl: '',
 			debugLogEndpoint: '',
 			storeDebug: true,
 			directDownloads: true,
@@ -106,13 +101,13 @@ var Zotero = {
 		var prefLevel = 3;
 		if(Zotero.config.storeDebug){
 			if(level <= prefLevel){
-				Zotero.debugstring += "DEBUG:" + debugstring + "\n";
+				Zotero.debugstring += 'DEBUG:' + debugstring + '\n';
 			}
 		}
 		if(typeof console == 'undefined'){
 			return;
 		}
-		if(typeof(level) !== "number"){
+		if(typeof(level) !== 'number'){
 			level = 1;
 		}
 		if(Zotero.preferences !== undefined){
@@ -125,7 +120,7 @@ var Zotero = {
 	
 	warn: function(warnstring){
 		if(Zotero.config.storeDebug){
-			Zotero.debugstring += "WARN:" + warnstring + "\n";
+			Zotero.debugstring += 'WARN:' + warnstring + '\n';
 		}
 		if(typeof console == 'undefined' || typeof console.warn == 'undefined'){
 			this.debug(warnstring);
@@ -137,7 +132,7 @@ var Zotero = {
 	
 	error: function(errorstring){
 		if(Zotero.config.storeDebug){
-			Zotero.debugstring += "ERROR:" + errorstring + "\n";
+			Zotero.debugstring += 'ERROR:' + errorstring + '\n';
 		}
 		if(typeof console == 'undefined' || typeof console.error == 'undefined'){
 			this.debug(errorstring);
@@ -154,9 +149,9 @@ var Zotero = {
 		}).then(function(xhr){
 			var data = JSON.parse(xhr.responseText);
 			if(data.logID) {
-				alert("ZoteroWWW debug logID:" + data.logID);
+				alert('ZoteroWWW debug logID:' + data.logID);
 			} else if (data.error) {
-				alert("Error submitting ZoteroWWW debug log:" + data.error);
+				alert('Error submitting ZoteroWWW debug log:' + data.error);
 			}
 		});
 	},
@@ -198,14 +193,14 @@ var Zotero = {
 		},
 		
 		validate: function(arg, type){
-			Z.debug("Zotero.validate", 4);
+			Z.debug('Zotero.validate', 4);
 			if(arg === ''){
 				return null;
 			}
 			else if(arg === null){
 				return true;
 			}
-			Z.debug(arg + " " + type, 4);
+			Z.debug(arg + ' ' + type, 4);
 			var patterns = this.patterns;
 			
 			if(patterns.hasOwnProperty(type)){
@@ -260,104 +255,9 @@ var Zotero = {
 	}
 };
 
-Zotero.Cache = function(store){
-	this.store = store;
-	var registry = this.store._registry;
-	if(registry === null || typeof registry == 'undefined'){
-		registry = {};
-		this.store._registry = JSON.stringify(registry);
-	}
-};
-
-//build a consistent string from an object to use as a cache key
-//put object key/value pairs into array, sort array, and concatenate
-//array with '/'
-Zotero.Cache.prototype.objectCacheString = function(params){
-	var paramVarsArray = [];
-	Object.keys(params).forEach(function(index){
-		var value = params[index];
-		if(!value) { return; }
-		else if(Array.isArray(value)){
-			value.forEach(function(v){
-				paramVarsArray.push(index + '/' + encodeURIComponent(v) );
-			});
-		}
-		else{
-			paramVarsArray.push(index + '/' + encodeURIComponent(value) );
-		}
-	});
-	paramVarsArray.sort();
-	Z.debug(paramVarsArray, 4);
-	var objectCacheString = paramVarsArray.join('/');
-	return objectCacheString;
-};
-
-//should use setItem and getItem if I extend that to the case where no Storage object is available in the browser
-Zotero.Cache.prototype.save = function(params, object, cachetags){
-	//cachetags for expiring entries
-	if(!Array.isArray(cachetags)){
-		cachetags = [];
-	}
-	//get registry object from storage
-	var registry = JSON.parse(this.store._registry);
-	if(!registry){
-		registry = {};
-	}
-	var objectCacheString = this.objectCacheString(params);
-	//save object in storage
-	this.store[objectCacheString] = JSON.stringify(object);
-	//make registry entry for object
-	var registryEntry = {'id':objectCacheString, saved:Date.now(), cachetags:cachetags};
-	registry[objectCacheString] = registryEntry;
-	//save registry back to storage
-	this.store._registry = JSON.stringify(registry);
-};
-
-Zotero.Cache.prototype.load = function(params){
-	Z.debug("Zotero.Cache.load", 3);
-	var objectCacheString = this.objectCacheString(params);
-	Z.debug(objectCacheString, 4);
-	try{
-		var s = this.store[objectCacheString];
-		if(!s){
-			Z.warn("No value found in cache store - " + objectCacheString, 3);
-			return null;
-		}
-		else{
-			return JSON.parse(s);
-		}
-	}
-	catch(e){
-		Z.error('Error parsing retrieved cache data: ' + objectCacheString + ' : ' + s);
-		return null;
-	}
-};
-
-Zotero.Cache.prototype.expireCacheTag = function(tag){
-	Z.debug("Zotero.Cache.expireCacheTag", 3);
-	var registry = JSON.parse(this.store._registry);
-	var store = this.store;
-	Object.keys(registry).forEach(function(index){
-		var value = registry[index];
-		if(value.cachetags.indexOf(tag) != (-1)){
-			Z.debug('tag ' + tag + ' found for item ' + value['id'] + ' : expiring', 4);
-			delete store[value['id']];
-			delete registry[value['id']];
-		}
-	});
-};
-
-Zotero.Cache.prototype.clear = function(){
-	if(typeof(this.store.clear) == 'function'){
-		this.store.clear();
-	}
-	else{
-		this.store = {};
-	}
-};
 
 Zotero.ajaxRequest = function(url, type, options){
-	Z.debug("Zotero.ajaxRequest ==== " + url, 3);
+	Z.debug('Zotero.ajaxRequest ==== ' + url, 3);
 	if(!type){
 		type = 'GET';
 	}
@@ -380,16 +280,16 @@ Zotero.eventmanager = {
 
 Zotero.trigger = function(eventType, data={}, filter=false){
 	if(filter){
-		Z.debug("filter is not false", 3);
-		eventType += "_" + filter;
+		Z.debug('filter is not false', 3);
+		eventType += '_' + filter;
 	}
-	Zotero.debug("Triggering eventful " + eventType, 3);
+	Zotero.debug('Triggering eventful ' + eventType, 3);
 	Z.debug(data);
 	
 	data.zeventful = true;
-	if(data.triggeringElement === null || data.triggeringElement === undefined){
-		data.triggeringElement = J("#eventful");
-	}
+	// if(data.triggeringElement === null || data.triggeringElement === undefined){
+	// 	data.triggeringElement = J('#eventful');
+	// }
 	
 	try{
 		if(Zotero.eventmanager.callbacks.hasOwnProperty(eventType)){
@@ -404,18 +304,18 @@ Zotero.trigger = function(eventType, data={}, filter=false){
 		}
 	}
 	catch(e){
-		Z.error("failed triggering:" + eventType);
+		Z.error('failed triggering:' + eventType);
 		Z.error(e);
 	}
 };
 
 Zotero.listen = function(events, handler, data, filter){
-	Z.debug("Zotero.listen: " + events);
+	Z.debug('Zotero.listen: ' + events);
 	//append filter to event strings if it's specified
-	var eventsArray = events.split(" ");
+	var eventsArray = events.split(' ');
 	if(eventsArray.length > 0 && filter){
 		for(var i = 0; i < eventsArray.length; i++){
-			eventsArray[i] += "_" + filter;
+			eventsArray[i] += '_' + filter;
 		}
 	}
 	eventsArray.forEach(function(ev){
@@ -433,6 +333,18 @@ Zotero.listen = function(events, handler, data, filter){
 	});
 };
 
-var Z = Zotero;
+Zotero.extend = function() {
+	var res = {};
+	for(var i = 0; i < arguments.length; i++){
+		var a = arguments[i];
+		if(typeof a != 'object'){
+			continue;
+		}
+		Object.keys(a).forEach(function(key){
+			res[key] = a[key];
+		});
+	}
+	return res;
+};
 
-
+module.exports = Zotero;

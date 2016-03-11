@@ -1,6 +1,8 @@
-Zotero.Collections = function(jsonBody){
+'use strict';
+
+module.exports = function(jsonBody){
 	var collections = this;
-	this.instance = "Zotero.Collections";
+	this.instance = 'Zotero.Collections';
 	this.version = 0;
 	this.syncState = {
 		earliestVersion: null,
@@ -19,11 +21,11 @@ Zotero.Collections = function(jsonBody){
 	}
 };
 
-Zotero.Collections.prototype = new Zotero.Container();
+ module.exports.prototype = new Zotero.Container();
 //build up secondary data necessary to rendering and easy operations but that
 //depend on all collections already being present
-Zotero.Collections.prototype.initSecondaryData = function(){
-	Z.debug("Zotero.Collections.initSecondaryData", 3);
+ module.exports.prototype.initSecondaryData = function(){
+	Z.debug('Zotero.Collections.initSecondaryData', 3);
 	var collections = this;
 	
 	//rebuild collectionsArray
@@ -39,13 +41,13 @@ Zotero.Collections.prototype.initSecondaryData = function(){
 };
 
 //take Collection XML and insert a Collection object
-Zotero.Collections.prototype.addCollection = function(collection){
+ module.exports.prototype.addCollection = function(collection){
 	this.addObject(collection);
 	return this;
 };
 
-Zotero.Collections.prototype.addCollectionsFromJson = function(jsonBody){
-	Z.debug("addCollectionsFromJson");
+ module.exports.prototype.addCollectionsFromJson = function(jsonBody){
+	Z.debug('addCollectionsFromJson');
 	Z.debug(jsonBody);
 	var collections = this;
 	var collectionsAdded = [];
@@ -57,8 +59,8 @@ Zotero.Collections.prototype.addCollectionsFromJson = function(jsonBody){
 	return collectionsAdded;
 };
 
-Zotero.Collections.prototype.assignDepths = function(depth, cArray){
-	Z.debug("Zotero.Collections.assignDepths", 3);
+ module.exports.prototype.assignDepths = function(depth, cArray){
+	Z.debug('Zotero.Collections.assignDepths', 3);
 	var collections = this;
 	var insertchildren = function(depth, children){
 		children.forEach(function(col){
@@ -78,8 +80,8 @@ Zotero.Collections.prototype.assignDepths = function(depth, cArray){
 	});
 };
 
-Zotero.Collections.prototype.nestedOrderingArray = function(){
-	Z.debug("Zotero.Collections.nestedOrderingArray", 3);
+ module.exports.prototype.nestedOrderingArray = function(){
+	Z.debug('Zotero.Collections.nestedOrderingArray', 3);
 	var collections = this;
 	var nested = [];
 	var insertchildren = function(a, children){
@@ -98,25 +100,25 @@ Zotero.Collections.prototype.nestedOrderingArray = function(){
 			}
 		}
 	});
-	Z.debug("Done with nestedOrderingArray", 3);
+	Z.debug('Done with nestedOrderingArray', 3);
 	return nested;
 };
 
-Zotero.Collections.prototype.getCollection = function(key){
+ module.exports.prototype.getCollection = function(key){
 	return this.getObject(key);
 };
 
-Zotero.Collections.prototype.remoteDeleteCollection = function(collectionKey){
+ module.exports.prototype.remoteDeleteCollection = function(collectionKey){
 	var collections = this;
 	return collections.removeLocalCollection(collectionKey);
 };
 
-Zotero.Collections.prototype.removeLocalCollection = function(collectionKey){
+ module.exports.prototype.removeLocalCollection = function(collectionKey){
 	var collections = this;
 	return collections.removeLocalCollections([collectionKey]);
 };
 
-Zotero.Collections.prototype.removeLocalCollections = function(collectionKeys){
+ module.exports.prototype.removeLocalCollections = function(collectionKeys){
 	var collections = this;
 	//delete Collection from collectionObjects
 	for(var i = 0; i < collectionKeys.length; i++){
@@ -128,7 +130,7 @@ Zotero.Collections.prototype.removeLocalCollections = function(collectionKeys){
 };
 
 //reprocess all collections to add references to children inside their parents
-Zotero.Collections.prototype.nestCollections = function(){
+ module.exports.prototype.nestCollections = function(){
 	var collections = this;
 	//clear out all child references so we don't duplicate
 	collections.collectionsArray.forEach(function(collection){
@@ -141,7 +143,7 @@ Zotero.Collections.prototype.nestCollections = function(){
 	});
 };
 
-Zotero.Collections.prototype.writeCollections = function(collectionsArray){
+ module.exports.prototype.writeCollections = function(collectionsArray){
 	Z.debug('Zotero.Collections.writeCollections', 3);
 	var collections = this;
 	var library = collections.owningLibrary;
@@ -159,10 +161,10 @@ Zotero.Collections.prototype.writeCollections = function(collectionsArray){
 		var collection = collectionsArray[i];
 		//generate a collectionKey if the collection does not already have one
 		var collectionKey = collection.get('key');
-		if(collectionKey === "" || collectionKey === null) {
+		if(collectionKey === '' || collectionKey === null) {
 			var newCollectionKey = Zotero.utils.getKey();
-			collection.set("key", newCollectionKey);
-			collection.set("version", 0);
+			collection.set('key', newCollectionKey);
+			collection.set('version', 0);
 		}
 	}
 
@@ -170,7 +172,7 @@ Zotero.Collections.prototype.writeCollections = function(collectionsArray){
 	var rawChunkObjects = collections.rawChunks(writeChunks);
 	//update collections with server response if successful
 	var writeCollectionsSuccessCallback = function(response){
-		Z.debug("writeCollections successCallback", 3);
+		Z.debug('writeCollections successCallback', 3);
 		var library = this.library;
 		var writeChunk = this.writeChunk;
 		library.collections.updateObjectsFromWriteResponse(this.writeChunk, response);
@@ -181,7 +183,7 @@ Zotero.Collections.prototype.writeCollections = function(collectionsArray){
 				library.collections.addCollection(collection);
 				//save updated collections to IDB
 				if(Zotero.config.useIndexedDB){
-					Z.debug("updating indexedDB collections");
+					Z.debug('updating indexedDB collections');
 					library.idbLibrary.updateCollections(writeChunk);
 				}
 			}
@@ -190,8 +192,8 @@ Zotero.Collections.prototype.writeCollections = function(collectionsArray){
 		return response;
 	};
 	
-	Z.debug("collections.version: " + collections.version, 3);
-	Z.debug("collections.libraryVersion: " + collections.libraryVersion, 3);
+	Z.debug('collections.version: ' + collections.version, 3);
+	Z.debug('collections.libraryVersion: ' + collections.libraryVersion, 3);
 	
 	var requestObjects = [];
 	for(i = 0; i < writeChunks.length; i++){
@@ -216,12 +218,12 @@ Zotero.Collections.prototype.writeCollections = function(collectionsArray){
 
 	return library.sequentialRequests(requestObjects)
 	.then(function(responses){
-		Z.debug("Done with writeCollections sequentialRequests promise", 3);
+		Z.debug('Done with writeCollections sequentialRequests promise', 3);
 		collections.initSecondaryData();
 		
 		responses.forEach(function(response){
 			if(response.isError || (response.data.hasOwnProperty('failed') && Object.keys(response.data.failed).length > 0) ){
-				throw new Error("failure when writing collections");
+				throw new Error('failure when writing collections');
 			}
 		});
 		return responses;

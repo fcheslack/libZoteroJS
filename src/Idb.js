@@ -1,17 +1,19 @@
-Zotero.Idb = {};
+'use strict';
+
+module.exports = {};
 
 //Initialize an indexedDB for the specified library user or group + id
 //returns a promise that is resolved with a Zotero.Idb.Library instance when successful
 //and rejected onerror
-Zotero.Idb.Library = function(libraryString){
-	Z.debug("Zotero.Idb.Library", 3);
-	Z.debug("Initializing Zotero IDB", 3);
+module.exports.Library = function(libraryString){
+	Z.debug('Zotero.Idb.Library', 3);
+	Z.debug('Initializing Zotero IDB', 3);
 	this.libraryString = libraryString;
 	this.owningLibrary = null;
 	this.initialized = false;
 };
 
-Zotero.Idb.Library.prototype.init = function(){
+module.exports.Library.prototype.init = function(){
 	var idbLibrary = this;
 	return new Promise(function(resolve, reject){
 		//Don't bother with the prefixed names because they should all be irrelevant by now
@@ -19,85 +21,85 @@ Zotero.Idb.Library.prototype.init = function(){
 		idbLibrary.indexedDB = indexedDB;
 		
 		// Now we can open our database
-		Z.debug("requesting indexedDb from browser", 3);
-		var request = indexedDB.open("Zotero_" + idbLibrary.libraryString, 4);
+		Z.debug('requesting indexedDb from browser', 3);
+		var request = indexedDB.open('Zotero_' + idbLibrary.libraryString, 4);
 		request.onerror = function(e){
-			Zotero.error("ERROR OPENING INDEXED DB");
+			Zotero.error('ERROR OPENING INDEXED DB');
 			reject();
 		};
 		
 		var upgradeCallback = function(event){
-			Z.debug("Zotero.Idb onupgradeneeded or onsuccess", 3);
+			Z.debug('Zotero.Idb onupgradeneeded or onsuccess', 3);
 			var oldVersion = event.oldVersion;
-			Z.debug("oldVersion: " + event.oldVersion, 3);
+			Z.debug('oldVersion: ' + event.oldVersion, 3);
 			var db = event.target.result;
 			idbLibrary.db = db;
 			
 			if(oldVersion < 4){
 				//delete old versions of object stores
-				Z.debug("Existing object store names:", 3);
+				Z.debug('Existing object store names:', 3);
 				Z.debug(JSON.stringify(db.objectStoreNames), 3);
-				Z.debug("Deleting old object stores", 3);
-				if(db.objectStoreNames["items"]){
-					db.deleteObjectStore("items");
+				Z.debug('Deleting old object stores', 3);
+				if(db.objectStoreNames['items']){
+					db.deleteObjectStore('items');
 				}
-				if(db.objectStoreNames["tags"]){
-					db.deleteObjectStore("tags");
+				if(db.objectStoreNames['tags']){
+					db.deleteObjectStore('tags');
 				}
-				if(db.objectStoreNames["collections"]){
-					db.deleteObjectStore("collections");
+				if(db.objectStoreNames['collections']){
+					db.deleteObjectStore('collections');
 				}
-				if(db.objectStoreNames["files"]){
-					db.deleteObjectStore("files");
+				if(db.objectStoreNames['files']){
+					db.deleteObjectStore('files');
 				}
-				if(db.objectStoreNames["versions"]){
-					db.deleteObjectStore("versions");
+				if(db.objectStoreNames['versions']){
+					db.deleteObjectStore('versions');
 				}
-				Z.debug("Existing object store names:", 3);
+				Z.debug('Existing object store names:', 3);
 				Z.debug(JSON.stringify(db.objectStoreNames), 3);
 				
 				// Create object stores to hold items, collections, and tags.
 				// IDB keys are just the zotero object keys
-				var itemStore = db.createObjectStore("items", { keyPath: "key" });
-				var collectionStore = db.createObjectStore("collections", { keyPath: "key" });
-				var tagStore = db.createObjectStore("tags", { keyPath: "tag" });
-				var fileStore = db.createObjectStore("files");
-				var versionStore = db.createObjectStore("versions");
+				var itemStore = db.createObjectStore('items', { keyPath: 'key' });
+				var collectionStore = db.createObjectStore('collections', { keyPath: 'key' });
+				var tagStore = db.createObjectStore('tags', { keyPath: 'tag' });
+				var fileStore = db.createObjectStore('files');
+				var versionStore = db.createObjectStore('versions');
 				
-				Z.debug("itemStore index names:", 3);
+				Z.debug('itemStore index names:', 3);
 				Z.debug(JSON.stringify(itemStore.indexNames), 3);
-				Z.debug("collectionStore index names:", 3);
+				Z.debug('collectionStore index names:', 3);
 				Z.debug(JSON.stringify(collectionStore.indexNames), 3);
-				Z.debug("tagStore index names:", 3);
+				Z.debug('tagStore index names:', 3);
 				Z.debug(JSON.stringify(tagStore.indexNames), 3);
 				
 				// Create index to search/sort items by each attribute
 				Object.keys(Zotero.Item.prototype.fieldMap).forEach(function(key){
-					Z.debug("Creating index on " + key, 3);
-					itemStore.createIndex(key, "data." + key, { unique: false });
+					Z.debug('Creating index on ' + key, 3);
+					itemStore.createIndex(key, 'data.' + key, { unique: false });
 				});
 				
 				//itemKey index was created above with all other item fields
 				//itemStore.createIndex("itemKey", "itemKey", { unique: false });
 				
 				//create multiEntry indices on item collectionKeys and tags
-				itemStore.createIndex("collectionKeys", "data.collections", {unique: false, multiEntry:true});
+				itemStore.createIndex('collectionKeys', 'data.collections', {unique: false, multiEntry:true});
 				//index on extra tagstrings array since tags are objects and we can't index them directly
-				itemStore.createIndex("itemTagStrings", "_supplement.tagstrings", {unique: false, multiEntry:true});
+				itemStore.createIndex('itemTagStrings', '_supplement.tagstrings', {unique: false, multiEntry:true});
 				//example filter for tag: Zotero.Idb.filterItems("itemTagStrings", "Unread");
 				//example filter collection: Zotero.Idb.filterItems("collectionKeys", "<collectionKey>");
 				
 				//itemStore.createIndex("itemType", "itemType", { unique: false });
-				itemStore.createIndex("parentItemKey", "data.parentItem", { unique: false });
-				itemStore.createIndex("libraryKey", "libraryKey", { unique: false });
-				itemStore.createIndex("deleted", "data.deleted", { unique: false });
+				itemStore.createIndex('parentItemKey', 'data.parentItem', { unique: false });
+				itemStore.createIndex('libraryKey', 'libraryKey', { unique: false });
+				itemStore.createIndex('deleted', 'data.deleted', { unique: false });
 				
-				collectionStore.createIndex("name", "data.name", { unique: false });
-				collectionStore.createIndex("key", "key", { unique: false });
-				collectionStore.createIndex("parentCollection", "data.parentCollection", { unique: false });
+				collectionStore.createIndex('name', 'data.name', { unique: false });
+				collectionStore.createIndex('key', 'key', { unique: false });
+				collectionStore.createIndex('parentCollection', 'data.parentCollection', { unique: false });
 				//collectionStore.createIndex("libraryKey", "libraryKey", { unique: false });
 				
-				tagStore.createIndex("tag", "tag", { unique: false });
+				tagStore.createIndex('tag', 'tag', { unique: false });
 				//tagStore.createIndex("libraryKey", "libraryKey", { unique: false });
 			}
 		};
@@ -105,7 +107,7 @@ Zotero.Idb.Library.prototype.init = function(){
 		request.onupgradeneeded = upgradeCallback;
 		
 		request.onsuccess = function(){
-			Z.debug("IDB success", 3);
+			Z.debug('IDB success', 3);
 			idbLibrary.db = request.result;
 			idbLibrary.initialized = true;
 			resolve(idbLibrary);
@@ -113,17 +115,17 @@ Zotero.Idb.Library.prototype.init = function(){
 	});
 };
 
-Zotero.Idb.Library.prototype.deleteDB = function(){
+module.exports.Library.prototype.deleteDB = function(){
 	var idbLibrary = this;
 	idbLibrary.db.close();
 	return new Promise(function(resolve, reject){
-		var deleteRequest = idbLibrary.indexedDB.deleteDatabase("Zotero_" + idbLibrary.libraryString);
+		var deleteRequest = idbLibrary.indexedDB.deleteDatabase('Zotero_' + idbLibrary.libraryString);
 		deleteRequest.onerror = function(){
-			Z.error("Error deleting indexedDB");
+			Z.error('Error deleting indexedDB');
 			reject();
 		};
 		deleteRequest.onsuccess = function(){
-			Z.debug("Successfully deleted indexedDB", 2);
+			Z.debug('Successfully deleted indexedDB', 2);
 			resolve();
 		};
 	});
@@ -133,23 +135,23 @@ Zotero.Idb.Library.prototype.deleteDB = function(){
 * @param {string} store_name
 * @param {string} mode either "readonly" or "readwrite"
 */
-Zotero.Idb.Library.prototype.getObjectStore = function (store_name, mode) {
+module.exports.Library.prototype.getObjectStore = function (store_name, mode) {
 	var idbLibrary = this;
 	var tx = idbLibrary.db.transaction(store_name, mode);
 	return tx.objectStore(store_name);
 };
 
-Zotero.Idb.Library.prototype.clearObjectStore = function (store_name) {
+module.exports.Library.prototype.clearObjectStore = function (store_name) {
 	var idbLibrary = this;
 	var store = idbLibrary.getObjectStore(store_name, 'readwrite');
 	return new Promise(function(resolve, reject){
 		var req = store.clear();
 		req.onsuccess = function(evt) {
-			Z.debug("Store cleared", 3);
+			Z.debug('Store cleared', 3);
 			resolve();
 		};
 		req.onerror = function (evt) {
-			Z.error("clearObjectStore:", evt.target.errorCode);
+			Z.error('clearObjectStore:', evt.target.errorCode);
 			reject();
 		};
 	});
@@ -159,7 +161,7 @@ Zotero.Idb.Library.prototype.clearObjectStore = function (store_name) {
 * Add array of items to indexedDB
 * @param {array} items
 */
-Zotero.Idb.Library.prototype.addItems = function(items){
+module.exports.Library.prototype.addItems = function(items){
 	return this.addObjects(items, 'item');
 };
 
@@ -167,7 +169,7 @@ Zotero.Idb.Library.prototype.addItems = function(items){
 * Update/add array of items to indexedDB
 * @param {array} items
 */
-Zotero.Idb.Library.prototype.updateItems = function(items){
+module.exports.Library.prototype.updateItems = function(items){
 	return this.updateObjects(items, 'item');
 };
 
@@ -175,7 +177,7 @@ Zotero.Idb.Library.prototype.updateItems = function(items){
 * Remove array of items to indexedDB. Just references itemKey and does no other checks that items match
 * @param {array} items
 */
-Zotero.Idb.Library.prototype.removeItems = function(items){
+module.exports.Library.prototype.removeItems = function(items){
 	return this.removeObjects(items, 'item');
 };
 
@@ -183,13 +185,13 @@ Zotero.Idb.Library.prototype.removeItems = function(items){
 * Get item from indexedDB that has given itemKey
 * @param {string} itemKey
 */
-Zotero.Idb.Library.prototype.getItem = function(itemKey){
+module.exports.Library.prototype.getItem = function(itemKey){
 	var idbLibrary = this;
 	return new Promise(function(resolve, reject){
 		var success = function(event){
 			resolve(event.target.result);
 		};
-		idbLibrary.db.transaction("items").objectStore(["items"], "readonly").get(itemKey).onsuccess = success;
+		idbLibrary.db.transaction('items').objectStore(['items'], 'readonly').get(itemKey).onsuccess = success;
 	});
 };
 
@@ -197,14 +199,14 @@ Zotero.Idb.Library.prototype.getItem = function(itemKey){
 * Get all the items in this indexedDB
 * @param {array} items
 */
-Zotero.Idb.Library.prototype.getAllItems = function(){
+module.exports.Library.prototype.getAllItems = function(){
 	return this.getAllObjects('item');
 };
 
-Zotero.Idb.Library.prototype.getOrderedItemKeys = function(field, order){
+module.exports.Library.prototype.getOrderedItemKeys = function(field, order){
 	var idbLibrary = this;
-	Z.debug("Zotero.Idb.getOrderedItemKeys", 3);
-	Z.debug("" + field + " " + order, 3);
+	Z.debug('Zotero.Idb.getOrderedItemKeys', 3);
+	Z.debug('' + field + ' ' + order, 3);
 	return new Promise(function(resolve, reject){
 		var objectStore = idbLibrary.db.transaction(['items'], 'readonly').objectStore('items');
 		var index = objectStore.index(field);
@@ -212,9 +214,9 @@ Zotero.Idb.Library.prototype.getOrderedItemKeys = function(field, order){
 			throw new Error("Index for requested field '" + field + "'' not found");
 		}
 		
-		var cursorDirection = "next";
-		if(order == "desc"){
-			cursorDirection = "prev";
+		var cursorDirection = 'next';
+		if(order == 'desc'){
+			cursorDirection = 'prev';
 		}
 		
 		var cursorRequest = index.openKeyCursor(null, cursorDirection);
@@ -226,7 +228,7 @@ Zotero.Idb.Library.prototype.getOrderedItemKeys = function(field, order){
 				cursor.continue();
 			}
 			else {
-				Z.debug("No more cursor: done. Resolving deferred.", 3);
+				Z.debug('No more cursor: done. Resolving deferred.', 3);
 				resolve(itemKeys);
 			}
 		}.bind(this);
@@ -238,9 +240,9 @@ Zotero.Idb.Library.prototype.getOrderedItemKeys = function(field, order){
 };
 
 //filter the items in indexedDB by value in field
-Zotero.Idb.Library.prototype.filterItems = function(field, value){
+module.exports.Library.prototype.filterItems = function(field, value){
 	var idbLibrary = this;
-	Z.debug("Zotero.Idb.filterItems " + field + " - " + value, 3);
+	Z.debug('Zotero.Idb.filterItems ' + field + ' - ' + value, 3);
 	return new Promise(function(resolve, reject){
 		var itemKeys = [];
 		var objectStore = idbLibrary.db.transaction(['items'], 'readonly').objectStore('items');
@@ -249,7 +251,7 @@ Zotero.Idb.Library.prototype.filterItems = function(field, value){
 			throw new Error("Index for requested field '" + field + "'' not found");
 		}
 		
-		var cursorDirection = "next";
+		var cursorDirection = 'next';
 		/*if(order == "desc"){
 			cursorDirection = "prev";
 		}*/
@@ -263,7 +265,7 @@ Zotero.Idb.Library.prototype.filterItems = function(field, value){
 				cursor.continue();
 			}
 			else {
-				Z.debug("No more cursor: done. Resolving deferred.", 3);
+				Z.debug('No more cursor: done. Resolving deferred.', 3);
 				resolve(itemKeys);
 			}
 		}.bind(this);
@@ -274,7 +276,7 @@ Zotero.Idb.Library.prototype.filterItems = function(field, value){
 	});
 };
 
-Zotero.Idb.Library.prototype.inferType = function(object){
+module.exports.Library.prototype.inferType = function(object){
 	if(!object){
 		return false;
 	}
@@ -293,7 +295,7 @@ Zotero.Idb.Library.prototype.inferType = function(object){
 	}
 };
 
-Zotero.Idb.Library.prototype.getTransactionAndStore = function(type, access){
+module.exports.Library.prototype.getTransactionAndStore = function(type, access){
 	var idbLibrary = this;
 	var transaction;
 	var objectStore;
@@ -316,8 +318,8 @@ Zotero.Idb.Library.prototype.getTransactionAndStore = function(type, access){
 	return [transaction, objectStore];
 };
 
-Zotero.Idb.Library.prototype.addObjects = function(objects, type){
-	Z.debug("Zotero.Idb.Library.addObjects", 3);
+module.exports.Library.prototype.addObjects = function(objects, type){
+	Z.debug('Zotero.Idb.Library.addObjects', 3);
 	var idbLibrary = this;
 	if(!type){
 		type = idbLibrary.inferType(objects[0]);
@@ -328,17 +330,17 @@ Zotero.Idb.Library.prototype.addObjects = function(objects, type){
 	
 	return new Promise(function(resolve, reject){
 		transaction.oncomplete = function(event){
-			Zotero.debug("Add Objects transaction completed.", 3);
+			Zotero.debug('Add Objects transaction completed.', 3);
 			resolve();
 		};
 		
 		transaction.onerror = function(event){
-			Zotero.error("Add Objects transaction failed.");
+			Zotero.error('Add Objects transaction failed.');
 			reject();
 		};
 		
 		var reqSuccess = function(event){
-			Zotero.debug("Added Object " + event.target.result, 4);
+			Zotero.debug('Added Object ' + event.target.result, 4);
 		};
 		for (var i in objects) {
 			var request = objectStore.add(objects[i].apiObj);
@@ -347,8 +349,8 @@ Zotero.Idb.Library.prototype.addObjects = function(objects, type){
 	});
 };
 
-Zotero.Idb.Library.prototype.updateObjects = function(objects, type){
-	Z.debug("Zotero.Idb.Library.updateObjects", 3);
+module.exports.Library.prototype.updateObjects = function(objects, type){
+	Z.debug('Zotero.Idb.Library.updateObjects', 3);
 	var idbLibrary = this;
 	if(!type){
 		type = idbLibrary.inferType(objects[0]);
@@ -359,17 +361,17 @@ Zotero.Idb.Library.prototype.updateObjects = function(objects, type){
 	
 	return new Promise(function(resolve, reject){
 		transaction.oncomplete = function(event){
-			Zotero.debug("Update Objects transaction completed.", 3);
+			Zotero.debug('Update Objects transaction completed.', 3);
 			resolve();
 		};
 		
 		transaction.onerror = function(event){
-			Zotero.error("Update Objects transaction failed.");
+			Zotero.error('Update Objects transaction failed.');
 			reject();
 		};
 		
 		var reqSuccess = function(event){
-			Zotero.debug("Updated Object " + event.target.result, 4);
+			Zotero.debug('Updated Object ' + event.target.result, 4);
 		};
 		for (var i in objects) {
 			var request = objectStore.put(objects[i].apiObj);
@@ -378,7 +380,7 @@ Zotero.Idb.Library.prototype.updateObjects = function(objects, type){
 	});
 };
 
-Zotero.Idb.Library.prototype.removeObjects = function(objects, type){
+module.exports.Library.prototype.removeObjects = function(objects, type){
 	var idbLibrary = this;
 	if(!type){
 		type = idbLibrary.inferType(objects[0]);
@@ -389,17 +391,17 @@ Zotero.Idb.Library.prototype.removeObjects = function(objects, type){
 	
 	return new Promise(function(resolve, reject){
 		transaction.oncomplete = function(event){
-			Zotero.debug("Remove Objects transaction completed.", 3);
+			Zotero.debug('Remove Objects transaction completed.', 3);
 			resolve();
 		};
 		
 		transaction.onerror = function(event){
-			Zotero.error("Remove Objects transaction failed.");
+			Zotero.error('Remove Objects transaction failed.');
 			reject();
 		};
 		
 		var reqSuccess = function(event){
-			Zotero.debug("Removed Object " + event.target.result, 4);
+			Zotero.debug('Removed Object ' + event.target.result, 4);
 		};
 		for (var i in objects) {
 			var request = objectStore.delete(objects[i].key);
@@ -408,7 +410,7 @@ Zotero.Idb.Library.prototype.removeObjects = function(objects, type){
 	});
 };
 
-Zotero.Idb.Library.prototype.getAllObjects = function(type){
+module.exports.Library.prototype.getAllObjects = function(type){
 	var idbLibrary = this;
 	return new Promise(function(resolve, reject){
 		var objects = [];
@@ -427,12 +429,12 @@ Zotero.Idb.Library.prototype.getAllObjects = function(type){
 	});
 };
 
-Zotero.Idb.Library.prototype.addCollections = function(collections){
+module.exports.Library.prototype.addCollections = function(collections){
 	return this.addObjects(collections, 'collection');
 };
 
-Zotero.Idb.Library.prototype.updateCollections = function(collections){
-	Z.debug("Zotero.Idb.Library.updateCollections", 3);
+module.exports.Library.prototype.updateCollections = function(collections){
+	Z.debug('Zotero.Idb.Library.updateCollections', 3);
 	return this.updateObjects(collections, 'collection');
 };
 
@@ -440,59 +442,59 @@ Zotero.Idb.Library.prototype.updateCollections = function(collections){
 * Get collection from indexedDB that has given collectionKey
 * @param {string} collectionKey
 */
-Zotero.Idb.Library.prototype.getCollection = function(collectionKey){
+module.exports.Library.prototype.getCollection = function(collectionKey){
 	var idbLibrary = this;
 	return new Promise(function(resolve, reject){
 		var success = function(event){
 			resolve(event.target.result);
 		};
-		idbLibrary.db.transaction("collections").objectStore(["collections"], "readonly").get(collectionKey).onsuccess = success;
+		idbLibrary.db.transaction('collections').objectStore(['collections'], 'readonly').get(collectionKey).onsuccess = success;
 	});
 };
 
-Zotero.Idb.Library.prototype.removeCollections = function(collections){
-	Z.debug("Zotero.Idb.Library.removeCollections", 3);
+module.exports.Library.prototype.removeCollections = function(collections){
+	Z.debug('Zotero.Idb.Library.removeCollections', 3);
 	return this.removeObjects(collections, 'collection');
 };
 
-Zotero.Idb.Library.prototype.getAllCollections = function(){
+module.exports.Library.prototype.getAllCollections = function(){
 	Z.debug('Zotero.Idb.Library.getAllCollections', 3);
 	return this.getAllObjects('collection');
 };
 
-Zotero.Idb.Library.prototype.addTags = function(tags){
+module.exports.Library.prototype.addTags = function(tags){
 	return this.addObjects(tags, 'tag');
 };
 
-Zotero.Idb.Library.prototype.updateTags = function(tags){
-	Z.debug("Zotero.Idb.Library.updateTags", 3);
+module.exports.Library.prototype.updateTags = function(tags){
+	Z.debug('Zotero.Idb.Library.updateTags', 3);
 	return this.updateObjects(tags, 'tag');
 };
 
-Zotero.Idb.Library.prototype.getAllTags = function(){
+module.exports.Library.prototype.getAllTags = function(){
 	Z.debug('getAllTags', 3);
 	return this.getAllObjects('tag');
 };
 
-Zotero.Idb.Library.prototype.setVersion = function(type, version){
-	Z.debug("Zotero.Idb.Library.setVersion", 3);
+module.exports.Library.prototype.setVersion = function(type, version){
+	Z.debug('Zotero.Idb.Library.setVersion', 3);
 	var idbLibrary = this;
 	return new Promise(function(resolve, reject){
-		var transaction = idbLibrary.db.transaction(["versions"], "readwrite");
+		var transaction = idbLibrary.db.transaction(['versions'], 'readwrite');
 		
 		transaction.oncomplete = function(event){
-			Zotero.debug("set version transaction completed.", 3);
+			Zotero.debug('set version transaction completed.', 3);
 			resolve();
 		};
 		
 		transaction.onerror = function(event){
-			Zotero.error("set version transaction failed.");
+			Zotero.error('set version transaction failed.');
 			reject();
 		};
 		
-		var versionStore = transaction.objectStore("versions");
+		var versionStore = transaction.objectStore('versions');
 		var reqSuccess = function(event){
-			Zotero.debug("Set Version" + event.target.result, 3);
+			Zotero.debug('Set Version' + event.target.result, 3);
 		};
 		var request = versionStore.put(version, type);
 		request.onsuccess = reqSuccess;
@@ -503,37 +505,37 @@ Zotero.Idb.Library.prototype.setVersion = function(type, version){
 * Get version data from indexedDB
 * @param {string} type
 */
-Zotero.Idb.Library.prototype.getVersion = function(type){
-	Z.debug("Zotero.Idb.Library.getVersion", 3);
+module.exports.Library.prototype.getVersion = function(type){
+	Z.debug('Zotero.Idb.Library.getVersion', 3);
 	var idbLibrary = this;
 	return new Promise(function(resolve, reject){
 		var success = function(event){
-			Z.debug("done getting version");
+			Z.debug('done getting version');
 			resolve(event.target.result);
 		};
-		idbLibrary.db.transaction(["versions"], "readonly").objectStore("versions").get(type).onsuccess = success;
+		idbLibrary.db.transaction(['versions'], 'readonly').objectStore('versions').get(type).onsuccess = success;
 	});
 };
 
-Zotero.Idb.Library.prototype.setFile = function(itemKey, fileData){
-	Z.debug("Zotero.Idb.Library.setFile", 3);
+module.exports.Library.prototype.setFile = function(itemKey, fileData){
+	Z.debug('Zotero.Idb.Library.setFile', 3);
 	var idbLibrary = this;
 	return new Promise(function(resolve, reject){
-		var transaction = idbLibrary.db.transaction(["files"], "readwrite");
+		var transaction = idbLibrary.db.transaction(['files'], 'readwrite');
 		
 		transaction.oncomplete = function(event){
-			Zotero.debug("set file transaction completed.", 3);
+			Zotero.debug('set file transaction completed.', 3);
 			resolve();
 		};
 		
 		transaction.onerror = function(event){
-			Zotero.error("set file transaction failed.");
+			Zotero.error('set file transaction failed.');
 			reject();
 		};
 		
-		var fileStore = transaction.objectStore("files");
+		var fileStore = transaction.objectStore('files');
 		var reqSuccess = function(event){
-			Zotero.debug("Set File" + event.target.result, 3);
+			Zotero.debug('Set File' + event.target.result, 3);
 		};
 		var request = fileStore.put(fileData, itemKey);
 		request.onsuccess = reqSuccess;
@@ -544,37 +546,37 @@ Zotero.Idb.Library.prototype.setFile = function(itemKey, fileData){
 * Get item from indexedDB that has given itemKey
 * @param {string} itemKey
 */
-Zotero.Idb.Library.prototype.getFile = function(itemKey){
-	Z.debug("Zotero.Idb.Library.getFile", 3);
+module.exports.Library.prototype.getFile = function(itemKey){
+	Z.debug('Zotero.Idb.Library.getFile', 3);
 	var idbLibrary = this;
 	return new Promise(function(resolve, reject){
 		var success = function(event){
-			Z.debug("done getting file");
+			Z.debug('done getting file');
 			resolve(event.target.result);
 		};
-		idbLibrary.db.transaction(["files"], "readonly").objectStore("files").get(itemKey).onsuccess = success;
+		idbLibrary.db.transaction(['files'], 'readonly').objectStore('files').get(itemKey).onsuccess = success;
 	});
 };
 
-Zotero.Idb.Library.prototype.deleteFile = function(itemKey){
-	Z.debug("Zotero.Idb.Library.deleteFile", 3);
+module.exports.Library.prototype.deleteFile = function(itemKey){
+	Z.debug('Zotero.Idb.Library.deleteFile', 3);
 	var idbLibrary = this;
 	return new Promise(function(resolve, reject){
-		var transaction = idbLibrary.db.transaction(["files"], "readwrite");
+		var transaction = idbLibrary.db.transaction(['files'], 'readwrite');
 		
 		transaction.oncomplete = function(event){
-			Zotero.debug("delete file transaction completed.", 3);
+			Zotero.debug('delete file transaction completed.', 3);
 			resolve();
 		};
 		
 		transaction.onerror = function(event){
-			Zotero.error("delete file transaction failed.");
+			Zotero.error('delete file transaction failed.');
 			reject();
 		};
 		
-		var fileStore = transaction.objectStore("files");
+		var fileStore = transaction.objectStore('files');
 		var reqSuccess = function(event){
-			Zotero.debug("Deleted File" + event.target.result, 4);
+			Zotero.debug('Deleted File' + event.target.result, 4);
 		};
 		var request = fileStore.delete(itemKey);
 		request.onsuccess = reqSuccess;
@@ -583,7 +585,7 @@ Zotero.Idb.Library.prototype.deleteFile = function(itemKey){
 
 
 //intersect two arrays of strings as an AND condition on index results
-Zotero.Idb.Library.prototype.intersect = function(ar1, ar2){
+module.exports.Library.prototype.intersect = function(ar1, ar2){
 	var idbLibrary = this;
 	var result = [];
 	for(var i = 0; i < ar1.length; i++){
@@ -595,7 +597,7 @@ Zotero.Idb.Library.prototype.intersect = function(ar1, ar2){
 };
 
 //intersect an array of arrays of strings as an AND condition on index results
-Zotero.Idb.Library.prototype.intersectAll = function(arrs) {
+module.exports.Library.prototype.intersectAll = function(arrs) {
 	var idbLibrary = this;
 	var result = arrs[0];
 	for(var i = 0; i < arrs.length - 1; i++){

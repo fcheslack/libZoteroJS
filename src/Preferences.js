@@ -1,4 +1,6 @@
-Zotero.Preferences = function(store, idString) {
+'use strict';
+
+module.exports = function(store, idString) {
 	this.store = store;
 	this.idString = idString;
 	this.preferencesObject = {};
@@ -15,22 +17,22 @@ Zotero.Preferences = function(store, idString) {
 	this.load();
 };
 
-Zotero.Preferences.prototype.setPref = function(key, value) {
+module.exports.prototype.setPref = function(key, value) {
 	var preferences = this;
 	preferences.preferencesObject[key] = value;
 	preferences.persist();
 };
 
-Zotero.Preferences.prototype.setPrefs = function(newPrefs) {
+module.exports.prototype.setPrefs = function(newPrefs) {
 	var preferences = this;
-	if(typeof(newPrefs) != "object") {
-		throw new Error("Preferences must be an object");
+	if(typeof(newPrefs) != 'object') {
+		throw new Error('Preferences must be an object');
 	}
 	preferences.preferencesObject = newPrefs;
 	preferences.persist();
 };
 
-Zotero.Preferences.prototype.getPref = function(key){
+module.exports.prototype.getPref = function(key){
 	var preferences = this;
 	if(preferences.preferencesObject[key]){
 		return preferences.preferencesObject[key];
@@ -43,18 +45,18 @@ Zotero.Preferences.prototype.getPref = function(key){
 	}
 };
 
-Zotero.Preferences.prototype.getPrefs = function(){
+module.exports.prototype.getPrefs = function(){
 	var preferences = this;
 	return preferences.preferencesObject;
 };
 
-Zotero.Preferences.prototype.persist = function(){
+module.exports.prototype.persist = function(){
 	var preferences = this;
 	var storageString = 'preferences_' + preferences.idString;
 	preferences.store[storageString] = JSON.stringify(preferences.preferencesObject);
 };
 
-Zotero.Preferences.prototype.load = function(){
+module.exports.prototype.load = function(){
 	var preferences = this;
 	var storageString = 'preferences_' + preferences.idString;
 	var storageObjectString = preferences.store[storageString];

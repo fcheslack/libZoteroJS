@@ -1,7 +1,9 @@
-Zotero.utils = {
+'use strict';
+
+var Utils = {
 	randomString:function(len, chars) {
 		if (!chars) {
-			chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+			chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 		}
 		if (!len) {
 			len = 8;
@@ -15,25 +17,25 @@ Zotero.utils = {
 	},
 	
 	getKey: function() {
-		var baseString = "23456789ABCDEFGHIJKMNPQRSTUVWXZ";
-		return Zotero.utils.randomString(8, baseString);
+		var baseString = '23456789ABCDEFGHIJKMNPQRSTUVWXZ';
+		return Utils.randomString(8, baseString);
 	},
 	
 	slugify: function(name){
 		var slug = name.trim();
 		slug = slug.toLowerCase();
-		slug = slug.replace( /[^a-z0-9 ._-]/g , "");
-		slug = slug.replace(/\s/g, "_");
+		slug = slug.replace( /[^a-z0-9 ._-]/g , '');
+		slug = slug.replace(/\s/g, '_');
 		
 		return slug;
 	},
 	
 	prependAutocomplete: function(pre, source){
 		Z.debug('Zotero.utils.prependAutocomplete', 3);
-		Z.debug("prepend match: " + pre);
+		Z.debug('prepend match: ' + pre);
 		var satisfy;
 		if(!source){
-			Z.debug("source is not defined");
+			Z.debug('source is not defined');
 		}
 		if(pre === ''){
 			satisfy = source.slice(0);
@@ -54,10 +56,10 @@ Zotero.utils = {
 	
 	matchAnyAutocomplete: function(pre, source){
 		Z.debug('Zotero.utils.matchAnyAutocomplete', 3);
-		Z.debug("matchAny match: " + pre);
+		Z.debug('matchAny match: ' + pre);
 		var satisfy;
 		if(!source){
-			Z.debug("source is not defined");
+			Z.debug('source is not defined');
 		}
 		if(pre === ''){
 			satisfy = source.slice(0);
@@ -94,7 +96,7 @@ Zotero.utils = {
 			type = 'group';
 		}
 		else{
-			throw new Error("unexpected type character in libraryString");
+			throw new Error('unexpected type character in libraryString');
 		}
 		libraryID = parseInt(libraryString.substring(1));
 		return {libraryType:type, libraryID: libraryID};
@@ -128,7 +130,7 @@ Zotero.utils = {
 		var re = /([0-9]+)-([0-9]+)-([0-9]+)T([0-9]+):([0-9]+):([0-9]+)Z/;
 		var matches = re.exec(datestr);
 		if(matches === null){
-			Z.error("error parsing api date: " + datestr);
+			Z.error('error parsing api date: ' + datestr);
 			return null;
 		}
 		else{
@@ -140,7 +142,7 @@ Zotero.utils = {
 	},
 	
 	readCookie: function(name) {
-		var nameEQ = name + "=";
+		var nameEQ = name + '=';
 		var ca = document.cookie.split(';');
 		for(var i=0;i < ca.length;i++) {
 			var c = ca[i];
@@ -275,7 +277,7 @@ Zotero.utils = {
 		var pl = /\+/g;  // Regex for replacing addition symbol with a space
 		var search = /([^&=]+)=?([^&]*)/g;
 		var decode = function (s) {
-			return decodeURIComponent(s.replace(pl, " "));
+			return decodeURIComponent(s.replace(pl, ' '));
 		};
 
 		while(match = search.exec(query)) {
@@ -291,16 +293,4 @@ Zotero.utils = {
 	}
 };
 
-Zotero.extend = function() {
-	var res = {};
-	for(var i = 0; i < arguments.length; i++){
-		var a = arguments[i];
-		if(typeof a != "object"){
-			continue;
-		}
-		Object.keys(a).forEach(function(key){
-			res[key] = a[key];
-		});
-	}
-	return res;
-};
+module.exports = Utils;

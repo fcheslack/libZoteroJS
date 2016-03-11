@@ -1,3 +1,5 @@
+'use strict';
+
 // Url.js - construct certain urls and links locally that may depend on the
 // current website's routing scheme etc. Not necessarily pointing to zotero.org
 // - href for a particular item's local representation
@@ -8,8 +10,10 @@
 // - list of urls for supported export formats
 // 
 
+var Url = {};
+
 //locally construct a url for the item on the current website
-Zotero.url.itemHref = function(item){
+Url.itemHref = function(item){
 	var href = '';
 	href += Zotero.config.librarySettings.libraryPathString + '/itemKey/' + item.get('key');
 	return href;
@@ -17,7 +21,7 @@ Zotero.url.itemHref = function(item){
 
 //construct a download link for an item's enclosure file that takes into
 //account size and whether the file is a snapshot
-Zotero.url.attachmentDownloadLink = function(item){
+Url.attachmentDownloadLink = function(item){
 	var retString = '';
 	var downloadUrl = item.attachmentDownloadUrl;
 	var contentType = item.get('contentType');
@@ -32,15 +36,15 @@ Zotero.url.attachmentDownloadLink = function(item){
 			var enctype = Zotero.utils.translateMimeType(item.apiObj.links['enclosure'].type);
 			var enc = item.apiObj.links['enclosure'];
 			var filesize = parseInt(enc['length'], 10);
-			var filesizeString = "" + filesize + " B";
+			var filesizeString = '' + filesize + ' B';
 			if(filesize > 1073741824){
-				filesizeString = "" + (filesize / 1073741824).toFixed(1) + " GB";
+				filesizeString = '' + (filesize / 1073741824).toFixed(1) + ' GB';
 			}
 			else if(filesize > 1048576){
-				filesizeString = "" + (filesize / 1048576).toFixed(1) + " MB";
+				filesizeString = '' + (filesize / 1048576).toFixed(1) + ' MB';
 			}
 			else if(filesize > 1024){
-				filesizeString = "" + (filesize / 1024).toFixed(1) + " KB";
+				filesizeString = '' + (filesize / 1024).toFixed(1) + ' KB';
 			}
 			Z.debug(enctype, 3);
 			retString += '<a href="' + downloadUrl + '">';
@@ -56,33 +60,33 @@ Zotero.url.attachmentDownloadLink = function(item){
 	return retString;
 };
 
-Zotero.url.attachmentDownloadUrl = function(item){
+Url.attachmentDownloadUrl = function(item){
 	if(item.apiObj.links && item.apiObj.links['enclosure']){
 		if(Zotero.config.proxyDownloads){
 			//we have a proxy for downloads at baseDownloadUrl so just pass an itemkey to that
-			return Zotero.url.wwwDownloadUrl(item);
+			return Url.wwwDownloadUrl(item);
 		}
 		else {
-			return Zotero.url.apiDownloadUrl(item);
+			return Url.apiDownloadUrl(item);
 		}
 	}
 	return false;
 };
 
-Zotero.url.apiDownloadUrl = function(item){
+Url.apiDownloadUrl = function(item){
 	if(item.apiObj.links['enclosure']){
 		return item.apiObj.links['enclosure']['href'];
 	}
 	return false;
 };
 
-Zotero.url.proxyDownloadUrl = function(item){
+Url.proxyDownloadUrl = function(item){
 	if(item.apiObj.links['enclosure']){
 		if(Zotero.config.proxyDownloads){
-			return Zotero.config.baseDownloadUrl + "?itemkey=" + item.get('key');
+			return Zotero.config.baseDownloadUrl + '?itemkey=' + item.get('key');
 		}
 		else{
-			return Zotero.url.apiDownloadUrl(item);
+			return Url.apiDownloadUrl(item);
 		}
 	}
 	else {
@@ -90,23 +94,23 @@ Zotero.url.proxyDownloadUrl = function(item){
 	}
 };
 
-Zotero.url.wwwDownloadUrl = function(item){
+Url.wwwDownloadUrl = function(item){
 	if(item.apiObj.links['enclosure']){
-		return Zotero.config.baseZoteroWebsiteUrl + Zotero.config.librarySettings.libraryPathString + "/" + item.get('key') + "/file/view";
+		return Zotero.config.baseZoteroWebsiteUrl + Zotero.config.librarySettings.libraryPathString + '/' + item.get('key') + '/file/view';
 	}
 	else {
 		return false;
 	}
 };
 
-Zotero.url.publicationsDownloadUrl = function(item){
+Url.publicationsDownloadUrl = function(item){
 	if(item.apiObj.links['enclosure']){
 		return item.apiObj.links['enclosure']['href'];
 	}
 	return false;
 };
 
-Zotero.url.attachmentFileDetails = function(item){
+Url.attachmentFileDetails = function(item){
 	//file: offer download
 	if(!item.apiObj.links['enclosure']) return '';
 	var enctype = Zotero.utils.translateMimeType(item.apiObj.links['enclosure'].type);
@@ -114,15 +118,15 @@ Zotero.url.attachmentFileDetails = function(item){
 	var filesizeString = '';
 	if(enc['length']){
 		var filesize = parseInt(enc['length'], 10);
-		filesizeString = "" + filesize + " B";
+		filesizeString = '' + filesize + ' B';
 		if(filesize > 1073741824){
-			filesizeString = "" + (filesize / 1073741824).toFixed(1) + " GB";
+			filesizeString = '' + (filesize / 1073741824).toFixed(1) + ' GB';
 		}
 		else if(filesize > 1048576){
-			filesizeString = "" + (filesize / 1048576).toFixed(1) + " MB";
+			filesizeString = '' + (filesize / 1048576).toFixed(1) + ' MB';
 		}
 		else if(filesize > 1024){
-			filesizeString = "" + (filesize / 1024).toFixed(1) + " KB";
+			filesizeString = '' + (filesize / 1024).toFixed(1) + ' KB';
 		}
 		return '(' + enctype + ', ' + filesizeString + ')';
 	}
@@ -131,21 +135,21 @@ Zotero.url.attachmentFileDetails = function(item){
 	}
 };
 
-Zotero.url.userWebLibrary = function(slug) {
-	return [Zotero.config.baseWebsiteUrl, slug, "items"].join("/");
+Url.userWebLibrary = function(slug) {
+	return [Zotero.config.baseWebsiteUrl, slug, 'items'].join('/');
 };
 
-Zotero.url.groupWebLibrary = function(group) {
+Url.groupWebLibrary = function(group) {
 	if(group.type == 'Private'){
-		return [Zotero.config.baseWebsiteUrl, "groups", group.get('id'), "items"].join("/");
+		return [Zotero.config.baseWebsiteUrl, 'groups', group.get('id'), 'items'].join('/');
 	}
 	else {
-		return [Zotero.config.baseWebsiteUrl, "groups", Zotero.utils.slugify(group.get('name')), "items"].join("/");
+		return [Zotero.config.baseWebsiteUrl, 'groups', Zotero.utils.slugify(group.get('name')), 'items'].join('/');
 	}
 };
 
-Zotero.url.exportUrls = function(config){
-	Z.debug("Zotero.url.exportUrls", 3);
+Url.exportUrls = function(config){
+	Z.debug('Zotero.url.exportUrls', 3);
 	var exportUrls = {};
 	var exportConfig = {};
 	Zotero.config.exportFormats.forEach(function(format){
@@ -155,6 +159,8 @@ Zotero.url.exportUrls = function(config){
 	return exportUrls;
 };
 
-Zotero.url.relationUrl = function(libraryType, libraryID, itemKey){
-	return "http://zotero.org/" + libraryType + "s/" + libraryID + "/items/" + itemKey;
+Url.relationUrl = function(libraryType, libraryID, itemKey){
+	return 'http://zotero.org/' + libraryType + 's/' + libraryID + '/items/' + itemKey;
 };
+
+module.exports = Url;
