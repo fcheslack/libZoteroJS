@@ -207,15 +207,15 @@ module.exports.prototype.get = function(key){
 	switch(key) {
 		case 'title':
 		case 'name':
-		return collection.apiObj.data.name;
+			return collection.apiObj.data.name;
 		case 'collectionKey':
 		case 'key':
-		return collection.apiObj.key || collection.key;
+			return collection.apiObj.key || collection.key;
 		case 'collectionVersion':
 		case 'version':
-		return collection.apiObj.version;
+			return collection.apiObj.version;
 		case 'parentCollection':
-		return collection.apiObj.data.parentCollection;
+			return collection.apiObj.data.parentCollection;
 	}
 	
 	if(key in collection.apiObj.data){
