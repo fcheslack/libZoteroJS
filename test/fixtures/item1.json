@@ -1,0 +1,88 @@
+{
+    "key": "NSBERGDK",
+    "version": 6821,
+    "library": {
+        "type": "user",
+        "id": 14058,
+        "name": "fcheslack1",
+        "links": {
+            "alternate": {
+                "href": "https://staging.zotero.net/fcheslack1",
+                "type": "text/html"
+            }
+        }
+    },
+    "links": {
+        "self": {
+            "href": "https://apidev.zotero.org/users/14058/items/NSBERGDK",
+            "type": "application/json"
+        },
+        "alternate": {
+            "href": "https://staging.zotero.net/fcheslack1/items/NSBERGDK",
+            "type": "text/html"
+        }
+    },
+    "meta": {
+        "creatorSummary": "Dreher et al.",
+        "parsedDate": "2009",
+        "numChildren": 0
+    },
+    "data": {
+        "key": "NSBERGDK",
+        "version": 6821,
+        "itemType": "conferencePaper",
+        "title": "3D virtual worlds as collaborative communities enriching human endeavours: Innovative applications in e-Learning",
+        "creators": [
+            {
+                "creatorType": "author",
+                "firstName": "C.",
+                "lastName": "Dreher"
+            },
+            {
+                "creatorType": "author",
+                "firstName": "T.",
+                "lastName": "Reiners"
+            },
+            {
+                "creatorType": "author",
+                "firstName": "N.",
+                "lastName": "Dreher"
+            },
+            {
+                "creatorType": "author",
+                "firstName": "H.",
+                "lastName": "Dreher"
+            }
+        ],
+        "abstractNote": "",
+        "date": "06/2009",
+        "proceedingsTitle": "2009 3rd IEEE International Conference on Digital Ecosystems and Technologies",
+        "conferenceName": "2009 3rd IEEE International Conference on Digital Ecosystems and Technologies (DEST)",
+        "place": "Istanbul",
+        "publisher": "",
+        "volume": "",
+        "pages": "151-156",
+        "series": "",
+        "language": "",
+        "DOI": "10.1109/DEST.2009.5276761",
+        "ISBN": "",
+        "shortTitle": "3D virtual worlds as collaborative communities enriching human endeavours",
+        "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=5276761",
+        "accessDate": "2010-09-10T03:43:56Z",
+        "archive": "",
+        "archiveLocation": "",
+        "libraryCatalog": "CrossRef",
+        "callNumber": "",
+        "rights": "",
+        "extra": "",
+        "tags": [],
+        "collections": [
+            "FR277SB3"
+        ],
+        "relations": {
+            "owl:sameAs": "http://zotero.org/groups/12/items/Z5D3B2IR"
+        },
+        "dateAdded": "2010-09-10T03:43:56Z",
+        "dateModified": "2010-09-10T03:43:56Z"
+    }
+}
