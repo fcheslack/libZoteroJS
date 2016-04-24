@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:Base');
+
 var Zotero = {
 	callbacks: {},
 	ui: {
@@ -193,14 +195,14 @@ var Zotero = {
 		},
 		
 		validate: function(arg, type){
-			Z.debug('Zotero.validate', 4);
+			log.debug('Zotero.validate', 4);
 			if(arg === ''){
 				return null;
 			}
 			else if(arg === null){
 				return true;
 			}
-			Z.debug(arg + ' ' + type, 4);
+			log.debug(arg + ' ' + type, 4);
 			var patterns = this.patterns;
 			
 			if(patterns.hasOwnProperty(type)){
@@ -257,7 +259,7 @@ var Zotero = {
 
 
 Zotero.ajaxRequest = function(url, type, options){
-	Z.debug('Zotero.ajaxRequest ==== ' + url, 3);
+	log.debug('Zotero.ajaxRequest ==== ' + url, 3);
 	if(!type){
 		type = 'GET';
 	}
@@ -269,7 +271,7 @@ Zotero.ajaxRequest = function(url, type, options){
 		type: type
 	};
 	requestObject = Z.extend({}, requestObject, options);
-	Z.debug(requestObject, 3);
+	log.debug(requestObject, 3);
 	return Zotero.net.queueRequest(requestObject);
 };
 
@@ -280,11 +282,11 @@ Zotero.eventmanager = {
 
 Zotero.trigger = function(eventType, data={}, filter=false){
 	if(filter){
-		Z.debug('filter is not false', 3);
+		log.debug('filter is not false', 3);
 		eventType += '_' + filter;
 	}
 	Zotero.debug('Triggering eventful ' + eventType, 3);
-	Z.debug(data);
+	log.debug(data);
 	
 	data.zeventful = true;
 	// if(data.triggeringElement === null || data.triggeringElement === undefined){
@@ -304,13 +306,13 @@ Zotero.trigger = function(eventType, data={}, filter=false){
 		}
 	}
 	catch(e){
-		Z.error('failed triggering:' + eventType);
-		Z.error(e);
+		error(`failed triggering:${eventType}`);
+		error(e);
 	}
 };
 
 Zotero.listen = function(events, handler, data, filter){
-	Z.debug('Zotero.listen: ' + events);
+	log.debug('Zotero.listen: ' + events);
 	//append filter to event strings if it's specified
 	var eventsArray = events.split(' ');
 	if(eventsArray.length > 0 && filter){

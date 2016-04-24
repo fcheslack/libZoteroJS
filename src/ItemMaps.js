@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:ItemMaps');
+
 var ItemMaps = {};
 
 ItemMaps.fieldMap = {

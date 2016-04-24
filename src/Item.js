@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:Item');
+
 var striptags = require('striptags');
 var ItemMaps = require('./ItemMaps.js');
 
@@ -30,7 +32,7 @@ var Item = function(itemObj){
 Item.prototype = new Zotero.ApiObject();
 
 Item.prototype.parseJsonItem = function (apiObj) {
-	Z.debug('parseJsonItem', 3);
+	log.debug('parseJsonItem', 3);
 	var item = this;
 	item.version = apiObj.version;
 	item.key = apiObj.key;
@@ -63,7 +65,7 @@ Item.prototype.emptyJsonItem = function(){
 
 //populate property values derived from json content
 Item.prototype.initSecondaryData = function(){
-	Z.debug('initSecondaryData', 3);
+	log.debug('initSecondaryData', 3);
 	var item = this;
 	
 	item.version = item.apiObj.version;
@@ -87,7 +89,7 @@ Item.prototype.initSecondaryData = function(){
 	item.synced = false;
 
 	item.updateTagStrings();
-	Z.debug('done with initSecondaryData', 3);
+	log.debug('done with initSecondaryData', 3);
 };
 
 Item.prototype.updateTagStrings = function(){
@@ -233,7 +235,7 @@ Item.prototype.writePatch = function(){
 };
 
 Item.prototype.getChildren = function(library){
-	Z.debug('Zotero.Item.getChildren');
+	log.debug('Zotero.Item.getChildren');
 	var item = this;
 	return Promise.resolve()
 	.then(function(){
@@ -253,7 +255,7 @@ Item.prototype.getChildren = function(library){
 		
 		return Zotero.net.queueRequest(config)
 		.then(function(response){
-			Z.debug('getChildren proxied callback', 4);
+			log.debug('getChildren proxied callback', 4);
 			var items = library.items;
 			var childItems = items.addItemsFromJson(response.data);
 			for (var i = childItems.length - 1; i >= 0; i--) {
@@ -266,7 +268,7 @@ Item.prototype.getChildren = function(library){
 };
 
 Item.prototype.getItemTypes = function (locale) {
-	Z.debug('Zotero.Item.prototype.getItemTypes', 3);
+	log.debug('Zotero.Item.prototype.getItemTypes', 3);
 	if(!locale){
 		locale = 'en-US';
 	}
@@ -274,7 +276,7 @@ Item.prototype.getItemTypes = function (locale) {
 
 	var itemTypes = Zotero.cache.load({locale:locale, target:'itemTypes'});
 	if(itemTypes){
-		Z.debug('have itemTypes in localStorage', 3);
+		log.debug('have itemTypes in localStorage', 3);
 		Item.prototype.itemTypes = itemTypes;//JSON.parse(Zotero.storage.localStorage['itemTypes']);
 		return;
 	}
@@ -285,15 +287,15 @@ Item.prototype.getItemTypes = function (locale) {
 		url: Zotero.ajax.proxyWrapper(url, 'GET'),
 		type: 'GET'
 	}).then(function(xhr){
-		Z.debug('got itemTypes response', 3);
-		Z.debug(xhr.response, 4);
+		log.debug('got itemTypes response', 3);
+		log.debug(xhr.response, 4);
 		Item.prototype.itemTypes = JSON.parse(xhr.responseText);
 		Zotero.cache.save({locale:locale, target:'itemTypes'}, Item.prototype.itemTypes);
 	});
 };
 
 Item.prototype.getItemFields = function (locale) {
-	Z.debug('Zotero.Item.prototype.getItemFields', 3);
+	log.debug('Zotero.Item.prototype.getItemFields', 3);
 	if(!locale){
 		locale = 'en-US';
 	}
@@ -301,7 +303,7 @@ Item.prototype.getItemFields = function (locale) {
 	
 	var itemFields = Zotero.cache.load({locale:locale, target:'itemFields'});
 	if(itemFields){
-		Z.debug('have itemFields in localStorage', 3);
+		log.debug('have itemFields in localStorage', 3);
 		Item.prototype.itemFields = itemFields;//JSON.parse(Zotero.storage.localStorage['itemFields']);
 		Object.keys(Item.prototype.itemFields).forEach(function(key){
 			var val = Item.prototype.itemFields[key];
@@ -316,7 +318,7 @@ Item.prototype.getItemFields = function (locale) {
 		url: Zotero.ajax.proxyWrapper(requestUrl),
 		type: 'GET'
 	}).then(function(xhr){
-		Z.debug('got itemTypes response', 4);
+		log.debug('got itemTypes response', 4);
 		var data = JSON.parse(xhr.responseText);
 		Item.prototype.itemFields = data;
 		Zotero.cache.save({locale:locale, target:'itemFields'}, data);
@@ -329,7 +331,7 @@ Item.prototype.getItemFields = function (locale) {
 };
 
 Item.prototype.getItemTemplate = function (itemType='document', linkMode='') {
-	Z.debug('Zotero.Item.prototype.getItemTemplate', 3);
+	log.debug('Zotero.Item.prototype.getItemTemplate', 3);
 	if(itemType == 'attachment' && linkMode == ''){
 		throw new Error('attachment template requested with no linkMode');
 	}
@@ -340,14 +342,14 @@ Item.prototype.getItemTemplate = function (itemType='document', linkMode='') {
 	var cacheConfig = {itemType:itemType, target:'itemTemplate'};
 	var itemTemplate = Zotero.cache.load(cacheConfig);
 	if(itemTemplate){
-		Z.debug('have itemTemplate in localStorage', 3);
+		log.debug('have itemTemplate in localStorage', 3);
 		var template = itemTemplate;// JSON.parse(Zotero.storage.localStorage[url]);
 		return Promise.resolve(template);
 	}
 	
 	return Zotero.ajaxRequest(requestUrl, 'GET', {dataType:'json'})
 	.then(function(response){
-		Z.debug('got itemTemplate response', 3);
+		log.debug('got itemTemplate response', 3);
 		Zotero.cache.save(cacheConfig, response.data);
 		return response.data;
 	});
@@ -355,7 +357,7 @@ Item.prototype.getItemTemplate = function (itemType='document', linkMode='') {
 
 Item.prototype.getUploadAuthorization = function(fileinfo){
 	//fileInfo: md5, filename, filesize, mtime, zip, contentType, charset
-	Z.debug('Zotero.Item.getUploadAuthorization', 3);
+	log.debug('Zotero.Item.getUploadAuthorization', 3);
 	var item = this;
 	
 	var config = {
@@ -386,7 +388,7 @@ Item.prototype.getUploadAuthorization = function(fileinfo){
 };
 
 Item.prototype.registerUpload = function(uploadKey){
-	Z.debug('Zotero.Item.registerUpload', 3);
+	log.debug('Zotero.Item.registerUpload', 3);
 	var item = this;
 	var config = {
 		'target':'item',
@@ -421,7 +423,7 @@ Item.prototype.fullUpload = function(file){
 Item.prototype.creatorTypes = {};
 
 Item.prototype.getCreatorTypes = function (itemType) {
-	Z.debug('Zotero.Item.prototype.getCreatorTypes: ' + itemType, 3);
+	log.debug('Zotero.Item.prototype.getCreatorTypes: ' + itemType, 3);
 	if(!itemType){
 		itemType = 'document';
 	}
@@ -430,24 +432,24 @@ Item.prototype.getCreatorTypes = function (itemType) {
 	//creatorTypes maps itemType to the possible creatorTypes
 	var creatorTypes = Zotero.cache.load({target:'creatorTypes'});
 	if(creatorTypes){
-		Z.debug('have creatorTypes in localStorage', 3);
+		log.debug('have creatorTypes in localStorage', 3);
 		Item.prototype.creatorTypes = creatorTypes;//JSON.parse(Zotero.storage.localStorage['creatorTypes']);
 	}
 	
 	if(Item.prototype.creatorTypes[itemType]){
-		Z.debug('creatorTypes of requested itemType available in localStorage', 3);
-		Z.debug(Item.prototype.creatorTypes, 4);
+		log.debug('creatorTypes of requested itemType available in localStorage', 3);
+		log.debug(Item.prototype.creatorTypes, 4);
 		return Promise.resolve(Item.prototype.creatorTypes[itemType]);
 	}
 	else{
-		Z.debug('sending request for creatorTypes', 3);
+		log.debug('sending request for creatorTypes', 3);
 		var query = Zotero.ajax.apiQueryString({itemType:itemType});
 		//TODO: this probably shouldn't be using baseApiUrl directly
 		var requestUrl = Zotero.config.baseApiUrl + '/itemTypeCreatorTypes' + query;
 		
 		return Zotero.ajaxRequest(requestUrl, 'GET', {dataType:'json'})
 		.then(function(response){
-			Z.debug('got creatorTypes response', 4);
+			log.debug('got creatorTypes response', 4);
 			Item.prototype.creatorTypes[itemType] = response.data;
 			//Zotero.storage.localStorage['creatorTypes'] = JSON.stringify(Item.prototype.creatorTypes);
 			Zotero.cache.save({target:'creatorTypes'}, Item.prototype.creatorTypes);
@@ -457,10 +459,10 @@ Item.prototype.getCreatorTypes = function (itemType) {
 };
 
 Item.prototype.getCreatorFields = function (locale) {
-	Z.debug('Zotero.Item.prototype.getCreatorFields', 3);
+	log.debug('Zotero.Item.prototype.getCreatorFields', 3);
 	var creatorFields = Zotero.cache.load({target:'creatorFields'});
 	if(creatorFields){
-		Z.debug('have creatorFields in localStorage', 3);
+		log.debug('have creatorFields in localStorage', 3);
 		Item.prototype.creatorFields = creatorFields;// JSON.parse(Zotero.storage.localStorage['creatorFields']);
 		return Promise.resolve(creatorFields);
 	}
@@ -468,7 +470,7 @@ Item.prototype.getCreatorFields = function (locale) {
 	var requestUrl = Zotero.config.baseApiUrl + '/creatorFields';
 	return Zotero.ajaxRequest(requestUrl, 'GET', {dataType:'json'})
 	.then(function(response){
-		Z.debug('got itemTypes response', 4);
+		log.debug('got itemTypes response', 4);
 		Item.prototype.creatorFields = response.data;
 		Zotero.cache.save({target:'creatorFields'}, response.data);
 	});
@@ -774,7 +776,7 @@ Item.prototype.uploadChildAttachment = function(childItem, fileInfo, progressCal
 	 * perform full upload
 	 */
 	var item = this;
-	Z.debug('uploadChildAttachment', 3);
+	log.debug('uploadChildAttachment', 3);
 	if(!item.owningLibrary){
 		return Promise.reject(new Error('Item must be associated with a library'));
 	}
@@ -801,7 +803,7 @@ Item.prototype.uploadChildAttachment = function(childItem, fileInfo, progressCal
 
 Item.prototype.uploadFile = function(fileInfo, progressCallback){
 	var item = this;
-	Z.debug('Zotero.Item.uploadFile', 3);
+	log.debug('Zotero.Item.uploadFile', 3);
 	var uploadAuthFileData = {
 		md5:fileInfo.md5,
 		filename: item.get('title'),
@@ -815,7 +817,7 @@ Item.prototype.uploadFile = function(fileInfo, progressCallback){
 	}
 	return item.getUploadAuthorization(uploadAuthFileData)
 	.then(function(response){
-		Z.debug('uploadAuth callback', 3);
+		log.debug('uploadAuth callback', 3);
 		var upAuthOb;
 		if(typeof response.data == 'string'){upAuthOb = JSON.parse(response.data);}
 		else{upAuthOb = response.data;}
@@ -836,7 +838,7 @@ Item.prototype.uploadFile = function(fileInfo, progressCallback){
 							'serverMessage': response.jqxhr.responseText,
 							'response': response
 						};
-						Z.error(e);
+						log.error(e);
 						throw e;
 					} else {
 						return {'message': 'Upload Successful'};
@@ -845,8 +847,8 @@ Item.prototype.uploadFile = function(fileInfo, progressCallback){
 			});
 		}
 	}).catch(function(response){
-		Z.debug('Failure caught during upload', 3);
-		Z.debug(response, 3);
+		log.debug('Failure caught during upload', 3);
+		log.debug(response, 3);
 		throw {
 			'message':'Failure during upload.',
 			'code': response.status,

@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:File');
+
 var SparkMD5 = require('spark-md5');
 
 
@@ -15,9 +17,9 @@ module.exports.getFileInfo = function(file){
 		var fileInfo = {};
 		var reader = new FileReader();
 		reader.onload = function(e){
-			Z.debug('Zotero.file.getFileInfo onloadFunc', 3);
+			log.debug('Zotero.file.getFileInfo onloadFunc', 3);
 			var result = e.target.result;
-			Zotero.debug(result, 3);
+			log.debug(result, 3);
 			fileInfo.md5 = SparkMD5.ArrayBuffer.hash(result);
 			fileInfo.filename = file.name;
 			fileInfo.filesize = file.size;
@@ -33,8 +35,8 @@ module.exports.getFileInfo = function(file){
 };
 
 module.exports.uploadFile = function(uploadInfo, fileInfo){
-	Z.debug('Zotero.file.uploadFile', 3);
-	Z.debug(uploadInfo, 4);
+	log.debug('Zotero.file.uploadFile', 3);
+	log.debug(uploadInfo, 4);
 	
 	var formData = new FormData();
 	Object.keys(uploadInfo.params).forEach(function(key){
@@ -51,13 +53,13 @@ module.exports.uploadFile = function(uploadInfo, fileInfo){
 	
 	return new Promise(function(resolve, reject){
 		xhr.onload = function(evt){
-			Z.debug('uploadFile onload event', 3);
+			log.debug('uploadFile onload event', 3);
 			if(this.status == 201){
-				Z.debug('successful upload - 201', 3);
+				log.debug('successful upload - 201', 3);
 				resolve();
 			}
 			else {
-				Z.error('uploadFile failed - ' + xhr.status);
+				log.error('uploadFile failed - ' + xhr.status);
 				reject({
 					'message': 'Failure uploading file.',
 					'code': xhr.status,
@@ -67,8 +69,8 @@ module.exports.uploadFile = function(uploadInfo, fileInfo){
 		};
 		
 		xhr.onprogress = function(evt){
-			Z.debug('progress event');
-			Z.debug(evt);
+			log.debug('progress event');
+			log.debug(evt);
 		};
 		xhr.send(formData);
 	});

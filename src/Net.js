@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:Net');
+
 var Deferred = require('deferred');
 /*
  * Make concurrent and sequential network requests, respecting backoff/retry-after
@@ -29,26 +31,26 @@ Net.prototype.queueDeferred = function(){
 };
 
 Net.prototype.queueRequest = function(requestObject){
-	Z.debug('Zotero.Net.queueRequest', 3);
+	log.debug('Zotero.Net.queueRequest', 3);
 	var net = this;
 	var resultPromise;
 	
 	if(Array.isArray(requestObject)){
 		resultPromise = net.queueDeferred().then(function(){
-			Z.debug('running sequential after queued deferred resolved', 4);
+			log.debug('running sequential after queued deferred resolved', 4);
 			return net.runSequential(requestObject);
 		}).then(function(response){
-			Z.debug('runSequential done', 3);
+			log.debug('runSequential done', 3);
 			net.queuedRequestDone();
 			return response;
 		});
 	}
 	else {
 		resultPromise = net.queueDeferred().then(function(){
-			Z.debug('running concurrent after queued deferred resolved', 4);
+			log.debug('running concurrent after queued deferred resolved', 4);
 			return net.runConcurrent(requestObject);
 		}).then(function(response){
-			Z.debug('done with queuedRequest');
+			log.debug('done with queuedRequest');
 			net.queuedRequestDone();
 			return response;
 		});
@@ -56,15 +58,15 @@ Net.prototype.queueRequest = function(requestObject){
 	
 	net.runNext();
 	return resultPromise.catch(function(error){
-		Z.error('Error before leaving Zotero.Net');
-		Z.error(error);
+		log.error('Error before leaving Zotero.Net');
+		log.error(error);
 	});
 };
 
 Net.prototype.runConcurrent = function(requestObject){
-	Z.debug('Zotero.Net.runConcurrent', 3);
+	log.debug('Zotero.Net.runConcurrent', 3);
 	return this.ajaxRequest(requestObject).then(function(response){
-		Z.debug('done with runConcurrent request');
+		log.debug('done with runConcurrent request');
 		return response;
 	});
 };
@@ -74,7 +76,7 @@ Net.prototype.runConcurrent = function(requestObject){
 //adding the previous response to a responses array that will be
 //returned via promise to the caller when all requests are complete
 Net.prototype.runSequential = function(requestObjects){
-	Z.debug('Zotero.Net.runSequential', 3);
+	log.debug('Zotero.Net.runSequential', 3);
 	var net = this;
 	var responses = [];
 	var seqPromise = Promise.resolve();
@@ -84,7 +86,7 @@ Net.prototype.runSequential = function(requestObjects){
 		seqPromise = seqPromise.then(function(){
 			var p = net.ajaxRequest(requestObject)
 			.then(function(response){
-				Z.debug('pushing sequential response into result array');
+				log.debug('pushing sequential response into result array');
 				responses.push(response);
 			});
 			return p;
@@ -92,7 +94,7 @@ Net.prototype.runSequential = function(requestObjects){
 	}
 	
 	return seqPromise.then(function(){
-		Z.debug('done with sequential aggregator promise - returning responses');
+		log.debug('done with sequential aggregator promise - returning responses');
 		return responses;
 	});
 };
@@ -100,7 +102,7 @@ Net.prototype.runSequential = function(requestObjects){
 //when one concurrent call, or a sequential series finishes, subtract it from the running
 //count and run the next if there is something waiting to be run
 Net.prototype.individualRequestDone = function(response){
-	Z.debug('Zotero.Net.individualRequestDone', 3);
+	log.debug('Zotero.Net.individualRequestDone', 3);
 	var net = this;
 	
 	//check if we need to back off before making more requests
@@ -119,7 +121,7 @@ Net.prototype.individualRequestDone = function(response){
 };
 
 Net.prototype.queuedRequestDone = function(response){
-	Z.debug('queuedRequestDone', 3);
+	log.debug('queuedRequestDone', 3);
 	var net = this;
 	net.numRunning--;
 	net.runNext();
@@ -127,14 +129,14 @@ Net.prototype.queuedRequestDone = function(response){
 };
 
 Net.prototype.runNext = function(){
-	Z.debug('Zotero.Net.runNext', 3);
+	log.debug('Zotero.Net.runNext', 3);
 	var net = this;
 	var nowms = Date.now();
 	
 	//check if we're backing off and need to remain backing off,
 	//or if we should now continue
 	if(net.backingOff && (net.waitingExpires > (nowms - 100)) ){
-		Z.debug('currently backing off', 3);
+		log.debug('currently backing off', 3);
 		var waitms = net.waitingExpires - nowms;
 		setTimeout(net.runNext, waitms);
 		return;
@@ -144,18 +146,18 @@ Net.prototype.runNext = function(){
 	}
 	
 	//continue making requests up to the concurrent limit
-	Z.debug(net.numRunning + '/' + net.numConcurrent + ' Running. ' + net.deferredQueue.length + ' queued.', 3);
+	log.debug(net.numRunning + '/' + net.numConcurrent + ' Running. ' + net.deferredQueue.length + ' queued.', 3);
 	while((net.deferredQueue.length > 0) && (net.numRunning < net.numConcurrent)){
 		net.numRunning++;
 		var nextD = net.deferredQueue.shift();
 		nextD.resolve();
-		Z.debug(net.numRunning + '/' + net.numConcurrent + ' Running. ' + net.deferredQueue.length + ' queued.', 3);
+		log.debug(net.numRunning + '/' + net.numConcurrent + ' Running. ' + net.deferredQueue.length + ' queued.', 3);
 	}
 };
 
 Net.prototype.checkDelay = function(response){
-	Z.debug('Zotero.Net.checkDelay');
-	Z.debug(response);
+	log.debug('Zotero.Net.checkDelay');
+	log.debug(response);
 	var net = this;
 	var wait = 0;
 	if(Array.isArray(response)){
@@ -178,7 +180,7 @@ Net.prototype.checkDelay = function(response){
 };
 
 Net.prototype.ajaxRequest = function(requestConfig){
-	Z.debug('Zotero.Net.ajaxRequest', 3);
+	log.debug('Zotero.Net.ajaxRequest', 3);
 	var net = this;
 	var defaultConfig = {
 		type:'GET',
@@ -190,7 +192,7 @@ Net.prototype.ajaxRequest = function(requestConfig){
 			return response;
 		},
 		error: function(response){
-			Z.error('ajaxRequest rejected:' + response.jqxhr.status + ' - ' + response.jqxhr.responseText);
+			log.error('ajaxRequest rejected:' + response.jqxhr.status + ' - ' + response.jqxhr.responseText);
 			return response;
 		}
 		//cache:false
@@ -214,8 +216,8 @@ Net.prototype.ajaxRequest = function(requestConfig){
 	delete config.success;
 	delete config.error;
 	
-	Z.debug('AJAX config');
-	Z.debug(config);
+	log.debug('AJAX config');
+	log.debug(config);
 	var ajaxpromise = new Promise(function(resolve, reject){
 		net.ajax(config)
 		.then(function(request){
@@ -252,7 +254,7 @@ Net.prototype.ajaxRequest = function(requestConfig){
 	.then(function(response){
 		//now that we're done handling, reject
 		if(response.isError){
-			Z.error('re-throwing ApiResponse that was a rejection');
+			log.error('re-throwing ApiResponse that was a rejection');
 			throw response;
 		}
 		return response;
@@ -279,14 +281,14 @@ Net.prototype.ajax = function(config){
 		req.send(config.data);
 
 		req.onload = function(){
-			Z.debug('XMLHttpRequest done');
-			Z.debug(req);
+			log.debug('XMLHttpRequest done');
+			log.debug(req);
 			if (req.status >= 200 && req.status < 300) {
-				Z.debug('200-300 response: resolving Net.ajax promise');
+				log.debug('200-300 response: resolving Net.ajax promise');
 				// Performs the function "resolve" when this.status is equal to 2xx
 				resolve(req);
 			} else {
-				Z.debug('not 200-300 response: rejecting Net.ajax promise');
+				log.debug('not 200-300 response: rejecting Net.ajax promise');
 				// Performs the function "reject" when this.status is different than 2xx
 				reject(req);
 			}

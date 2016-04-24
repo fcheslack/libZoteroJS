@@ -1,14 +1,15 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:Ajax');
 var Ajax = {};
 
 Ajax.errorCallback = function(response){
-	Z.error(response);
-	Z.debug('ajax error callback', 2);
-	Z.debug('textStatus: ' + response.textStatus, 2);
-	Z.debug('errorThrown: ', 2);
-	Z.debug(response.errorThrown, 2);
-	Z.debug(response.jqxhr, 2);
+	log.error(response);
+	log.debug('ajax error callback', 2);
+	log.debug('textStatus: ' + response.textStatus, 2);
+	log.debug('errorThrown: ', 2);
+	log.debug(response.errorThrown, 2);
+	log.debug(response.jqxhr, 2);
 };
 
 Ajax.error = Ajax.errorCallback;
@@ -18,8 +19,8 @@ Ajax.activeRequests = [];
  * Requires {target:items|collections|tags, libraryType:user|group, libraryID:<>}
  */
 Ajax.apiRequestUrl = function(params){
-	Z.debug('Zotero.Ajax.apiRequestUrl', 4);
-	Z.debug(params, 4);
+	log.debug('Zotero.Ajax.apiRequestUrl', 4);
+	log.debug(params, 4);
 	Object.keys(params).forEach(function(key){
 		var val = params[key];
 		//should probably figure out exactly why I'm doing this, is it just to make sure no hashes snuck in?
@@ -128,13 +129,13 @@ Ajax.apiRequestUrl = function(params){
 			url += '/file/view';
 			break;
 	}
-	//Z.debug("returning apiRequestUrl: " + url, 3);
+	//log.debug("returning apiRequestUrl: " + url, 3);
 	return url;
 };
 
 Ajax.apiQueryString = function(passedParams, useConfigKey){
-	Z.debug('Zotero.Ajax.apiQueryString', 4);
-	Z.debug(passedParams, 4);
+	log.debug('Zotero.Ajax.apiQueryString', 4);
+	log.debug(passedParams, 4);
 	if(useConfigKey === null || typeof useConfigKey === 'undefined'){
 		useConfigKey = true;
 	}
@@ -160,13 +161,13 @@ Ajax.apiQueryString = function(passedParams, useConfigKey){
 		passedParams['key'] = Zotero.config.apiKey;
 	}
 	
-	//Z.debug()
+	//log.debug()
 	if(passedParams.hasOwnProperty('sort') && passedParams['sort'] == 'undefined' ){
 		//alert('fixed a bad sort');
 		passedParams['sort'] = 'asc';
 	}
 	
-	Z.debug(passedParams, 4);
+	log.debug(passedParams, 4);
 	
 	var queryString = '?';
 	var queryParamsArray = [];
@@ -238,7 +239,7 @@ Ajax.apiQueryString = function(passedParams, useConfigKey){
 	
 	//build query string by concatenating array
 	queryString += queryParamsArray.join('&');
-	//Z.debug("resulting queryString:" + queryString);
+	//log.debug("resulting queryString:" + queryString);
 	return queryString;
 };
 
@@ -276,7 +277,7 @@ Ajax.downloadBlob = function(url){
 		
 		xhr.addEventListener('load', function () {
 			if (xhr.status === 200) {
-				Z.debug('downloadBlob Image retrieved. resolving', 3);
+				log.debug('downloadBlob Image retrieved. resolving', 3);
 				resolve(xhr.response);
 			}
 			else {

@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:Cache');
+
 //build a consistent string from an object to use as a cache key
 //put object key/value pairs into array, sort array, and concatenate
 //array with '/'
@@ -27,7 +29,7 @@ module.exports.prototype.objectCacheString = function(params){
 		}
 	});
 	paramVarsArray.sort();
-	Z.debug(paramVarsArray, 4);
+	log.debug(paramVarsArray, 4);
 	var objectCacheString = paramVarsArray.join('/');
 	return objectCacheString;
 };
@@ -54,9 +56,9 @@ module.exports.prototype.save = function(params, object, cachetags){
 };
 
 module.exports.prototype.load = function(params){
-	Z.debug('Zotero.Cache.load', 3);
+	log.debug('Zotero.Cache.load', 3);
 	var objectCacheString = this.objectCacheString(params);
-	Z.debug(objectCacheString, 4);
+	log.debug(objectCacheString, 4);
 	try{
 		var s = this.store[objectCacheString];
 		if(!s){
@@ -68,19 +70,19 @@ module.exports.prototype.load = function(params){
 		}
 	}
 	catch(e){
-		Z.error('Error parsing retrieved cache data: ' + objectCacheString + ' : ' + s);
+		log.error(`Error parsing retrieved cache data: ${objectCacheString} : ${s}`);
 		return null;
 	}
 };
 
 module.exports.prototype.expireCacheTag = function(tag){
-	Z.debug('Zotero.Cache.expireCacheTag', 3);
+	log.debug('Zotero.Cache.expireCacheTag', 3);
 	var registry = JSON.parse(this.store._registry);
 	var store = this.store;
 	Object.keys(registry).forEach(function(index){
 		var value = registry[index];
 		if(value.cachetags.indexOf(tag) != (-1)){
-			Z.debug('tag ' + tag + ' found for item ' + value['id'] + ' : expiring', 4);
+			log.debug('tag ' + tag + ' found for item ' + value['id'] + ' : expiring', 4);
 			delete store[value['id']];
 			delete registry[value['id']];
 		}

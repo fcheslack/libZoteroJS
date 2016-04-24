@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:Items');
+
 module.exports = function(jsonBody){
 	this.instance = 'Zotero.Items';
 	//represent items as array for ordering purposes
@@ -34,13 +36,13 @@ module.exports.prototype.addItem = function(item){
 };
 
 module.exports.prototype.addItemsFromJson = function(jsonBody){
-	Z.debug('addItemsFromJson', 3);
+	log.debug('addItemsFromJson', 3);
 	var items = this;
 	var parsedItemJson = jsonBody;
 	var itemsAdded = [];
-	Z.debug('looping');
+	log.debug('looping');
 	parsedItemJson.forEach(function(itemObj){
-		Z.debug('creating new Item');
+		log.debug('creating new Item');
 		var item = new Zotero.Item(itemObj);
 		items.addItem(item);
 		itemsAdded.push(item);
@@ -58,7 +60,7 @@ module.exports.prototype.removeLocalItems = function(keys){
 };
 
 module.exports.prototype.deleteItem = function(itemKey){
-	Z.debug('Zotero.Items.deleteItem', 3);
+	log.debug('Zotero.Items.deleteItem', 3);
 	var items = this;
 	var item;
 	
@@ -83,7 +85,7 @@ module.exports.prototype.deleteItem = function(itemKey){
 
 module.exports.prototype.deleteItems = function(deleteItems, version){
 	//TODO: split into multiple requests if necessary
-	Z.debug('Zotero.Items.deleteItems', 3);
+	log.debug('Zotero.Items.deleteItems', 3);
 	var items = this;
 	var deleteKeys = [];
 	var i;
@@ -218,7 +220,7 @@ module.exports.prototype.writeItems = function(itemsArray){
 	
 	//update item with server response if successful
 	var writeItemsSuccessCallback = function(response){
-		Z.debug('writeItem successCallback', 3);
+		log.debug('writeItem successCallback', 3);
 		items.updateObjectsFromWriteResponse(this.writeChunk, response);
 		//save updated items to IDB
 		if(Zotero.config.useIndexedDB){
@@ -230,8 +232,8 @@ module.exports.prototype.writeItems = function(itemsArray){
 		return response;
 	};
 	
-	Z.debug('items.itemsVersion: ' + items.itemsVersion, 3);
-	Z.debug('items.libraryVersion: ' + items.libraryVersion, 3);
+	log.debug('items.itemsVersion: ' + items.itemsVersion, 3);
+	log.debug('items.libraryVersion: ' + items.libraryVersion, 3);
 	
 	var requestObjects = [];
 	for(i = 0; i < writeChunks.length; i++){
@@ -252,7 +254,7 @@ module.exports.prototype.writeItems = function(itemsArray){
 	
 	return library.sequentialRequests(requestObjects)
 	.then(function(responses){
-		Z.debug('Done with writeItems sequentialRequests promise', 3);
+		log.debug('Done with writeItems sequentialRequests promise', 3);
 		return responses;
 	});
 };

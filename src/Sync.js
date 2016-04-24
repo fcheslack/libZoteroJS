@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:Sync');
+
 //sync pull:
 //upload changed data
 // get updatedVersions for collections

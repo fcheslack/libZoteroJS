@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:Collection');
+
 module.exports = function(collectionObj){
 	this.instance = 'Zotero.Collection';
 	this.libraryUrlIdentifier = '';
@@ -45,7 +47,7 @@ module.exports.prototype.updateCollectionKey = function(collectionKey){
 };
 
 module.exports.prototype.parseJsonCollection = function(apiObj) {
-	Z.debug('parseJsonCollection', 4);
+	log.debug('parseJsonCollection', 4);
 	var collection = this;
 	collection.key = apiObj.key;
 	collection.version = apiObj.version;
@@ -79,7 +81,7 @@ module.exports.prototype.initSecondaryData = function() {
 };
 
 module.exports.prototype.nestCollection = function(collectionsObject) {
-	Z.debug('Zotero.Collection.nestCollection', 4);
+	log.debug('Zotero.Collection.nestCollection', 4);
 	var collection = this;
 	var parentCollectionKey = collection.get('parentCollection');
 	if(parentCollectionKey !== false){
@@ -95,7 +97,7 @@ module.exports.prototype.nestCollection = function(collectionsObject) {
 };
 
 module.exports.prototype.addItems = function(itemKeys){
-	Z.debug('Zotero.Collection.addItems', 3);
+	log.debug('Zotero.Collection.addItems', 3);
 	var collection = this;
 	var config = {
 		'target':'items',
@@ -111,7 +113,7 @@ module.exports.prototype.addItems = function(itemKeys){
 };
 
 module.exports.prototype.getMemberItemKeys = function(){
-	Z.debug('Zotero.Collection.getMemberItemKeys', 3);
+	log.debug('Zotero.Collection.getMemberItemKeys', 3);
 	var collection = this;
 	var config = {
 		'target':'items',
@@ -123,7 +125,7 @@ module.exports.prototype.getMemberItemKeys = function(){
 	
 	return Zotero.ajaxRequest(config, 'GET', {processData: false} )
 	.then(function(response){
-		Z.debug('getMemberItemKeys proxied callback', 3);
+		log.debug('getMemberItemKeys proxied callback', 3);
 		var result = response.data;
 		var keys = result.trim().split(/[\s]+/);
 		collection.itemKeys = keys;
@@ -179,7 +181,7 @@ module.exports.prototype.writeApiObj = function(){
 };
 
 module.exports.prototype.remove = function(){
-	Z.debug('Zotero.Collection.delete', 3);
+	log.debug('Zotero.Collection.delete', 3);
 	var collection = this;
 	var owningLibrary = collection.owningLibrary;
 	var config = {
@@ -196,7 +198,7 @@ module.exports.prototype.remove = function(){
 		},
 		cache:false
 	}).then(function(){
-		Z.debug('done deleting collection. remove local copy.', 3);
+		log.debug('done deleting collection. remove local copy.', 3);
 		owningLibrary.collections.removeLocalCollection(collection.key);
 		owningLibrary.trigger('libraryCollectionsUpdated');
 	});

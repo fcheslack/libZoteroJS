@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:Utils');
+
 var Utils = {
 	randomString:function(len, chars) {
 		if (!chars) {
@@ -31,11 +33,11 @@ var Utils = {
 	},
 	
 	prependAutocomplete: function(pre, source){
-		Z.debug('Zotero.utils.prependAutocomplete', 3);
-		Z.debug('prepend match: ' + pre);
+		log.debug('Zotero.utils.prependAutocomplete', 3);
+		log.debug('prepend match: ' + pre);
 		var satisfy;
 		if(!source){
-			Z.debug('source is not defined');
+			log.debug('source is not defined');
 		}
 		if(pre === ''){
 			satisfy = source.slice(0);
@@ -55,17 +57,16 @@ var Utils = {
 	},
 	
 	matchAnyAutocomplete: function(pre, source){
-		Z.debug('Zotero.utils.matchAnyAutocomplete', 3);
-		Z.debug('matchAny match: ' + pre);
+		log.debug('Zotero.utils.matchAnyAutocomplete', 3);
+		log.debug('matchAny match: ' + pre);
 		var satisfy;
 		if(!source){
-			Z.debug('source is not defined');
+			log.debug('source is not defined');
 		}
 		if(pre === ''){
 			satisfy = source.slice(0);
 			return satisfy;
 		}
-		var plen = pre.length;
 		var plower = pre.toLowerCase();
 		satisfy = source.map(function(n){
 			if(n.toLowerCase().indexOf(plower) != -1){
@@ -82,6 +83,7 @@ var Utils = {
 		var lstring = '';
 		if(type == 'user') lstring = 'u';
 		else if(type == 'group') lstring = 'g';
+		else if(type == 'publications') lstring = 'p';
 		lstring += libraryID;
 		return lstring;
 	},
@@ -95,10 +97,16 @@ var Utils = {
 		else if(libraryString.charAt(0) == 'g'){
 			type = 'group';
 		}
+		else if(libraryString.charAt(0) == 'p'){
+			type = 'publications';
+		}
 		else{
 			throw new Error('unexpected type character in libraryString');
 		}
-		libraryID = parseInt(libraryString.substring(1));
+		libraryID = parseInt(libraryString.substring(1), 10);
+		if(isNaN(libraryID)){
+			throw new Error('NaN libraryID');
+		}
 		return {libraryType:type, libraryID: libraryID};
 	},
 	
@@ -124,21 +132,19 @@ var Utils = {
 		});
 	},
 	
-	parseApiDate: function(datestr, date){
+	parseApiDate: function(datestr){
 		//var parsems = Date.parse(datestr);
 		
 		var re = /([0-9]+)-([0-9]+)-([0-9]+)T([0-9]+):([0-9]+):([0-9]+)Z/;
 		var matches = re.exec(datestr);
 		if(matches === null){
-			Z.error('error parsing api date: ' + datestr);
+			log.debug(`error parsing api date: ${datestr}`);
 			return null;
 		}
 		else{
-			date = new Date(Date.UTC(matches[1], matches[2]-1, matches[3], matches[4], matches[5], matches[6]));
+			var date = new Date(Date.UTC(matches[1], matches[2]-1, matches[3], matches[4], matches[5], matches[6]));
 			return date;
 		}
-		
-		return date;
 	},
 	
 	readCookie: function(name) {

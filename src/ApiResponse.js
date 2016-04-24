@@ -1,7 +1,9 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:ApiResponse');
+
 module.exports = function(response) {
-	Z.debug('Zotero.ApiResponse', 3);
+	log.debug('Zotero.ApiResponse', 3);
 	this.totalResults = 0;
 	this.apiVersion = null;
 	this.lastModifiedVersion = 0;
@@ -21,7 +23,7 @@ module.exports = function(response) {
 };
 
 module.exports.prototype.parseResponse = function(response){
-	Z.debug('parseResponse');
+	log.debug('parseResponse');
 	var apiResponse = this;
 	apiResponse.jqxhr = response.jqxhr;
 	apiResponse.status = response.jqxhr.status;
@@ -40,8 +42,8 @@ module.exports.prototype.parseResponse = function(response){
 		apiResponse.retryAfter = parseInt(apiResponse.retryAfter, 10);
 	}
 	//TODO: parse link header into individual links
-	Z.debug('parse link header');
-	Z.debug(apiResponse.linkHeader);
+	log.debug('parse link header');
+	log.debug(apiResponse.linkHeader);
 	if(apiResponse.linkHeader){
 		var links = apiResponse.linkHeader.split(',');
 		var parsedLinks = {};
@@ -54,5 +56,5 @@ module.exports.prototype.parseResponse = function(response){
 		}
 		apiResponse.parsedLinks = parsedLinks;
 	}
-	Z.debug('done parsing response');
+	log.debug('done parsing response');
 };

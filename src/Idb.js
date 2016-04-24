@@ -1,13 +1,15 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:Idb');
+
 module.exports = {};
 
 //Initialize an indexedDB for the specified library user or group + id
 //returns a promise that is resolved with a Zotero.Idb.Library instance when successful
 //and rejected onerror
 module.exports.Library = function(libraryString){
-	Z.debug('Zotero.Idb.Library', 3);
-	Z.debug('Initializing Zotero IDB', 3);
+	log.debug('Zotero.Idb.Library', 3);
+	log.debug('Initializing Zotero IDB', 3);
 	this.libraryString = libraryString;
 	this.owningLibrary = null;
 	this.initialized = false;
@@ -21,25 +23,25 @@ module.exports.Library.prototype.init = function(){
 		idbLibrary.indexedDB = indexedDB;
 		
 		// Now we can open our database
-		Z.debug('requesting indexedDb from browser', 3);
+		log.debug('requesting indexedDb from browser', 3);
 		var request = indexedDB.open('Zotero_' + idbLibrary.libraryString, 4);
 		request.onerror = function(e){
-			Zotero.error('ERROR OPENING INDEXED DB');
+			log.log.error('ERROR OPENING INDEXED DB');
 			reject();
 		};
 		
 		var upgradeCallback = function(event){
-			Z.debug('Zotero.Idb onupgradeneeded or onsuccess', 3);
+			log.debug('Zotero.Idb onupgradeneeded or onsuccess', 3);
 			var oldVersion = event.oldVersion;
-			Z.debug('oldVersion: ' + event.oldVersion, 3);
+			log.debug('oldVersion: ' + event.oldVersion, 3);
 			var db = event.target.result;
 			idbLibrary.db = db;
 			
 			if(oldVersion < 4){
 				//delete old versions of object stores
-				Z.debug('Existing object store names:', 3);
-				Z.debug(JSON.stringify(db.objectStoreNames), 3);
-				Z.debug('Deleting old object stores', 3);
+				log.debug('Existing object store names:', 3);
+				log.debug(JSON.stringify(db.objectStoreNames), 3);
+				log.debug('Deleting old object stores', 3);
 				if(db.objectStoreNames['items']){
 					db.deleteObjectStore('items');
 				}
@@ -55,8 +57,8 @@ module.exports.Library.prototype.init = function(){
 				if(db.objectStoreNames['versions']){
 					db.deleteObjectStore('versions');
 				}
-				Z.debug('Existing object store names:', 3);
-				Z.debug(JSON.stringify(db.objectStoreNames), 3);
+				log.debug('Existing object store names:', 3);
+				log.debug(JSON.stringify(db.objectStoreNames), 3);
 				
 				// Create object stores to hold items, collections, and tags.
 				// IDB keys are just the zotero object keys
@@ -66,16 +68,16 @@ module.exports.Library.prototype.init = function(){
 				var fileStore = db.createObjectStore('files');
 				var versionStore = db.createObjectStore('versions');
 				
-				Z.debug('itemStore index names:', 3);
-				Z.debug(JSON.stringify(itemStore.indexNames), 3);
-				Z.debug('collectionStore index names:', 3);
-				Z.debug(JSON.stringify(collectionStore.indexNames), 3);
-				Z.debug('tagStore index names:', 3);
-				Z.debug(JSON.stringify(tagStore.indexNames), 3);
+				log.debug('itemStore index names:', 3);
+				log.debug(JSON.stringify(itemStore.indexNames), 3);
+				log.debug('collectionStore index names:', 3);
+				log.debug(JSON.stringify(collectionStore.indexNames), 3);
+				log.debug('tagStore index names:', 3);
+				log.debug(JSON.stringify(tagStore.indexNames), 3);
 				
 				// Create index to search/sort items by each attribute
 				Object.keys(Zotero.Item.prototype.fieldMap).forEach(function(key){
-					Z.debug('Creating index on ' + key, 3);
+					log.debug('Creating index on ' + key, 3);
 					itemStore.createIndex(key, 'data.' + key, { unique: false });
 				});
 				
@@ -107,7 +109,7 @@ module.exports.Library.prototype.init = function(){
 		request.onupgradeneeded = upgradeCallback;
 		
 		request.onsuccess = function(){
-			Z.debug('IDB success', 3);
+			log.debug('IDB success', 3);
 			idbLibrary.db = request.result;
 			idbLibrary.initialized = true;
 			resolve(idbLibrary);
@@ -121,11 +123,11 @@ module.exports.Library.prototype.deleteDB = function(){
 	return new Promise(function(resolve, reject){
 		var deleteRequest = idbLibrary.indexedDB.deleteDatabase('Zotero_' + idbLibrary.libraryString);
 		deleteRequest.onerror = function(){
-			Z.error('Error deleting indexedDB');
+			log.error('Error deleting indexedDB');
 			reject();
 		};
 		deleteRequest.onsuccess = function(){
-			Z.debug('Successfully deleted indexedDB', 2);
+			log.debug('Successfully deleted indexedDB', 2);
 			resolve();
 		};
 	});
@@ -147,11 +149,11 @@ module.exports.Library.prototype.clearObjectStore = function (store_name) {
 	return new Promise(function(resolve, reject){
 		var req = store.clear();
 		req.onsuccess = function(evt) {
-			Z.debug('Store cleared', 3);
+			log.debug('Store cleared', 3);
 			resolve();
 		};
 		req.onerror = function (evt) {
-			Z.error('clearObjectStore:', evt.target.errorCode);
+			log.error('clearObjectStore:', evt.target.errorCode);
 			reject();
 		};
 	});
@@ -205,8 +207,8 @@ module.exports.Library.prototype.getAllItems = function(){
 
 module.exports.Library.prototype.getOrderedItemKeys = function(field, order){
 	var idbLibrary = this;
-	Z.debug('Zotero.Idb.getOrderedItemKeys', 3);
-	Z.debug('' + field + ' ' + order, 3);
+	log.debug('Zotero.Idb.getOrderedItemKeys', 3);
+	log.debug('' + field + ' ' + order, 3);
 	return new Promise(function(resolve, reject){
 		var objectStore = idbLibrary.db.transaction(['items'], 'readonly').objectStore('items');
 		var index = objectStore.index(field);
@@ -228,7 +230,7 @@ module.exports.Library.prototype.getOrderedItemKeys = function(field, order){
 				cursor.continue();
 			}
 			else {
-				Z.debug('No more cursor: done. Resolving deferred.', 3);
+				log.debug('No more cursor: done. Resolving deferred.', 3);
 				resolve(itemKeys);
 			}
 		}.bind(this);
@@ -242,7 +244,7 @@ module.exports.Library.prototype.getOrderedItemKeys = function(field, order){
 //filter the items in indexedDB by value in field
 module.exports.Library.prototype.filterItems = function(field, value){
 	var idbLibrary = this;
-	Z.debug('Zotero.Idb.filterItems ' + field + ' - ' + value, 3);
+	log.debug('Zotero.Idb.filterItems ' + field + ' - ' + value, 3);
 	return new Promise(function(resolve, reject){
 		var itemKeys = [];
 		var objectStore = idbLibrary.db.transaction(['items'], 'readonly').objectStore('items');
@@ -265,7 +267,7 @@ module.exports.Library.prototype.filterItems = function(field, value){
 				cursor.continue();
 			}
 			else {
-				Z.debug('No more cursor: done. Resolving deferred.', 3);
+				log.debug('No more cursor: done. Resolving deferred.', 3);
 				resolve(itemKeys);
 			}
 		}.bind(this);
@@ -319,7 +321,7 @@ module.exports.Library.prototype.getTransactionAndStore = function(type, access)
 };
 
 module.exports.Library.prototype.addObjects = function(objects, type){
-	Z.debug('Zotero.Idb.Library.addObjects', 3);
+	log.debug('Zotero.Idb.Library.addObjects', 3);
 	var idbLibrary = this;
 	if(!type){
 		type = idbLibrary.inferType(objects[0]);
@@ -330,17 +332,17 @@ module.exports.Library.prototype.addObjects = function(objects, type){
 	
 	return new Promise(function(resolve, reject){
 		transaction.oncomplete = function(event){
-			Zotero.debug('Add Objects transaction completed.', 3);
+			log.debug('Add Objects transaction completed.', 3);
 			resolve();
 		};
 		
 		transaction.onerror = function(event){
-			Zotero.error('Add Objects transaction failed.');
+			log.log.error('Add Objects transaction failed.');
 			reject();
 		};
 		
 		var reqSuccess = function(event){
-			Zotero.debug('Added Object ' + event.target.result, 4);
+			log.debug('Added Object ' + event.target.result, 4);
 		};
 		for (var i in objects) {
 			var request = objectStore.add(objects[i].apiObj);
@@ -350,7 +352,7 @@ module.exports.Library.prototype.addObjects = function(objects, type){
 };
 
 module.exports.Library.prototype.updateObjects = function(objects, type){
-	Z.debug('Zotero.Idb.Library.updateObjects', 3);
+	log.debug('Zotero.Idb.Library.updateObjects', 3);
 	var idbLibrary = this;
 	if(!type){
 		type = idbLibrary.inferType(objects[0]);
@@ -361,17 +363,17 @@ module.exports.Library.prototype.updateObjects = function(objects, type){
 	
 	return new Promise(function(resolve, reject){
 		transaction.oncomplete = function(event){
-			Zotero.debug('Update Objects transaction completed.', 3);
+			log.debug('Update Objects transaction completed.', 3);
 			resolve();
 		};
 		
 		transaction.onerror = function(event){
-			Zotero.error('Update Objects transaction failed.');
+			log.log.error('Update Objects transaction failed.');
 			reject();
 		};
 		
 		var reqSuccess = function(event){
-			Zotero.debug('Updated Object ' + event.target.result, 4);
+			log.debug('Updated Object ' + event.target.result, 4);
 		};
 		for (var i in objects) {
 			var request = objectStore.put(objects[i].apiObj);
@@ -391,17 +393,17 @@ module.exports.Library.prototype.removeObjects = function(objects, type){
 	
 	return new Promise(function(resolve, reject){
 		transaction.oncomplete = function(event){
-			Zotero.debug('Remove Objects transaction completed.', 3);
+			log.debug('Remove Objects transaction completed.', 3);
 			resolve();
 		};
 		
 		transaction.onerror = function(event){
-			Zotero.error('Remove Objects transaction failed.');
+			log.log.error('Remove Objects transaction failed.');
 			reject();
 		};
 		
 		var reqSuccess = function(event){
-			Zotero.debug('Removed Object ' + event.target.result, 4);
+			log.debug('Removed Object ' + event.target.result, 4);
 		};
 		for (var i in objects) {
 			var request = objectStore.delete(objects[i].key);
@@ -434,7 +436,7 @@ module.exports.Library.prototype.addCollections = function(collections){
 };
 
 module.exports.Library.prototype.updateCollections = function(collections){
-	Z.debug('Zotero.Idb.Library.updateCollections', 3);
+	log.debug('Zotero.Idb.Library.updateCollections', 3);
 	return this.updateObjects(collections, 'collection');
 };
 
@@ -453,12 +455,12 @@ module.exports.Library.prototype.getCollection = function(collectionKey){
 };
 
 module.exports.Library.prototype.removeCollections = function(collections){
-	Z.debug('Zotero.Idb.Library.removeCollections', 3);
+	log.debug('Zotero.Idb.Library.removeCollections', 3);
 	return this.removeObjects(collections, 'collection');
 };
 
 module.exports.Library.prototype.getAllCollections = function(){
-	Z.debug('Zotero.Idb.Library.getAllCollections', 3);
+	log.debug('Zotero.Idb.Library.getAllCollections', 3);
 	return this.getAllObjects('collection');
 };
 
@@ -467,34 +469,34 @@ module.exports.Library.prototype.addTags = function(tags){
 };
 
 module.exports.Library.prototype.updateTags = function(tags){
-	Z.debug('Zotero.Idb.Library.updateTags', 3);
+	log.debug('Zotero.Idb.Library.updateTags', 3);
 	return this.updateObjects(tags, 'tag');
 };
 
 module.exports.Library.prototype.getAllTags = function(){
-	Z.debug('getAllTags', 3);
+	log.debug('getAllTags', 3);
 	return this.getAllObjects('tag');
 };
 
 module.exports.Library.prototype.setVersion = function(type, version){
-	Z.debug('Zotero.Idb.Library.setVersion', 3);
+	log.debug('Zotero.Idb.Library.setVersion', 3);
 	var idbLibrary = this;
 	return new Promise(function(resolve, reject){
 		var transaction = idbLibrary.db.transaction(['versions'], 'readwrite');
 		
 		transaction.oncomplete = function(event){
-			Zotero.debug('set version transaction completed.', 3);
+			log.debug('set version transaction completed.', 3);
 			resolve();
 		};
 		
 		transaction.onerror = function(event){
-			Zotero.error('set version transaction failed.');
+			log.log.error('set version transaction failed.');
 			reject();
 		};
 		
 		var versionStore = transaction.objectStore('versions');
 		var reqSuccess = function(event){
-			Zotero.debug('Set Version' + event.target.result, 3);
+			log.debug('Set Version' + event.target.result, 3);
 		};
 		var request = versionStore.put(version, type);
 		request.onsuccess = reqSuccess;
@@ -506,11 +508,11 @@ module.exports.Library.prototype.setVersion = function(type, version){
 * @param {string} type
 */
 module.exports.Library.prototype.getVersion = function(type){
-	Z.debug('Zotero.Idb.Library.getVersion', 3);
+	log.debug('Zotero.Idb.Library.getVersion', 3);
 	var idbLibrary = this;
 	return new Promise(function(resolve, reject){
 		var success = function(event){
-			Z.debug('done getting version');
+			log.debug('done getting version');
 			resolve(event.target.result);
 		};
 		idbLibrary.db.transaction(['versions'], 'readonly').objectStore('versions').get(type).onsuccess = success;
@@ -518,24 +520,24 @@ module.exports.Library.prototype.getVersion = function(type){
 };
 
 module.exports.Library.prototype.setFile = function(itemKey, fileData){
-	Z.debug('Zotero.Idb.Library.setFile', 3);
+	log.debug('Zotero.Idb.Library.setFile', 3);
 	var idbLibrary = this;
 	return new Promise(function(resolve, reject){
 		var transaction = idbLibrary.db.transaction(['files'], 'readwrite');
 		
 		transaction.oncomplete = function(event){
-			Zotero.debug('set file transaction completed.', 3);
+			log.debug('set file transaction completed.', 3);
 			resolve();
 		};
 		
 		transaction.onerror = function(event){
-			Zotero.error('set file transaction failed.');
+			log.log.error('set file transaction failed.');
 			reject();
 		};
 		
 		var fileStore = transaction.objectStore('files');
 		var reqSuccess = function(event){
-			Zotero.debug('Set File' + event.target.result, 3);
+			log.debug('Set File' + event.target.result, 3);
 		};
 		var request = fileStore.put(fileData, itemKey);
 		request.onsuccess = reqSuccess;
@@ -547,11 +549,11 @@ module.exports.Library.prototype.setFile = function(itemKey, fileData){
 * @param {string} itemKey
 */
 module.exports.Library.prototype.getFile = function(itemKey){
-	Z.debug('Zotero.Idb.Library.getFile', 3);
+	log.debug('Zotero.Idb.Library.getFile', 3);
 	var idbLibrary = this;
 	return new Promise(function(resolve, reject){
 		var success = function(event){
-			Z.debug('done getting file');
+			log.debug('done getting file');
 			resolve(event.target.result);
 		};
 		idbLibrary.db.transaction(['files'], 'readonly').objectStore('files').get(itemKey).onsuccess = success;
@@ -559,24 +561,24 @@ module.exports.Library.prototype.getFile = function(itemKey){
 };
 
 module.exports.Library.prototype.deleteFile = function(itemKey){
-	Z.debug('Zotero.Idb.Library.deleteFile', 3);
+	log.debug('Zotero.Idb.Library.deleteFile', 3);
 	var idbLibrary = this;
 	return new Promise(function(resolve, reject){
 		var transaction = idbLibrary.db.transaction(['files'], 'readwrite');
 		
 		transaction.oncomplete = function(event){
-			Zotero.debug('delete file transaction completed.', 3);
+			log.debug('delete file transaction completed.', 3);
 			resolve();
 		};
 		
 		transaction.onerror = function(event){
-			Zotero.error('delete file transaction failed.');
+			log.log.error('delete file transaction failed.');
 			reject();
 		};
 		
 		var fileStore = transaction.objectStore('files');
 		var reqSuccess = function(event){
-			Zotero.debug('Deleted File' + event.target.result, 4);
+			log.debug('Deleted File' + event.target.result, 4);
 		};
 		var request = fileStore.delete(itemKey);
 		request.onsuccess = reqSuccess;

@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:Tag');
+
 module.exports = function (tagObj) {
 	this.instance = 'Zotero.Tag';
 	this.color = null;

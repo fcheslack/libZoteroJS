@@ -3,7 +3,7 @@
 var assert = require('chai').assert;
 var should = require('chai').should();
 var expect = require('chai').expect;
-var Zotero = require('../../../libzoterojs.js');
+var Zotero = require('../../libzoterojs.js');
 
 Zotero.testing = {
 	libraryID: 0,

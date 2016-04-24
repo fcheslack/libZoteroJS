@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:Container');
+
 module.exports = function(){
 	
 };
@@ -9,7 +11,7 @@ module.exports.prototype.initSecondaryData = function(){
 };
 
 module.exports.prototype.addObject = function(object){
-	Zotero.debug('Zotero.Container.addObject', 4);
+	log.debug('Zotero.Container.addObject', 4);
 	var container = this;
 	container.objectArray.push(object);
 	container.objectMap[object.key] = object;
@@ -135,9 +137,9 @@ module.exports.prototype.rawChunks = function(chunks){
  */
 module.exports.prototype.updateSyncState = function(version) {
 	var container = this;
-	Z.debug('updateSyncState: ' + version, 3);
+	log.debug('updateSyncState: ' + version, 3);
 	if(!container.hasOwnProperty('syncState')){
-		Z.debug('no syncState property');
+		log.debug('no syncState property');
 		throw new Error('Attempt to update sync state of object with no syncState property');
 	}
 	if(container.syncState.earliestVersion === null){
@@ -152,7 +154,7 @@ module.exports.prototype.updateSyncState = function(version) {
 	if(version > container.syncState.latestVersion){
 		container.syncState.latestVersion = version;
 	}
-	Z.debug('done updating sync state', 3);
+	log.debug('done updating sync state', 3);
 };
 
 module.exports.prototype.updateSyncedVersion = function(versionField) {
@@ -198,11 +200,11 @@ module.exports.prototype.processDeletions = function(deletedKeys) {
 //  calling code should check for writeFailure after the written objects
 //  are returned
 module.exports.prototype.updateObjectsFromWriteResponse = function(objectsArray, response){
-	Z.debug('Zotero.Container.updateObjectsFromWriteResponse', 3);
-	Z.debug('statusCode: ' + response.status, 3);
+	log.debug('Zotero.Container.updateObjectsFromWriteResponse', 3);
+	log.debug('statusCode: ' + response.status, 3);
 	var data = response.data;
 	if(response.status == 200){
-		Z.debug('newLastModifiedVersion: ' + response.lastModifiedVersion, 3);
+		log.debug('newLastModifiedVersion: ' + response.lastModifiedVersion, 3);
 		//make sure writes were actually successful and
 		//update the itemKey for the parent
 		if(data.hasOwnProperty('success')){
@@ -224,10 +226,10 @@ module.exports.prototype.updateObjectsFromWriteResponse = function(objectsArray,
 			});
 		}
 		if(data.hasOwnProperty('failed')){
-			Z.debug('updating objects with failed writes', 3);
+			log.debug('updating objects with failed writes', 3);
 			Object.keys(data.failed).forEach(function(ind){
 				var failure = data.failed[ind];
-				Z.error('failed write ' + ind + ' - ' + failure);
+				log.error('failed write ' + ind + ' - ' + failure);
 				var i = parseInt(ind, 10);
 				var object = objectsArray[i];
 				object.writeFailure = failure;

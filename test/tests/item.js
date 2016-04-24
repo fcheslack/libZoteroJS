@@ -3,11 +3,11 @@
 var assert = require('chai').assert;
 var should = require('chai').should();
 var expect = require('chai').expect;
-var Zotero = require('../../../libzoterojs.js');
+var Zotero = require('../../libzoterojs.js');
 
 Zotero.init();
 
-var itemjson = require('../../fixtures/item1.json');
+var itemjson = require('../fixtures/item1.json');
 
 describe('Zotero.Item', function(){
 	describe('#Construct', function() {

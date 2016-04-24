@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:Tags');
+
 module.exports = function(jsonBody){
 	this.instance = 'Zotero.Tags';
 	//represent collections as array for ordering purposes
@@ -52,7 +54,7 @@ module.exports.prototype.removeTags = function(tagnames){
 };
 
 module.exports.prototype.plainTagsList = function(tagsArray){
-	Z.debug('Zotero.Tags.plainTagsList', 3);
+	log.debug('Zotero.Tags.plainTagsList', 3);
 	var plainList = [];
 	tagsArray.forEach(function(tag){
 		plainList.push(tag.apiObj.tag);
@@ -61,7 +63,7 @@ module.exports.prototype.plainTagsList = function(tagsArray){
 };
 
 module.exports.prototype.clear = function(){
-	Z.debug('Zotero.Tags.clear', 3);
+	log.debug('Zotero.Tags.clear', 3);
 	this.tagsVersion = 0;
 	this.syncState.earliestVersion = null;
 	this.syncState.latestVersion = null;
@@ -72,7 +74,7 @@ module.exports.prototype.clear = function(){
 };
 
 module.exports.prototype.updateSecondaryData = function(){
-	Z.debug('Zotero.Tags.updateSecondaryData', 3);
+	log.debug('Zotero.Tags.updateSecondaryData', 3);
 	var tags = this;
 	tags.tagsArray = [];
 	Object.keys(tags.tagObjects).forEach(function(key){
@@ -103,7 +105,7 @@ module.exports.prototype.rebuildTagsArray = function() {
 };
 
 module.exports.prototype.addTagsFromJson = function(jsonBody){
-	Z.debug('Zotero.Tags.addTagsFromJson', 3);
+	log.debug('Zotero.Tags.addTagsFromJson', 3);
 	var tags = this;
 	var tagsAdded = [];
 	jsonBody.forEach(function(tagObj){

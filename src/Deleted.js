@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:Deleted');
+
 module.exports = function(data){
 	this.instance = 'Zotero.Deleted';
 	if(typeof data === 'string'){

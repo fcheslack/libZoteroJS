@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:Preferences');
+
 module.exports = function(store, idString) {
 	this.store = store;
 	this.idString = idString;

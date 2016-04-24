@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:Collections');
+
 module.exports = function(jsonBody){
 	var collections = this;
 	this.instance = 'Zotero.Collections';
@@ -25,7 +27,7 @@ module.exports = function(jsonBody){
 //build up secondary data necessary to rendering and easy operations but that
 //depend on all collections already being present
  module.exports.prototype.initSecondaryData = function(){
-	Z.debug('Zotero.Collections.initSecondaryData', 3);
+	log.debug('Zotero.Collections.initSecondaryData', 3);
 	var collections = this;
 	
 	//rebuild collectionsArray
@@ -47,8 +49,8 @@ module.exports = function(jsonBody){
 };
 
  module.exports.prototype.addCollectionsFromJson = function(jsonBody){
-	Z.debug('addCollectionsFromJson');
-	Z.debug(jsonBody);
+	log.debug('addCollectionsFromJson');
+	log.debug(jsonBody);
 	var collections = this;
 	var collectionsAdded = [];
 	jsonBody.forEach(function(collectionObj){
@@ -60,7 +62,7 @@ module.exports = function(jsonBody){
 };
 
  module.exports.prototype.assignDepths = function(depth, cArray){
-	Z.debug('Zotero.Collections.assignDepths', 3);
+	log.debug('Zotero.Collections.assignDepths', 3);
 	var collections = this;
 	var insertchildren = function(depth, children){
 		children.forEach(function(col){
@@ -81,7 +83,7 @@ module.exports = function(jsonBody){
 };
 
  module.exports.prototype.nestedOrderingArray = function(){
-	Z.debug('Zotero.Collections.nestedOrderingArray', 3);
+	log.debug('Zotero.Collections.nestedOrderingArray', 3);
 	var collections = this;
 	var nested = [];
 	var insertchildren = function(a, children){
@@ -100,7 +102,7 @@ module.exports = function(jsonBody){
 			}
 		}
 	});
-	Z.debug('Done with nestedOrderingArray', 3);
+	log.debug('Done with nestedOrderingArray', 3);
 	return nested;
 };
 
@@ -144,7 +146,7 @@ module.exports = function(jsonBody){
 };
 
  module.exports.prototype.writeCollections = function(collectionsArray){
-	Z.debug('Zotero.Collections.writeCollections', 3);
+	log.debug('Zotero.Collections.writeCollections', 3);
 	var collections = this;
 	var library = collections.owningLibrary;
 	var i;
@@ -172,7 +174,7 @@ module.exports = function(jsonBody){
 	var rawChunkObjects = collections.rawChunks(writeChunks);
 	//update collections with server response if successful
 	var writeCollectionsSuccessCallback = function(response){
-		Z.debug('writeCollections successCallback', 3);
+		log.debug('writeCollections successCallback', 3);
 		var library = this.library;
 		var writeChunk = this.writeChunk;
 		library.collections.updateObjectsFromWriteResponse(this.writeChunk, response);
@@ -183,7 +185,7 @@ module.exports = function(jsonBody){
 				library.collections.addCollection(collection);
 				//save updated collections to IDB
 				if(Zotero.config.useIndexedDB){
-					Z.debug('updating indexedDB collections');
+					log.debug('updating indexedDB collections');
 					library.idbLibrary.updateCollections(writeChunk);
 				}
 			}
@@ -192,8 +194,8 @@ module.exports = function(jsonBody){
 		return response;
 	};
 	
-	Z.debug('collections.version: ' + collections.version, 3);
-	Z.debug('collections.libraryVersion: ' + collections.libraryVersion, 3);
+	log.debug('collections.version: ' + collections.version, 3);
+	log.debug('collections.libraryVersion: ' + collections.libraryVersion, 3);
 	
 	var requestObjects = [];
 	for(i = 0; i < writeChunks.length; i++){
@@ -218,7 +220,7 @@ module.exports = function(jsonBody){
 
 	return library.sequentialRequests(requestObjects)
 	.then(function(responses){
-		Z.debug('Done with writeCollections sequentialRequests promise', 3);
+		log.debug('Done with writeCollections sequentialRequests promise', 3);
 		collections.initSecondaryData();
 		
 		responses.forEach(function(response){
@@ -229,7 +231,7 @@ module.exports = function(jsonBody){
 		return responses;
 	})
 	.catch(function(err){
-		Z.error(err);
+		log.error(err);
 		//rethrow so widget doesn't report success
 		throw(err);
 	});

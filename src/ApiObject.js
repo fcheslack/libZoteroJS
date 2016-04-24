@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:ApiObject');
+
 module.exports = function(){
 	this.instance = 'Zotero.ApiObject';
 	this.version = 0;

@@ -34,11 +34,12 @@ function getBuild(dev) {
 	var b = browserify({
 		debug: true,
 		entries: './libzoterojs.js',
-		standalone: "Zotero",
+		standalone: 'Zotero',
 		transform: [
-        	['babelify', {
-        		'presets': ['es2015']
-    		}]
+			['babelify', {
+				'presets': ['es2015'],
+				'plugins': ['transform-flow-strip-types']
+			}]
 		]
 	}).ignore('w3c-xmlhttprequest');
 

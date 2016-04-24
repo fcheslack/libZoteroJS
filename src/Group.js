@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:Group');
+
 module.exports = function (groupObj) {
 	var group = this;
 	group.instance = 'Zotero.Group';

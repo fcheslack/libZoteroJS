@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('./Log.js').Logger('libZotero:Url');
+
 // Url.js - construct certain urls and links locally that may depend on the
 // current website's routing scheme etc. Not necessarily pointing to zotero.org
 // - href for a particular item's local representation
@@ -46,7 +48,7 @@ Url.attachmentDownloadLink = function(item){
 			else if(filesize > 1024){
 				filesizeString = '' + (filesize / 1024).toFixed(1) + ' KB';
 			}
-			Z.debug(enctype, 3);
+			log.debug(enctype, 3);
 			retString += '<a href="' + downloadUrl + '">';
 			if(enctype == 'undefined' || enctype === '' || typeof enctype == 'undefined'){
 				retString += filesizeString + '</a>';
@@ -149,7 +151,7 @@ Url.groupWebLibrary = function(group) {
 };
 
 Url.exportUrls = function(config){
-	Z.debug('Zotero.url.exportUrls', 3);
+	log.debug('Zotero.url.exportUrls', 3);
 	var exportUrls = {};
 	var exportConfig = {};
 	Zotero.config.exportFormats.forEach(function(format){
