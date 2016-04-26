@@ -235,7 +235,7 @@ Item.prototype.writePatch = function(){
 };
 
 Item.prototype.getChildren = function(library){
-	log.debug('Zotero.Item.getChildren');
+	log.debug('Zotero.Item.getChildren', 3);
 	var item = this;
 	return Promise.resolve()
 	.then(function(){

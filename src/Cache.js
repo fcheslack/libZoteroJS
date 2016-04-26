@@ -62,7 +62,7 @@ module.exports.prototype.load = function(params){
 	try{
 		var s = this.store[objectCacheString];
 		if(!s){
-			Z.warn('No value found in cache store - ' + objectCacheString, 3);
+			log.warn('No value found in cache store - ' + objectCacheString, 3);
 			return null;
 		}
 		else{

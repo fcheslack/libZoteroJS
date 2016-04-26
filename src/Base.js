@@ -98,7 +98,7 @@ var Zotero = {
 				'start': 0
 			}
 	},
-	
+	/*
 	debug: function(debugstring, level){
 		var prefLevel = 3;
 		if(Zotero.config.storeDebug){
@@ -143,7 +143,7 @@ var Zotero = {
 			console.error(errorstring);
 		}
 	},
-
+	*/
 	submitDebugLog: function(){
 		Zotero.net.ajax({
 			url: Zotero.config.debugLogEndpoint,
@@ -285,8 +285,7 @@ Zotero.trigger = function(eventType, data={}, filter=false){
 		log.debug('filter is not false', 3);
 		eventType += '_' + filter;
 	}
-	Zotero.debug('Triggering eventful ' + eventType, 3);
-	log.debug(data);
+	log.debug('Triggering eventful ' + eventType, 3);
 	
 	data.zeventful = true;
 	// if(data.triggeringElement === null || data.triggeringElement === undefined){
@@ -312,7 +311,7 @@ Zotero.trigger = function(eventType, data={}, filter=false){
 };
 
 Zotero.listen = function(events, handler, data, filter){
-	log.debug('Zotero.listen: ' + events);
+	log.debug('Zotero.listen: ' + events, 3);
 	//append filter to event strings if it's specified
 	var eventsArray = events.split(' ');
 	if(eventsArray.length > 0 && filter){

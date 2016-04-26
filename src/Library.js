@@ -36,7 +36,7 @@ var Library = function(type, libraryID, libraryUrlIdentifier, apiKey){
 		if(libraryUrlIdentifier){
 			this.libraryBaseWebsiteUrl += libraryUrlIdentifier + '/items';
 		} else {
-			Z.warn('no libraryUrlIdentifier specified');
+			log.warn('no libraryUrlIdentifier specified');
 		}
 	}
 	//object holders within this library, whether tied to a specific library or not
@@ -56,7 +56,7 @@ var Library = function(type, libraryID, libraryUrlIdentifier, apiKey){
 	
 	if(!type){
 		//return early if library not specified
-		Z.warn('No type specified for library');
+		log.warn('No type specified for library');
 		return;
 	}
 	//attributes tying instance to a specific Zotero library
@@ -339,7 +339,7 @@ Library.prototype.loadUpdatedCollections = function(){
 	var library = this;
 	//sync from the libraryVersion if it exists, otherwise use the collectionsVersion, which is likely
 	//derived from the most recent version of any individual collection we have.
-	log.debug('library.collections.collectionsVersion:' + library.collections.collectionsVersion);
+	log.debug('library.collections.collectionsVersion:' + library.collections.collectionsVersion, 4);
 	var syncFromVersion = library.libraryVersion ? library.libraryVersion : library.collections.collectionsVersion;
 	//we need modified collectionKeys regardless, so load them
 	return library.updatedVersions('collections', syncFromVersion)
@@ -391,7 +391,7 @@ Library.prototype.loadUpdatedCollections = function(){
 	})
 	.then(function(response){
 		log.debug('got deleted collections data: removing local copies', 3);
-		log.debug(library.deleted);
+		log.debug(library.deleted, 3);
 		if(library.deleted.deletedData.collections && library.deleted.deletedData.collections.length > 0 ){
 			library.collections.removeLocalCollections(library.deleted.deletedData.collections);
 		}
@@ -408,7 +408,7 @@ Library.prototype.loadUpdatedTags = function(){
 		return library.getDeleted(library.libraryVersion);
 	})
 	.then(function(response){
-		log.debug('got deleted tags data');
+		log.debug('got deleted tags data', 3);
 		if(library.deleted.deletedData.tags && library.deleted.deletedData.tags.length > 0 ){
 			library.tags.removeTags(library.deleted.deletedData.tags);
 		}
@@ -433,33 +433,33 @@ Library.prototype.getDeleted = function(version) {
 	//if there is already a request working, create a new promise to resolve
 	//when the actual request finishes
 	if(library.deleted.pending){
-		log.debug('getDeleted resolving with previously pending promise');
+		log.debug('getDeleted resolving with previously pending promise', 3);
 		return Promise.resolve(library.deleted.pendingPromise);
 	}
 	
 	//don't fetch again if version we'd be requesting is between
 	//deleted.newer and delete.deleted versions, just use that one
-	log.debug('version:' + version);
-	log.debug('sinceVersion:' + library.deleted.sinceVersion);
-	log.debug('untilVersion:' + library.deleted.untilVersion);
+	log.debug('version:' + version, 3);
+	log.debug('sinceVersion:' + library.deleted.sinceVersion, 3);
+	log.debug('untilVersion:' + library.deleted.untilVersion, 3);
 	
 	if(library.deleted.untilVersion &&
 		version >= library.deleted.sinceVersion /*&&
 		version < library.deleted.untilVersion*/){
-		log.debug('deletedVersion matches requested: immediately resolving');
+		log.debug('deletedVersion matches requested: immediately resolving', 3);
 		return Promise.resolve(library.deleted.deletedData);
 	}
 	
 	library.deleted.pending = true;
 	library.deleted.pendingPromise = library.ajaxRequest(urlconf)
 	.then(function(response){
-		log.debug('got deleted response');
+		log.debug('got deleted response', 3);
 		library.deleted.deletedData = response.data;
 		log.debug('Deleted Last-Modified-Version:' + response.lastModifiedVersion, 3);
 		library.deleted.untilVersion = response.lastModifiedVersion;
 		library.deleted.sinceVersion = version;
 	}).then(function(response){
-		log.debug('cleaning up deleted pending');
+		log.debug('cleaning up deleted pending', 3);
 		library.deleted.pending = false;
 		library.deleted.pendingPromise = false;
 	});
@@ -857,7 +857,7 @@ Library.prototype.processLoadedCollections = function(response){
 	var library = this;
 	
 	//clear out display items
-	log.debug('adding collections to library.collections');
+	log.debug('adding collections to library.collections', 3);
 	var collectionsAdded = library.collections.addCollectionsFromJson(response.data);
 	for (var i = 0; i < collectionsAdded.length; i++) {
 		collectionsAdded[i].associateWithLibrary(library);
@@ -967,7 +967,6 @@ Library.prototype.loadItems = function(config){
 		var items = library.items;
 		//clear out display items
 		var loadedItemsArray = items.addItemsFromJson(response.data);
-		log.debug('Looping over loadedItemsArray');
 		for (let i = 0; i < loadedItemsArray.length; i++) {
 			loadedItemsArray[i].associateWithLibrary(library);
 		}
@@ -1052,7 +1051,7 @@ Library.prototype.loadItem = function(itemKey) {
 	
 	return library.ajaxRequest(urlconfig)
 	.then(function(response){
-		log.debug('Got loadItem response');
+		log.debug('Got loadItem response', 3);
 		var item = new Zotero.Item(response.data);
 		item.owningLibrary = library;
 		library.items.itemObjects[item.key] = item;
@@ -1060,7 +1059,7 @@ Library.prototype.loadItem = function(itemKey) {
 		return(item);
 	},
 	function(response){
-		log.debug('Error loading Item');
+		log.warn('Error loading Item');
 	});
 };
 
@@ -1135,7 +1134,7 @@ Library.prototype.fetchGlobalItems = function(config){
 
 Library.prototype.fetchGlobalItem = function(globalKey){
 	log.debug('Zotero.Library.fetchGlobalItem', 3);
-	log.debug(globalKey);
+	log.debug(globalKey, 3);
 	var library = this;
 	
 	var defaultConfig = {target:'item'};
@@ -1331,7 +1330,7 @@ Library.prototype.loadIndexedDBCache = function(){
 	
 	tagsPromise.then(function(tagsArray){
 		log.debug('loadIndexedDBCache tagsD done', 3);
-		log.debug(tagsArray);
+		log.debug(tagsArray, 4);
 		//create tagsDump from array of tag objects
 		var latestVersion = 0;
 		var tagsVersion = 0;

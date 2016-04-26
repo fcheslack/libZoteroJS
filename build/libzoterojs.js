@@ -5564,11 +5564,11 @@ var Zotero = {
 	temp: {},
 
 	config: { librarySettings: {},
-		baseApiUrl: 'https://apidev.zotero.org',
-		baseWebsiteUrl: 'https://test.zotero.net',
-		baseFeedUrl: 'https://apidev.zotero.org',
-		baseZoteroWebsiteUrl: 'https://test.zotero.net',
-		baseDownloadUrl: 'https://test.zotero.net',
+		baseApiUrl: 'https://api.zotero.org',
+		baseWebsiteUrl: 'https://zotero.org',
+		baseFeedUrl: 'https://api.zotero.org',
+		baseZoteroWebsiteUrl: 'https://www.zotero.org',
+		baseDownloadUrl: 'https://www.zotero.org',
 		nonparsedBaseUrl: '',
 		debugLogEndpoint: '',
 		storeDebug: true,
@@ -10481,6 +10481,9 @@ log.errorFunction = function (prefix) {
 };
 
 log.Logger = function (prefix) {
+	var level = arguments.length <= 1 || arguments[1] === undefined ? 3 : arguments[1];
+
+	prefLevel = level;
 	return {
 		debug: function debug(debugstring, level) {
 			return log.debug(prefix + ': ' + debugstring, level);
@@ -11241,7 +11244,7 @@ Url.exportUrls = function (config) {
 };
 
 Url.relationUrl = function (libraryType, libraryID, itemKey) {
-	return 'http://test.zotero.net/' + libraryType + 's/' + libraryID + '/items/' + itemKey;
+	return 'http://zotero.org/' + libraryType + 's/' + libraryID + '/items/' + itemKey;
 };
 
 module.exports = Url;

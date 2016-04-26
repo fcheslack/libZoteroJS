@@ -34,10 +34,10 @@ var Utils = {
 	
 	prependAutocomplete: function(pre, source){
 		log.debug('Zotero.utils.prependAutocomplete', 3);
-		log.debug('prepend match: ' + pre);
+		log.debug('prepend match: ' + pre, 4);
 		var satisfy;
 		if(!source){
-			log.debug('source is not defined');
+			log.warn('source is not defined');
 		}
 		if(pre === ''){
 			satisfy = source.slice(0);
@@ -58,10 +58,10 @@ var Utils = {
 	
 	matchAnyAutocomplete: function(pre, source){
 		log.debug('Zotero.utils.matchAnyAutocomplete', 3);
-		log.debug('matchAny match: ' + pre);
+		log.debug('matchAny match: ' + pre, 4);
 		var satisfy;
 		if(!source){
-			log.debug('source is not defined');
+			log.warn('source is not defined');
 		}
 		if(pre === ''){
 			satisfy = source.slice(0);
@@ -138,7 +138,7 @@ var Utils = {
 		var re = /([0-9]+)-([0-9]+)-([0-9]+)T([0-9]+):([0-9]+):([0-9]+)Z/;
 		var matches = re.exec(datestr);
 		if(matches === null){
-			log.debug(`error parsing api date: ${datestr}`);
+			log.debug(`error parsing api date: ${datestr}`, 2);
 			return null;
 		}
 		else{

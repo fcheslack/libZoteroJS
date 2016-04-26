@@ -50,7 +50,7 @@ Net.prototype.queueRequest = function(requestObject){
 			log.debug('running concurrent after queued deferred resolved', 4);
 			return net.runConcurrent(requestObject);
 		}).then(function(response){
-			log.debug('done with queuedRequest');
+			log.debug('done with queuedRequest', 4);
 			net.queuedRequestDone();
 			return response;
 		});
@@ -66,7 +66,7 @@ Net.prototype.queueRequest = function(requestObject){
 Net.prototype.runConcurrent = function(requestObject){
 	log.debug('Zotero.Net.runConcurrent', 3);
 	return this.ajaxRequest(requestObject).then(function(response){
-		log.debug('done with runConcurrent request');
+		log.debug('done with runConcurrent request', 3);
 		return response;
 	});
 };
@@ -86,7 +86,7 @@ Net.prototype.runSequential = function(requestObjects){
 		seqPromise = seqPromise.then(function(){
 			var p = net.ajaxRequest(requestObject)
 			.then(function(response){
-				log.debug('pushing sequential response into result array');
+				log.debug('pushing sequential response into result array', 3);
 				responses.push(response);
 			});
 			return p;
@@ -94,7 +94,7 @@ Net.prototype.runSequential = function(requestObjects){
 	}
 	
 	return seqPromise.then(function(){
-		log.debug('done with sequential aggregator promise - returning responses');
+		log.debug('done with sequential aggregator promise - returning responses', 4);
 		return responses;
 	});
 };
@@ -156,8 +156,7 @@ Net.prototype.runNext = function(){
 };
 
 Net.prototype.checkDelay = function(response){
-	log.debug('Zotero.Net.checkDelay');
-	log.debug(response);
+	log.debug('Zotero.Net.checkDelay', 4);
 	var net = this;
 	var wait = 0;
 	if(Array.isArray(response)){
@@ -216,8 +215,8 @@ Net.prototype.ajaxRequest = function(requestConfig){
 	delete config.success;
 	delete config.error;
 	
-	log.debug('AJAX config');
-	log.debug(config);
+	log.debug('AJAX config', 4);
+	log.debug(config, 4);
 	var ajaxpromise = new Promise(function(resolve, reject){
 		net.ajax(config)
 		.then(function(request){
@@ -281,14 +280,14 @@ Net.prototype.ajax = function(config){
 		req.send(config.data);
 
 		req.onload = function(){
-			log.debug('XMLHttpRequest done');
-			log.debug(req);
+			log.debug('XMLHttpRequest done', 4);
+			log.debug(req, 4);
 			if (req.status >= 200 && req.status < 300) {
-				log.debug('200-300 response: resolving Net.ajax promise');
+				log.debug('200-300 response: resolving Net.ajax promise', 3);
 				// Performs the function "resolve" when this.status is equal to 2xx
 				resolve(req);
 			} else {
-				log.debug('not 200-300 response: rejecting Net.ajax promise');
+				log.debug('not 200-300 response: rejecting Net.ajax promise', 3);
 				// Performs the function "reject" when this.status is different than 2xx
 				reject(req);
 			}

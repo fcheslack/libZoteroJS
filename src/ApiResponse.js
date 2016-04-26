@@ -23,7 +23,7 @@ module.exports = function(response) {
 };
 
 module.exports.prototype.parseResponse = function(response){
-	log.debug('parseResponse');
+	log.debug('parseResponse', 3);
 	var apiResponse = this;
 	apiResponse.jqxhr = response.jqxhr;
 	apiResponse.status = response.jqxhr.status;
@@ -42,8 +42,8 @@ module.exports.prototype.parseResponse = function(response){
 		apiResponse.retryAfter = parseInt(apiResponse.retryAfter, 10);
 	}
 	//TODO: parse link header into individual links
-	log.debug('parse link header');
-	log.debug(apiResponse.linkHeader);
+	log.debug('parse link header', 4);
+	log.debug(apiResponse.linkHeader, 4);
 	if(apiResponse.linkHeader){
 		var links = apiResponse.linkHeader.split(',');
 		var parsedLinks = {};
@@ -56,5 +56,4 @@ module.exports.prototype.parseResponse = function(response){
 		}
 		apiResponse.parsedLinks = parsedLinks;
 	}
-	log.debug('done parsing response');
 };

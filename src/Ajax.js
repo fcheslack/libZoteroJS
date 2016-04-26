@@ -4,7 +4,7 @@ var log = require('./Log.js').Logger('libZotero:Ajax');
 var Ajax = {};
 
 Ajax.errorCallback = function(response){
-	log.error(response);
+	//log.error(response);
 	log.debug('ajax error callback', 2);
 	log.debug('textStatus: ' + response.textStatus, 2);
 	log.debug('errorThrown: ', 2);
@@ -19,7 +19,7 @@ Ajax.activeRequests = [];
  * Requires {target:items|collections|tags, libraryType:user|group, libraryID:<>}
  */
 Ajax.apiRequestUrl = function(params){
-	log.debug('Zotero.Ajax.apiRequestUrl', 4);
+	log.debug('Zotero.Ajax.apiRequestUrl', 3);
 	log.debug(params, 4);
 	Object.keys(params).forEach(function(key){
 		var val = params[key];
@@ -33,8 +33,8 @@ Ajax.apiRequestUrl = function(params){
 		//validate params based on patterns in Zotero.validate
 		if(Zotero.validator.validate(val, key) === false){
 			//warn on invalid parameter and drop from params that will be used
-			Zotero.warn('API argument failed validation: ' + key + ' cannot be ' + val);
-			Zotero.warn(params);
+			log.warn('API argument failed validation: ' + key + ' cannot be ' + val);
+			log.warn(params);
 			delete params[key];
 		}
 	});
@@ -129,7 +129,6 @@ Ajax.apiRequestUrl = function(params){
 			url += '/file/view';
 			break;
 	}
-	//log.debug("returning apiRequestUrl: " + url, 3);
 	return url;
 };
 
@@ -161,7 +160,6 @@ Ajax.apiQueryString = function(passedParams, useConfigKey){
 		passedParams['key'] = Zotero.config.apiKey;
 	}
 	
-	//log.debug()
 	if(passedParams.hasOwnProperty('sort') && passedParams['sort'] == 'undefined' ){
 		//alert('fixed a bad sort');
 		passedParams['sort'] = 'asc';
@@ -239,7 +237,6 @@ Ajax.apiQueryString = function(passedParams, useConfigKey){
 	
 	//build query string by concatenating array
 	queryString += queryParamsArray.join('&');
-	//log.debug("resulting queryString:" + queryString);
 	return queryString;
 };
 

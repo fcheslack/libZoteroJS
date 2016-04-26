@@ -40,9 +40,7 @@ module.exports.prototype.addItemsFromJson = function(jsonBody){
 	var items = this;
 	var parsedItemJson = jsonBody;
 	var itemsAdded = [];
-	log.debug('looping');
 	parsedItemJson.forEach(function(itemObj){
-		log.debug('creating new Item');
 		var item = new Zotero.Item(itemObj);
 		items.addItem(item);
 		itemsAdded.push(item);
