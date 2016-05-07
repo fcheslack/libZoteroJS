@@ -4,27 +4,6 @@ var log = require('./Log.js').Logger('libZotero:Base');
 
 var Zotero = {
 	callbacks: {},
-	ui: {
-		callbacks: {},
-		keyCode: {
-			BACKSPACE: 8,
-			COMMA: 188,
-			DELETE: 46,
-			DOWN: 40,
-			END: 35,
-			ENTER: 13,
-			ESCAPE: 27,
-			HOME: 36,
-			LEFT: 37,
-			PAGE_DOWN: 34,
-			PAGE_UP: 33,
-			PERIOD: 190,
-			RIGHT: 39,
-			SPACE: 32,
-			TAB: 9,
-			UP: 38
-		}
-	},
 	offline: {},
 	temp: {},
 	
@@ -159,7 +138,7 @@ var Zotero = {
 	},
 	
 	catchPromiseError: function(err){
-		Zotero.error(err);
+		log.error(err);
 	},
 	
 	libraries: {},
@@ -305,8 +284,8 @@ Zotero.trigger = function(eventType, data={}, filter=false){
 		}
 	}
 	catch(e){
-		error(`failed triggering:${eventType}`);
-		error(e);
+		log.error(`failed triggering:${eventType}`);
+		log.error(e);
 	}
 };
 
@@ -346,6 +325,28 @@ Zotero.extend = function() {
 		});
 	}
 	return res;
+};
+
+Zotero.deepExtend = function(out) {
+  out = out || {};
+
+  for (var i = 1; i < arguments.length; i++) {
+    var obj = arguments[i];
+
+    if (!obj)
+      continue;
+
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        if (typeof obj[key] === 'object')
+          out[key] = Zotero.deepExtend(out[key], obj[key]);
+        else
+          out[key] = obj[key];
+      }
+    }
+  }
+
+  return out;
 };
 
 module.exports = Zotero;

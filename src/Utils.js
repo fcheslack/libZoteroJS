@@ -277,7 +277,12 @@ var Utils = {
 		});
 	},
 
+	/**
+	 * Given a query string, parse keys/values into an object
+	 **/
 	parseQuery: function(query) {
+		log.debug('parseQuery');
+		log.debug(query);
 		var params = {};
 		var match;
 		var pl = /\+/g;  // Regex for replacing addition symbol with a space
@@ -292,7 +297,19 @@ var Utils = {
 		return params;
 	},
 
+	buildQuery: function(params = {}) {
+		let q = '?';
+		for(let p in params) {
+			q += `&${encodeURIComponent(p)}=${encodeURIComponent(params[p])}`;
+		}
+		return q;
+	},
+
+	//extract the section of a url between ? and #
 	querystring: function(href) {
+		if(href.indexOf('?') == -1) {
+			return '';
+		}
 		var hashindex = (href.indexOf('#') != -1) ? href.indexOf('#') : undefined;
 		var q = href.substring(href.indexOf('?') + 1, hashindex);
 		return q;

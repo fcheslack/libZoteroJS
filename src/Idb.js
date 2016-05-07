@@ -26,7 +26,7 @@ module.exports.Library.prototype.init = function(){
 		log.debug('requesting indexedDb from browser', 3);
 		var request = indexedDB.open('Zotero_' + idbLibrary.libraryString, 4);
 		request.onerror = function(e){
-			log.log.error('ERROR OPENING INDEXED DB');
+			log.error('ERROR OPENING INDEXED DB');
 			reject();
 		};
 		
@@ -337,7 +337,7 @@ module.exports.Library.prototype.addObjects = function(objects, type){
 		};
 		
 		transaction.onerror = function(event){
-			log.log.error('Add Objects transaction failed.');
+			log.error('Add Objects transaction failed.');
 			reject();
 		};
 		
@@ -368,7 +368,7 @@ module.exports.Library.prototype.updateObjects = function(objects, type){
 		};
 		
 		transaction.onerror = function(event){
-			log.log.error('Update Objects transaction failed.');
+			log.error('Update Objects transaction failed.');
 			reject();
 		};
 		
@@ -398,7 +398,7 @@ module.exports.Library.prototype.removeObjects = function(objects, type){
 		};
 		
 		transaction.onerror = function(event){
-			log.log.error('Remove Objects transaction failed.');
+			log.error('Remove Objects transaction failed.');
 			reject();
 		};
 		
@@ -490,7 +490,7 @@ module.exports.Library.prototype.setVersion = function(type, version){
 		};
 		
 		transaction.onerror = function(event){
-			log.log.error('set version transaction failed.');
+			log.error('set version transaction failed.');
 			reject();
 		};
 		
@@ -531,7 +531,7 @@ module.exports.Library.prototype.setFile = function(itemKey, fileData){
 		};
 		
 		transaction.onerror = function(event){
-			log.log.error('set file transaction failed.');
+			log.error('set file transaction failed.');
 			reject();
 		};
 		
@@ -572,7 +572,7 @@ module.exports.Library.prototype.deleteFile = function(itemKey){
 		};
 		
 		transaction.onerror = function(event){
-			log.log.error('delete file transaction failed.');
+			log.error('delete file transaction failed.');
 			reject();
 		};
 		

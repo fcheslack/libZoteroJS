@@ -32,7 +32,6 @@ var Item = function(itemObj){
 Item.prototype = new Zotero.ApiObject();
 
 Item.prototype.parseJsonItem = function (apiObj) {
-	log.debug('parseJsonItem', 3);
 	var item = this;
 	item.version = apiObj.version;
 	item.key = apiObj.key;
@@ -65,7 +64,6 @@ Item.prototype.emptyJsonItem = function(){
 
 //populate property values derived from json content
 Item.prototype.initSecondaryData = function(){
-	log.debug('initSecondaryData', 3);
 	var item = this;
 	
 	item.version = item.apiObj.version;
@@ -89,7 +87,6 @@ Item.prototype.initSecondaryData = function(){
 	item.synced = false;
 
 	item.updateTagStrings();
-	log.debug('done with initSecondaryData', 3);
 };
 
 Item.prototype.updateTagStrings = function(){
@@ -235,7 +232,7 @@ Item.prototype.writePatch = function(){
 };
 
 Item.prototype.getChildren = function(library){
-	log.debug('Zotero.Item.getChildren', 3);
+	log.debug('Zotero.Item.getChildren', 4);
 	var item = this;
 	return Promise.resolve()
 	.then(function(){

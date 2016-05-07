@@ -5178,7 +5178,7 @@ var log = require('./Log.js').Logger('libZotero:Ajax');
 var Ajax = {};
 
 Ajax.errorCallback = function (response) {
-	log.error(response);
+	//log.error(response);
 	log.debug('ajax error callback', 2);
 	log.debug('textStatus: ' + response.textStatus, 2);
 	log.debug('errorThrown: ', 2);
@@ -5193,7 +5193,7 @@ Ajax.activeRequests = [];
  * Requires {target:items|collections|tags, libraryType:user|group, libraryID:<>}
  */
 Ajax.apiRequestUrl = function (params) {
-	log.debug('Zotero.Ajax.apiRequestUrl', 4);
+	log.debug('Zotero.Ajax.apiRequestUrl', 3);
 	log.debug(params, 4);
 	Object.keys(params).forEach(function (key) {
 		var val = params[key];
@@ -5207,8 +5207,8 @@ Ajax.apiRequestUrl = function (params) {
 		//validate params based on patterns in Zotero.validate
 		if (Zotero.validator.validate(val, key) === false) {
 			//warn on invalid parameter and drop from params that will be used
-			Zotero.warn('API argument failed validation: ' + key + ' cannot be ' + val);
-			Zotero.warn(params);
+			log.warn('API argument failed validation: ' + key + ' cannot be ' + val);
+			log.warn(params);
 			delete params[key];
 		}
 	});
@@ -5295,7 +5295,6 @@ Ajax.apiRequestUrl = function (params) {
 			url += '/file/view';
 			break;
 	}
-	//log.debug("returning apiRequestUrl: " + url, 3);
 	return url;
 };
 
@@ -5326,7 +5325,6 @@ Ajax.apiQueryString = function (passedParams, useConfigKey) {
 		passedParams['key'] = Zotero.config.apiKey;
 	}
 
-	//log.debug()
 	if (passedParams.hasOwnProperty('sort') && passedParams['sort'] == 'undefined') {
 		//alert('fixed a bad sort');
 		passedParams['sort'] = 'asc';
@@ -5380,7 +5378,6 @@ Ajax.apiQueryString = function (passedParams, useConfigKey) {
 
 	//build query string by concatenating array
 	queryString += queryParamsArray.join('&');
-	//log.debug("resulting queryString:" + queryString);
 	return queryString;
 };
 
@@ -5494,7 +5491,7 @@ module.exports = function (response) {
 };
 
 module.exports.prototype.parseResponse = function (response) {
-	log.debug('parseResponse');
+	log.debug('parseResponse', 3);
 	var apiResponse = this;
 	apiResponse.jqxhr = response.jqxhr;
 	apiResponse.status = response.jqxhr.status;
@@ -5513,8 +5510,8 @@ module.exports.prototype.parseResponse = function (response) {
 		apiResponse.retryAfter = parseInt(apiResponse.retryAfter, 10);
 	}
 	//TODO: parse link header into individual links
-	log.debug('parse link header');
-	log.debug(apiResponse.linkHeader);
+	log.debug('parse link header', 4);
+	log.debug(apiResponse.linkHeader, 4);
 	if (apiResponse.linkHeader) {
 		var links = apiResponse.linkHeader.split(',');
 		var parsedLinks = {};
@@ -5527,7 +5524,6 @@ module.exports.prototype.parseResponse = function (response) {
 		}
 		apiResponse.parsedLinks = parsedLinks;
 	}
-	log.debug('done parsing response');
 };
 
 },{"./Log.js":115}],100:[function(require,module,exports){
@@ -5539,27 +5535,6 @@ var log = require('./Log.js').Logger('libZotero:Base');
 
 var Zotero = {
 	callbacks: {},
-	ui: {
-		callbacks: {},
-		keyCode: {
-			BACKSPACE: 8,
-			COMMA: 188,
-			DELETE: 46,
-			DOWN: 40,
-			END: 35,
-			ENTER: 13,
-			ESCAPE: 27,
-			HOME: 36,
-			LEFT: 37,
-			PAGE_DOWN: 34,
-			PAGE_UP: 33,
-			PERIOD: 190,
-			RIGHT: 39,
-			SPACE: 32,
-			TAB: 9,
-			UP: 38
-		}
-	},
 	offline: {},
 	temp: {},
 
@@ -5623,50 +5598,52 @@ var Zotero = {
 			'start': 0
 		}
 	},
-
-	debug: function debug(debugstring, level) {
-		var prefLevel = 3;
-		if (Zotero.config.storeDebug) {
-			if (level <= prefLevel) {
-				Zotero.debugstring += 'DEBUG:' + debugstring + '\n';
-			}
-		}
-		if (typeof console == 'undefined') {
-			return;
-		}
-		if (typeof level !== 'number') {
-			level = 1;
-		}
-		if (Zotero.preferences !== undefined) {
-			prefLevel = Zotero.preferences.getPref('debug_level');
-		}
-		if (level <= prefLevel) {
-			console.log(debugstring);
-		}
-	},
-
-	warn: function warn(warnstring) {
-		if (Zotero.config.storeDebug) {
-			Zotero.debugstring += 'WARN:' + warnstring + '\n';
-		}
-		if (typeof console == 'undefined' || typeof console.warn == 'undefined') {
-			this.debug(warnstring);
-		} else {
-			console.warn(warnstring);
-		}
-	},
-
-	error: function error(errorstring) {
-		if (Zotero.config.storeDebug) {
-			Zotero.debugstring += 'ERROR:' + errorstring + '\n';
-		}
-		if (typeof console == 'undefined' || typeof console.error == 'undefined') {
-			this.debug(errorstring);
-		} else {
-			console.error(errorstring);
-		}
-	},
-
+	/*
+ debug: function(debugstring, level){
+ 	var prefLevel = 3;
+ 	if(Zotero.config.storeDebug){
+ 		if(level <= prefLevel){
+ 			Zotero.debugstring += 'DEBUG:' + debugstring + '\n';
+ 		}
+ 	}
+ 	if(typeof console == 'undefined'){
+ 		return;
+ 	}
+ 	if(typeof(level) !== 'number'){
+ 		level = 1;
+ 	}
+ 	if(Zotero.preferences !== undefined){
+ 		prefLevel = Zotero.preferences.getPref('debug_level');
+ 	}
+ 	if(level <= prefLevel) {
+ 		console.log(debugstring);
+ 	}
+ },
+ 
+ warn: function(warnstring){
+ 	if(Zotero.config.storeDebug){
+ 		Zotero.debugstring += 'WARN:' + warnstring + '\n';
+ 	}
+ 	if(typeof console == 'undefined' || typeof console.warn == 'undefined'){
+ 		this.debug(warnstring);
+ 	}
+ 	else{
+ 		console.warn(warnstring);
+ 	}
+ },
+ 
+ error: function(errorstring){
+ 	if(Zotero.config.storeDebug){
+ 		Zotero.debugstring += 'ERROR:' + errorstring + '\n';
+ 	}
+ 	if(typeof console == 'undefined' || typeof console.error == 'undefined'){
+ 		this.debug(errorstring);
+ 	}
+ 	else{
+ 		console.error(errorstring);
+ 	}
+ },
+ */
 	submitDebugLog: function submitDebugLog() {
 		Zotero.net.ajax({
 			url: Zotero.config.debugLogEndpoint,
@@ -5682,7 +5659,7 @@ var Zotero = {
 	},
 
 	catchPromiseError: function catchPromiseError(err) {
-		Zotero.error(err);
+		log.error(err);
 	},
 
 	libraries: {},
@@ -5806,8 +5783,7 @@ Zotero.trigger = function (eventType) {
 		log.debug('filter is not false', 3);
 		eventType += '_' + filter;
 	}
-	Zotero.debug('Triggering eventful ' + eventType, 3);
-	log.debug(data);
+	log.debug('Triggering eventful ' + eventType, 3);
 
 	data.zeventful = true;
 	// if(data.triggeringElement === null || data.triggeringElement === undefined){
@@ -5826,13 +5802,13 @@ Zotero.trigger = function (eventType) {
 			});
 		}
 	} catch (e) {
-		error('failed triggering:' + eventType);
-		error(e);
+		log.error('failed triggering:' + eventType);
+		log.error(e);
 	}
 };
 
 Zotero.listen = function (events, handler, data, filter) {
-	log.debug('Zotero.listen: ' + events);
+	log.debug('Zotero.listen: ' + events, 3);
 	//append filter to event strings if it's specified
 	var eventsArray = events.split(' ');
 	if (eventsArray.length > 0 && filter) {
@@ -5867,6 +5843,24 @@ Zotero.extend = function () {
 		});
 	}
 	return res;
+};
+
+Zotero.deepExtend = function (out) {
+	out = out || {};
+
+	for (var i = 1; i < arguments.length; i++) {
+		var obj = arguments[i];
+
+		if (!obj) continue;
+
+		for (var key in obj) {
+			if (obj.hasOwnProperty(key)) {
+				if (_typeof(obj[key]) === 'object') out[key] = Zotero.deepExtend(out[key], obj[key]);else out[key] = obj[key];
+			}
+		}
+	}
+
+	return out;
 };
 
 module.exports = Zotero;
@@ -5936,7 +5930,7 @@ module.exports.prototype.load = function (params) {
 	try {
 		var s = this.store[objectCacheString];
 		if (!s) {
-			Z.warn('No value found in cache store - ' + objectCacheString, 3);
+			log.warn('No value found in cache store - ' + objectCacheString, 3);
 			return null;
 		} else {
 			return JSON.parse(s);
@@ -7005,7 +6999,7 @@ module.exports.Library.prototype.init = function () {
 		log.debug('requesting indexedDb from browser', 3);
 		var request = indexedDB.open('Zotero_' + idbLibrary.libraryString, 4);
 		request.onerror = function (e) {
-			log.log.error('ERROR OPENING INDEXED DB');
+			log.error('ERROR OPENING INDEXED DB');
 			reject();
 		};
 
@@ -7314,7 +7308,7 @@ module.exports.Library.prototype.addObjects = function (objects, type) {
 		};
 
 		transaction.onerror = function (event) {
-			log.log.error('Add Objects transaction failed.');
+			log.error('Add Objects transaction failed.');
 			reject();
 		};
 
@@ -7345,7 +7339,7 @@ module.exports.Library.prototype.updateObjects = function (objects, type) {
 		};
 
 		transaction.onerror = function (event) {
-			log.log.error('Update Objects transaction failed.');
+			log.error('Update Objects transaction failed.');
 			reject();
 		};
 
@@ -7375,7 +7369,7 @@ module.exports.Library.prototype.removeObjects = function (objects, type) {
 		};
 
 		transaction.onerror = function (event) {
-			log.log.error('Remove Objects transaction failed.');
+			log.error('Remove Objects transaction failed.');
 			reject();
 		};
 
@@ -7466,7 +7460,7 @@ module.exports.Library.prototype.setVersion = function (type, version) {
 		};
 
 		transaction.onerror = function (event) {
-			log.log.error('set version transaction failed.');
+			log.error('set version transaction failed.');
 			reject();
 		};
 
@@ -7507,7 +7501,7 @@ module.exports.Library.prototype.setFile = function (itemKey, fileData) {
 		};
 
 		transaction.onerror = function (event) {
-			log.log.error('set file transaction failed.');
+			log.error('set file transaction failed.');
 			reject();
 		};
 
@@ -7548,7 +7542,7 @@ module.exports.Library.prototype.deleteFile = function (itemKey) {
 		};
 
 		transaction.onerror = function (event) {
-			log.log.error('delete file transaction failed.');
+			log.error('delete file transaction failed.');
 			reject();
 		};
 
@@ -7618,7 +7612,6 @@ var Item = function Item(itemObj) {
 Item.prototype = new Zotero.ApiObject();
 
 Item.prototype.parseJsonItem = function (apiObj) {
-	log.debug('parseJsonItem', 3);
 	var item = this;
 	item.version = apiObj.version;
 	item.key = apiObj.key;
@@ -7651,7 +7644,6 @@ Item.prototype.emptyJsonItem = function () {
 
 //populate property values derived from json content
 Item.prototype.initSecondaryData = function () {
-	log.debug('initSecondaryData', 3);
 	var item = this;
 
 	item.version = item.apiObj.version;
@@ -7675,7 +7667,6 @@ Item.prototype.initSecondaryData = function () {
 	item.synced = false;
 
 	item.updateTagStrings();
-	log.debug('done with initSecondaryData', 3);
 };
 
 Item.prototype.updateTagStrings = function () {
@@ -7816,7 +7807,7 @@ Item.prototype.createChildNotes = function (notes) {
 Item.prototype.writePatch = function () {};
 
 Item.prototype.getChildren = function (library) {
-	log.debug('Zotero.Item.getChildren');
+	log.debug('Zotero.Item.getChildren', 4);
 	var item = this;
 	return Promise.resolve().then(function () {
 		//short circuit if has item has no children
@@ -8853,9 +8844,7 @@ module.exports.prototype.addItemsFromJson = function (jsonBody) {
 	var items = this;
 	var parsedItemJson = jsonBody;
 	var itemsAdded = [];
-	log.debug('looping');
 	parsedItemJson.forEach(function (itemObj) {
-		log.debug('creating new Item');
 		var item = new Zotero.Item(itemObj);
 		items.addItem(item);
 		itemsAdded.push(item);
@@ -9109,7 +9098,7 @@ var Library = function Library(type, libraryID, libraryUrlIdentifier, apiKey) {
 		if (libraryUrlIdentifier) {
 			this.libraryBaseWebsiteUrl += libraryUrlIdentifier + '/items';
 		} else {
-			Z.warn('no libraryUrlIdentifier specified');
+			log.warn('no libraryUrlIdentifier specified');
 		}
 	}
 	//object holders within this library, whether tied to a specific library or not
@@ -9129,7 +9118,7 @@ var Library = function Library(type, libraryID, libraryUrlIdentifier, apiKey) {
 
 	if (!type) {
 		//return early if library not specified
-		Z.warn('No type specified for library');
+		log.warn('No type specified for library');
 		return;
 	}
 	//attributes tying instance to a specific Zotero library
@@ -9380,7 +9369,7 @@ Library.prototype.loadUpdatedCollections = function () {
 	var library = this;
 	//sync from the libraryVersion if it exists, otherwise use the collectionsVersion, which is likely
 	//derived from the most recent version of any individual collection we have.
-	log.debug('library.collections.collectionsVersion:' + library.collections.collectionsVersion);
+	log.debug('library.collections.collectionsVersion:' + library.collections.collectionsVersion, 4);
 	var syncFromVersion = library.libraryVersion ? library.libraryVersion : library.collections.collectionsVersion;
 	//we need modified collectionKeys regardless, so load them
 	return library.updatedVersions('collections', syncFromVersion).then(function (response) {
@@ -9427,7 +9416,7 @@ Library.prototype.loadUpdatedCollections = function () {
 		return library.getDeleted(library.libraryVersion);
 	}).then(function (response) {
 		log.debug('got deleted collections data: removing local copies', 3);
-		log.debug(library.deleted);
+		log.debug(library.deleted, 3);
 		if (library.deleted.deletedData.collections && library.deleted.deletedData.collections.length > 0) {
 			library.collections.removeLocalCollections(library.deleted.deletedData.collections);
 		}
@@ -9442,7 +9431,7 @@ Library.prototype.loadUpdatedTags = function () {
 		log.debug('done getting tags, request deleted tags data', 3);
 		return library.getDeleted(library.libraryVersion);
 	}).then(function (response) {
-		log.debug('got deleted tags data');
+		log.debug('got deleted tags data', 3);
 		if (library.deleted.deletedData.tags && library.deleted.deletedData.tags.length > 0) {
 			library.tags.removeTags(library.deleted.deletedData.tags);
 		}
@@ -9467,31 +9456,31 @@ Library.prototype.getDeleted = function (version) {
 	//if there is already a request working, create a new promise to resolve
 	//when the actual request finishes
 	if (library.deleted.pending) {
-		log.debug('getDeleted resolving with previously pending promise');
+		log.debug('getDeleted resolving with previously pending promise', 3);
 		return Promise.resolve(library.deleted.pendingPromise);
 	}
 
 	//don't fetch again if version we'd be requesting is between
 	//deleted.newer and delete.deleted versions, just use that one
-	log.debug('version:' + version);
-	log.debug('sinceVersion:' + library.deleted.sinceVersion);
-	log.debug('untilVersion:' + library.deleted.untilVersion);
+	log.debug('version:' + version, 3);
+	log.debug('sinceVersion:' + library.deleted.sinceVersion, 3);
+	log.debug('untilVersion:' + library.deleted.untilVersion, 3);
 
 	if (library.deleted.untilVersion && version >= library.deleted.sinceVersion /*&&
                                                                              version < library.deleted.untilVersion*/) {
-			log.debug('deletedVersion matches requested: immediately resolving');
+			log.debug('deletedVersion matches requested: immediately resolving', 3);
 			return Promise.resolve(library.deleted.deletedData);
 		}
 
 	library.deleted.pending = true;
 	library.deleted.pendingPromise = library.ajaxRequest(urlconf).then(function (response) {
-		log.debug('got deleted response');
+		log.debug('got deleted response', 3);
 		library.deleted.deletedData = response.data;
 		log.debug('Deleted Last-Modified-Version:' + response.lastModifiedVersion, 3);
 		library.deleted.untilVersion = response.lastModifiedVersion;
 		library.deleted.sinceVersion = version;
 	}).then(function (response) {
-		log.debug('cleaning up deleted pending');
+		log.debug('cleaning up deleted pending', 3);
 		library.deleted.pending = false;
 		library.deleted.pendingPromise = false;
 	});
@@ -9885,7 +9874,7 @@ Library.prototype.processLoadedCollections = function (response) {
 	var library = this;
 
 	//clear out display items
-	log.debug('adding collections to library.collections');
+	log.debug('adding collections to library.collections', 3);
 	var collectionsAdded = library.collections.addCollectionsFromJson(response.data);
 	for (var i = 0; i < collectionsAdded.length; i++) {
 		collectionsAdded[i].associateWithLibrary(library);
@@ -9994,7 +9983,6 @@ Library.prototype.loadItems = function (config) {
 		var items = library.items;
 		//clear out display items
 		var loadedItemsArray = items.addItemsFromJson(response.data);
-		log.debug('Looping over loadedItemsArray');
 		for (var i = 0; i < loadedItemsArray.length; i++) {
 			loadedItemsArray[i].associateWithLibrary(library);
 		}
@@ -10077,14 +10065,14 @@ Library.prototype.loadItem = function (itemKey) {
 	};
 
 	return library.ajaxRequest(urlconfig).then(function (response) {
-		log.debug('Got loadItem response');
+		log.debug('Got loadItem response', 3);
 		var item = new Zotero.Item(response.data);
 		item.owningLibrary = library;
 		library.items.itemObjects[item.key] = item;
 		Zotero.trigger('itemsChanged', { library: library });
 		return item;
 	}, function (response) {
-		log.debug('Error loading Item');
+		log.warn('Error loading Item');
 	});
 };
 
@@ -10158,7 +10146,7 @@ Library.prototype.fetchGlobalItems = function (config) {
 
 Library.prototype.fetchGlobalItem = function (globalKey) {
 	log.debug('Zotero.Library.fetchGlobalItem', 3);
-	log.debug(globalKey);
+	log.debug(globalKey, 3);
 	var library = this;
 
 	var defaultConfig = { target: 'item' };
@@ -10352,7 +10340,7 @@ Library.prototype.loadIndexedDBCache = function () {
 
 	tagsPromise.then(function (tagsArray) {
 		log.debug('loadIndexedDBCache tagsD done', 3);
-		log.debug(tagsArray);
+		log.debug(tagsArray, 4);
 		//create tagsDump from array of tag objects
 		var latestVersion = 0;
 		var tagsVersion = 0;
@@ -10402,7 +10390,7 @@ module.exports.creatorMap = ItemMaps.creatorMap;
 
 var log = {};
 
-var prefLevel = 3;
+var prefLevel = 1;
 
 var debugOut;
 var warnOut;
@@ -10429,64 +10417,44 @@ log.SetLevel = function (level) {
 };
 
 log.debug = function (debugstring, level) {
-	/*
- var prefLevel = 3;
- if(Zotero.config.storeDebug){
- 	if(level <= prefLevel){
- 		Zotero.debugstring += 'DEBUG:' + debugstring + '\n';
- 	}
- }
- */
 	if (typeof level !== 'number') {
 		level = 1;
 	}
-	/*
- if(Zotero.preferences !== undefined){
- 	prefLevel = Zotero.preferences.getPref('debug_level');
- }
- */
 	if (level <= prefLevel) {
 		debugOut(debugstring);
 	}
 };
 
+log.debugObject = function (obj, level) {
+	if (typeof level !== 'number') {
+		level = 1;
+	}
+	if (level <= prefLevel) {
+		debugOut(obj);
+	}
+};
+
 log.warn = function (warnstring) {
-	/*
- if(Zotero.config.storeDebug){
- 	Zotero.debugstring += 'WARN:' + warnstring + '\n';
- }
- */
 	warnOut(warnstring);
 };
 
 log.error = function (errorstring) {
-	/*
- if(Zotero.config.storeDebug){
- 	Zotero.debugstring += 'ERROR:' + errorstring + '\n';
- }
- */
 	errorOut(errorstring);
 };
 
-log.debugFunction = function (prefix) {
-	return function (debugstring, level) {
-		return log.debug(prefix + ': ' + debugstring, level);
-	};
-};
-
-log.errorFunction = function (prefix) {
-	return function (errorstring) {
-		return log.error(prefix + ': ' + errorstring);
-	};
-};
-
 log.Logger = function (prefix) {
-	var level = arguments.length <= 1 || arguments[1] === undefined ? 3 : arguments[1];
+	var llevel = arguments.length <= 1 || arguments[1] === undefined ? 3 : arguments[1];
 
-	prefLevel = level;
+	prefLevel = llevel;
 	return {
 		debug: function debug(debugstring, level) {
-			return log.debug(prefix + ': ' + debugstring, level);
+			if (typeof debugstring == 'string') {
+				return log.debug(prefix + ': ' + debugstring, level);
+			} else {
+				log.debug(prefix + ': \\', level);
+				log.debug(debugstring, level);
+				return;
+			}
 		},
 		warn: function warn(warnstring) {
 			return log.warn(prefix + ': ' + warnstring);
@@ -10553,7 +10521,7 @@ Net.prototype.queueRequest = function (requestObject) {
 			log.debug('running concurrent after queued deferred resolved', 4);
 			return net.runConcurrent(requestObject);
 		}).then(function (response) {
-			log.debug('done with queuedRequest');
+			log.debug('done with queuedRequest', 4);
 			net.queuedRequestDone();
 			return response;
 		});
@@ -10569,7 +10537,7 @@ Net.prototype.queueRequest = function (requestObject) {
 Net.prototype.runConcurrent = function (requestObject) {
 	log.debug('Zotero.Net.runConcurrent', 3);
 	return this.ajaxRequest(requestObject).then(function (response) {
-		log.debug('done with runConcurrent request');
+		log.debug('done with runConcurrent request', 3);
 		return response;
 	});
 };
@@ -10588,7 +10556,7 @@ Net.prototype.runSequential = function (requestObjects) {
 		var requestObject = requestObjects[i];
 		seqPromise = seqPromise.then(function () {
 			var p = net.ajaxRequest(requestObject).then(function (response) {
-				log.debug('pushing sequential response into result array');
+				log.debug('pushing sequential response into result array', 3);
 				responses.push(response);
 			});
 			return p;
@@ -10596,7 +10564,7 @@ Net.prototype.runSequential = function (requestObjects) {
 	}
 
 	return seqPromise.then(function () {
-		log.debug('done with sequential aggregator promise - returning responses');
+		log.debug('done with sequential aggregator promise - returning responses', 4);
 		return responses;
 	});
 };
@@ -10657,8 +10625,7 @@ Net.prototype.runNext = function () {
 };
 
 Net.prototype.checkDelay = function (response) {
-	log.debug('Zotero.Net.checkDelay');
-	log.debug(response);
+	log.debug('Zotero.Net.checkDelay', 4);
 	var net = this;
 	var wait = 0;
 	if (Array.isArray(response)) {
@@ -10715,8 +10682,8 @@ Net.prototype.ajaxRequest = function (requestConfig) {
 	delete config.success;
 	delete config.error;
 
-	log.debug('AJAX config');
-	log.debug(config);
+	log.debug('AJAX config', 4);
+	log.debug(config, 4);
 	var ajaxpromise = new Promise(function (resolve, reject) {
 		net.ajax(config).then(function (request) {
 			var data;
@@ -10774,14 +10741,14 @@ Net.prototype.ajax = function (config) {
 		req.send(config.data);
 
 		req.onload = function () {
-			log.debug('XMLHttpRequest done');
-			log.debug(req);
+			log.debug('XMLHttpRequest done', 4);
+			log.debug(req, 4);
 			if (req.status >= 200 && req.status < 300) {
-				log.debug('200-300 response: resolving Net.ajax promise');
+				log.debug('200-300 response: resolving Net.ajax promise', 3);
 				// Performs the function "resolve" when this.status is equal to 2xx
 				resolve(req);
 			} else {
-				log.debug('not 200-300 response: rejecting Net.ajax promise');
+				log.debug('not 200-300 response: rejecting Net.ajax promise', 3);
 				// Performs the function "reject" when this.status is different than 2xx
 				reject(req);
 			}
@@ -11321,10 +11288,10 @@ var Utils = {
 
 	prependAutocomplete: function prependAutocomplete(pre, source) {
 		log.debug('Zotero.utils.prependAutocomplete', 3);
-		log.debug('prepend match: ' + pre);
+		log.debug('prepend match: ' + pre, 4);
 		var satisfy;
 		if (!source) {
-			log.debug('source is not defined');
+			log.warn('source is not defined');
 		}
 		if (pre === '') {
 			satisfy = source.slice(0);
@@ -11344,10 +11311,10 @@ var Utils = {
 
 	matchAnyAutocomplete: function matchAnyAutocomplete(pre, source) {
 		log.debug('Zotero.utils.matchAnyAutocomplete', 3);
-		log.debug('matchAny match: ' + pre);
+		log.debug('matchAny match: ' + pre, 4);
 		var satisfy;
 		if (!source) {
-			log.debug('source is not defined');
+			log.warn('source is not defined');
 		}
 		if (pre === '') {
 			satisfy = source.slice(0);
@@ -11418,7 +11385,7 @@ var Utils = {
 		var re = /([0-9]+)-([0-9]+)-([0-9]+)T([0-9]+):([0-9]+):([0-9]+)Z/;
 		var matches = re.exec(datestr);
 		if (matches === null) {
-			log.debug('error parsing api date: ' + datestr);
+			log.debug('error parsing api date: ' + datestr, 2);
 			return null;
 		} else {
 			var date = new Date(Date.UTC(matches[1], matches[2] - 1, matches[3], matches[4], matches[5], matches[6]));
@@ -11555,7 +11522,12 @@ var Utils = {
 		});
 	},
 
+	/**
+  * Given a query string, parse keys/values into an object
+  **/
 	parseQuery: function parseQuery(query) {
+		log.debug('parseQuery');
+		log.debug(query);
 		var params = {};
 		var match;
 		var pl = /\+/g; // Regex for replacing addition symbol with a space
@@ -11570,7 +11542,21 @@ var Utils = {
 		return params;
 	},
 
+	buildQuery: function buildQuery() {
+		var params = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+		var q = '?';
+		for (var p in params) {
+			q += '&' + encodeURIComponent(p) + '=' + encodeURIComponent(params[p]);
+		}
+		return q;
+	},
+
+	//extract the section of a url between ? and #
 	querystring: function querystring(href) {
+		if (href.indexOf('?') == -1) {
+			return '';
+		}
 		var hashindex = href.indexOf('#') != -1 ? href.indexOf('#') : undefined;
 		var q = href.substring(href.indexOf('?') + 1, hashindex);
 		return q;
