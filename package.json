@@ -6,7 +6,8 @@
   "scripts": {
     "build": "./node_modules/.bin/gulp",
     "dev": "./node_modules/.bin/gulp dev",
-    "flow": "flow; test $? -eq 0 -o $? -eq 2"
+    "flow": "flow; test $? -eq 0 -o $? -eq 2",
+    "test": "mocha --compilers js:babel-core/register ./test/tests"
   },
   "keywords": [
     "Zotero"

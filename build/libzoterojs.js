@@ -6868,6 +6868,16 @@ module.exports.prototype.get = function (key) {
 		case 'title':
 		case 'name':
 			return group.apiObj.data.name;
+		case 'members':
+			if (!group.apiObj.data.members) {
+				return [];
+			}
+			return group.apiObj.data.members;
+		case 'admins':
+			if (!group.apiObj.data.admins) {
+				return [];
+			}
+			return group.apiObj.data.admins;
 	}
 
 	if (key in group.apiObj) {
@@ -6888,10 +6898,16 @@ module.exports.prototype.get = function (key) {
 
 module.exports.prototype.isWritable = function (userID) {
 	var group = this;
+	log.debug(group);
+	var admins = group.apiObj.data.admins;
+	if (!admins) {
+		admins = [];
+	}
+
 	switch (true) {
 		case group.get('owner') == userID:
 			return true;
-		case group.apiObj.data.admins && group.apiObj.data.admins.indexOf(userID) != -1:
+		case admins.indexOf(userID) != -1:
 			return true;
 		case group.apiObj.data.libraryEditing == 'members' && group.apiObj.data.members && group.apiObj.data.members.indexOf(userID) != -1:
 			return true;
@@ -9133,7 +9149,7 @@ var Library = function Library(type, libraryID, libraryUrlIdentifier, apiKey) {
 
 	if (typeof window === 'undefined') {
 		Zotero.config.useIndexedDB = false;
-		Zotero.warn('Node detected; disabling indexedDB');
+		log.warn('Node detected; disabling indexedDB');
 	} else {
 		//initialize indexedDB if we're supposed to use it
 		//detect safari until they fix their shit
@@ -9150,7 +9166,7 @@ var Library = function Library(type, libraryID, libraryUrlIdentifier, apiKey) {
 		}
 		if (is_safari) {
 			Zotero.config.useIndexedDB = false;
-			Zotero.warn('Safari detected; disabling indexedDB');
+			log.warn('Safari detected; disabling indexedDB');
 		}
 	}
 
@@ -10443,7 +10459,7 @@ log.error = function (errorstring) {
 };
 
 log.Logger = function (prefix) {
-	var llevel = arguments.length <= 1 || arguments[1] === undefined ? 3 : arguments[1];
+	var llevel = arguments.length <= 1 || arguments[1] === undefined ? 2 : arguments[1];
 
 	prefLevel = llevel;
 	return {

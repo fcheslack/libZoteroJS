@@ -71,7 +71,7 @@ var Library = function(type, libraryID, libraryUrlIdentifier, apiKey){
 	
 	if(typeof window === 'undefined') {
 		Zotero.config.useIndexedDB = false;
-		Zotero.warn('Node detected; disabling indexedDB');
+		log.warn('Node detected; disabling indexedDB');
 	} else {
 		//initialize indexedDB if we're supposed to use it
 		//detect safari until they fix their shit
@@ -84,7 +84,7 @@ var Library = function(type, libraryID, libraryUrlIdentifier, apiKey){
 		if ((is_chrome)&&(is_opera)) {is_chrome=false;}
 		if(is_safari) {
 			Zotero.config.useIndexedDB = false;
-			Zotero.warn('Safari detected; disabling indexedDB');
+			log.warn('Safari detected; disabling indexedDB');
 		}
 	}
 

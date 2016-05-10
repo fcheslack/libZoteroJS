@@ -1,0 +1,39 @@
+{
+    "id": 1,
+    "version": 1,
+    "links": {
+        "self": {
+            "href": "https://apidev.zotero.org/groups/1",
+            "type": "application/json"
+        },
+        "alternate": {
+            "href": "https://staging.zotero.net/groups/panda",
+            "type": "text/html"
+        }
+    },
+    "meta": {
+        "created": "2010-02-17T23:59:17Z",
+        "lastModified": "2014-06-27T20:27:40Z",
+        "numItems": 26
+    },
+    "data": {
+        "id": 1,
+        "version": 1,
+        "name": "Panda",
+        "owner": 14058,
+        "type": "PublicClosed",
+        "description": "<p>The <strong>panda</strong> (<em>Ailuropoda melanoleuca</em>, <small>lit.</small> \"black and white cat-foot\"),<sup class=\"reference\"><a rel='nofollow' href=\"http://en.wikipedia.org/wiki/Giant_panda#cite_note-Scheff_Duncan-2\"><span>[</span>2<span>]</span></a></sup> also known as the <strong>giant panda</strong> to distinguish it from the unrelated <a rel='nofollow' href=\"http://en.wikipedia.org/wiki/Red_panda\" title=\"Red panda\">red panda</a>, is a</p>\n",
+        "url": "",
+        "hasImage": 1,
+        "libraryEditing": "members",
+        "libraryReading": "all",
+        "fileEditing": "members",
+        "admins": [
+            3,
+            10150
+        ],
+        "members": [
+            6
+        ]
+    }
+}

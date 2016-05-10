@@ -55,7 +55,7 @@ log.error = function(errorstring){
 	errorOut(errorstring);
 };
 
-log.Logger = function(prefix, llevel=3){
+log.Logger = function(prefix, llevel=2){
 	prefLevel = llevel;
 	return {
 		debug: function(debugstring, level){

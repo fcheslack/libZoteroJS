@@ -23,6 +23,16 @@ module.exports.prototype.get = function(key) {
 		case 'title':
 		case 'name':
 			return group.apiObj.data.name;
+		case 'members':
+			if(!group.apiObj.data.members){
+				return [];
+			}
+			return group.apiObj.data.members;
+		case 'admins':
+			if(!group.apiObj.data.admins){
+				return [];
+			}
+			return group.apiObj.data.admins;
 	}
 	
 	if(key in group.apiObj){
@@ -43,10 +53,16 @@ module.exports.prototype.get = function(key) {
 
 module.exports.prototype.isWritable = function(userID){
 	var group = this;
+	log.debug(group);
+	let admins = group.apiObj.data.admins;
+	if(!admins){
+		admins = [];
+	}
+
 	switch(true){
 		case group.get('owner') == userID:
 			return true;
-		case (group.apiObj.data.admins && (group.apiObj.data.admins.indexOf(userID) != -1) ):
+		case (admins.indexOf(userID) != -1):
 			return true;
 		case ((group.apiObj.data.libraryEditing == 'members') &&
 			(group.apiObj.data.members) &&
