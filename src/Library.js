@@ -25,6 +25,7 @@ var Library = function(type, libraryID, libraryUrlIdentifier, apiKey){
 	};
 	library._apiKey = apiKey || '';
 	
+	library.libraryUrlIdentifier = libraryUrlIdentifier;
 	if(Zotero.config.librarySettings){
 		library.libraryBaseWebsiteUrl = Zotero.config.librarySettings.libraryPathString;
 	}
@@ -93,7 +94,7 @@ var Library = function(type, libraryID, libraryUrlIdentifier, apiKey){
 		var idbLibrary = new Zotero.Idb.Library(library.libraryString);
 		idbLibrary.owningLibrary = this;
 		library.idbLibrary = idbLibrary;
-		idbLibrary.init()
+		library.cachedDataPromise = idbLibrary.init()
 		.then(function(){
 			log.debug('Library Constructor: idbInitD Done', 3);
 			if(Zotero.config.preloadCachedLibrary === true){
@@ -113,6 +114,8 @@ var Library = function(type, libraryID, libraryUrlIdentifier, apiKey){
 					log.error(err);
 					throw new Error('Error loading cached library');
 				});
+
+				return cacheLoadD;
 			}
 			else {
 				//trigger cachedDataLoaded since we are done with that step
@@ -127,6 +130,8 @@ var Library = function(type, libraryID, libraryUrlIdentifier, apiKey){
 			log.error('Error initializing indexedDB. Promise rejected.');
 			//don't re-throw error, since we can still load data from the API
 		});
+	} else {
+		library.cachedDataPromise = Promise.resolve();
 	}
 	
 	library.dirty = false;
@@ -340,7 +345,9 @@ Library.prototype.loadUpdatedCollections = function(){
 	//sync from the libraryVersion if it exists, otherwise use the collectionsVersion, which is likely
 	//derived from the most recent version of any individual collection we have.
 	log.debug('library.collections.collectionsVersion:' + library.collections.collectionsVersion, 4);
-	var syncFromVersion = library.libraryVersion ? library.libraryVersion : library.collections.collectionsVersion;
+	//var syncFromVersion = library.libraryVersion ? library.libraryVersion : library.collections.collectionsVersion;
+	var syncFromVersion = library.collections.collectionsVersion;
+	log.debug(`loadUpdatedCollections syncFromVersion: ${syncFromVersion}`, 3);
 	//we need modified collectionKeys regardless, so load them
 	return library.updatedVersions('collections', syncFromVersion)
 	.then(function(response){
