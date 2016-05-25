@@ -19,8 +19,3 @@ Alternatively, in node environemnt and within Browserify-based builds you can ju
 
 	var Zotero = require('libzotero');
 
-
-Usage
------
-
-For instructions and examples see [api documentation](https://www.zotero.org/support/dev/client_coding/javascript_api)
