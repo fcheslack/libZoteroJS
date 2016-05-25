@@ -179,7 +179,8 @@ Net.prototype.checkDelay = function(response){
 };
 
 Net.prototype.ajaxRequest = function(requestConfig){
-	log.debug('Zotero.Net.ajaxRequest', 3);
+	log.debug('Zotero.Net.ajaxRequest', 2);
+	log.debug(requestConfig);
 	var net = this;
 	var defaultConfig = {
 		type:'GET',
@@ -196,7 +197,14 @@ Net.prototype.ajaxRequest = function(requestConfig){
 		}
 		//cache:false
 	};
+	
 	var headers = Z.extend({}, defaultConfig.headers, requestConfig.headers);
+	if(requestConfig.key){
+		headers = Z.extend(headers, {'Zotero-API-Key': requestConfig.key});
+		//headers = Z.extend(headers, {'Authorization': 'Bearer ' + requestConfig.key});
+		delete requestConfig.key;
+	}
+	
 	var config = Z.extend({}, defaultConfig, requestConfig);
 	config.headers = headers;
 	if(typeof config.url == 'object'){

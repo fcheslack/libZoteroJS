@@ -73,12 +73,12 @@ module.exports.prototype.deleteItem = function(itemKey){
 		'itemKey':item.key
 	};
 	var requestConfig = {
-		url: Zotero.ajax.apiRequestString(urlconfig),
+		url: urlconfig,
 		type: 'DELETE',
 		headers:{'If-Unmodified-Since-Version':item.get('version')}
 	};
 	
-	return Zotero.net.ajaxRequest(requestConfig);
+	return items.owningLibrary.ajaxRequest(requestConfig);
 };
 
 module.exports.prototype.deleteItems = function(deleteItems, version){
@@ -128,7 +128,7 @@ module.exports.prototype.deleteItems = function(deleteItems, version){
 		requestObjects.push(requestConfig);
 	}
 	
-	return Zotero.net.queueRequest(requestObjects);
+	return items.owningLibrary.sequentialRequests(requestObjects);
 };
 
 module.exports.prototype.trashItems = function(itemsArray){
@@ -211,7 +211,6 @@ module.exports.prototype.writeItems = function(itemsArray){
 		'libraryType':items.owningLibrary.libraryType,
 		'libraryID':items.owningLibrary.libraryID
 	};
-	var requestUrl = Zotero.ajax.apiRequestString(config);
 	
 	var writeChunks = items.chunkObjectsArray(writeItems);
 	var rawChunkObjects = items.rawChunks(writeChunks);
@@ -242,7 +241,7 @@ module.exports.prototype.writeItems = function(itemsArray){
 		
 		var requestData = JSON.stringify(rawChunkObjects[i]);
 		requestObjects.push({
-			url: requestUrl,
+			url: config,
 			type: 'POST',
 			data: requestData,
 			processData: false,

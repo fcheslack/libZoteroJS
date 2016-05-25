@@ -268,9 +268,8 @@ var Utils = {
 		}
 		
 		var urlconfig = {'target':'key', 'libraryType':'user', 'libraryID':userID, 'apiKey':key};
-		var requestUrl = Zotero.ajax.apiRequestString(urlconfig);
 		
-		return Zotero.ajaxRequest(requestUrl)
+		return Zotero.ajaxRequest(urlconfig)
 		.then(function(response){
 			var keyObject = JSON.parse(response.data);
 			return keyObject;

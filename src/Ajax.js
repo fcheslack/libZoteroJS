@@ -132,12 +132,9 @@ Ajax.apiRequestUrl = function(params){
 	return url;
 };
 
-Ajax.apiQueryString = function(passedParams, useConfigKey){
+Ajax.apiQueryString = function(passedParams){
 	log.debug('Zotero.Ajax.apiQueryString', 4);
 	log.debug(passedParams, 4);
-	if(useConfigKey === null || typeof useConfigKey === 'undefined'){
-		useConfigKey = true;
-	}
 	
 	Object.keys(passedParams).forEach(function(key){
 		var val = passedParams[key];
@@ -152,16 +149,12 @@ Ajax.apiQueryString = function(passedParams, useConfigKey){
 	if(passedParams.hasOwnProperty('order') && passedParams['order'] == 'year'){
 		passedParams['order'] = 'date';
 	}
-	if(useConfigKey && Zotero.config.sessionAuth) {
+	if(Zotero.config.sessionAuth) {
 		var sessionKey = Zotero.utils.readCookie(Zotero.config.sessionCookieName);
 		passedParams['session'] = sessionKey;
 	}
-	else if(useConfigKey && Zotero.config.apiKey){
-		passedParams['key'] = Zotero.config.apiKey;
-	}
 	
 	if(passedParams.hasOwnProperty('sort') && passedParams['sort'] == 'undefined' ){
-		//alert('fixed a bad sort');
 		passedParams['sort'] = 'asc';
 	}
 	
@@ -254,14 +247,6 @@ Ajax.proxyWrapper = function(requestUrl, method){
 	else{
 		return requestUrl;
 	}
-};
-
-Ajax.parseQueryString = function(query){
-	
-};
-
-Ajax.webUrl = function(args){
-	
 };
 
 Ajax.downloadBlob = function(url){

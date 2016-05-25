@@ -234,6 +234,9 @@ Library.prototype.ajaxRequest = function(url, type, options){
 		type: type
 	};
 	requestObject = Z.extend({}, requestObject, options);
+	if(!requestObject.key && (this._apiKey != '')){
+		requestObject.key = this._apiKey;
+	}
 	log.debug(requestObject, 3);
 	return Zotero.net.queueRequest(requestObject);
 };
@@ -255,8 +258,13 @@ Library.prototype.ajaxRequest = function(url, type, options){
  */
 Library.prototype.sequentialRequests = function(requests){
 	log.debug('Zotero.Library.sequentialRequests', 3);
-	var library = this;
-	return Zotero.net.queueRequest(requests);
+	let modRequests = requests.map((request)=>{
+		if(!request.key && (this._apiKey != '')){
+			request.key = this._apiKey;
+		}
+		return request;
+	});
+	return Zotero.net.queueRequest(modRequests);
 };
 
 /**
@@ -748,12 +756,14 @@ Library.prototype.loadFromKeys = function(keys, objectType){
 	
 	var promises = [];
 	for(var i = 0; i < requestObjects.length; i++){
-		promises.push(Zotero.net.queueRequest(requestObjects[i]));
+		let url = requestObjects[i].url;
+		let type = requestObjects[i].type;
+		let options = {
+			success: requestObjects[i].success
+		};
+		promises.push(library.ajaxRequest(url, type, options));
 	}
 	return Promise.all(promises);
-	/*
-	return Zotero.net.queueRequest(requestObjects);
-	*/
 };
 
 //publishes: displayedItemsUpdated
@@ -965,9 +975,8 @@ Library.prototype.loadItems = function(config){
 		'libraryType':library.libraryType,
 		'libraryID':library.libraryID
 	}, newConfig);
-	var requestUrl = Zotero.ajax.apiRequestString(urlconfig);
 	
-	return library.ajaxRequest(requestUrl)
+	return library.ajaxRequest(urlconfig)
 	.then(function(response){
 		log.debug('loadItems proxied callback', 3);
 		//var library = this;
@@ -1008,9 +1017,8 @@ Library.prototype.loadPublications = function(config){
 		'libraryType':library.libraryType,
 		'libraryID':library.libraryID
 	}, newConfig);
-	var requestUrl = Zotero.ajax.apiRequestString(urlconfig);
 	
-	return library.ajaxRequest(requestUrl)
+	return library.ajaxRequest(urlconfig)
 	.then(function(response){
 		log.debug('loadPublications proxied callback', 3);
 		var publicationItems = [];
@@ -1106,10 +1114,9 @@ Library.prototype.addNote = function(itemKey, note){
 		'itemKey':itemKey
 	};
 	
-	var requestUrl = Zotero.ajax.apiRequestString(config);
 	var item = this.items.getItem(itemKey);
 	
-	return library.ajaxRequest(requestUrl, 'POST', {processData: false});
+	return library.ajaxRequest(config, 'POST', {processData: false});
 };
 
 Library.prototype.fetchGlobalItems = function(config){
@@ -1127,12 +1134,10 @@ Library.prototype.fetchGlobalItems = function(config){
 	
 	//Build config object that should be displayed next and compare to currently displayed
 	var newConfig = Z.extend({}, defaultConfig, config);
-	//newConfig.start = parseInt(newConfig.limit, 10) * (parseInt(newConfig.itemPage, 10) - 1);
 	
 	var urlconfig = Z.extend({'target':'items', 'libraryType': ''}, newConfig);
-	var requestUrl = Zotero.ajax.apiRequestString(urlconfig);
 	
-	return library.ajaxRequest(requestUrl, 'GET', {dataType:'json'})
+	return library.ajaxRequest(urlconfig, 'GET', {dataType:'json'})
 	.then(function(response){
 		log.debug('globalItems callback', 3);
 		return(response.data);
@@ -1153,9 +1158,8 @@ Library.prototype.fetchGlobalItem = function(globalKey){
 		'libraryType': '',
 		'itemKey': globalKey
 	}, newConfig);
-	var requestUrl = Zotero.ajax.apiRequestString(urlconfig);
 	
-	return library.ajaxRequest(requestUrl, 'GET', {dataType:'json'})
+	return library.ajaxRequest(urlconfig, 'GET', {dataType:'json'})
 	.then(function(response){
 		log.debug('globalItem callback', 3);
 		return(response.data);
@@ -1229,14 +1233,8 @@ Library.prototype.loadAllTags = function(config={}){
 	//Build config object that should be displayed next and compare to currently displayed
 	var newConfig = Z.extend({}, defaultConfig, config);
 	var urlconfig = Z.extend({}, newConfig);
-	var requestUrl = Zotero.ajax.apiRequestString(urlconfig);
-	var tags = library.tags;
 	
 	//check if already loaded tags are okay to use
-	var loadedConfig = Z.extend({}, defaultConfig, tags.loadedConfig);
-	var loadedConfigRequestUrl = tags.loadedRequestUrl;
-	log.debug('requestUrl: ' + requestUrl, 4);
-	log.debug('loadedConfigRequestUrl: ' + loadedConfigRequestUrl, 4);
 	return new Promise(function(resolve, reject){
 		var continueLoadingCallback = function(tags){
 			log.debug('loadAllTags continueLoadingCallback', 3);
@@ -1269,7 +1267,6 @@ Library.prototype.loadAllTags = function(config={}){
 				library.tagsLoaded = true;
 				library.tags.loaded = true;
 				tags.loadedConfig = config;
-				tags.loadedRequestUrl = requestUrl;
 				
 				//update all tags with tagsVersion
 				for (var i = 0; i < library.tags.tagsArray.length; i++) {

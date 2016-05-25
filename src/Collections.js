@@ -156,7 +156,6 @@ module.exports = function(jsonBody){
 		'libraryType':collections.owningLibrary.libraryType,
 		'libraryID':collections.owningLibrary.libraryID
 	};
-	var requestUrl = Zotero.ajax.apiRequestString(config);
 	
 	//add collectionKeys to collections if they don't exist yet
 	for(i = 0; i < collectionsArray.length; i++){
@@ -206,7 +205,7 @@ module.exports = function(jsonBody){
 		
 		var requestData = JSON.stringify(rawChunkObjects[i]);
 		requestObjects.push({
-			url: requestUrl,
+			url: config,
 			type: 'POST',
 			data: requestData,
 			processData: false,
