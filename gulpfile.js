@@ -33,7 +33,7 @@ function onError(err) {
 function getBuild(dev) {
 	var b = browserify({
 		debug: true,
-		entries: './libzoterojs.js',
+		entries: './src/libzotero.js',
 		standalone: 'Zotero',
 		transform: [
 			['babelify', {
@@ -44,7 +44,7 @@ function getBuild(dev) {
 	}).ignore('w3c-xmlhttprequest');
 
 	return b.bundle()
-		.pipe(source('./libzoterojs.js'))
+		.pipe(source('libzotero.js'))
 		.pipe(buffer())
 		.pipe(plumber({errorHandler: onError}))
 		.pipe(sourcemaps.init({loadMaps: true}))
@@ -63,9 +63,17 @@ gulp.task('default', function() {
 	return getBuild(false);
 });
 
-
 gulp.task('dev', function() {
 	return getBuild(true);
+});
+
+gulp.task('prepublish', function() {
+	return gulp.src('./src/**/*.js')
+			.pipe(babel({
+				'presets': ['es2015'],
+				'plugins': ['transform-flow-strip-types']
+			}))
+			.pipe(gulp.dest('./lib/'));
 });
 
 module.exports = {
