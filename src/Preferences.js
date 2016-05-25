@@ -2,7 +2,7 @@
 
 var log = require('./Log.js').Logger('libZotero:Preferences');
 
-module.exports = function(store, idString) {
+var Preferences = function(store, idString) {
 	this.store = store;
 	this.idString = idString;
 	this.preferencesObject = {};
@@ -19,13 +19,13 @@ module.exports = function(store, idString) {
 	this.load();
 };
 
-module.exports.prototype.setPref = function(key, value) {
+Preferences.prototype.setPref = function(key, value) {
 	var preferences = this;
 	preferences.preferencesObject[key] = value;
 	preferences.persist();
 };
 
-module.exports.prototype.setPrefs = function(newPrefs) {
+Preferences.prototype.setPrefs = function(newPrefs) {
 	var preferences = this;
 	if(typeof(newPrefs) != 'object') {
 		throw new Error('Preferences must be an object');
@@ -34,7 +34,7 @@ module.exports.prototype.setPrefs = function(newPrefs) {
 	preferences.persist();
 };
 
-module.exports.prototype.getPref = function(key){
+Preferences.prototype.getPref = function(key){
 	var preferences = this;
 	if(preferences.preferencesObject[key]){
 		return preferences.preferencesObject[key];
@@ -47,18 +47,18 @@ module.exports.prototype.getPref = function(key){
 	}
 };
 
-module.exports.prototype.getPrefs = function(){
+Preferences.prototype.getPrefs = function(){
 	var preferences = this;
 	return preferences.preferencesObject;
 };
 
-module.exports.prototype.persist = function(){
+Preferences.prototype.persist = function(){
 	var preferences = this;
 	var storageString = 'preferences_' + preferences.idString;
 	preferences.store[storageString] = JSON.stringify(preferences.preferencesObject);
 };
 
-module.exports.prototype.load = function(){
+Preferences.prototype.load = function(){
 	var preferences = this;
 	var storageString = 'preferences_' + preferences.idString;
 	var storageObjectString = preferences.store[storageString];
@@ -69,3 +69,5 @@ module.exports.prototype.load = function(){
 		preferences.preferencesObject = JSON.parse(storageObjectString);
 	}
 };
+
+module.exports = Preferences;

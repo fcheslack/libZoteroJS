@@ -162,7 +162,15 @@ Url.exportUrls = function(config){
 };
 
 Url.relationUrl = function(libraryType, libraryID, itemKey){
-	return 'http://zotero.org/' + libraryType + 's/' + libraryID + '/items/' + itemKey;
+	switch(libraryType){
+		case 'group':
+			return `http://zotero.org/groups/${libraryID}/items/${itemKey}`;
+		case 'user':
+			return `http://zotero.org/users/${libraryID}/items/${itemKey}`;
+		case 'publications':
+			return `http://zotero.org/users/${libraryID}/publications/items/${itemKey}`;
+	}
+	return '';
 };
 
 module.exports = Url;
