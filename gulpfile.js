@@ -33,7 +33,7 @@ function onError(err) {
 function getBuild(dev) {
 	var b = browserify({
 		debug: true,
-		entries: './src/libzoterojs.js',
+		entries: './src/libzotero.js',
 		standalone: 'Zotero',
 		transform: [
 			['babelify', {
