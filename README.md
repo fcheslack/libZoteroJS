@@ -13,7 +13,7 @@ Alternatively you can download the latest release directly from Github:
 
     https://github.com/fcheslack/libZoteroJS
 
-Whichever option you choose, for the browser you will need to include `libzotero.js` from the `dist` on your page. When included API will be accessbile via a global object `Zotero`. Additionaly this file follows an [Universal Module Definition](https://github.com/umdjs/umd) which means you can also use this library in systems that use AMD (e.g. [RequireJS](http://requirejs.org/)) or CommonJS module loader mechanism.
+Whichever option you choose, for the browser you will need to include `libzotero.js` from the `build` on your page. When included API will be accessbile via a global object `Zotero`. Additionaly this file follows an [Universal Module Definition](https://github.com/umdjs/umd) which means you can also use this library in systems that use AMD (e.g. [RequireJS](http://requirejs.org/)) or CommonJS module loader mechanism.
 
 Alternatively, in node environemnt and within Browserify-based builds you can just do:
 
