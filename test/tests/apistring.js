@@ -48,6 +48,10 @@ describe( 'Zotero.Ajax.apiRequestUrl', function() {
 			config = {'target':'children', 'libraryType':'user', 'libraryID':1, 'itemKey':'ASDF1234', 'content':'json', limit:'100'};
 			assert.equal(Zotero.ajax.apiRequestUrl(config), 'https://api.zotero.org/users/1/items/ASDF1234/children');
 			assert.equal(Zotero.ajax.apiQueryString(config), '?content=json&limit=100');
+
+			config = {'target':'children', 'libraryType':'user', 'libraryID':1, 'itemKey':'ASDF1234', 'format':'csljson', limit:'100'};
+			assert.equal(Zotero.ajax.apiRequestUrl(config), 'https://api.zotero.org/users/1/items/ASDF1234/children');
+			assert.equal(Zotero.ajax.apiQueryString(config), '?format=csljson&limit=100');
 			
 			
 			Zotero.config.baseApiUrl = oldBaseApiUrl;
