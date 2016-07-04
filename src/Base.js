@@ -161,6 +161,7 @@ var Zotero = {
 			'order': /^\S*$/,
 			'content': /^((html|json|data|bib|none|bibtex|bookmarks|coins|csljson|mods|refer|rdf_bibliontology|rdf_dc|ris|tei|wikipedia),?)+$/,
 			'include': /^((html|json|data|bib|none|bibtex|bookmarks|coins|csljson|mods|refer|rdf_bibliontology|rdf_dc|ris|tei|wikipedia),?)+$/,
+			'format': /^((atom|bib|json|keys|versions|bibtex|bookmarks|coins|csljson|mods|refer|rdf_bibliontology|rdf_dc|ris|tei|wikipedia),?)+$/,
 			'q': /^.*$/,
 			'fq': /^\S*$/,
 			'itemType': /^\S*$/,
@@ -168,7 +169,6 @@ var Zotero = {
 			'tag': /^.*$/,
 			'tagType': /^(0|1)$/,
 			'key': /^\S*/,
-			'format': /^(json|atom|bib|keys|versions|bibtex|bookmarks|mods|refer|rdf_bibliontology|rdf_dc|rdf_zotero|ris|wikipedia)$/,
 			'style': /^\S*$/,
 			'linkwrap': /^(0|1)*$/
 		},
