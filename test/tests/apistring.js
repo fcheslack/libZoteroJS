@@ -53,6 +53,9 @@ describe( 'Zotero.Ajax.apiRequestUrl', function() {
 			assert.equal(Zotero.ajax.apiRequestUrl(config), 'https://api.zotero.org/users/1/items/ASDF1234/children');
 			assert.equal(Zotero.ajax.apiQueryString(config), '?format=csljson&limit=100');
 			
+			config = {'target':'key', apiKey:'NOTANAPIKEY', libraryType:''};
+			assert.equal(Zotero.ajax.apiRequestUrl(config), 'https://api.zotero.org/keys/NOTANAPIKEY');
+			assert.equal(Zotero.ajax.apiQueryString(config), '?');
 			
 			Zotero.config.baseApiUrl = oldBaseApiUrl;
 		});

@@ -101,7 +101,7 @@ Ajax.apiRequestUrl = function(params){
 			url += '/items/' + params.itemKey + '/children';
 			break;
 		case 'key':
-			url = base + '/users/' + params.libraryID + '/keys/' + params.apiKey;
+			url = base + '/keys/' + params.apiKey;
 			break;
 		case 'deleted':
 			url += '/deleted';
