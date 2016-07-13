@@ -179,8 +179,7 @@ Net.prototype.checkDelay = function(response){
 };
 
 Net.prototype.ajaxRequest = function(requestConfig){
-	log.debug('Zotero.Net.ajaxRequest', 2);
-	log.debug(requestConfig);
+	log.debug('Zotero.Net.ajaxRequest', 3);
 	var net = this;
 	var defaultConfig = {
 		type:'GET',

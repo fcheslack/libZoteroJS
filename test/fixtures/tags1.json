@@ -1,0 +1,393 @@
+[
+    {
+        "tag": "green",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/green",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/green",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 2
+        }
+    },
+    {
+        "tag": "reread",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/reread",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/reread",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 1
+        }
+    },
+    {
+        "tag": "read",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/read",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/read",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 1
+        }
+    },
+    {
+        "tag": "test5",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/test5",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/test5",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 1
+        }
+    },
+    {
+        "tag": "test4",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/test4",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/test4",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 1
+        }
+    },
+    {
+        "tag": "test2",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/test2",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/test2",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 1
+        }
+    },
+    {
+        "tag": "Etag",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/Etag",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/Etag",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 1
+        }
+    },
+    {
+        "tag": "unread",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/unread",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/unread",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 1
+        }
+    },
+    {
+        "tag": "test35",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/test35",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/test35",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 1
+        }
+    },
+    {
+        "tag": "fairness doctrine",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/fairness+doctrine",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/fairness+doctrine",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 1
+        }
+    },
+    {
+        "tag": "test",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/test",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/test",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 3
+        }
+    },
+    {
+        "tag": "winnebago",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/winnebago",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/winnebago",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 1
+        }
+    },
+    {
+        "tag": "how-to",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/how-to",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/how-to",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 4
+        }
+    },
+    {
+        "tag": "minerals management service",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/minerals+management+service",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/minerals+management+service",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 4
+        }
+    },
+    {
+        "tag": "obama  barack",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/obama++barack",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/obama++barack",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 4
+        }
+    },
+    {
+        "tag": "user manual",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/user+manual",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/user+manual",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 4
+        }
+    },
+    {
+        "tag": "offshore drilling and exploration",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/offshore+drilling+and+exploration",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/offshore+drilling+and+exploration",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 4
+        }
+    },
+    {
+        "tag": "oil (petroleum) and gasoline",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/oil+%28petroleum%29+and+gasoline",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/oil+%28petroleum%29+and+gasoline",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 4
+        }
+    },
+    {
+        "tag": "speeches and statements",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/speeches+and+statements",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/speeches+and+statements",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 4
+        }
+    },
+    {
+        "tag": "tag2",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/tag2",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/tag2",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 1
+        }
+    },
+    {
+        "tag": "purple",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/purple",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/purple",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 1
+        }
+    },
+    {
+        "tag": "tag6",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/tag6",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/tag6",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 1
+        }
+    },
+    {
+        "tag": "tag3",
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/users/10150/tags/tag3",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "http://zotero.org/users/10150/tags/tag3",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "type": 0,
+            "numItems": 1
+        }
+    }
+]

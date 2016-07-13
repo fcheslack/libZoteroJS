@@ -49,8 +49,7 @@ module.exports = function(jsonBody){
 };
 
  module.exports.prototype.addCollectionsFromJson = function(jsonBody){
-	log.debug('addCollectionsFromJson');
-	log.debug(jsonBody);
+	log.debug('addCollectionsFromJson', 3);
 	var collections = this;
 	var collectionsAdded = [];
 	jsonBody.forEach(function(collectionObj){

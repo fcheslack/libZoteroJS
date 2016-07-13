@@ -75,3 +75,22 @@ module.exports.prototype.set = function(key, val){
 	return tag;
 };
 
+module.exports.prototype.get = function(key){
+	var tag = this;
+
+	if(key in tag.apiObj){
+		return tag.apiObj[key];
+	}
+	if(key in tag.apiObj.meta){
+		return tag.apiObj.meta[key];
+	}
+
+	switch (key) {
+		case 'tagVersion':
+		case 'version':
+			return tag.version;
+	}
+
+	return null;
+};
+
