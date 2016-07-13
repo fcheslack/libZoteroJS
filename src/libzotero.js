@@ -38,5 +38,8 @@ Zotero.Url = Zotero.url = require('./Url.js');
 Zotero.File = Zotero.file = require('./File.js');
 Zotero.Idb = require('./Idb.js');
 Zotero.Preferences = require('./Preferences.js');
+Zotero.Client = require('./Client.js');
+Zotero.MultiFetch = require('./MultiFetch.js');
+Zotero.TagColors = require('./TagColors.js');
 
 module.exports = Zotero;

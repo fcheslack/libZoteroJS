@@ -566,20 +566,6 @@ Library.prototype.loadSettings = function() {
 		//even if it has settings we don't use or know about
 		library.preferences.setPref('settings', resultObject);
 		
-		//pull out the settings we know we care about so we can query them directly
-		if(resultObject.tagColors){
-			var tagColors = resultObject.tagColors.value;
-			library.preferences.setPref('tagColors', tagColors);
-			/*
-			for(var i = 0; i < tagColors.length; i++){
-				var t = library.tags.getTag(tagColors[i].name);
-				if(t){
-					t.color = tagColors[i].color;
-				}
-			}
-			*/
-		}
-		
 		library.trigger('settingsLoaded');
 		return library.preferences;
 	});
@@ -589,22 +575,18 @@ Library.prototype.loadSettings = function() {
 //the colors they should be
 Library.prototype.matchColoredTags = function(tags) {
 	var library = this;
-	var i;
-	var tagColorsSettings = library.preferences.getPref('tagColors');
-	if(!tagColorsSettings) return [];
-	
-	var tagColorsMap = {};
-	for(i = 0; i < tagColorsSettings.length; i++){
-		tagColorsMap[tagColorsSettings[i].name.toLowerCase()] = tagColorsSettings[i].color;
-	}
-	var resultTags = [];
-	
-	for(i = 0; i < tags.length; i++){
-		if(tagColorsMap.hasOwnProperty(tags[i]) ) {
-			resultTags.push(tagColorsMap[tags[i]]);
+
+	if(!library.tagColors){
+		//pull out the settings we know we care about so we can query them directly
+		let tagColors = [];
+		let settings = library.preferences.getPref('settings');
+		if(settings && settings.hasOwnProperty('tagColors')){
+			tagColors = settings.tagColors.value;
 		}
+		library.tagColors = new Zotero.TagColors(tagColors);
 	}
-	return resultTags;
+	
+	return library.tagColors.match(tags);
 };
 
 /**

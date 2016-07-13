@@ -267,7 +267,7 @@ var Utils = {
 			return false;
 		}
 		
-		var urlconfig = {'target':'key', 'libraryType':'user', 'libraryID':userID, 'apiKey':key};
+		var urlconfig = {'target':'key', 'apiKey':key, 'libraryType':''};
 		
 		return Zotero.ajaxRequest(urlconfig)
 		.then(function(response){
