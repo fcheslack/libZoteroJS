@@ -5,8 +5,6 @@ var should = require('chai').should();
 var expect = require('chai').expect;
 var Zotero = require('../../src/libzotero.js');
 
-Zotero.init();
-
 var groupjson = require('../fixtures/group1.json');
 
 describe('Zotero.Group', function(){

@@ -9,8 +9,6 @@ Zotero.testing = {
 	libraryID: 0,
 	libraryType: 'user'
 };
-Zotero.init();
-
 
 describe( 'Set/Get item properties', function() {
 	it('should correctly set/get item properties', function(){

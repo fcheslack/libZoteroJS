@@ -12,8 +12,6 @@ Zotero.testing = {
 	libraryID: 0,
 	libraryType: 'user'
 };
-Zotero.init();
-
 
 describe.skip( 'Parse Collections Feed', function(){
 	it('should correctly parse the collections feed without error', function(){

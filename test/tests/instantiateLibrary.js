@@ -9,8 +9,6 @@ Zotero.testing = {
 	libraryID: 0,
 	libraryType: 'user'
 };
-Zotero.init();
-
 
 describe('new Zotero.Library', function() {
 	it( 'should instantiate user library', function() {

@@ -9,8 +9,6 @@ Zotero.testing = {
 	libraryID: 0,
 	libraryType: 'user'
 };
-Zotero.init();
-
 
 /*
  * Test cases:

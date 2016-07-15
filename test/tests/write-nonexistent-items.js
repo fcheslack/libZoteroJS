@@ -9,9 +9,6 @@ Zotero.testing = {
 	libraryID: 0,
 	libraryType: 'user'
 };
-Zotero.init();
-
-
 
 describe.skip( 'Write Nonexistent Items', function(){
 	it("should write nonexistent items", function(){

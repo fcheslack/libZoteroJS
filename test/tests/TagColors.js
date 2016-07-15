@@ -5,8 +5,6 @@ var should = require('chai').should();
 var expect = require('chai').expect;
 var Zotero = require('../../src/libzotero.js');
 
-Zotero.init();
-
 describe('Zotero', function(){
 	describe('TagColors', function() {
 		let tagColors;

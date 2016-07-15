@@ -9,8 +9,6 @@ Zotero.testing = {
 	libraryID: 0,
 	libraryType: 'user'
 };
-Zotero.init();
-
 
 describe.skip( 'Zotero.Idb', function() {
 	it("test Zotero IDB", function(){

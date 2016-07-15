@@ -6,7 +6,7 @@ var expect = require("chai").expect;
 
 var Utils = require("../../src/Utils.js");
 
-describe('Utils', function() {
+describe('Zotero.Utils', function() {
 	describe('#randomString()', function () {
 		it("should return an 8 character string", function(){
 			var s = Utils.randomString(8);

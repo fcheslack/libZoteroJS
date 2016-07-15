@@ -1,4 +1,7 @@
 // use strict;
+
+var log = require('./Log.js').Logger('libZotero');
+
 if(typeof window === 'undefined') {
 	var globalScope = global;
 	if(!globalScope.XMLHttpRequest) {
@@ -11,7 +14,7 @@ if(typeof window === 'undefined') {
 	}
 }
 
-var Zotero = require('./Base.js');
+var Zotero = {};
 globalScope.Zotero = globalScope.Z = Zotero;
 Zotero.Cache = require('./Cache.js');
 Zotero.Ajax = Zotero.ajax = require('./Ajax.js');
@@ -52,5 +55,32 @@ Zotero.eventmanager = {callbacks: {}};
 let {trigger, listen} = require('./Events.js');
 Zotero.trigger = trigger;
 Zotero.listen = listen;
+
+Zotero.libraries = {};
+Zotero.config = require('./DefaultConfig.js');
+
+Zotero.catchPromiseError = function(err){
+	log.error(err);
+};
+
+Zotero.ajaxRequest = function(url, type, options){
+	log.debug('Zotero.ajaxRequest ==== ' + url, 3);
+	if(!type){
+		type = 'GET';
+	}
+	if(!options){
+		options = {};
+	}
+	var requestObject = {
+		url: url,
+		type: type
+	};
+	requestObject = Z.extend({}, requestObject, options);
+	log.debug(requestObject, 3);
+	return Zotero.net.queueRequest(requestObject);
+};
+
+Zotero.init = require('./Init.js');
+Zotero.init();
 
 module.exports = Zotero;

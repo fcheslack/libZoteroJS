@@ -9,8 +9,6 @@ Zotero.testing = {
 	libraryID: 0,
 	libraryType: 'user'
 };
-Zotero.init();
-
 
 describe.skip( 'Parse Tags Feed', function(){
 	it('should correctly parse the tags feed without error', function(){

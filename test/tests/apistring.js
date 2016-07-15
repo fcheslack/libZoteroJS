@@ -9,7 +9,6 @@ Zotero.testing = {
 	libraryID: 0,
 	libraryType: 'user'
 };
-Zotero.init();
 
 describe( 'Zotero.Ajax.apiRequestUrl', function() {
 	describe('#apiRequest()', function () {
