@@ -1,6 +1,9 @@
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Ajax');
+
+var Validator = require('./Validator.js');
+
 var Ajax = {};
 
 Ajax.errorCallback = function(response){
@@ -30,8 +33,8 @@ Ajax.apiRequestUrl = function(params){
 			params[key] = val[0];
 		}
 		
-		//validate params based on patterns in Zotero.validate
-		if(Zotero.validator.validate(val, key) === false){
+		//validate params based on patterns in Zotero.Validator
+		if(Validator.validate(val, key) === false){
 			//warn on invalid parameter and drop from params that will be used
 			log.warn('API argument failed validation: ' + key + ' cannot be ' + val);
 			log.warn(params);
