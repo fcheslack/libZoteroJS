@@ -46,9 +46,7 @@ Zotero.MultiFetch = require('./MultiFetch.js');
 Zotero.TagColors = require('./TagColors.js');
 Zotero.Validator = require('./Validator.js');
 
-let {extend, deepExtend} = require('./Extend.js');
-Zotero.extend = extend;
-Zotero.deepExtend = deepExtend;
+Zotero.extend = require('./Extend.js');
 
 //non-DOM (jquery) event management
 Zotero.eventmanager = {callbacks: {}};
