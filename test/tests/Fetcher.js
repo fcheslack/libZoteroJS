@@ -11,9 +11,9 @@ var config = {
 	'libraryID':3
 };
 
-var fetcher = new Zotero.MultiFetch(config);
+var fetcher = new Zotero.Fetcher(config);
 
-describe('Zotero.MultiFetch', function(){
+describe.skip('Zotero.Fetcher', function(){
 	describe('Fetchall', function() {
 		it('should fetch all publications', function(done){
 			var p = fetcher.fetchAll();
@@ -21,7 +21,7 @@ describe('Zotero.MultiFetch', function(){
 				assert.lengthOf(publications, 4);
 				done();
 			}).catch(function(response){
-				log.debug('caught error in Zotero.MultiFetch Fetchall test');
+				log.debug('caught error in Zotero.Fetcher Fetchall test');
 				log.debug(response);
 			});
 		});

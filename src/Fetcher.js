@@ -1,11 +1,11 @@
 'use strict';
 
-var log = require('./Log.js').Logger('libZotero:MultiFetch');
+var log = require('./Log.js').Logger('libZotero:Fetcher');
 
-var MultiFetch = function(config={}){
+var Fetcher = function(config={}){
 	let defaultConfig = {
 		start: 0,
-		limit: 50
+		limit: 25
 	};
 	
 	this.config = Z.extend({}, defaultConfig, config);
@@ -16,7 +16,7 @@ var MultiFetch = function(config={}){
 	this.resultInfo = {};
 };
 
-MultiFetch.prototype.next = function(){
+Fetcher.prototype.next = function(){
 	if(this.hasMore == false){
 		return Promise.resolve(null);
 	}
@@ -42,7 +42,7 @@ MultiFetch.prototype.next = function(){
 	return p;
 };
 
-MultiFetch.prototype.fetchAll = function(){
+Fetcher.prototype.fetchAll = function(){
 	let results = [];
 	let tryNext = () => {
 		if(this.hasMore){
@@ -57,4 +57,4 @@ MultiFetch.prototype.fetchAll = function(){
 	return tryNext();
 };
 
-module.exports = MultiFetch;
+module.exports = Fetcher;

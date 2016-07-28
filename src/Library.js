@@ -921,6 +921,7 @@ Library.prototype.emptyTrash = function(){
 	});
 };
 
+//gets the full set of item keys that satisfy `config`
 Library.prototype.loadItemKeys = function(config){
 	log.debug('Zotero.Library.loadItemKeys', 3);
 	var library = this;
@@ -932,6 +933,9 @@ Library.prototype.loadItemKeys = function(config){
 	});
 };
 
+//loads a set of items specified by `config`
+//The items are added to this Library's items container, as well included as an array of Zotero.Item
+//on the returned promise as `response.loadedItems`
 Library.prototype.loadItems = function(config){
 	log.debug('Zotero.Library.loadItems', 3);
 	var library = this;

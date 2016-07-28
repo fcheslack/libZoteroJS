@@ -42,7 +42,7 @@ Zotero.File = Zotero.file = require('./File.js');
 Zotero.Idb = require('./Idb.js');
 Zotero.Preferences = require('./Preferences.js');
 Zotero.Client = require('./Client.js');
-Zotero.MultiFetch = require('./MultiFetch.js');
+Zotero.Fetcher = require('./Fetcher.js');
 Zotero.TagColors = require('./TagColors.js');
 Zotero.Validator = require('./Validator.js');
 Zotero.RequestConfig = require('./RequestConfig.js');

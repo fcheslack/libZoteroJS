@@ -2,7 +2,7 @@
 
 var log = require('./Log.js').Logger('libZotero:Client');
 
-var MultiFetch = require('./MultiFetch.js');
+var Fetcher = require('./Fetcher.js');
 
 var Client = function(apiKey=''){
 	this._apiKey = apiKey;
@@ -53,7 +53,7 @@ Client.prototype.getUserPublications = function(userID, config={}) {
 		'libraryID':userID
 	});
 	
-	let fetcher = new MultiFetch(urlconfig);
+	let fetcher = new Fetcher(urlconfig);
 	return fetcher.fetchAll().then((results)=>{
 		return results.map(function(itemObj){
 			return new Zotero.Item(itemObj);
