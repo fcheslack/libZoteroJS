@@ -5159,6 +5159,9 @@ module.exports = function (value) {
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Ajax');
+
+var Validator = require('./Validator.js');
+
 var Ajax = {};
 
 Ajax.errorCallback = function (response) {
@@ -5188,8 +5191,8 @@ Ajax.apiRequestUrl = function (params) {
 			params[key] = val[0];
 		}
 
-		//validate params based on patterns in Zotero.validate
-		if (Zotero.validator.validate(val, key) === false) {
+		//validate params based on patterns in Zotero.Validator
+		if (Validator.validate(val, key) === false) {
 			//warn on invalid parameter and drop from params that will be used
 			log.warn('API argument failed validation: ' + key + ' cannot be ' + val);
 			log.warn(params);
@@ -5397,7 +5400,7 @@ Ajax.downloadBlob = function (url) {
 
 module.exports = Ajax;
 
-},{"./Log.js":115}],97:[function(require,module,exports){
+},{"./Log.js":119,"./Validator.js":131}],97:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -5439,7 +5442,7 @@ module.exports.prototype.fieldComparer = function (attr) {
 	}
 };
 
-},{"./Log.js":115}],98:[function(require,module,exports){
+},{"./Log.js":119}],98:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:ApiResponse');
@@ -5500,346 +5503,7 @@ module.exports.prototype.parseResponse = function (response) {
 	}
 };
 
-},{"./Log.js":115}],99:[function(require,module,exports){
-'use strict';
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-var log = require('./Log.js').Logger('libZotero:Base');
-
-var Zotero = {
-	callbacks: {},
-	offline: {},
-	temp: {},
-
-	config: { librarySettings: {},
-		baseApiUrl: 'https://apidev.zotero.org',
-		baseWebsiteUrl: 'https://test.zotero.net',
-		baseFeedUrl: 'https://apidev.zotero.org',
-		baseZoteroWebsiteUrl: 'https://test.zotero.net',
-		baseDownloadUrl: 'https://test.zotero.net',
-		nonparsedBaseUrl: '',
-		debugLogEndpoint: '',
-		storeDebug: true,
-		directDownloads: true,
-		proxyPath: '/proxyrequest',
-		ignoreLoggedInStatus: false,
-		storePrefsRemote: true,
-		preferUrlItem: true,
-		sessionAuth: false,
-		proxy: false,
-		apiKey: '',
-		apiVersion: 3,
-		locale: 'en-US',
-		cacheStoreType: 'localStorage',
-		preloadCachedLibrary: true,
-		sortOrdering: {
-			'dateAdded': 'desc',
-			'dateModified': 'desc',
-			'date': 'desc',
-			'year': 'desc',
-			'accessDate': 'desc',
-			'title': 'asc',
-			'creator': 'asc'
-		},
-		defaultSortColumn: 'title',
-		defaultSortOrder: 'asc',
-		largeFields: {
-			'title': 1,
-			'abstractNote': 1,
-			'extra': 1
-		},
-		richTextFields: {
-			'note': 1
-		},
-		maxFieldSummaryLength: { title: 60 },
-		exportFormats: ['bibtex', 'bookmarks', 'mods', 'refer', 'rdf_bibliontology', 'rdf_dc', 'rdf_zotero', 'ris', 'wikipedia'],
-		exportFormatsMap: {
-			'bibtex': 'BibTeX',
-			'bookmarks': 'Bookmarks',
-			'mods': 'MODS',
-			'refer': 'Refer/BibIX',
-			'rdf_bibliontology': 'Bibliontology RDF',
-			'rdf_dc': 'Unqualified Dublin Core RDF',
-			'rdf_zotero': 'Zotero RDF',
-			'ris': 'RIS',
-			'wikipedia': 'Wikipedia Citation Templates'
-		},
-		defaultApiArgs: {
-			'order': 'title',
-			'sort': 'asc',
-			'limit': 50,
-			'start': 0
-		}
-	},
-	/*
- debug: function(debugstring, level){
- 	var prefLevel = 3;
- 	if(Zotero.config.storeDebug){
- 		if(level <= prefLevel){
- 			Zotero.debugstring += 'DEBUG:' + debugstring + '\n';
- 		}
- 	}
- 	if(typeof console == 'undefined'){
- 		return;
- 	}
- 	if(typeof(level) !== 'number'){
- 		level = 1;
- 	}
- 	if(Zotero.preferences !== undefined){
- 		prefLevel = Zotero.preferences.getPref('debug_level');
- 	}
- 	if(level <= prefLevel) {
- 		console.log(debugstring);
- 	}
- },
- 
- warn: function(warnstring){
- 	if(Zotero.config.storeDebug){
- 		Zotero.debugstring += 'WARN:' + warnstring + '\n';
- 	}
- 	if(typeof console == 'undefined' || typeof console.warn == 'undefined'){
- 		this.debug(warnstring);
- 	}
- 	else{
- 		console.warn(warnstring);
- 	}
- },
- 
- error: function(errorstring){
- 	if(Zotero.config.storeDebug){
- 		Zotero.debugstring += 'ERROR:' + errorstring + '\n';
- 	}
- 	if(typeof console == 'undefined' || typeof console.error == 'undefined'){
- 		this.debug(errorstring);
- 	}
- 	else{
- 		console.error(errorstring);
- 	}
- },
- */
-	submitDebugLog: function submitDebugLog() {
-		Zotero.net.ajax({
-			url: Zotero.config.debugLogEndpoint,
-			data: { 'debug_string': Zotero.debugstring }
-		}).then(function (xhr) {
-			var data = JSON.parse(xhr.responseText);
-			if (data.logID) {
-				alert('ZoteroWWW debug logID:' + data.logID);
-			} else if (data.error) {
-				alert('Error submitting ZoteroWWW debug log:' + data.error);
-			}
-		});
-	},
-
-	catchPromiseError: function catchPromiseError(err) {
-		log.error(err);
-	},
-
-	libraries: {},
-
-	validator: {
-		patterns: {
-			//'itemKey': /^([A-Z0-9]{8,},?)+$/,
-			'itemKey': /^.+$/,
-			'collectionKey': /^([A-Z0-9]{8,})|trash$/,
-			//'tag': /^[^#]*$/,
-			'libraryID': /^[0-9]+$/,
-			'libraryType': /^(user|group|)$/,
-			'target': /^(items?|collections?|tags|children|deleted|userGroups|key|settings|publications)$/,
-			'targetModifier': /^(top|file|file\/view)$/,
-
-			//get params
-			'sort': /^(asc|desc)$/,
-			'start': /^[0-9]*$/,
-			'limit': /^[0-9]*$/,
-			'order': /^\S*$/,
-			'content': /^((html|json|data|bib|none|bibtex|bookmarks|coins|csljson|mods|refer|rdf_bibliontology|rdf_dc|ris|tei|wikipedia),?)+$/,
-			'include': /^((html|json|data|bib|none|bibtex|bookmarks|coins|csljson|mods|refer|rdf_bibliontology|rdf_dc|ris|tei|wikipedia),?)+$/,
-			'format': /^((atom|bib|json|keys|versions|bibtex|bookmarks|coins|csljson|mods|refer|rdf_bibliontology|rdf_dc|ris|tei|wikipedia),?)+$/,
-			'q': /^.*$/,
-			'fq': /^\S*$/,
-			'itemType': /^\S*$/,
-			'locale': /^\S*$/,
-			'tag': /^.*$/,
-			'tagType': /^(0|1)$/,
-			'key': /^\S*/,
-			'style': /^\S*$/,
-			'linkwrap': /^(0|1)*$/
-		},
-
-		validate: function validate(arg, type) {
-			log.debug('Zotero.validate', 4);
-			if (arg === '') {
-				return null;
-			} else if (arg === null) {
-				return true;
-			}
-			log.debug(arg + ' ' + type, 4);
-			var patterns = this.patterns;
-
-			if (patterns.hasOwnProperty(type)) {
-				return patterns[type].test(arg);
-			} else {
-				return null;
-			}
-		}
-	},
-
-	_logEnabled: 0,
-	enableLogging: function enableLogging() {
-		Zotero._logEnabled++;
-		if (Zotero._logEnabled > 0) {
-			//TODO: enable debug_log?
-		}
-	},
-
-	disableLogging: function disableLogging() {
-		Zotero._logEnabled--;
-		if (Zotero._logEnabled <= 0) {
-			Zotero._logEnabled = 0;
-			//TODO: disable debug_log?
-		}
-	},
-
-	init: function init() {
-		var store;
-		if (Zotero.config.cacheStoreType == 'localStorage' && typeof localStorage != 'undefined') {
-			store = localStorage;
-		} else if (Zotero.config.cacheStoreType == 'sessionStorage' && typeof sessionStorage != 'undefined') {
-			store = sessionStorage;
-		} else {
-			store = {};
-		}
-		Zotero.store = store;
-
-		Zotero.cache = new Zotero.Cache(store);
-
-		//initialize global preferences object
-		Zotero.preferences = new Zotero.Preferences(Zotero.store, 'global');
-
-		//get localized item constants if not stored in localstorage
-		var locale = 'en-US';
-		if (Zotero.config.locale) {
-			locale = Zotero.config.locale;
-		}
-		locale = 'en-US';
-	}
-};
-
-Zotero.ajaxRequest = function (url, type, options) {
-	log.debug('Zotero.ajaxRequest ==== ' + url, 3);
-	if (!type) {
-		type = 'GET';
-	}
-	if (!options) {
-		options = {};
-	}
-	var requestObject = {
-		url: url,
-		type: type
-	};
-	requestObject = Z.extend({}, requestObject, options);
-	log.debug(requestObject, 3);
-	return Zotero.net.queueRequest(requestObject);
-};
-
-//non-DOM (jquery) event management
-Zotero.eventmanager = {
-	callbacks: {}
-};
-
-Zotero.trigger = function (eventType) {
-	var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-	var filter = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
-
-	if (filter) {
-		log.debug('filter is not false', 3);
-		eventType += '_' + filter;
-	}
-	log.debug('Triggering eventful ' + eventType, 3);
-
-	data.zeventful = true;
-	// if(data.triggeringElement === null || data.triggeringElement === undefined){
-	// 	data.triggeringElement = J('#eventful');
-	// }
-
-	try {
-		if (Zotero.eventmanager.callbacks.hasOwnProperty(eventType)) {
-			var callbacks = Zotero.eventmanager.callbacks[eventType];
-			callbacks.forEach(function (callback) {
-				var cdata = Z.extend({}, data, callback.data);
-				var e = {
-					data: cdata
-				};
-				callback.f(e);
-			});
-		}
-	} catch (e) {
-		log.error('failed triggering:' + eventType);
-		log.error(e);
-	}
-};
-
-Zotero.listen = function (events, handler, data, filter) {
-	log.debug('Zotero.listen: ' + events, 3);
-	//append filter to event strings if it's specified
-	var eventsArray = events.split(' ');
-	if (eventsArray.length > 0 && filter) {
-		for (var i = 0; i < eventsArray.length; i++) {
-			eventsArray[i] += '_' + filter;
-		}
-	}
-	eventsArray.forEach(function (ev) {
-		if (Zotero.eventmanager.callbacks.hasOwnProperty(ev)) {
-			Zotero.eventmanager.callbacks[ev].push({
-				data: data,
-				f: handler
-			});
-		} else {
-			Zotero.eventmanager.callbacks[ev] = [{
-				data: data,
-				f: handler
-			}];
-		}
-	});
-};
-
-Zotero.extend = function () {
-	var res = {};
-	for (var i = 0; i < arguments.length; i++) {
-		var a = arguments[i];
-		if ((typeof a === 'undefined' ? 'undefined' : _typeof(a)) != 'object') {
-			continue;
-		}
-		Object.keys(a).forEach(function (key) {
-			res[key] = a[key];
-		});
-	}
-	return res;
-};
-
-Zotero.deepExtend = function (out) {
-	out = out || {};
-
-	for (var i = 1; i < arguments.length; i++) {
-		var obj = arguments[i];
-
-		if (!obj) continue;
-
-		for (var key in obj) {
-			if (obj.hasOwnProperty(key)) {
-				if (_typeof(obj[key]) === 'object') out[key] = Zotero.deepExtend(out[key], obj[key]);else out[key] = obj[key];
-			}
-		}
-	}
-
-	return out;
-};
-
-module.exports = Zotero;
-
-},{"./Log.js":115}],100:[function(require,module,exports){
+},{"./Log.js":119}],99:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Cache');
@@ -5937,10 +5601,12 @@ module.exports.prototype.clear = function () {
 	}
 };
 
-},{"./Log.js":115}],101:[function(require,module,exports){
+},{"./Log.js":119}],100:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Client');
+
+var Fetcher = require('./Fetcher.js');
 
 var Client = function Client() {
 	var apiKey = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
@@ -5988,29 +5654,17 @@ Client.prototype.getUserPublications = function (userID) {
 		include: 'bib'
 	};
 
-	//Build config object that should be displayed next and compare to currently displayed
-	var newConfig = Z.extend({}, defaultConfig, config);
-
-	var urlconfig = Z.extend({
+	var urlconfig = Z.extend({}, defaultConfig, config, {
 		'target': 'publications',
 		'libraryType': 'user',
 		'libraryID': userID
-	}, newConfig);
+	});
 
-	var publicationItems = [];
-	var fetcher = new MultiFetch(urlconfig);
-
-	return Zotero.ajaxRequest(urlconfig).then(function (response) {
-		log.debug('loadPublications proxied callback', 3);
-		var publicationItems = [];
-		var parsedItemJson = response.data;
-		parsedItemJson.forEach(function (itemObj) {
-			var item = new Zotero.Item(itemObj);
-			publicationItems.push(item);
+	var fetcher = new Fetcher(urlconfig);
+	return fetcher.fetchAll().then(function (results) {
+		return results.map(function (itemObj) {
+			return new Zotero.Item(itemObj);
 		});
-
-		response.publicationItems = publicationItems;
-		return response;
 	});
 };
 
@@ -6039,61 +5693,9 @@ Client.prototype.deleteKey = function () {
 	return this.net.ajax();
 };
 
-var MultiFetch = function MultiFetch() {
-	var config = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
-	var defaultConfig = {
-		start: 0,
-		limit: 50
-	};
-
-	this.config = Z.extend({}, defaultConfig, config);
-	this.hasMore = true;
-};
-
-MultiFetch.prototype.next = function () {
-	var _this = this;
-
-	if (this.hasMore == false) {
-		return Promise.resolve(null);
-	}
-
-	var nconfig = Z.extend({}, this.config);
-	var p = Zotero.ajaxRequest(nconfig);
-	p.then(function (response) {
-		if (response.parsedLinks.hasOwnProperty('next')) {
-			_this.hasMore = true;
-		} else {
-			_this.hasMore = false;
-		}
-
-		return response;
-	});
-
-	nconfig.start = nconfig.start + nconfig.limit;
-	return p;
-};
-
-MultiFetch.prototype.fetchAll = function () {
-	var _this2 = this;
-
-	var results = [];
-	var tryNext = function tryNext() {
-		if (_this2.hasMore) {
-			return _this2.next().then(function (response) {
-				results = results.concat(response.data);
-			}).then(tryNext);
-		} else {
-			return Promise.resolve(results);
-		}
-	};
-
-	return tryNext();
-};
-
 module.exports = Client;
 
-},{"./Log.js":115,"./Net.js":117}],102:[function(require,module,exports){
+},{"./Fetcher.js":108,"./Log.js":119,"./Net.js":120}],101:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Collection');
@@ -6385,7 +5987,7 @@ module.exports.prototype.set = function (key, val) {
 	}
 };
 
-},{"./Log.js":115}],103:[function(require,module,exports){
+},{"./Log.js":119}],102:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Collections');
@@ -6621,7 +6223,7 @@ module.exports.prototype.writeCollections = function (collectionsArray) {
 	});
 };
 
-},{"./Log.js":115}],104:[function(require,module,exports){
+},{"./Log.js":119}],103:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Container');
@@ -6866,7 +6468,74 @@ module.exports.prototype.extractKey = function (object) {
 	return object.get('key');
 };
 
-},{"./Log.js":115}],105:[function(require,module,exports){
+},{"./Log.js":119}],104:[function(require,module,exports){
+'use strict';
+
+var defaultConfig = {
+	librarySettings: {},
+	baseApiUrl: 'https://api.zotero.org',
+	baseWebsiteUrl: 'https://zotero.org',
+	baseFeedUrl: 'https://api.zotero.org',
+	baseZoteroWebsiteUrl: 'https://www.zotero.org',
+	baseDownloadUrl: 'https://www.zotero.org',
+	nonparsedBaseUrl: '',
+	debugLogEndpoint: '',
+	storeDebug: true,
+	directDownloads: true,
+	proxyPath: '/proxyrequest',
+	ignoreLoggedInStatus: false,
+	storePrefsRemote: true,
+	preferUrlItem: true,
+	sessionAuth: false,
+	proxy: false,
+	apiKey: '',
+	apiVersion: 3,
+	locale: 'en-US',
+	cacheStoreType: 'localStorage',
+	preloadCachedLibrary: true,
+	sortOrdering: {
+		'dateAdded': 'desc',
+		'dateModified': 'desc',
+		'date': 'desc',
+		'year': 'desc',
+		'accessDate': 'desc',
+		'title': 'asc',
+		'creator': 'asc'
+	},
+	defaultSortColumn: 'title',
+	defaultSortOrder: 'asc',
+	largeFields: {
+		'title': 1,
+		'abstractNote': 1,
+		'extra': 1
+	},
+	richTextFields: {
+		'note': 1
+	},
+	maxFieldSummaryLength: { title: 60 },
+	exportFormats: ['bibtex', 'bookmarks', 'mods', 'refer', 'rdf_bibliontology', 'rdf_dc', 'rdf_zotero', 'ris', 'wikipedia'],
+	exportFormatsMap: {
+		'bibtex': 'BibTeX',
+		'bookmarks': 'Bookmarks',
+		'mods': 'MODS',
+		'refer': 'Refer/BibIX',
+		'rdf_bibliontology': 'Bibliontology RDF',
+		'rdf_dc': 'Unqualified Dublin Core RDF',
+		'rdf_zotero': 'Zotero RDF',
+		'ris': 'RIS',
+		'wikipedia': 'Wikipedia Citation Templates'
+	},
+	defaultApiArgs: {
+		'order': 'title',
+		'sort': 'asc',
+		'limit': 50,
+		'start': 0
+	}
+};
+
+module.exports = defaultConfig;
+
+},{}],105:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Deleted');
@@ -6888,7 +6557,160 @@ module.exports = function (data) {
 //the next time we finish a deleted request
 module.exports.prototype.addWaiter = function () {};
 
-},{"./Log.js":115}],106:[function(require,module,exports){
+},{"./Log.js":119}],106:[function(require,module,exports){
+'use strict';
+
+var log = require('./Log.js').Logger('libZotero:Events');
+
+var trigger = function trigger(eventType) {
+	var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+	var filter = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+
+	if (filter) {
+		log.debug('filter is not false', 3);
+		eventType += '_' + filter;
+	}
+	log.debug('Triggering eventful ' + eventType, 3);
+
+	data.zeventful = true;
+	// if(data.triggeringElement === null || data.triggeringElement === undefined){
+	// 	data.triggeringElement = J('#eventful');
+	// }
+
+	try {
+		if (Zotero.eventmanager.callbacks.hasOwnProperty(eventType)) {
+			var callbacks = Zotero.eventmanager.callbacks[eventType];
+			callbacks.forEach(function (callback) {
+				var cdata = Z.extend({}, data, callback.data);
+				var e = {
+					data: cdata
+				};
+				callback.f(e);
+			});
+		}
+	} catch (e) {
+		log.error('failed triggering:' + eventType);
+		log.error(e);
+	}
+};
+
+var listen = function listen(events, handler, data, filter) {
+	log.debug('Zotero.listen: ' + events, 3);
+	//append filter to event strings if it's specified
+	var eventsArray = events.split(' ');
+	if (eventsArray.length > 0 && filter) {
+		for (var i = 0; i < eventsArray.length; i++) {
+			eventsArray[i] += '_' + filter;
+		}
+	}
+	eventsArray.forEach(function (ev) {
+		if (Zotero.eventmanager.callbacks.hasOwnProperty(ev)) {
+			Zotero.eventmanager.callbacks[ev].push({
+				data: data,
+				f: handler
+			});
+		} else {
+			Zotero.eventmanager.callbacks[ev] = [{
+				data: data,
+				f: handler
+			}];
+		}
+	});
+};
+
+module.exports = { trigger: trigger, listen: listen };
+
+},{"./Log.js":119}],107:[function(require,module,exports){
+'use strict';
+
+var extend = function extend() {
+	return Object.assign.apply(Object, arguments);
+	/*
+ var res = {};
+ for(var i = 0; i < arguments.length; i++){
+ 	var a = arguments[i];
+ 	if(typeof a != 'object'){
+ 		continue;
+ 	}
+ 	Object.keys(a).forEach(function(key){
+ 		res[key] = a[key];
+ 	});
+ }
+ return res;
+ */
+};
+
+module.exports = extend;
+
+},{}],108:[function(require,module,exports){
+'use strict';
+
+var log = require('./Log.js').Logger('libZotero:Fetcher');
+
+var Fetcher = function Fetcher() {
+	var config = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+	var defaultConfig = {
+		start: 0,
+		limit: 25
+	};
+
+	this.config = Z.extend({}, defaultConfig, config);
+	this.hasMore = true;
+
+	this.results = [];
+	this.totalResults = null;
+	this.resultInfo = {};
+};
+
+Fetcher.prototype.next = function () {
+	var _this = this;
+
+	if (this.hasMore == false) {
+		return Promise.resolve(null);
+	}
+
+	var urlconfig = Z.extend({}, this.config);
+	var p = Zotero.net.queueRequest({ url: urlconfig });
+	p.then(function (response) {
+		if (response.parsedLinks.hasOwnProperty('next')) {
+			_this.hasMore = true;
+		} else {
+			_this.hasMore = false;
+		}
+
+		_this.results = _this.results.concat(response.data);
+		_this.totalResults = response.totalResults;
+
+		return response;
+	});
+
+	var nconfig = Z.extend({}, urlconfig);
+	nconfig.start = nconfig.start + nconfig.limit;
+	this.config = nconfig;
+	return p;
+};
+
+Fetcher.prototype.fetchAll = function () {
+	var _this2 = this;
+
+	var results = [];
+	var tryNext = function tryNext() {
+		if (_this2.hasMore) {
+			return _this2.next().then(function (response) {
+				results = results.concat(response.data);
+			}).then(tryNext);
+		} else {
+			return Promise.resolve(results);
+		}
+	};
+
+	return tryNext();
+};
+
+module.exports = Fetcher;
+
+},{"./Log.js":119}],109:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:File');
@@ -6970,7 +6792,7 @@ module.exports.uploadFile = function (uploadInfo, fileInfo) {
 	//from JS)
 };
 
-},{"./Log.js":115,"spark-md5":92}],107:[function(require,module,exports){
+},{"./Log.js":119,"spark-md5":92}],110:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Group');
@@ -7065,7 +6887,7 @@ module.exports.prototype.accessMap = {
 	}
 };
 
-},{"./Log.js":115}],108:[function(require,module,exports){
+},{"./Log.js":119}],111:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Groups');
@@ -7114,7 +6936,7 @@ module.exports.prototype.fetchUserGroups = function (userID, apikey) {
 	});
 };
 
-},{"./Log.js":115}],109:[function(require,module,exports){
+},{"./Log.js":119}],112:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Idb');
@@ -7721,7 +7543,29 @@ module.exports.Library.prototype.intersectAll = function (arrs) {
 	return result;
 };
 
-},{"./Log.js":115}],110:[function(require,module,exports){
+},{"./Log.js":119}],113:[function(require,module,exports){
+'use strict';
+
+var init = function init() {
+	var store;
+	if (Zotero.config.cacheStoreType == 'localStorage' && typeof localStorage != 'undefined') {
+		store = localStorage;
+	} else if (Zotero.config.cacheStoreType == 'sessionStorage' && typeof sessionStorage != 'undefined') {
+		store = sessionStorage;
+	} else {
+		store = {};
+	}
+	Zotero.store = store;
+
+	Zotero.cache = new Zotero.Cache(store);
+
+	//initialize global preferences object
+	Zotero.preferences = new Zotero.Preferences(Zotero.store, 'global');
+};
+
+module.exports = init;
+
+},{}],114:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Item');
@@ -8615,7 +8459,7 @@ Object.keys(ItemMaps).forEach(function (key) {
 
 module.exports = Item;
 
-},{"./ItemMaps.js":111,"./Log.js":115,"striptags":93}],111:[function(require,module,exports){
+},{"./ItemMaps.js":115,"./Log.js":119,"striptags":93}],115:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:ItemMaps');
@@ -8945,7 +8789,7 @@ ItemMaps.citePaperJournalArticleURL = false;
 
 module.exports = ItemMaps;
 
-},{"./Log.js":115}],112:[function(require,module,exports){
+},{"./Log.js":119}],116:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Items');
@@ -9203,7 +9047,7 @@ module.exports.prototype.writeItems = function (itemsArray) {
 	});
 };
 
-},{"./Log.js":115}],113:[function(require,module,exports){
+},{"./Log.js":119}],117:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Library');
@@ -9728,20 +9572,6 @@ Library.prototype.loadSettings = function () {
 		//even if it has settings we don't use or know about
 		library.preferences.setPref('settings', resultObject);
 
-		//pull out the settings we know we care about so we can query them directly
-		if (resultObject.tagColors) {
-			var tagColors = resultObject.tagColors.value;
-			library.preferences.setPref('tagColors', tagColors);
-			/*
-   for(var i = 0; i < tagColors.length; i++){
-   	var t = library.tags.getTag(tagColors[i].name);
-   	if(t){
-   		t.color = tagColors[i].color;
-   	}
-   }
-   */
-		}
-
 		library.trigger('settingsLoaded');
 		return library.preferences;
 	});
@@ -9751,22 +9581,18 @@ Library.prototype.loadSettings = function () {
 //the colors they should be
 Library.prototype.matchColoredTags = function (tags) {
 	var library = this;
-	var i;
-	var tagColorsSettings = library.preferences.getPref('tagColors');
-	if (!tagColorsSettings) return [];
 
-	var tagColorsMap = {};
-	for (i = 0; i < tagColorsSettings.length; i++) {
-		tagColorsMap[tagColorsSettings[i].name.toLowerCase()] = tagColorsSettings[i].color;
-	}
-	var resultTags = [];
-
-	for (i = 0; i < tags.length; i++) {
-		if (tagColorsMap.hasOwnProperty(tags[i])) {
-			resultTags.push(tagColorsMap[tags[i]]);
+	if (!library.tagColors) {
+		//pull out the settings we know we care about so we can query them directly
+		var tagColors = [];
+		var settings = library.preferences.getPref('settings');
+		if (settings && settings.hasOwnProperty('tagColors')) {
+			tagColors = settings.tagColors.value;
 		}
+		library.tagColors = new Zotero.TagColors(tagColors);
 	}
-	return resultTags;
+
+	return library.tagColors.match(tags);
 };
 
 /**
@@ -10102,6 +9928,7 @@ Library.prototype.emptyTrash = function () {
 	});
 };
 
+//gets the full set of item keys that satisfy `config`
 Library.prototype.loadItemKeys = function (config) {
 	log.debug('Zotero.Library.loadItemKeys', 3);
 	var library = this;
@@ -10112,6 +9939,9 @@ Library.prototype.loadItemKeys = function (config) {
 	});
 };
 
+//loads a set of items specified by `config`
+//The items are added to this Library's items container, as well included as an array of Zotero.Item
+//on the returned promise as `response.loadedItems`
 Library.prototype.loadItems = function (config) {
 	log.debug('Zotero.Library.loadItems', 3);
 	var library = this;
@@ -10525,7 +10355,7 @@ Library.prototype.saveIndexedDB = function () {
 
 module.exports = Library;
 
-},{"./Log.js":115}],114:[function(require,module,exports){
+},{"./Log.js":119}],118:[function(require,module,exports){
 'use strict';
 
 var ItemMaps = require('./ItemMaps.js');
@@ -10534,7 +10364,7 @@ module.exports.fieldMap = ItemMaps.fieldMap;
 module.exports.typeMap = ItemMaps.typeMap;
 module.exports.creatorMap = ItemMaps.creatorMap;
 
-},{"./ItemMaps.js":111}],115:[function(require,module,exports){
+},{"./ItemMaps.js":115}],119:[function(require,module,exports){
 'use strict';
 
 var log = {};
@@ -10616,66 +10446,7 @@ log.Logger = function (prefix) {
 
 module.exports = log;
 
-},{}],116:[function(require,module,exports){
-'use strict';
-
-var log = require('./Log.js').Logger('libZotero:MultiFetch');
-
-var MultiFetch = function MultiFetch() {
-	var config = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
-	var defaultConfig = {
-		start: 0,
-		limit: 50
-	};
-
-	this.config = Z.extend({}, defaultConfig, config);
-	this.hasMore = true;
-};
-
-MultiFetch.prototype.next = function () {
-	var _this = this;
-
-	if (this.hasMore == false) {
-		return Promise.resolve(null);
-	}
-
-	var nconfig = Z.extend({}, this.config);
-	var p = Zotero.ajaxRequest(nconfig);
-	p.then(function (response) {
-		if (response.parsedLinks.hasOwnProperty('next')) {
-			_this.hasMore = true;
-		} else {
-			_this.hasMore = false;
-		}
-
-		return response;
-	});
-
-	nconfig.start = nconfig.start + nconfig.limit;
-	return p;
-};
-
-MultiFetch.prototype.fetchAll = function () {
-	var _this2 = this;
-
-	var results = [];
-	var tryNext = function tryNext() {
-		if (_this2.hasMore) {
-			return _this2.next().then(function (response) {
-				results = results.concat(response.data);
-			}).then(tryNext);
-		} else {
-			return Promise.resolve(results);
-		}
-	};
-
-	return tryNext();
-};
-
-module.exports = MultiFetch;
-
-},{"./Log.js":115}],117:[function(require,module,exports){
+},{}],120:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -10854,7 +10625,7 @@ Net.prototype.checkDelay = function (response) {
 };
 
 Net.prototype.ajaxRequest = function (requestConfig) {
-	log.debug('Zotero.Net.ajaxRequest', 2);
+	log.debug('Zotero.Net.ajaxRequest', 3);
 	var net = this;
 	var defaultConfig = {
 		type: 'GET',
@@ -10978,7 +10749,7 @@ Net.prototype.ajax = function (config) {
 
 module.exports = new Net();
 
-},{"./Log.js":115,"deferred":30}],118:[function(require,module,exports){
+},{"./Log.js":119,"deferred":30}],121:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -11052,7 +10823,142 @@ Preferences.prototype.load = function () {
 
 module.exports = Preferences;
 
-},{"./Log.js":115}],119:[function(require,module,exports){
+},{"./Log.js":119}],122:[function(require,module,exports){
+'use strict';
+
+var log = require('./Log.js').Logger('libZotero:RequestConfig');
+var Validator = require('./Validator.js');
+
+var RequestConfig = function RequestConfig() {
+	this.config = {};
+};
+
+RequestConfig.prototype.Target = function (val) {
+	this.config['target'] = val;
+	return this;
+};
+
+RequestConfig.prototype.TargetModifier = function (val) {
+	this.config['targetModifier'] = val;
+	return this;
+};
+
+RequestConfig.prototype.LibraryType = function (val) {
+	this.config['libraryType'] = val;
+	return this;
+};
+
+RequestConfig.prototype.LibraryID = function (val) {
+	this.config['libraryID'] = val;
+	return this;
+};
+
+RequestConfig.prototype.ItemType = function (val) {
+	this.config['itemType'] = val;
+	return this;
+};
+
+RequestConfig.prototype.ItemKey = function (val) {
+	this.config['itemKey'] = val;
+	return this;
+};
+
+RequestConfig.prototype.CollectionKey = function (val) {
+	this.config['collectionKey'] = val;
+	return this;
+};
+
+RequestConfig.prototype.Sort = function (val) {
+	this.config['sort'] = val;
+	return this;
+};
+
+RequestConfig.prototype.Order = function (val) {
+	this.config['order'] = val;
+	return this;
+};
+
+RequestConfig.prototype.Start = function (val) {
+	this.config['start'] = val;
+	return this;
+};
+
+RequestConfig.prototype.Limit = function (val) {
+	this.config['limit'] = val;
+	return this;
+};
+
+RequestConfig.prototype.Content = function (val) {
+	this.config['content'] = val;
+	return this;
+};
+
+RequestConfig.prototype.Include = function (val) {
+	this.config['include'] = val;
+	return this;
+};
+
+RequestConfig.prototype.Format = function (val) {
+	this.config['format'] = val;
+	return this;
+};
+
+RequestConfig.prototype.Q = function (val) {
+	this.config['q'] = val;
+	return this;
+};
+
+RequestConfig.prototype.Fq = function (val) {
+	this.config['fq'] = val;
+	return this;
+};
+
+RequestConfig.prototype.Tag = function (val) {
+	this.config['tag'] = val;
+	return this;
+};
+
+RequestConfig.prototype.TagType = function (val) {
+	this.config['tagType'] = val;
+	return this;
+};
+
+RequestConfig.prototype.Key = function (val) {
+	this.config['key'] = val;
+	return this;
+};
+
+RequestConfig.prototype.Style = function (val) {
+	this.config['style'] = val;
+	return this;
+};
+
+RequestConfig.prototype.LinkWrap = function (val) {
+	this.config['linkwrap'] = val;
+	return this;
+};
+
+RequestConfig.prototype.Validate = function () {
+	var params = this.config;
+	var valid = true;
+
+	Object.keys(params).forEach(function (key) {
+		var val = params[key];
+		//validate params based on patterns in Zotero.Validator
+		if (Validator.validate(val, key) === false) {
+			//warn on invalid parameter and drop from params that will be used
+			log.warn('API argument failed validation: ' + key + ' cannot be ' + val);
+			delete params[key];
+			valid = false;
+		}
+	});
+
+	return valid;
+};
+
+module.exports = RequestConfig;
+
+},{"./Log.js":119,"./Validator.js":131}],123:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Search');
@@ -11062,7 +10968,7 @@ module.exports = function () {
 	this.searchObject = {};
 };
 
-},{"./Log.js":115}],120:[function(require,module,exports){
+},{"./Log.js":119}],124:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Searches');
@@ -11076,7 +10982,7 @@ module.exports = function () {
 	};
 };
 
-},{"./Log.js":115}],121:[function(require,module,exports){
+},{"./Log.js":119}],125:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -11175,7 +11081,42 @@ module.exports.prototype.get = function (key) {
 	return null;
 };
 
-},{"./Log.js":115}],122:[function(require,module,exports){
+},{"./Log.js":119}],126:[function(require,module,exports){
+'use strict';
+
+var log = require('./Log.js').Logger('libZotero:TagColors');
+
+var TagColors = function TagColors() {
+	var _this = this;
+
+	var tagColors = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+
+	this.instance = 'Zotero.TagColors';
+	this.colorsArray = tagColors;
+	this.colors = new Map();
+
+	this.colorsArray.forEach(function (color) {
+		_this.colors.set(color.name.toLowerCase(), color.color);
+	});
+};
+
+//take an array of tags and return subset of tags that should be colored, along with
+//the colors they should be
+TagColors.prototype.match = function (tags) {
+	var resultTags = [];
+
+	for (var i = 0; i < tags.length; i++) {
+		var lowerTag = tags[i].toLowerCase();
+		if (this.colors.has(lowerTag)) {
+			resultTags.push(this.colors.get(lowerTag));
+		}
+	}
+	return resultTags;
+};
+
+module.exports = TagColors;
+
+},{"./Log.js":119}],127:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Tags');
@@ -11294,7 +11235,7 @@ module.exports.prototype.addTagsFromJson = function (jsonBody) {
 	return tagsAdded;
 };
 
-},{"./Log.js":115}],123:[function(require,module,exports){
+},{"./Log.js":119}],128:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Url');
@@ -11449,18 +11390,18 @@ Url.exportUrls = function (config) {
 Url.relationUrl = function (libraryType, libraryID, itemKey) {
 	switch (libraryType) {
 		case 'group':
-			return 'http://test.zotero.net/groups/' + libraryID + '/items/' + itemKey;
+			return 'http://zotero.org/groups/' + libraryID + '/items/' + itemKey;
 		case 'user':
-			return 'http://test.zotero.net/users/' + libraryID + '/items/' + itemKey;
+			return 'http://zotero.org/users/' + libraryID + '/items/' + itemKey;
 		case 'publications':
-			return 'http://test.zotero.net/users/' + libraryID + '/publications/items/' + itemKey;
+			return 'http://zotero.org/users/' + libraryID + '/publications/items/' + itemKey;
 	}
 	return '';
 };
 
 module.exports = Url;
 
-},{"./Log.js":115}],124:[function(require,module,exports){
+},{"./Log.js":119}],129:[function(require,module,exports){
 'use strict';
 
 module.exports = function () {
@@ -11495,7 +11436,7 @@ module.exports.prototype.parseXmlUser = function (tel) {
 	}
 };
 
-},{}],125:[function(require,module,exports){
+},{}],130:[function(require,module,exports){
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Utils');
@@ -11808,11 +11749,242 @@ var Utils = {
 
 module.exports = Utils;
 
-},{"./Log.js":115}],126:[function(require,module,exports){
+},{"./Log.js":119}],131:[function(require,module,exports){
+'use strict';
+
+var log = require('./Log.js').Logger('libZotero:Validator');
+
+var validator = {
+	patterns: {
+		//'itemKey': /^([A-Z0-9]{8,},?)+$/,
+		'itemKey': /^.+$/,
+		'collectionKey': /^([A-Z0-9]{8,})|trash$/,
+		//'tag': /^[^#]*$/,
+		'libraryID': /^[0-9]+$/,
+		'libraryType': /^(user|group|)$/,
+		'target': /^(items?|collections?|tags|children|deleted|userGroups|key|settings|publications)$/,
+		'targetModifier': /^(top|file|file\/view)$/,
+
+		//get params
+		'sort': /^(asc|desc)$/,
+		'start': /^[0-9]*$/,
+		'limit': /^[0-9]*$/,
+		'order': /^\S*$/,
+		'content': /^((html|json|data|bib|none|bibtex|bookmarks|coins|csljson|mods|refer|rdf_bibliontology|rdf_dc|rdf_zotero|ris|tei|wikipedia),?)+$/,
+		'include': /^((html|json|data|bib|none|bibtex|bookmarks|coins|csljson|mods|refer|rdf_bibliontology|rdf_dc|rdf_zotero|ris|tei|wikipedia),?)+$/,
+		'format': /^((atom|bib|json|keys|versions|bibtex|bookmarks|coins|csljson|mods|refer|rdf_bibliontology|rdf_dc|rdf_zotero|ris|tei|wikipedia),?)+$/,
+		'q': /^.*$/,
+		'fq': /^\S*$/,
+		'itemType': /^\S*$/,
+		'locale': /^\S*$/,
+		'tag': /^.*$/,
+		'tagType': /^(0|1)$/,
+		'key': /^\S*/,
+		'style': /^\S*$/,
+		'linkwrap': /^(0|1)*$/
+	},
+
+	validate: function validate(arg, type) {
+		log.debug('Zotero.validate', 4);
+		if (arg === '') {
+			return null;
+		} else if (arg === null) {
+			return true;
+		}
+		log.debug(arg + ' ' + type, 4);
+		var patterns = this.patterns;
+
+		if (patterns.hasOwnProperty(type)) {
+			return patterns[type].test(arg);
+		} else {
+			return null;
+		}
+	}
+};
+
+module.exports = validator;
+
+},{"./Log.js":119}],132:[function(require,module,exports){
+'use strict';
+
+var log = require('./Log.js').Logger('libZotero:Writer');
+
+var Writer = function Writer(libraryType, libraryID, apiKey) {
+	this.libraryType = libraryType;
+	this.libraryID = libraryID;
+	this.apiKey = apiKey;
+};
+
+Writer.prototype.writeObjects = function (objectsArray, target) {
+	var libraryType = this.libraryType;
+	var libraryID = this.libraryID;
+
+	var rc = new Zotero.RequestConfig().LibraryType(libraryType).LibraryID(libraryID);
+	rc.Key(this.apiKey);
+	rc.Target(target);
+
+	var writeChunks = chunkObjectsArray(objectsArray);
+	var rawChunkObjects = rawChunks(writeChunks);
+
+	//update object with server response if successful
+	var writeSuccessCallback = function writeSuccessCallback(response) {
+		log.debug('write successCallback', 3);
+		updateObjectsFromWriteResponse(this.writeChunk, response);
+		response.returnObjects = this.writeChunk;
+		return response;
+	};
+
+	var requestObjects = [];
+	writeChunks.forEach(function (writeChunk, i) {
+		var successContext = { writeChunk: writeChunk };
+
+		var requestData = JSON.stringify(rawChunkObjects[i]);
+		requestObjects.push({
+			url: rc.config,
+			type: 'POST',
+			data: requestData,
+			processData: false,
+			success: writeSuccessCallback.bind(successContext)
+		});
+	});
+
+	return Zotero.net.queueRequest(requestObjects).then(function (responses) {
+		log.debug('Done with writeObjects sequentialRequests promise', 3);
+		return responses;
+	});
+};
+
+//accept an array of 'Zotero.Item's
+Writer.prototype.writeItems = function (itemsArray) {
+	var writeItems = atomizeItems(itemsArray);
+
+	return this.writeObjects(writeItems, 'items');
+};
+
+//take an array of items and extract children into their own items
+//for writing
+var atomizeItems = function atomizeItems(itemsArray) {
+	//process the array of items, pulling out child notes/attachments to write
+	//separately with correct parentItem set and assign generated itemKeys to
+	//new items
+	var writeItems = [];
+	var item;
+	for (var i = 0; i < itemsArray.length; i++) {
+		item = itemsArray[i];
+		//generate an itemKey if the item does not already have one
+		var itemKey = item.get('key');
+		if (itemKey === '' || itemKey === null) {
+			var newItemKey = Zotero.utils.getKey();
+			item.set('key', newItemKey);
+			item.set('version', 0);
+		}
+		//items that already have item key always in first pass, as are their children
+		writeItems.push(item);
+		if (item.hasOwnProperty('notes') && item.notes.length > 0) {
+			for (var j = 0; j < item.notes.length; j++) {
+				item.notes[j].set('parentItem', item.get('key'));
+			}
+			writeItems = writeItems.concat(item.notes);
+		}
+		if (item.hasOwnProperty('attachments') && item.attachments.length > 0) {
+			for (var k = 0; k < item.attachments.length; k++) {
+				item.attachments[k].set('parentItem', item.get('key'));
+			}
+			writeItems = writeItems.concat(item.attachments);
+		}
+	}
+	return writeItems;
+};
+
+//split an array of objects into chunks to write over multiple api requests
+var chunkObjectsArray = function chunkObjectsArray(objectsArray) {
+	var chunkSize = 50;
+	var writeChunks = [];
+
+	for (var i = 0; i < objectsArray.length; i = i + chunkSize) {
+		writeChunks.push(objectsArray.slice(i, i + chunkSize));
+	}
+
+	return writeChunks;
+};
+
+var rawChunks = function rawChunks(chunks) {
+	var rawChunkObjects = [];
+
+	for (var i = 0; i < chunks.length; i++) {
+		rawChunkObjects[i] = [];
+		for (var j = 0; j < chunks[i].length; j++) {
+			rawChunkObjects[i].push(chunks[i][j].writeApiObj());
+		}
+	}
+	return rawChunkObjects;
+};
+
+//update items appropriately based on response to multi-write request
+//for success:
+//  update objectKey if item doesn't have one yet (newly created item)
+//  update itemVersion to response's Last-Modified-Version header
+//  mark as synced
+//for unchanged:
+//  don't need to do anything? itemVersion should remain the same?
+//  mark as synced if not already?
+//for failed:
+//  add the failure to the object under writeFailure
+//  don't mark as synced
+//  calling code should check for writeFailure after the written objects
+//  are returned
+var updateObjectsFromWriteResponse = function updateObjectsFromWriteResponse(objectsArray, response) {
+	log.debug('updateObjectsFromWriteResponse', 3);
+	log.debug('statusCode: ' + response.status, 3);
+	var data = response.data;
+	if (response.status == 200) {
+		log.debug('newLastModifiedVersion: ' + response.lastModifiedVersion, 3);
+		//make sure writes were actually successful and
+		//update the itemKey for the parent
+		if (data.hasOwnProperty('success')) {
+			//update each successfully written item, possibly with new itemKeys
+			Object.keys(data.success).forEach(function (ind) {
+				var i = parseInt(ind, 10);
+				var key = data.success[ind];
+				var object = objectsArray[i];
+				//throw error if objectKey mismatch
+				if (object.key !== '' && object.key !== key) {
+					throw new Error('object key mismatch in multi-write response');
+				}
+				if (object.key === '') {
+					object.updateObjectKey(key);
+				}
+				object.set('version', response.lastModifiedVersion);
+				object.synced = true;
+				object.writeFailure = false;
+			});
+		}
+		if (data.hasOwnProperty('failed')) {
+			log.debug('updating objects with failed writes', 3);
+			Object.keys(data.failed).forEach(function (ind) {
+				var failure = data.failed[ind];
+				log.error('failed write ' + ind + ' - ' + failure);
+				var i = parseInt(ind, 10);
+				var object = objectsArray[i];
+				object.writeFailure = failure;
+			});
+		}
+	} else if (response.status == 204) {
+		//single item put response, this probably should never go to this function
+		objectsArray[0].synced = true;
+	}
+};
+
+module.exports = Writer;
+
+},{"./Log.js":119}],133:[function(require,module,exports){
 (function (global){
 'use strict';
 
 // use strict;
+
+var log = require('./Log.js').Logger('libZotero');
+
 if (typeof window === 'undefined') {
 	var globalScope = global;
 	if (!globalScope.XMLHttpRequest) {
@@ -11825,7 +11997,7 @@ if (typeof window === 'undefined') {
 	}
 }
 
-var Zotero = require('./Base.js');
+var Zotero = {};
 globalScope.Zotero = globalScope.Z = Zotero;
 Zotero.Cache = require('./Cache.js');
 Zotero.Ajax = Zotero.ajax = require('./Ajax.js');
@@ -11853,13 +12025,57 @@ Zotero.File = Zotero.file = require('./File.js');
 Zotero.Idb = require('./Idb.js');
 Zotero.Preferences = require('./Preferences.js');
 Zotero.Client = require('./Client.js');
-Zotero.MultiFetch = require('./MultiFetch.js');
+Zotero.Fetcher = require('./Fetcher.js');
+Zotero.Writer = require('./Writer.js');
+Zotero.TagColors = require('./TagColors.js');
+Zotero.Validator = require('./Validator.js');
+Zotero.RequestConfig = require('./RequestConfig.js');
+
+Zotero.extend = require('./Extend.js');
+
+//non-DOM (jquery) event management
+Zotero.eventmanager = { callbacks: {} };
+
+var _require = require('./Events.js');
+
+var trigger = _require.trigger;
+var listen = _require.listen;
+
+Zotero.trigger = trigger;
+Zotero.listen = listen;
+
+Zotero.libraries = {};
+Zotero.config = require('./DefaultConfig.js');
+
+Zotero.catchPromiseError = function (err) {
+	log.error(err);
+};
+
+Zotero.ajaxRequest = function (url, type, options) {
+	log.debug('Zotero.ajaxRequest ==== ' + url, 3);
+	if (!type) {
+		type = 'GET';
+	}
+	if (!options) {
+		options = {};
+	}
+	var requestObject = {
+		url: url,
+		type: type
+	};
+	requestObject = Z.extend({}, requestObject, options);
+	log.debug(requestObject, 3);
+	return Zotero.net.queueRequest(requestObject);
+};
+
+Zotero.init = require('./Init.js');
+Zotero.init();
 
 module.exports = Zotero;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./Ajax.js":96,"./ApiObject.js":97,"./ApiResponse.js":98,"./Base.js":99,"./Cache.js":100,"./Client.js":101,"./Collection.js":102,"./Collections.js":103,"./Container":104,"./Deleted.js":105,"./File.js":106,"./Group.js":107,"./Groups.js":108,"./Idb.js":109,"./Item.js":110,"./Items.js":112,"./Library.js":113,"./Localizations.js":114,"./MultiFetch.js":116,"./Net.js":117,"./Preferences.js":118,"./Search.js":119,"./Searches.js":120,"./Tag.js":121,"./Tags.js":122,"./Url.js":123,"./User.js":124,"./Utils.js":125,"es6-promise":82,"w3c-xmlhttprequest":1}]},{},[126])(126)
+},{"./Ajax.js":96,"./ApiObject.js":97,"./ApiResponse.js":98,"./Cache.js":99,"./Client.js":100,"./Collection.js":101,"./Collections.js":102,"./Container":103,"./DefaultConfig.js":104,"./Deleted.js":105,"./Events.js":106,"./Extend.js":107,"./Fetcher.js":108,"./File.js":109,"./Group.js":110,"./Groups.js":111,"./Idb.js":112,"./Init.js":113,"./Item.js":114,"./Items.js":116,"./Library.js":117,"./Localizations.js":118,"./Log.js":119,"./Net.js":120,"./Preferences.js":121,"./RequestConfig.js":122,"./Search.js":123,"./Searches.js":124,"./Tag.js":125,"./TagColors.js":126,"./Tags.js":127,"./Url.js":128,"./User.js":129,"./Utils.js":130,"./Validator.js":131,"./Writer.js":132,"es6-promise":82,"w3c-xmlhttprequest":1}]},{},[133])(133)
 });
 
 
