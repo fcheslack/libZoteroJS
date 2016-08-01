@@ -328,7 +328,7 @@ ItemMaps.cslTypeMap = {
 	'case': 'legal_case',
 	'hearing': 'bill',                // ??
 	'patent': 'patent',
-	'statute': 'bill',                // ??
+	'statute': 'legislation',
 	'email': 'personal_communication',
 	'map': 'map',
 	'blogPost': 'webpage',
