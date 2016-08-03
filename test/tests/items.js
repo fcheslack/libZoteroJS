@@ -5,7 +5,7 @@ var should = require('chai').should();
 var expect = require('chai').expect;
 var Zotero = require('../../src/libzotero.js');
 
-var itemsApiObjects = require('../fixtures/virtual_worlds_items.json');
+var itemsApiObjects = require('../fixtures/all_virtual_worlds_items.json');
 
 describe('Zotero.Items', function(){
 	describe('Items', function() {

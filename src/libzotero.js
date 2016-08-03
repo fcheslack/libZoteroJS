@@ -2,16 +2,29 @@
 
 var log = require('./Log.js').Logger('libZotero');
 
+var globalScope;
+
 if(typeof window === 'undefined') {
-	var globalScope = global;
-	if(!globalScope.XMLHttpRequest) {
-		globalScope.XMLHttpRequest = require('w3c-xmlhttprequest').XMLHttpRequest;
+	globalScope = global;
+	//add node-fetch
+	if(!globalScope.fetch){
+		var nfetch = require('node-fetch');
+		globalScope.fetch = nfetch;
+		globalScope.Response = nfetch.Response;
+		globalScope.Headers = nfetch.Headers;
+		globalScope.Request = nfetch.Request;
 	}
 } else {
-	var globalScope = window;
+	globalScope = window;
 	if(typeof Promise === 'undefined') {
 		require('es6-promise').polyfill();
 	}
+	
+	//add github's whatwg-fetch for browsers
+	if(!globalScope.fetch){
+		require('whatwg-fetch');
+	}
+	//module.exports = self.fetch.bind(self);
 }
 
 var Zotero = {};

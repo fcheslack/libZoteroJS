@@ -2,6 +2,7 @@
 
 var log = require('./Log.js').Logger('libZotero:ApiResponse');
 
+//takes a superagent response
 module.exports = function(response) {
 	log.debug('Zotero.ApiResponse', 3);
 	this.totalResults = 0;
@@ -11,13 +12,8 @@ module.exports = function(response) {
 	this.links = {};
 	
 	if(response){
-		if(!response.isError){
-			this.isError = false;
-		} else {
-			this.isError = true;
-		}
-		this.data = response.data;
-		//this.jqxhr = response.jqxhr;
+		this.isError = !response.ok;
+		//this.data = response.json;
 		this.parseResponse(response);
 	}
 };
@@ -25,16 +21,16 @@ module.exports = function(response) {
 module.exports.prototype.parseResponse = function(response){
 	log.debug('parseResponse', 3);
 	var apiResponse = this;
-	apiResponse.jqxhr = response.jqxhr;
-	apiResponse.status = response.jqxhr.status;
+	apiResponse.rawResponse = response;
+	apiResponse.status = response.status;
 	//keep track of relevant headers
-	apiResponse.lastModifiedVersion = response.jqxhr.getResponseHeader('Last-Modified-Version');
-	apiResponse.apiVersion = response.jqxhr.getResponseHeader('Zotero-API-Version');
-	apiResponse.backoff = response.jqxhr.getResponseHeader('Backoff');
-	apiResponse.retryAfter = response.jqxhr.getResponseHeader('Retry-After');
-	apiResponse.contentType = response.jqxhr.getResponseHeader('Content-Type');
-	apiResponse.linkHeader = response.jqxhr.getResponseHeader('Link');
-	apiResponse.totalResults = response.jqxhr.getResponseHeader('Total-Results');
+	apiResponse.lastModifiedVersion = response.headers.get('last-modified-version');
+	apiResponse.apiVersion = response.headers.get('zotero-api-version');
+	apiResponse.backoff = response.headers.get('backoff');
+	apiResponse.retryAfter = response.headers.get('retry-after');
+	apiResponse.contentType = response.headers.get('content-type');
+	apiResponse.linkHeader = response.headers.get('link');
+	apiResponse.totalResults = response.headers.get('total-results');
 	if(apiResponse.backoff){
 		apiResponse.backoff = parseInt(apiResponse.backoff, 10);
 	}

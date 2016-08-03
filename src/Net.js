@@ -1,8 +1,18 @@
 'use strict';
 
-var log = require('./Log.js').Logger('libZotero:Net');
+var log = require('./Log.js').Logger('libZotero:FetchNet', 3);
 
-var Deferred = require('deferred');
+var Deferred = function(){
+	var d = this;
+
+	d.promise = new Promise(function(resolve, reject){
+		d.resolve = resolve;
+		d.reject = reject;
+	});
+};
+
+//var Deferred = require('deferred');
+
 /*
  * Make concurrent and sequential network requests, respecting backoff/retry-after
  * headers, and keeping concurrent requests below a certain limit.
@@ -27,9 +37,11 @@ Net.prototype.queueDeferred = function(){
 	var net = this;
 	var d = new Deferred();
 	net.deferredQueue.push(d);
-	return Promise.resolve(d);
+	return d.promise;
 };
 
+//add a request to the end of the queue, so that previously queue requests run first
+//if requestObject is an array of requests, run them sequentially
 Net.prototype.queueRequest = function(requestObject){
 	log.debug('Zotero.Net.queueRequest', 3);
 	var net = this;
@@ -40,9 +52,11 @@ Net.prototype.queueRequest = function(requestObject){
 			log.debug('running sequential after queued deferred resolved', 4);
 			return net.runSequential(requestObject);
 		}).then(function(response){
-			log.debug('runSequential done', 3);
 			net.queuedRequestDone();
 			return response;
+		}, function(response){
+			net.queuedRequestDone();
+			throw response;
 		});
 	}
 	else {
@@ -50,19 +64,19 @@ Net.prototype.queueRequest = function(requestObject){
 			log.debug('running concurrent after queued deferred resolved', 4);
 			return net.runConcurrent(requestObject);
 		}).then(function(response){
-			log.debug('done with queuedRequest', 4);
 			net.queuedRequestDone();
 			return response;
+		}, function(response){
+			net.queuedRequestDone();
+			throw response;
 		});
 	}
 	
 	net.runNext();
-	return resultPromise.catch(function(error){
-		log.error('Error before leaving Zotero.Net');
-		log.error(error);
-	});
+	return resultPromise;
 };
 
+//run a request without waiting for any other requests to complete
 Net.prototype.runConcurrent = function(requestObject){
 	log.debug('Zotero.Net.runConcurrent', 3);
 	return this.ajaxRequest(requestObject).then(function(response){
@@ -82,11 +96,14 @@ Net.prototype.runSequential = function(requestObjects){
 	var seqPromise = Promise.resolve();
 	
 	for(var i = 0; i < requestObjects.length; i++){
-		var requestObject = requestObjects[i];
+		let requestObject = requestObjects[i];
 		seqPromise = seqPromise.then(function(){
 			var p = net.ajaxRequest(requestObject)
 			.then(function(response){
 				log.debug('pushing sequential response into result array', 3);
+				responses.push(response);
+			}, function(response){
+				//return error responses too
 				responses.push(response);
 			});
 			return p;
@@ -120,16 +137,15 @@ Net.prototype.individualRequestDone = function(response){
 	return response;
 };
 
-Net.prototype.queuedRequestDone = function(response){
+Net.prototype.queuedRequestDone = function(){
 	log.debug('queuedRequestDone', 3);
 	var net = this;
 	net.numRunning--;
 	net.runNext();
-	return response;
 };
 
 Net.prototype.runNext = function(){
-	log.debug('Zotero.Net.runNext', 3);
+	log.debug('Zotero.Net.runNext', 4);
 	var net = this;
 	var nowms = Date.now();
 	
@@ -146,12 +162,12 @@ Net.prototype.runNext = function(){
 	}
 	
 	//continue making requests up to the concurrent limit
-	log.debug(net.numRunning + '/' + net.numConcurrent + ' Running. ' + net.deferredQueue.length + ' queued.', 3);
+	log.debug(net.numRunning + '/' + net.numConcurrent + ' Running. ' + net.deferredQueue.length + ' queued.', 4);
 	while((net.deferredQueue.length > 0) && (net.numRunning < net.numConcurrent)){
 		net.numRunning++;
 		var nextD = net.deferredQueue.shift();
 		nextD.resolve();
-		log.debug(net.numRunning + '/' + net.numConcurrent + ' Running. ' + net.deferredQueue.length + ' queued.', 3);
+		log.debug(net.numRunning + '/' + net.numConcurrent + ' Running. ' + net.deferredQueue.length + ' queued.', 4);
 	}
 };
 
@@ -178,9 +194,14 @@ Net.prototype.checkDelay = function(response){
 	return wait;
 };
 
+//perform a network request defined by requestConfig
+//convert the Response into a Zotero.ApiResponse, and attach the passed in
+//success/failure handlers to the promise chain before returning (or default error logger
+//if no failure handler is defined)
 Net.prototype.ajaxRequest = function(requestConfig){
 	log.debug('Zotero.Net.ajaxRequest', 3);
 	var net = this;
+	
 	var defaultConfig = {
 		type:'GET',
 		headers:{
@@ -191,8 +212,15 @@ Net.prototype.ajaxRequest = function(requestConfig){
 			return response;
 		},
 		error: function(response){
-			log.error('ajaxRequest rejected:' + response.jqxhr.status + ' - ' + response.jqxhr.responseText);
-			return response;
+			if(!response instanceof Zotero.ApiResponse){
+				log.error(`Response is not a Zotero.ApiResponse: ${response}`);
+			} else if(response.rawResponse){
+				log.error(`ajaxRequest rejected:${response.rawResponse.status} - ${response.rawResponse.statusText}`);
+			} else {
+				log.error('ajaxRequest rejected: No rawResponse set. (likely network error)');
+				log.error(response.error);
+			}
+			throw response;
 		}
 		//cache:false
 	};
@@ -200,7 +228,6 @@ Net.prototype.ajaxRequest = function(requestConfig){
 	var headers = Z.extend({}, defaultConfig.headers, requestConfig.headers);
 	if(requestConfig.key){
 		headers = Z.extend(headers, {'Zotero-API-Key': requestConfig.key});
-		//headers = Z.extend(headers, {'Authorization': 'Bearer ' + requestConfig.key});
 		delete requestConfig.key;
 	}
 	
@@ -214,97 +241,79 @@ Net.prototype.ajaxRequest = function(requestConfig){
 	if(!config.url){
 		throw 'No url specified in Zotero.Net.ajaxRequest';
 	}
-	//rename success/error callbacks so J.ajax does not actually use them
-	//and we can use them as es6 promise result functions with expected
-	//single value arguments
-	config.zsuccess = config.success;
-	config.zerror = config.error;
-	delete config.success;
-	delete config.error;
 	
 	log.debug('AJAX config', 4);
 	log.debug(config, 4);
 	var ajaxpromise = new Promise(function(resolve, reject){
 		net.ajax(config)
-		.then(function(request){
-			var data;
-
-			if(request.responseType == 'json'
-				|| (request.responseType === '' && request.getResponseHeader('content-type') === 'application/json')
-			) {
-				try{
-						data = JSON.parse(request.response);
-					} catch(err) {
-						data = request.response;
-					}
+		.then(function(response){
+			var ar = new Zotero.ApiResponse(response);
+			response.json().then(function(data){
+				ar.data = data;
+				resolve(ar);
+			}, function(err){
+				log.error(err);
+				ar.isError = true;
+				ar.error = err;
+				reject(ar); //reject promise on malformed json
+			});
+		}, function(response){
+			var ar;
+			if(response instanceof Error){
+				ar = new Zotero.ApiResponse();
+				ar.isError = true;
+				ar.error = response;
 			} else {
-				data = request.response;
+				ar = new Zotero.ApiResponse(response);
 			}
 			
-			var r = new Zotero.ApiResponse({
-				jqxhr: request,
-				data: data,
-				textStatus: request.responseText
-			});
-			resolve(r);
-		}, function(request){
-			var r = new Zotero.ApiResponse({
-				jqxhr: request,
-				textStatus: request.responseText,
-				isError: true
-			});
-			reject(r);
+			resolve(ar);
 		});
 	})
 	.then(net.individualRequestDone.bind(net))
 	.then(function(response){
 		//now that we're done handling, reject
 		if(response.isError){
-			log.error('re-throwing ApiResponse that was a rejection');
+			//re-throw ApiResponse that was a rejection
 			throw response;
 		}
 		return response;
 	})
-	.then(config.zsuccess, config.zerror);
+	.then(config.success, config.error);
 	
 	return ajaxpromise;
 };
 
+//perform a network request defined by config, and return a promise for a Response
+//resolve with a successful status (200-300) reject, but with the same Response object otherwise
 Net.prototype.ajax = function(config){
 	config = Zotero.extend({type:'GET'}, config);
-	var promise = new Promise(function(resolve, reject){
-		var req = new XMLHttpRequest();
-		var uri = config.url;
-		req.open(config.type, uri);
-		
-		if(config.headers){
-			Object.keys(config.headers).forEach(function(key){
-				var val = config.headers[key];
-				req.setRequestHeader(key, val);
-			});
-		}
+	let headersInit = config.headers || {};
+	let headers = new Headers(headersInit);
 
-		req.send(config.data);
-
-		req.onload = function(){
-			log.debug('XMLHttpRequest done', 4);
-			log.debug(req, 4);
-			if (req.status >= 200 && req.status < 300) {
-				log.debug('200-300 response: resolving Net.ajax promise', 3);
-				// Performs the function "resolve" when this.status is equal to 2xx
-				resolve(req);
-			} else {
-				log.debug('not 200-300 response: rejecting Net.ajax promise', 3);
-				// Performs the function "reject" when this.status is different than 2xx
-				reject(req);
-			}
-		};
-		req.onerror = function() {
-			reject(req);
-		};
+	var request = new Request(config.url, {
+		method:config.type,
+		headers: headers,
+		mode:'cors',
+		body:config.data
 	});
-
-	return promise;
+	
+	return fetch(request).then(function(response){
+		log.debug('fetch done', 4);
+		log.debug(request, 4);
+		if (response.status >= 200 && response.status < 300) {
+			log.debug('200-300 response: resolving Net.ajax promise', 3);
+			// Performs the function "resolve" when this.status is equal to 2xx
+			return response;
+		} else {
+			log.debug('not 200-300 response: rejecting Net.ajax promise', 3);
+			// Performs the function "reject" when this.status is different than 2xx
+			throw response;
+		}
+	}, function(err){
+		log.error(err);
+		throw(err);
+	});
 };
 
 module.exports = new Net();

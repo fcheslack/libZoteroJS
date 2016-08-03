@@ -1,0 +1,2346 @@
+[
+    {
+        "key": "DU84HZSG",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/DU84HZSG",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/DU84HZSG",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Guo et al.",
+            "parsedDate": "2009",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "DU84HZSG",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "Virtual Wealth Realization in Virtual and Real Worlds",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "Jingzhi",
+                    "lastName": "Guo"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Angelina",
+                    "lastName": "Chow"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Zhiguo",
+                    "lastName": "Gong"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Chengzheng",
+                    "lastName": "Sun"
+                }
+            ],
+            "abstractNote": "",
+            "date": "10/2009",
+            "proceedingsTitle": "2009 IEEE International Conference on e-Business Engineering",
+            "conferenceName": "2009 IEEE International Conference on e-Business Engineering (ICEBE)",
+            "place": "Macau, China",
+            "publisher": "",
+            "volume": "",
+            "pages": "85-94",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/ICEBE.2009.21",
+            "ISBN": "",
+            "shortTitle": "",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=5342125",
+            "accessDate": "2010-09-10T03:39:59Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "SFCNBT79",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/SFCNBT79",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/SFCNBT79",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Callaghan et al.",
+            "parsedDate": "2009",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "SFCNBT79",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "Teaching Engineering Education Using Virtual Worlds and Virtual Learning Environments",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "M.J.",
+                    "lastName": "Callaghan"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "K.",
+                    "lastName": "McCusker"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "J. Lopez",
+                    "lastName": "Losada"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "J.G.",
+                    "lastName": "Harkin"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "S.",
+                    "lastName": "Wilson"
+                }
+            ],
+            "abstractNote": "",
+            "date": "12/2009",
+            "proceedingsTitle": "2009 International Conference on Advances in Computing, Control, and Telecommunication Technologies",
+            "conferenceName": "Telecommunication Technologies (ACT)",
+            "place": "Bangalore, India",
+            "publisher": "",
+            "volume": "",
+            "pages": "295-299",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/ACT.2009.80",
+            "ISBN": "",
+            "shortTitle": "",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=5376685",
+            "accessDate": "2010-09-10T03:40:06Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "53DMDETR",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/53DMDETR",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/53DMDETR",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Stieglitz et al.",
+            "parsedDate": "2010",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "53DMDETR",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "Learning Arrangements in Virtual Worlds",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "Stefan",
+                    "lastName": "Stieglitz"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Christoph",
+                    "lastName": "Lattemann"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Gabriele",
+                    "lastName": "Fohr"
+                }
+            ],
+            "abstractNote": "",
+            "date": "01/2010",
+            "proceedingsTitle": "2010 43rd Hawaii International Conference on System Sciences",
+            "conferenceName": "2010 43rd Hawaii International Conference on System Sciences (HICSS)",
+            "place": "Honolulu, Hawaii, USA",
+            "publisher": "",
+            "volume": "",
+            "pages": "1-7",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/HICSS.2010.251",
+            "ISBN": "",
+            "shortTitle": "",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=5428766",
+            "accessDate": "2010-09-10T03:40:11Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "FSFKX334",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/FSFKX334",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/FSFKX334",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Broll",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "FSFKX334",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "Bringing people together-an infrastructure for shared virtual worlds on the Internet",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "W.",
+                    "lastName": "Broll"
+                }
+            ],
+            "abstractNote": "",
+            "date": "",
+            "proceedingsTitle": "Proceedings of IEEE 6th Workshop on Enabling Technologies: Infrastructure for Collaborative Enterprises",
+            "conferenceName": "IEEE 6th Workshop on Enabling Technologies: Infrastructure for Collaborative Enterprises",
+            "place": "Cambridge, MA, USA",
+            "publisher": "",
+            "volume": "",
+            "pages": "199-204",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/ENABL.1997.630814",
+            "ISBN": "",
+            "shortTitle": "",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=630814",
+            "accessDate": "2010-09-10T03:40:14Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "D45DP4CQ",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/D45DP4CQ",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/D45DP4CQ",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Vijaykar et al.",
+            "parsedDate": "2009",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "D45DP4CQ",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "Virtual Worlds as a Tool for Enterprise Services",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "Sameer",
+                    "lastName": "Vijaykar"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Muthukkumar S.",
+                    "lastName": "Kadavasal"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Krishna K.",
+                    "lastName": "Dhara"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Xiaotao",
+                    "lastName": "Wu"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Venkatesh",
+                    "lastName": "Krishnaswamy"
+                }
+            ],
+            "abstractNote": "",
+            "date": "01/2009",
+            "proceedingsTitle": "2009 6th IEEE Consumer Communications and Networking Conference",
+            "conferenceName": "2009 6th IEEE Consumer Communications and Networking Conference (CCNC)",
+            "place": "Las Vegas, Nevada, USA",
+            "publisher": "",
+            "volume": "",
+            "pages": "1-5",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/CCNC.2009.4784828",
+            "ISBN": "",
+            "shortTitle": "",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=4784828",
+            "accessDate": "2010-09-10T03:40:21Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "XPPKPVW9",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/XPPKPVW9",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/XPPKPVW9",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Soto and Allongue",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "XPPKPVW9",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "A semantic approach of virtual worlds interoperability",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "M.",
+                    "lastName": "Soto"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "S.",
+                    "lastName": "Allongue"
+                }
+            ],
+            "abstractNote": "",
+            "date": "",
+            "proceedingsTitle": "Proceedings of IEEE 6th Workshop on Enabling Technologies: Infrastructure for Collaborative Enterprises",
+            "conferenceName": "IEEE 6th Workshop on Enabling Technologies: Infrastructure for Collaborative Enterprises",
+            "place": "Cambridge, MA, USA",
+            "publisher": "",
+            "volume": "",
+            "pages": "173-178",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/ENABL.1997.630810",
+            "ISBN": "",
+            "shortTitle": "",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=630810",
+            "accessDate": "2010-09-10T03:40:25Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "TQZVV2BJ",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/TQZVV2BJ",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/TQZVV2BJ",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Singh et al.",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "TQZVV2BJ",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "Networked virtual worlds",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "G.",
+                    "lastName": "Singh"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "W.",
+                    "lastName": "Png"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "A.",
+                    "lastName": "Wong"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "L.",
+                    "lastName": "Serra"
+                }
+            ],
+            "abstractNote": "",
+            "date": "",
+            "proceedingsTitle": "Proceedings Computer Animation'95",
+            "conferenceName": "Computer Animation'95",
+            "place": "Geneva, Switzerland",
+            "publisher": "",
+            "volume": "",
+            "pages": "44-49",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/CA.1995.393549",
+            "ISBN": "",
+            "shortTitle": "",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=393549",
+            "accessDate": "2010-09-10T03:40:31Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "FQ5FPRDT",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/FQ5FPRDT",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/FQ5FPRDT",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Hu and Jiang",
+            "parsedDate": "2008",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "FQ5FPRDT",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "Plug: Virtual Worlds for Millions of People",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "Shun-Yun",
+                    "lastName": "Hu"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Jehn-Ruey",
+                    "lastName": "Jiang"
+                }
+            ],
+            "abstractNote": "",
+            "date": "12/2008",
+            "proceedingsTitle": "2008 14th IEEE International Conference on Parallel and Distributed Systems",
+            "conferenceName": "2008 14th IEEE International Conference on Parallel and Distributed Systems (ICPADS)",
+            "place": "Melbourne, Australia",
+            "publisher": "",
+            "volume": "",
+            "pages": "787-792",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/ICPADS.2008.121",
+            "ISBN": "",
+            "shortTitle": "Plug",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=4724396",
+            "accessDate": "2010-09-10T03:40:35Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "PSTUA5WJ",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/PSTUA5WJ",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/PSTUA5WJ",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Callaghan et al.",
+            "parsedDate": "2009",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "PSTUA5WJ",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "Integrating virtual worlds &#x00026; virtual learning environments for online education",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "Mj.",
+                    "lastName": "Callaghan"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "K.",
+                    "lastName": "McCusker"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "J. Lopez",
+                    "lastName": "Losada"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Jg.",
+                    "lastName": "Harkin"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "S.",
+                    "lastName": "Wilson"
+                }
+            ],
+            "abstractNote": "",
+            "date": "08/2009",
+            "proceedingsTitle": "2009 International IEEE Consumer Electronics Society's Games Innovations Conference",
+            "conferenceName": "2009 International IEEE Consumer Electronics Society's Games Innovations Conference (ICE-GIC 2009)",
+            "place": "London, UK",
+            "publisher": "",
+            "volume": "",
+            "pages": "54-63",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/ICEGIC.2009.5293576",
+            "ISBN": "",
+            "shortTitle": "",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=5293576",
+            "accessDate": "2010-09-10T03:40:39Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "2P9RDCPN",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/2P9RDCPN",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/2P9RDCPN",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Danilicheva et al.",
+            "parsedDate": "2009",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "2P9RDCPN",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "Education in Virtual Worlds: Virtual Storytelling",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "Polina",
+                    "lastName": "Danilicheva"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Stanislav",
+                    "lastName": "Klimenko"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Yury",
+                    "lastName": "Baturin"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Alexander",
+                    "lastName": "Serebrov"
+                }
+            ],
+            "abstractNote": "",
+            "date": "09/2009",
+            "proceedingsTitle": "2009 International Conference on CyberWorlds",
+            "conferenceName": "2009 International Conference on CyberWorlds (CW)",
+            "place": "Bradford, West Yorkshire, United Kingdom",
+            "publisher": "",
+            "volume": "",
+            "pages": "333-338",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/CW.2009.57",
+            "ISBN": "",
+            "shortTitle": "Education in Virtual Worlds",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=5279531",
+            "accessDate": "2010-09-10T03:40:45Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "TPP3HWPM",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/TPP3HWPM",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/TPP3HWPM",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Goggins et al.",
+            "parsedDate": "2010",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "TPP3HWPM",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "Assessing Multiple Perspectives in Three Dimensional Virtual Worlds: Eye Tracking and All Views Qualitative Analysis (AVQA)",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "Sean P.",
+                    "lastName": "Goggins"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Matthew",
+                    "lastName": "Schmidt"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Jesus",
+                    "lastName": "Guajardo"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Joi",
+                    "lastName": "Moore"
+                }
+            ],
+            "abstractNote": "",
+            "date": "01/2010",
+            "proceedingsTitle": "2010 43rd Hawaii International Conference on System Sciences",
+            "conferenceName": "2010 43rd Hawaii International Conference on System Sciences (HICSS)",
+            "place": "Honolulu, Hawaii, USA",
+            "publisher": "",
+            "volume": "",
+            "pages": "1-10",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/HICSS.2010.71",
+            "ISBN": "",
+            "shortTitle": "Assessing Multiple Perspectives in Three Dimensional Virtual Worlds",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=5428712",
+            "accessDate": "2010-09-10T03:40:51Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "NMDIXUSR",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/NMDIXUSR",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/NMDIXUSR",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Ross and Cornell",
+            "parsedDate": "2010",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "NMDIXUSR",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "Towards an Experimental Methodology of Virtual World Research",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "Travis L.",
+                    "lastName": "Ross"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Robert D.",
+                    "lastName": "Cornell"
+                }
+            ],
+            "abstractNote": "",
+            "date": "03/2010",
+            "proceedingsTitle": "2010 Second International Conference on Games and Virtual Worlds for Serious Applications",
+            "conferenceName": "2010 2nd International Conference on Games and Virtual Worlds for Serious Applications (VS-GAMES 2010)",
+            "place": "Braga, Portugal",
+            "publisher": "",
+            "volume": "",
+            "pages": "143-150",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/VS-GAMES.2010.16",
+            "ISBN": "",
+            "shortTitle": "",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=5459571",
+            "accessDate": "2010-09-10T03:40:55Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "X9GFTJDB",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/X9GFTJDB",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/X9GFTJDB",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Narayanan and Kanade",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "X9GFTJDB",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "Virtual worlds using computer vision",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "P.J.",
+                    "lastName": "Narayanan"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "T.",
+                    "lastName": "Kanade"
+                }
+            ],
+            "abstractNote": "",
+            "date": "",
+            "proceedingsTitle": "Proceedings 1998 IEEE and ATR Workshop on Computer Vision for Virtual Reality Based Human Communications",
+            "conferenceName": "1998 IEEE and ATR Workshop on Computer Vision for Virtual Reality Based Human Communications",
+            "place": "Bombay, India",
+            "publisher": "",
+            "volume": "",
+            "pages": "2-13",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/CVVRHC.1998.660365",
+            "ISBN": "",
+            "shortTitle": "",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=660365",
+            "accessDate": "2010-09-10T03:40:59Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "5XDF8TD9",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/5XDF8TD9",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/5XDF8TD9",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Fang and Cai",
+            "parsedDate": "2009",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "5XDF8TD9",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "Building Interoperable 3D Virtual World Platforms with RESTful Web Services",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "Zhi-Cong",
+                    "lastName": "Fang"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Hong",
+                    "lastName": "Cai"
+                }
+            ],
+            "abstractNote": "",
+            "date": "07/2009",
+            "proceedingsTitle": "2009 Congress on Services - I",
+            "conferenceName": "2009 IEEE Congress on Services (SERVICES)",
+            "place": "Los Angeles, CA, USA",
+            "publisher": "",
+            "volume": "",
+            "pages": "70-77",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/SERVICES-I.2009.23",
+            "ISBN": "",
+            "shortTitle": "",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=5190768",
+            "accessDate": "2010-09-10T03:41:03Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "RM3UBNQ8",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/RM3UBNQ8",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/RM3UBNQ8",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Maher and Corbit",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "RM3UBNQ8",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "Creating genetic applications for informal science learning in multi-user virtual environments or virtual worlds",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "C.",
+                    "lastName": "Maher"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "M.",
+                    "lastName": "Corbit"
+                }
+            ],
+            "abstractNote": "",
+            "date": "",
+            "proceedingsTitle": "Proceedings Tenth IEEE International Workshop on Enabling Technologies: Infrastructure for Collaborative Enterprises. WET ICE 2001",
+            "conferenceName": "Tenth IEEE International Workshop on Enabling Technologies: Infrastructure for Collaborative Enterprises. WET ICE 2001",
+            "place": "Cambridge, MA, USA",
+            "publisher": "",
+            "volume": "",
+            "pages": "291-298",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/ENABL.2001.953430",
+            "ISBN": "",
+            "shortTitle": "",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=953430",
+            "accessDate": "2010-09-10T03:41:07Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "SG7SQBJ5",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/SG7SQBJ5",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/SG7SQBJ5",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Schmeil et al.",
+            "parsedDate": "2010",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "SG7SQBJ5",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "A Workflow for Designing Virtual Worlds for Collaborative Learning",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "Andreas",
+                    "lastName": "Schmeil"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Michael",
+                    "lastName": "Steinbusch"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Alar",
+                    "lastName": "Jost"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Martin",
+                    "lastName": "Henn"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Markus",
+                    "lastName": "Jacobi"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Max",
+                    "lastName": "Schwitalla"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Béatrice",
+                    "lastName": "Hasler"
+                }
+            ],
+            "abstractNote": "",
+            "date": "03/2010",
+            "proceedingsTitle": "2010 Second International Conference on Games and Virtual Worlds for Serious Applications",
+            "conferenceName": "2010 2nd International Conference on Games and Virtual Worlds for Serious Applications (VS-GAMES 2010)",
+            "place": "Braga, Portugal",
+            "publisher": "",
+            "volume": "",
+            "pages": "151-158",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/VS-GAMES.2010.33",
+            "ISBN": "",
+            "shortTitle": "",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=5459627",
+            "accessDate": "2010-09-10T03:41:16Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "D4SSG2ZJ",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/D4SSG2ZJ",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/D4SSG2ZJ",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Matsubara et al.",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "D4SSG2ZJ",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "An agent control mechanism in virtual worlds for mobile users",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "K.",
+                    "lastName": "Matsubara"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Y.",
+                    "lastName": "Mizukubo"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "T.",
+                    "lastName": "Morita"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "H.",
+                    "lastName": "Tarumi"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "F.",
+                    "lastName": "Kusunoki"
+                }
+            ],
+            "abstractNote": "",
+            "date": "",
+            "proceedingsTitle": "Proceedings of the 2005 International Conference on Active Media Technology, 2005. (AMT 2005).",
+            "conferenceName": "2005 International Conference on Active Media Technology, 2005. (AMT 2005).",
+            "place": "Takamatsu, Kagawa, Japan",
+            "publisher": "",
+            "volume": "",
+            "pages": "475-480",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/AMT.2005.1505401",
+            "ISBN": "",
+            "shortTitle": "",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=1505401",
+            "accessDate": "2010-09-10T03:41:23Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "8BT3URD6",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/8BT3URD6",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/8BT3URD6",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Jaeger",
+            "parsedDate": "2009",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "8BT3URD6",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "What educational activities fit virtual worlds: Towards a theoretical evaluation framework",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "B.",
+                    "lastName": "Jaeger"
+                }
+            ],
+            "abstractNote": "",
+            "date": "06/2009",
+            "proceedingsTitle": "2009 3rd IEEE International Conference on Digital Ecosystems and Technologies",
+            "conferenceName": "2009 3rd IEEE International Conference on Digital Ecosystems and Technologies (DEST)",
+            "place": "Istanbul",
+            "publisher": "",
+            "volume": "",
+            "pages": "715-720",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/DEST.2009.5276700",
+            "ISBN": "",
+            "shortTitle": "What educational activities fit virtual worlds",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=5276700",
+            "accessDate": "2010-09-10T03:41:26Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "97I7W6PP",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/97I7W6PP",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/97I7W6PP",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Zhou et al.",
+            "parsedDate": "2010",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "97I7W6PP",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "Individual Motivations for Using Social Virtual Worlds: An Exploratory Investigation in Second Life",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "Zhongyun",
+                    "lastName": "Zhou"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Xiao-Ling",
+                    "lastName": "Jin"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Doug",
+                    "lastName": "Vogel"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Xitong",
+                    "lastName": "Guo"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Xiaojian",
+                    "lastName": "Chen"
+                }
+            ],
+            "abstractNote": "",
+            "date": "01/2010",
+            "proceedingsTitle": "2010 43rd Hawaii International Conference on System Sciences",
+            "conferenceName": "2010 43rd Hawaii International Conference on System Sciences (HICSS)",
+            "place": "Honolulu, Hawaii, USA",
+            "publisher": "",
+            "volume": "",
+            "pages": "1-10",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/HICSS.2010.230",
+            "ISBN": "",
+            "shortTitle": "Individual Motivations for Using Social Virtual Worlds",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=5428433",
+            "accessDate": "2010-09-10T03:41:33Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "MVHVKR5A",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/MVHVKR5A",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/MVHVKR5A",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Das et al.",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "MVHVKR5A",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "Developing social virtual worlds using NetEffect",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "T.K.",
+                    "lastName": "Das"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "G.",
+                    "lastName": "Singh"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "A.",
+                    "lastName": "Mitchell"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "P.",
+                    "lastName": "Senthil Kumar"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "K.",
+                    "lastName": "McGee"
+                }
+            ],
+            "abstractNote": "",
+            "date": "",
+            "proceedingsTitle": "Proceedings of IEEE 6th Workshop on Enabling Technologies: Infrastructure for Collaborative Enterprises",
+            "conferenceName": "IEEE 6th Workshop on Enabling Technologies: Infrastructure for Collaborative Enterprises",
+            "place": "Cambridge, MA, USA",
+            "publisher": "",
+            "volume": "",
+            "pages": "148-154",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/ENABL.1997.630806",
+            "ISBN": "",
+            "shortTitle": "",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=630806",
+            "accessDate": "2010-09-10T03:41:39Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "427WPAXJ",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/427WPAXJ",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/427WPAXJ",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Wang et al.",
+            "parsedDate": "2009",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "427WPAXJ",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "EMP: The Framework of a Parallel Delivery Scheme for Large Scale Virtual Worlds",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "Wei",
+                    "lastName": "Wang"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Gui-song",
+                    "lastName": "Yang"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Zhong-jie",
+                    "lastName": "Wang"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Xing-yu",
+                    "lastName": "He"
+                }
+            ],
+            "abstractNote": "",
+            "date": "12/2009",
+            "proceedingsTitle": "2009 First International Conference on Information Science and Engineering",
+            "conferenceName": "2009 1st International Conference on Information Science and Engineering (ICISE)",
+            "place": "Nanjing, China",
+            "publisher": "",
+            "volume": "",
+            "pages": "1733-1736",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/ICISE.2009.544",
+            "ISBN": "",
+            "shortTitle": "EMP",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=5455751",
+            "accessDate": "2010-09-10T03:41:45Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "G996VEIT",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/G996VEIT",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/G996VEIT",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Macedonia",
+            "parsedDate": "2009",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "G996VEIT",
+            "version": 1,
+            "itemType": "journalArticle",
+            "title": "Virtual Worlds: A New Reality for Treating Post-Traumatic Stress Disorder",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "Mike",
+                    "lastName": "Macedonia"
+                }
+            ],
+            "abstractNote": "",
+            "publicationTitle": "IEEE Computer Graphics and Applications",
+            "volume": "29",
+            "issue": "1",
+            "pages": "86-88",
+            "date": "01/2009",
+            "series": "",
+            "seriesTitle": "",
+            "seriesText": "",
+            "journalAbbreviation": "IEEE Comput. Grap. Appl.",
+            "language": "",
+            "DOI": "10.1109/MCG.2009.18",
+            "ISSN": "0272-1716",
+            "shortTitle": "Virtual Worlds",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=4736462",
+            "accessDate": "2010-09-10T03:41:48Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "V2JKCPKJ",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/V2JKCPKJ",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/V2JKCPKJ",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Freund and Rossmann",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "V2JKCPKJ",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "Decentralized virtual reality: making the move to multi-user- and multi-screen virtual worlds",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "E.",
+                    "lastName": "Freund"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "A.",
+                    "lastName": "Rossmann"
+                }
+            ],
+            "abstractNote": "",
+            "date": "",
+            "proceedingsTitle": "Proceedings 2001 IEEE/RSJ International Conference on Intelligent Robots and Systems. Expanding the Societal Role of Robotics in the the Next Millennium (Cat. No.01CH37180)",
+            "conferenceName": "RSJ/IEEE International Conference on Intelligent Robots and Systems",
+            "place": "Maui, HI, USA",
+            "publisher": "",
+            "volume": "",
+            "pages": "1830-1835",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/IROS.2001.976339",
+            "ISBN": "",
+            "shortTitle": "Decentralized virtual reality",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=976339",
+            "accessDate": "2010-09-10T03:41:52Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "U2U3T76A",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/U2U3T76A",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/U2U3T76A",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Laaki et al.",
+            "parsedDate": "2010",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "U2U3T76A",
+            "version": 1,
+            "itemType": "conferencePaper",
+            "title": "Augmenting virtual worlds with real-life data from mobile devices",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "Heikki",
+                    "lastName": "Laaki"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Karel",
+                    "lastName": "Kaurila"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Karl",
+                    "lastName": "Ots"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Vik",
+                    "lastName": "Nuckchady"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "Petros",
+                    "lastName": "Belimpasakis"
+                }
+            ],
+            "abstractNote": "",
+            "date": "03/2010",
+            "proceedingsTitle": "2010 IEEE Virtual Reality Conference (VR)",
+            "conferenceName": "2010 IEEE Virtual Reality Conference (VR)",
+            "place": "Boston, MA, USA",
+            "publisher": "",
+            "volume": "",
+            "pages": "281-282",
+            "series": "",
+            "language": "",
+            "DOI": "10.1109/VR.2010.5444764",
+            "ISBN": "",
+            "shortTitle": "",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=5444764",
+            "accessDate": "2010-09-10T03:41:59Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    },
+    {
+        "key": "BIG9XENA",
+        "version": 1,
+        "library": {
+            "type": "group",
+            "id": 12,
+            "name": "virtual worlds",
+            "links": {
+                "alternate": {
+                    "href": "https://staging.zotero.net/groups/virtual_worlds",
+                    "type": "text/html"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/12/items/BIG9XENA",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/virtual_worlds/items/BIG9XENA",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "createdByUser": {
+                "id": 14058,
+                "username": "fcheslack1",
+                "name": "",
+                "links": {
+                    "alternate": {
+                        "href": "https://staging.zotero.net/fcheslack1",
+                        "type": "text/html"
+                    }
+                }
+            },
+            "creatorSummary": "Bell et al.",
+            "parsedDate": "2010",
+            "numChildren": 0
+        },
+        "data": {
+            "key": "BIG9XENA",
+            "version": 1,
+            "itemType": "journalArticle",
+            "title": "VWRAP for virtual worlds interoperability [Standards",
+            "creators": [
+                {
+                    "creatorType": "author",
+                    "firstName": "J.",
+                    "lastName": "Bell"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "M.",
+                    "lastName": "Dinova"
+                },
+                {
+                    "creatorType": "author",
+                    "firstName": "D.",
+                    "lastName": "Levine"
+                }
+            ],
+            "abstractNote": "",
+            "publicationTitle": "IEEE Internet Computing",
+            "volume": "14",
+            "issue": "1",
+            "pages": "73-77",
+            "date": "01/2010",
+            "series": "",
+            "seriesTitle": "",
+            "seriesText": "",
+            "journalAbbreviation": "IEEE Internet Comput.",
+            "language": "",
+            "DOI": "10.1109/MIC.2010.20",
+            "ISSN": "1089-7801",
+            "shortTitle": "",
+            "url": "http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=5370823",
+            "accessDate": "2010-09-10T03:42:04Z",
+            "archive": "",
+            "archiveLocation": "",
+            "libraryCatalog": "CrossRef",
+            "callNumber": "",
+            "rights": "",
+            "extra": "",
+            "tags": [],
+            "collections": [
+                "5HFNVSN6"
+            ],
+            "relations": {},
+            "dateAdded": "2010-09-10T03:56:55Z",
+            "dateModified": "2010-09-10T03:56:55Z"
+        }
+    }
+]
