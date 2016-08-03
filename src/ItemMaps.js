@@ -268,7 +268,7 @@ ItemMaps.cslNameMap = {
 };
 
 ItemMaps.cslFieldMap = {
-	'title': ['title'],
+	'title': ['title', 'nameOfAct', 'caseName', 'subject'],
 	'container-title': ['publicationTitle',  'reporter', 'code'], /* reporter and code should move to SQL mapping tables */
 	'collection-title': ['seriesTitle', 'series'],
 	'collection-number': ['seriesNumber'],
@@ -328,7 +328,7 @@ ItemMaps.cslTypeMap = {
 	'case': 'legal_case',
 	'hearing': 'bill',                // ??
 	'patent': 'patent',
-	'statute': 'bill',                // ??
+	'statute': 'legislation',
 	'email': 'personal_communication',
 	'map': 'map',
 	'blogPost': 'webpage',
