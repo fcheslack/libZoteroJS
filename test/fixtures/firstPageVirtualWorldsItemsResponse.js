@@ -6,8 +6,8 @@ module.exports = new Response(JSON.stringify(require('./firstPageVirtualWorldsIt
 		'Total-Results': 190,
 		'Link': '<https://apidev.zotero.org/groups/12/items?start=25>; rel="next", <https://apidev.zotero.org/groups/12/items?start=175>; rel="last", <https://staging.zotero.net/groups/12/items>; rel="alternate"',
 		'Last-Modified-Version': 2869,
-		//'Vary': 'Host,Accept-Encoding',
-		//'Content-Type': 'application/json',
-		//'Transfer-Encoding': 'chunked'
+		'Vary': 'Host,Accept-Encoding',
+		'Content-Type': 'application/json',
+		'Transfer-Encoding': 'chunked'
 	}
 });
