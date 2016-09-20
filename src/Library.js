@@ -338,8 +338,10 @@ Library.prototype.loadUpdatedItems = function(){
 		library.items.updateSyncedVersion();
 		
 		//TODO: library needs its own state
-		var displayParams = Zotero.state.getUrlVars();
-		library.buildItemDisplayView(displayParams);
+		if(Zotero.state) {
+			var displayParams = Zotero.state.getUrlVars();
+			library.buildItemDisplayView(displayParams);
+		}
 		//save updated items to IDB
 		if(Zotero.config.useIndexedDB){
 			var saveItemsD = library.idbLibrary.updateItems(library.items.objectArray);
@@ -388,7 +390,7 @@ Library.prototype.loadUpdatedCollections = function(){
 				log.debug('All updated collections loaded', 3);
 				library.collections.updateSyncedVersion();
 				//TODO: library needs its own state
-				var displayParams = Zotero.state.getUrlVars();
+				
 				//save updated collections to cache
 				log.debug('loadUpdatedCollections complete - saving collections to cache before resolving', 3);
 				log.debug('collectionsVersion: ' + library.collections.collectionsVersion, 3);
