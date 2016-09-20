@@ -2,6 +2,7 @@
 
 const gulp = require('gulp');
 const sourcemaps = require('gulp-sourcemaps');
+const babelify = require('babelify');
 const babel = require('gulp-babel');
 const concat = require('gulp-concat');
 const replace = require('gulp-replace-task');
@@ -35,13 +36,7 @@ function getBuild(dev) {
 		debug: true,
 		entries: './src/libzotero.js',
 		standalone: 'Zotero',
-		transform: [
-			['babelify', {
-				'presets': ['es2015'],
-				'plugins': ['transform-flow-strip-types']
-			}]
-		]
-	}).ignore('w3c-xmlhttprequest');
+	}).transform(babelify).ignore('w3c-xmlhttprequest');
 
 	return b.bundle()
 		.pipe(source('libzotero.js'))
@@ -69,10 +64,7 @@ gulp.task('dev', function() {
 
 gulp.task('prepublish', function() {
 	return gulp.src('./src/**/*.js')
-			.pipe(babel({
-				'presets': ['es2015'],
-				'plugins': ['transform-flow-strip-types']
-			}))
+			.pipe(babel())
 			.pipe(gulp.dest('./lib/'));
 });
 
