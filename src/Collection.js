@@ -107,7 +107,7 @@ module.exports.prototype.addItems = function(itemKeys){
 	};
 	var requestData = itemKeys.join(' ');
 	
-	return Zotero.ajaxRequest(config, 'POST', {
+	return this.owningLibrary.ajaxRequest(config, 'POST', {
 		data: requestData
 	});
 };
@@ -122,14 +122,20 @@ module.exports.prototype.getMemberItemKeys = function(){
 		'collectionKey':collection.key,
 		'format':'keys'
 	};
-	
-	return Zotero.ajaxRequest(config, 'GET', {processData: false} )
-	.then(function(response){
-		log.debug('getMemberItemKeys proxied callback', 3);
-		var result = response.data;
-		var keys = result.trim().split(/[\s]+/);
-		collection.itemKeys = keys;
-		return keys;
+
+	return new Promise((resolve, reject) => {
+		this.owningLibrary.ajaxRequest(
+			config,
+			'GET',
+			{ processData: false }
+		).then(response => {
+			log.debug('getMemberItemKeys callback', 3);
+			response.text().then(keys => {
+				keys = keys.trim().split(/[\s]+/);
+				collection.itemKeys = keys;
+				resolve(keys);
+			}).catch(reject);
+		}).catch(reject)
 	});
 };
 
@@ -142,7 +148,7 @@ module.exports.prototype.removeItem = function(itemKey){
 		'collectionKey':collection.key,
 		'itemKey':itemKey
 	};
-	return Zotero.ajaxRequest(config, 'DELETE', {
+	return this.owningLibrary.ajaxRequest(config, 'DELETE', {
 		processData: false,
 		cache:false
 	});
@@ -164,7 +170,7 @@ module.exports.prototype.update = function(name, parentKey){
 	var writeObject = collection.writeApiObj();
 	var requestData = JSON.stringify(writeObject);
 	
-	return Zotero.ajaxRequest(config, 'PUT', {
+	return this.owningLibrary.ajaxRequest(config, 'PUT', {
 		data: requestData,
 		processData: false,
 		headers:{
@@ -191,7 +197,7 @@ module.exports.prototype.remove = function(){
 		'collectionKey':collection.key
 	};
 	
-	return Zotero.ajaxRequest(config, 'DELETE', {
+	return this.owningLibrary.ajaxRequest(config, 'DELETE', {
 		processData: false,
 		headers:{
 			'If-Unmodified-Since-Version': collection.version

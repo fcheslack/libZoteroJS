@@ -248,15 +248,19 @@ Net.prototype.ajaxRequest = function(requestConfig){
 		net.ajax(config)
 		.then(function(response){
 			var ar = new Zotero.ApiResponse(response);
-			response.json().then(function(data){
-				ar.data = data;
-				resolve(ar);
-			}, function(err){
-				log.error(err);
-				ar.isError = true;
-				ar.error = err;
-				reject(ar); //reject promise on malformed json
-			});
+			if('processData' in config && config.processData === false) {
+				resolve(response);
+			} else {
+				response.json().then(function(data){
+					ar.data = data;
+					resolve(ar);
+				}, function(err){
+					log.error(err);
+					ar.isError = true;
+					ar.error = err;
+					reject(ar); //reject promise on malformed json
+				});
+			}
 		}, function(response){
 			var ar;
 			if(response instanceof Error){
