@@ -21815,12 +21815,14 @@ module.exports.prototype.addItems = function (itemKeys) {
 	};
 	var requestData = itemKeys.join(' ');
 
-	return Zotero.ajaxRequest(config, 'POST', {
+	return this.owningLibrary.ajaxRequest(config, 'POST', {
 		data: requestData
 	});
 };
 
 module.exports.prototype.getMemberItemKeys = function () {
+	var _this = this;
+
 	log.debug('Zotero.Collection.getMemberItemKeys', 3);
 	var collection = this;
 	var config = {
@@ -21831,12 +21833,15 @@ module.exports.prototype.getMemberItemKeys = function () {
 		'format': 'keys'
 	};
 
-	return Zotero.ajaxRequest(config, 'GET', { processData: false }).then(function (response) {
-		log.debug('getMemberItemKeys proxied callback', 3);
-		var result = response.data;
-		var keys = result.trim().split(/[\s]+/);
-		collection.itemKeys = keys;
-		return keys;
+	return new Promise(function (resolve, reject) {
+		_this.owningLibrary.ajaxRequest(config, 'GET', { processData: false }).then(function (response) {
+			log.debug('getMemberItemKeys callback', 3);
+			response.text().then(function (keys) {
+				keys = keys.trim().split(/[\s]+/);
+				collection.itemKeys = keys;
+				resolve(keys);
+			}).catch(reject);
+		}).catch(reject);
 	});
 };
 
@@ -21849,7 +21854,7 @@ module.exports.prototype.removeItem = function (itemKey) {
 		'collectionKey': collection.key,
 		'itemKey': itemKey
 	};
-	return Zotero.ajaxRequest(config, 'DELETE', {
+	return this.owningLibrary.ajaxRequest(config, 'DELETE', {
 		processData: false,
 		cache: false
 	});
@@ -21871,7 +21876,7 @@ module.exports.prototype.update = function (name, parentKey) {
 	var writeObject = collection.writeApiObj();
 	var requestData = JSON.stringify(writeObject);
 
-	return Zotero.ajaxRequest(config, 'PUT', {
+	return this.owningLibrary.ajaxRequest(config, 'PUT', {
 		data: requestData,
 		processData: false,
 		headers: {
@@ -21898,7 +21903,7 @@ module.exports.prototype.remove = function () {
 		'collectionKey': collection.key
 	};
 
-	return Zotero.ajaxRequest(config, 'DELETE', {
+	return this.owningLibrary.ajaxRequest(config, 'DELETE', {
 		processData: false,
 		headers: {
 			'If-Unmodified-Since-Version': collection.version
@@ -26712,15 +26717,19 @@ Net.prototype.ajaxRequest = function (requestConfig) {
 	var ajaxpromise = new Promise(function (resolve, reject) {
 		net.ajax(config).then(function (response) {
 			var ar = new Zotero.ApiResponse(response);
-			response.json().then(function (data) {
-				ar.data = data;
-				resolve(ar);
-			}, function (err) {
-				log.error(err);
-				ar.isError = true;
-				ar.error = err;
-				reject(ar); //reject promise on malformed json
-			});
+			if ('processData' in config && config.processData === false) {
+				resolve(response);
+			} else {
+				response.json().then(function (data) {
+					ar.data = data;
+					resolve(ar);
+				}, function (err) {
+					log.error(err);
+					ar.isError = true;
+					ar.error = err;
+					reject(ar); //reject promise on malformed json
+				});
+			}
 		}, function (response) {
 			var ar;
 			if (response instanceof Error) {
