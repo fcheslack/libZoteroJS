@@ -250,7 +250,7 @@ Item.prototype.getChildren = function(library){
 			}
 		};
 		
-		return item.owningLibrary.ajaxRequest(config)
+		return item.owningLibrary.ajaxRequest(config.url)
 		.then(function(response){
 			log.debug('getChildren proxied callback', 4);
 			var items = library.items;
