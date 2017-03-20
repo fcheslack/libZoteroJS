@@ -222,7 +222,7 @@ Item.prototype.createChildNotes = function(notes){
 	
 	return Promise.all(childItemPromises)
 	.then(function(){
-		return item.owningLibrary.writeItems(childItems);
+		return item.owningLibrary.items.writeItems(childItems);
 	});
 };
 
