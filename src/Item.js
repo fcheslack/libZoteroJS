@@ -658,6 +658,13 @@ Item.prototype.get = function(key){
 			}
 	}
 	
+	if (item.baseMap[item.apiObj.data.itemType] && item.baseMap[item.apiObj.data.itemType][key]) {
+		let newKey = item.baseMap[item.apiObj.data.itemType][key];
+		if (!item.apiObj.data[key] && item.apiObj.data[newKey]) {
+			key = newKey;
+		}
+	}
+	
 	if(key in item.apiObj.data){
 		return item.apiObj.data[key];
 	}
