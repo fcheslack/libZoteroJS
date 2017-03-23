@@ -51,7 +51,6 @@ Writer.prototype.writeObjects = function(objectsArray, target){
 //accept an array of 'Zotero.Item's
 Writer.prototype.writeItems = function(itemsArray){
 	let writeItems = atomizeItems(itemsArray);
-	
 	return this.writeObjects(writeItems, 'items');
 };
 

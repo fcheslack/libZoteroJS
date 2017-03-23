@@ -1,45 +1,61 @@
+/* eslint-env node, mocha */
 'use strict';
 
-var assert = require('chai').assert;
-var should = require('chai').should();
-var expect = require('chai').expect;
-var Zotero = require('../../src/libzotero.js');
+const assert = require('chai').assert;
+const Zotero = require('../../src/libzotero.js');
+const fetchMock = require('fetch-mock');
 
-Zotero.testing = {
-	libraryID: 0,
-	libraryType: 'user'
-};
+const bookTemplateFixture = require('../fixtures/book-template.json');
 
 /*
  * Test cases:
  * create a new item with no children
  *     single POST to /items
  */
-describe.skip( 'Create item', function(){
-	it("should create item", function(){
-		console.log('config:');
-		console.log(Zotero.config);
-		var library = new Zotero.Library(Zotero.testing.libraryType, Zotero.testing.libraryID, '', '');
-		
-		var item = new Zotero.Item();
+describe('Create item', () => {
+	before(() => {
+		fetchMock.get(
+			/https:\/\/api\.zotero\.org\/items\/new\?itemType=book\&?/i,
+			bookTemplateFixture
+		);
+		fetchMock.post(
+			/https:\/\/api\.zotero\.org\/users\/1\/items\??/i,
+			request => {
+				let item = JSON.parse(request.body);
+				item.version++;
+				return {
+					'successful': item,
+					'success': {
+						'0': item.key
+					},
+					'unchanged': {},
+					'failed': {}
+				};
+			}
+		);
+		fetchMock.mock('*', request => {
+			throw(new Error(`A request to ${request.url} was not expected`));
+		});
+	});
+
+	after(() => {
+		fetchMock.restore();
+	});
+	
+	it('should create item', done => {
+		let library = new Zotero.Library('user', 1, '', '');
+		let item = new Zotero.Item();
+
 		item.associateWithLibrary(library);
-		var d = item.initEmpty('conferencePaper');
-		d.done(function(item){
-			item.set('title', 'GurunGo: coupling personal computers and mobile devices through mobile data types');
-			item.set('conferenceName', 'Eleventh Workshop on Mobile Computing Systems & Applications');
-			
-			var writeItemD = item.writeItem();
-			writeItemD.done(function(itemsArray){
-				assert.equal(itemsArray.length, 1, 'We expect 1 items was written');
-				assert.isOk(itemsArray[0].itemKey, 'We expect the first item to have an itemKey');
-				
-				//delete the newly created items
-				var deleteXhr = library.items.deleteItems(itemsArray);
-				deleteXhr.done(function(data, statusText, jqxhr){
-					assert.equal(jqxhr.status, 204, 'Expect successful delete to respond with 204 no content');
-					start();
-				});
-			});
-		}.bind(this) );
+		item.initEmpty('book')
+			.then(item => {
+				item.set('title', 'book-1');
+				item.writeItem()
+					.then(function(itemsArray) {
+						assert.equal(itemsArray.length, 1, 'We expect 1 items was written');
+						assert.isOk(itemsArray[0].key, 'We expect the first item to have an itemKey');
+						done();
+					}).catch(done);
+			}).catch(done)
 	});
 });

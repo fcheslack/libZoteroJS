@@ -205,6 +205,7 @@ module.exports.prototype.writeItems = function(itemsArray){
 	var library = items.owningLibrary;
 	var i;
 	var writeItems = items.atomizeItems(itemsArray);
+
 	
 	var config = {
 		'target':'items',
@@ -248,10 +249,12 @@ module.exports.prototype.writeItems = function(itemsArray){
 			success: writeItemsSuccessCallback.bind(successContext)
 		});
 	}
-	
-	return library.sequentialRequests(requestObjects)
-	.then(function(responses){
-		log.debug('Done with writeItems sequentialRequests promise', 3);
-		return responses;
+
+	return new Promise((resolve, reject) => {
+		library.sequentialRequests(requestObjects)
+			.then(function(responses) {
+				resolve(responses.reduce((a, r) => a.concat(r.returnItems), []));
+				log.debug('Done with writeItems sequentialRequests promise', 3);
+			}).catch(reject);
 	});
 };
