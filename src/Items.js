@@ -217,24 +217,27 @@ module.exports.prototype.writeItems = function(itemsArray){
 	var rawChunkObjects = items.rawChunks(writeChunks);
 	
 	//update item with server response if successful
-	var writeItemsSuccessCallback = function(response){
-		log.debug('writeItem successCallback', 3);
-		items.updateObjectsFromWriteResponse(this.writeChunk, response);
-		//save updated items to IDB
-		if(Zotero.config.useIndexedDB){
-			this.library.idbLibrary.updateItems(this.writeChunk);
-		}
-		
-		Zotero.trigger('itemsChanged', {library:this.library});
-		response.returnItems = this.writeChunk;
-		return response;
+	var writeItemsSuccessCallback = function(response) {
+		return new Promise(resolve => {
+			log.debug('writeItem successCallback', 3);
+			items.updateObjectsFromWriteResponse(this.writeChunk, response).then(() => {
+				//save updated items to IDB
+				if(Zotero.config.useIndexedDB){
+					this.library.idbLibrary.updateItems(this.writeChunk);
+				}
+				
+				Zotero.trigger('itemsChanged', {library:this.library});
+				response.returnItems = this.writeChunk;	
+				resolve();
+			});
+		});
 	};
 	
 	log.debug('items.itemsVersion: ' + items.itemsVersion, 3);
 	log.debug('items.libraryVersion: ' + items.libraryVersion, 3);
 	
 	var requestObjects = [];
-	for(i = 0; i < writeChunks.length; i++){
+	for(i = 0; i < writeChunks.length; i++) {
 		var successContext = {
 			writeChunk: writeChunks[i],
 			library: library

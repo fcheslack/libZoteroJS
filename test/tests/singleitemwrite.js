@@ -21,15 +21,20 @@ describe('Create item', () => {
 		fetchMock.post(
 			/https:\/\/api\.zotero\.org\/users\/1\/items\??/i,
 			request => {
-				let item = JSON.parse(request.body);
-				item.version++;
+				let item = JSON.parse(request.body)[0];
+				item.version = 12;
 				return {
-					'successful': item,
-					'success': {
-						'0': item.key
+					headers: {
+						'Last-Modified-Version': 12
 					},
-					'unchanged': {},
-					'failed': {}
+					body: {
+						'successful': item,
+						'success': {
+							'0': item.key
+						},
+						'unchanged': {},
+						'failed': {}
+					}
 				};
 			}
 		);
@@ -50,10 +55,12 @@ describe('Create item', () => {
 		item.initEmpty('book')
 			.then(item => {
 				item.set('title', 'book-1');
+				let version = item.version;
 				item.writeItem()
 					.then(function(itemsArray) {
 						assert.equal(itemsArray.length, 1, 'We expect 1 items was written');
 						assert.isOk(itemsArray[0].key, 'We expect the first item to have an itemKey');
+						assert.equal(item.version, 12, 'We expect version number to be updated');
 						done();
 					}).catch(done);
 			}).catch(done)

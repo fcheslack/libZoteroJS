@@ -202,45 +202,51 @@ module.exports.prototype.processDeletions = function(deletedKeys) {
 module.exports.prototype.updateObjectsFromWriteResponse = function(objectsArray, response){
 	log.debug('Zotero.Container.updateObjectsFromWriteResponse', 3);
 	log.debug('statusCode: ' + response.status, 3);
-	if(response.status == 200){
-		response.json().then(data => {
-			log.debug('newLastModifiedVersion: ' + response.lastModifiedVersion, 3);
-			//make sure writes were actually successful and
-			//update the itemKey for the parent
-			if(data.hasOwnProperty('success')){
-				//update each successfully written item, possibly with new itemKeys
-				Object.keys(data.success).forEach(function(ind){
-					var i = parseInt(ind, 10);
-					var key = data.success[ind];
-					var object = objectsArray[i];
-					//throw error if objectKey mismatch
-					if(object.key !== '' && object.key !== key){
-						throw new Error('object key mismatch in multi-write response');
-					}
-					if(object.key === ''){
-						object.updateObjectKey(key);
-					}
-					object.set('version', response.lastModifiedVersion);
-					object.synced = true;
-					object.writeFailure = false;
-				});
-			}
-			if(data.hasOwnProperty('failed')){
-				log.debug('updating objects with failed writes', 3);
-				Object.keys(data.failed).forEach(function(ind){
-					var failure = data.failed[ind];
-					log.error('failed write ' + ind + ' - ' + failure);
-					var i = parseInt(ind, 10);
-					var object = objectsArray[i];
-					object.writeFailure = failure;
-				});
-			}
-		});
-	}
-	else if(response.status == 204){
-		//single item put response, this probably should never go to this function
-		objectsArray[0].synced = true;
-	}
+	return new Promise((resolve, reject) => {
+		if(response.status == 200) {
+			response.json().then(data => {
+				let lastModifiedVersion = response.headers.get('Last-Modified-Version');
+				log.debug('newLastModifiedVersion: ' + lastModifiedVersion, 3);
+				//make sure writes were actually successful and
+				//update the itemKey for the parent
+				if(data.hasOwnProperty('success')){
+					//update each successfully written item, possibly with new itemKeys
+					Object.keys(data.success).forEach(function(ind){
+						var i = parseInt(ind, 10);
+						var key = data.success[ind];
+						var object = objectsArray[i];
+						//throw error if objectKey mismatch
+						if(object.key !== '' && object.key !== key){
+							throw new Error('object key mismatch in multi-write response');
+						}
+						if(object.key === ''){
+							object.updateObjectKey(key);
+						}
+						object.set('version', lastModifiedVersion);
+						object.synced = true;
+						object.writeFailure = false;
+						resolve();
+					});
+				}
+				if(data.hasOwnProperty('failed')){
+					log.debug('updating objects with failed writes', 3);
+					Object.keys(data.failed).forEach(function(ind){
+						var failure = data.failed[ind];
+						log.error('failed write ' + ind + ' - ' + failure);
+						var i = parseInt(ind, 10);
+						var object = objectsArray[i];
+						object.writeFailure = failure;
+						reject();
+					});
+				}
+			});
+		}
+		else if(response.status == 204){
+			//single item put response, this probably should never go to this function
+			objectsArray[0].synced = true;
+			resolve();
+		}
+	});
 };
 
 //return the key as a string when passed an argument that 

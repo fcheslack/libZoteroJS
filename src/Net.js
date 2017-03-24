@@ -244,16 +244,34 @@ Net.prototype.ajaxRequest = function(requestConfig){
 	
 	log.debug('AJAX config', 4);
 	log.debug(config, 4);
+
+	let handleSuccessCallback = (response) => {
+		return new Promise(resolve => {
+			if(config.success) {
+				let maybePromise = config.success(response);
+				if(maybePromise && 'then' in maybePromise) {
+					maybePromise.then(() => {
+						resolve();
+					});
+				} else {
+					resolve();
+				}
+			} else {
+				resolve();
+			}
+		});
+	};
+
 	var ajaxpromise = new Promise(function(resolve, reject){
 		net.ajax(config)
 		.then(function(response){
 			var ar = new Zotero.ApiResponse(response);
 			if('processData' in config && config.processData === false) {
-				resolve(response);
+				handleSuccessCallback(response).then(() => resolve(response))
 			} else {
 				response.json().then(function(data){
 					ar.data = data;
-					resolve(ar);
+					handleSuccessCallback(response).then(() => resolve(ar))
 				}, function(err){
 					log.error(err);
 					ar.isError = true;
@@ -283,7 +301,7 @@ Net.prototype.ajaxRequest = function(requestConfig){
 		}
 		return response;
 	})
-	.then(config.success, config.error);
+	.catch(config.error);
 	
 	return ajaxpromise;
 };
