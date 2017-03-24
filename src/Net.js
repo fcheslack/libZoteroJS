@@ -271,7 +271,7 @@ Net.prototype.ajaxRequest = function(requestConfig){
 			} else {
 				response.json().then(function(data){
 					ar.data = data;
-					handleSuccessCallback(response).then(() => resolve(ar))
+					handleSuccessCallback(ar).then(() => resolve(ar))
 				}, function(err){
 					log.error(err);
 					ar.isError = true;
