@@ -222,7 +222,7 @@ module.exports = function(jsonBody){
 		collections.initSecondaryData();
 		
 		responses.forEach(function(response){
-			if(response.isError || (response.data.hasOwnProperty('failed') && Object.keys(response.data.failed).length > 0) ){
+			if (response.isError || ( typeof response.data == "object" && response.data.hasOwnProperty('failed') && Object.keys(response.data.failed).length > 0) ){
 				throw new Error('failure when writing collections');
 			}
 		});
