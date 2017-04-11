@@ -253,11 +253,5 @@ module.exports.prototype.writeItems = function(itemsArray){
 		});
 	}
 
-	return new Promise((resolve, reject) => {
-		library.sequentialRequests(requestObjects)
-			.then(function(responses) {
-				resolve(responses.reduce((a, r) => a.concat(r.returnItems), []));
-				log.debug('Done with writeItems sequentialRequests promise', 3);
-			}).catch(reject);
-	});
+	return library.sequentialRequests(requestObjects);
 };
