@@ -57,7 +57,8 @@ describe('Create item', () => {
 				item.set('title', 'book-1');
 				let version = item.version;
 				item.writeItem()
-					.then(function(itemsArray) {
+					.then(function(responses) {
+						let itemsArray = responses[0].returnItems;
 						assert.equal(itemsArray.length, 1, 'We expect 1 items was written');
 						assert.isOk(itemsArray[0].key, 'We expect the first item to have an itemKey');
 						assert.equal(item.version, 12, 'We expect version number to be updated');
