@@ -209,7 +209,7 @@ module.exports.prototype.updateObjectsFromWriteResponse = function(objectsArray,
 				log.debug('newLastModifiedVersion: ' + lastModifiedVersion, 3);
 				//make sure writes were actually successful and
 				//update the itemKey for the parent
-				if(data.hasOwnProperty('success')){
+				if(data.hasOwnProperty('success') && Object.keys(data.success).length) {
 					//update each successfully written item, possibly with new itemKeys
 					Object.keys(data.success).forEach(function(ind){
 						var i = parseInt(ind, 10);
@@ -225,10 +225,9 @@ module.exports.prototype.updateObjectsFromWriteResponse = function(objectsArray,
 						object.set('version', lastModifiedVersion);
 						object.synced = true;
 						object.writeFailure = false;
-						resolve();
 					});
-				}
-				if(data.hasOwnProperty('failed')){
+					resolve();
+				} else if(data.hasOwnProperty('failed') && Object.keys(data.failed).length) {
 					log.debug('updating objects with failed writes', 3);
 					Object.keys(data.failed).forEach(function(ind){
 						var failure = data.failed[ind];
@@ -236,8 +235,10 @@ module.exports.prototype.updateObjectsFromWriteResponse = function(objectsArray,
 						var i = parseInt(ind, 10);
 						var object = objectsArray[i];
 						object.writeFailure = failure;
-						reject();
 					});
+					reject();
+				} else {
+					resolve();
 				}
 			});
 		}

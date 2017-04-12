@@ -218,9 +218,8 @@ module.exports.prototype.writeItems = function(itemsArray){
 	
 	//update item with server response if successful
 	var writeItemsSuccessCallback = function(response) {
-		return new Promise(resolve => {
-			log.debug('writeItem successCallback', 3);
-			items.updateObjectsFromWriteResponse(this.writeChunk, response).then(() => {
+		return new Promise((resolve) => {
+			var writeItemsCallback = () => {
 				//save updated items to IDB
 				if(Zotero.config.useIndexedDB){
 					this.library.idbLibrary.updateItems(this.writeChunk);
@@ -229,7 +228,15 @@ module.exports.prototype.writeItems = function(itemsArray){
 				Zotero.trigger('itemsChanged', {library:this.library});
 				response.returnItems = this.writeChunk;	
 				resolve();
-			});
+			}
+			log.debug('writeItem successCallback', 3);
+			
+			//@TODO: It would be nicer if rejections (for partially or entirely 
+			//		invalid updates) would propagate all the way to the end-user
+			//		instead of being swalloed here.
+			items.updateObjectsFromWriteResponse(this.writeChunk, response)
+				.then(writeItemsCallback)
+				.catch(writeItemsCallback)
 		});
 	};
 	
