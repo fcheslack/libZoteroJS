@@ -1,30 +1,27 @@
 'use strict';
 
-var assert = require('chai').assert;
-var should = require('chai').should();
-var expect = require('chai').expect;
-var Zotero = require('../../src/libzotero.js');
+const assert = require('chai').assert;
+const Zotero = require('../src/libzotero.js');
+const collectionApiObjectsFixture = require('./fixtures/collections-1.json');
 
-var collectionApiObjects = require('../fixtures/collections1.json');
-
-describe('Zotero.Collections', function(){
-	describe('#Construct', function() {
+describe('Zotero.Collections', () => {
+	describe('Construct', () => {
 		let collections = new Zotero.Collections();
 		
-		it('should instantiate collections from api objects', function(){
-			collections.addCollectionsFromJson(collectionApiObjects);
+		it('should instantiate collections from api objects', () => {
+			collections.addCollectionsFromJson(collectionApiObjectsFixture);
 			collections.initSecondaryData();
 
 			assert.equal(collections.instance, 'Zotero.Collections');
-
 			assert.lengthOf(collections.collectionsArray, 72);
 		});
-		it('should have instances in both collectionObjects and collectionsArray', function(){
+
+		it('should have instances in both collectionObjects and collectionsArray', () => {
 			let keys = Object.keys(collections.collectionObjects);
 			assert.lengthOf(keys, 72);
 		});
 
-		it('should allow accessing collections by key', function(){
+		it('should allow accessing collections by key', () => {
 			let c = collections.getCollection('TVS6NGIC');
 			assert.equal(c.instance, 'Zotero.Collection');
 			assert.equal(c.key, 'TVS6NGIC');
@@ -32,7 +29,7 @@ describe('Zotero.Collections', function(){
 			assert.equal(c.get('name'), 'samples');
 		});
 
-		it('should process collections with secondary attributes, including nesting', function(){
+		it('should process collections with secondary attributes, including nesting', () => {
 			let c = collections.getCollection('TVS6NGIC');
 			assert.equal(c.hasChildren, true);
 			assert.equal(c.nestingDepth, 1);

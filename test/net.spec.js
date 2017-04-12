@@ -1,17 +1,11 @@
 'use strict';
 
-var assert = require('chai').assert;
-var should = require('chai').should();
-var expect = require('chai').expect;
-var log = require('../../src/Log.js').Logger('libZotero:Tests:Net');
-var Zotero = require('../../src/libzotero.js');
+const assert = require('chai').assert;
+const fetchMock = require('fetch-mock');
+const Zotero = require('../src/libzotero.js');
 
-var fetchMock;
-
-describe('Zotero.Net', function(){
-	before(function(){
-		fetchMock = require('fetch-mock');
-
+describe('Zotero.Net', () => {
+	before(() => {
 		fetchMock.mock('https://api.zotero.org/itemTypes', `[
 		    {
 		        "itemType": "artwork",
@@ -41,27 +35,25 @@ describe('Zotero.Net', function(){
 		fetchMock.mock('networkError', {throws:new TypeError('network error')});
 	});
 
-	after(function(){
-		fetchMock.restore();
-	});
+	after(fetchMock.restore);
 
-	describe('ajax', function() {
-		it('should return a promise that resolves with a standard Fetch API response object', function(){
+	describe('ajax', () =>  {
+		it('should return a promise that resolves with a standard Fetch API response object', () => {
 			return Zotero.net.ajax({
 				url:'https://api.zotero.org/itemTypes'
-			}).then(function(response){
+			}).then(response => {
 				assert.instanceOf(response, Response, 'response is an instance of Fetch API Response interface');
 				return response;
 			});
 		});
 	});
 
-	describe('ajaxRequest', function() {
-		it('should return a promise that resolves with a Zotero.ApiResponse', function(){
+	describe('ajaxRequest', () =>  {
+		it('should return a promise that resolves with a Zotero.ApiResponse', () => {
 			var requestConfig = {
 				url:'https://api.zotero.org/itemTypes'
 			};
-			return Zotero.net.ajaxRequest(requestConfig).then(function(response){
+			return Zotero.net.ajaxRequest(requestConfig).then(response => {
 				assert.instanceOf(response, Zotero.ApiResponse, 'response is an instance of Zotero.ApiResponse');
 				assert.instanceOf(response.rawResponse, Response, 'rawResponse is an instance of Fetch API Response interface');
 				
@@ -70,65 +62,66 @@ describe('Zotero.Net', function(){
 			});
 		});
 
-		it('should parse the json response into the data property', function(){
+		it('should parse the json response into the data property', () => {
 			var requestConfig = {
 				url:'https://api.zotero.org/itemTypes'
 			};
-			return Zotero.net.ajaxRequest(requestConfig).then(function(response){
+			return Zotero.net.ajaxRequest(requestConfig).then(response => {
 				assert.equal('artwork', response.data[0].itemType);
 				return response;
 			});
 		});
 
-		it('should return a rejected promise if the response has bad json', function(){
+		it('should return a rejected promise if the response has bad json', () => {
 			var requestConfig = {
 				url:'malformed'
 			};
-			return Zotero.net.ajaxRequest(requestConfig).then(function(response){
+			
+			return Zotero.net.ajaxRequest(requestConfig).then(() => {
 				assert.fail('should never happen');
 				throw 'should never happen';
-			}, function(err){
+			}, (err) => {
 				assert.isNotNull(err);
 				//log.debug(err);
 			});
 		});
 
-		it('should throw a Zotero.ApiResponse indicating error for a 500 response', function(){
+		it('should throw a Zotero.ApiResponse indicating error for a 500 response', () => {
 			var requestConfig = {
 				url:'error'
 			};
-			return Zotero.net.ajaxRequest(requestConfig).then(function(response){
+			return Zotero.net.ajaxRequest(requestConfig).then(() => {
 				assert.fail('should never happen');
 				throw 'should never happen';
-			}, function(response){
+			}, response => {
 				assert.instanceOf(response, Zotero.ApiResponse, 'instance of Zotero.ApiResponse');
 				assert.equal(true, response.isError);
 				assert.equal(500, response.status);
 			});
 		});
 
-		it('should handle a 400 error with a bare string response gracefully', function(){
+		it('should handle a 400 error with a bare string response gracefully', () => {
 			var requestConfig = {
 				url:'errorString'
 			};
-			return Zotero.net.ajaxRequest(requestConfig).then(function(response){
+			return Zotero.net.ajaxRequest(requestConfig).then(() => {
 				assert.fail('should never happen');
 				throw 'should never happen';
-			}, function(response){
+			}, response => {
 				assert.instanceOf(response, Zotero.ApiResponse, 'instance of Zotero.ApiResponse');
 				assert.equal(true, response.isError);
 				assert.equal(400, response.status);
 			});
 		});
 
-		it('should throw a Zotero.ApiResponse indicating a network error', function(){
+		it('should throw a Zotero.ApiResponse indicating a network error', () => {
 			var requestConfig = {
 				url:'networkError'
 			};
-			return Zotero.net.ajaxRequest(requestConfig).then(function(response){
+			return Zotero.net.ajaxRequest(requestConfig).then(() => {
 				assert.fail('should never happen');
 				throw 'should never happen';
-			}, function(response){
+			}, response => {
 				assert.instanceOf(response, Zotero.ApiResponse, 'instance of Zotero.ApiResponse');
 				assert.equal(true, response.isError);
 			});
@@ -136,12 +129,12 @@ describe('Zotero.Net', function(){
 	});
 
 	//queueRequest should behave the same as ajaxRequest for individual requests
-	describe('queueRequest', function() {
-		it('should return a promise that resolves with a Zotero.ApiResponse', function(){
+	describe('queueRequest', () =>  {
+		it('should return a promise that resolves with a Zotero.ApiResponse', () => {
 			var requestConfig = {
 				url:'https://api.zotero.org/itemTypes'
 			};
-			return Zotero.net.queueRequest(requestConfig).then(function(response){
+			return Zotero.net.queueRequest(requestConfig).then(response => {
 				assert.instanceOf(response, Zotero.ApiResponse, 'response is an instance of Zotero.ApiResponse');
 				assert.instanceOf(response.rawResponse, Response, 'rawResponse is an instance of Fetch API Response interface');
 				
@@ -150,78 +143,78 @@ describe('Zotero.Net', function(){
 			});
 		});
 
-		it('should parse the json response into the data property', function(){
+		it('should parse the json response into the data property', () => {
 			var requestConfig = {
 				url:'https://api.zotero.org/itemTypes'
 			};
-			return Zotero.net.queueRequest(requestConfig).then(function(response){
+			return Zotero.net.queueRequest(requestConfig).then(response => {
 				assert.equal('artwork', response.data[0].itemType);
 				return response;
 			});
 		});
 
-		it('should return a rejected promise if the response has bad json', function(){
+		it('should return a rejected promise if the response has bad json', () => {
 			var requestConfig = {
 				url:'malformed'
 			};
-			return Zotero.net.queueRequest(requestConfig).then(function(response){
+			return Zotero.net.queueRequest(requestConfig).then(() => {
 				assert.fail('should never happen');
 				throw 'should never happen';
-			}, function(err){
+			}, (err) => {
 				assert.isNotNull(err);
 				//log.debug(err);
 			});
 		});
 
-		it('should throw a Zotero.ApiResponse indicating error for a 500 response', function(){
+		it('should throw a Zotero.ApiResponse indicating error for a 500 response', () => {
 			var requestConfig = {
 				url:'error'
 			};
-			return Zotero.net.queueRequest(requestConfig).then(function(response){
+			return Zotero.net.queueRequest(requestConfig).then(() => {
 				assert.fail('should never happen');
 				throw 'should never happen';
-			}, function(response){
+			}, response => {
 				assert.instanceOf(response, Zotero.ApiResponse, 'instance of Zotero.ApiResponse');
 				assert.equal(true, response.isError);
 				assert.equal(500, response.status);
 			});
 		});
 
-		it('should handle a 400 error with a bare string response gracefully', function(){
+		it('should handle a 400 error with a bare string response gracefully', () => {
 			var requestConfig = {
 				url:'errorString'
 			};
-			return Zotero.net.queueRequest(requestConfig).then(function(response){
+			return Zotero.net.queueRequest(requestConfig).then(() => {
 				assert.fail('should never happen');
 				throw 'should never happen';
-			}, function(response){
+			}, response => {
 				assert.instanceOf(response, Zotero.ApiResponse, 'instance of Zotero.ApiResponse');
 				assert.equal(true, response.isError);
 				assert.equal(400, response.status);
 			});
 		});
 
-		it('should throw a Zotero.ApiResponse indicating a network error', function(){
+		it('should throw a Zotero.ApiResponse indicating a network error', () => {
 			var requestConfig = {
 				url:'networkError'
 			};
-			return Zotero.net.queueRequest(requestConfig).then(function(response){
+			return Zotero.net.queueRequest(requestConfig).then(() => {
 				assert.fail('should never happen');
 				throw 'should never happen';
-			}, function(response){
+			}, response => {
 				assert.instanceOf(response, Zotero.ApiResponse, 'instance of Zotero.ApiResponse');
 				assert.equal(true, response.isError);
 			});
 		});
 
 		//run requests in parallel
-		it('should accept an array of configs and all requests', function(){
+		it('should accept an array of configs and all requests', () => {
 			var requestConfigs = [
 				{url:'https://api.zotero.org/itemTypes'},
 				//{url:'https://api.zotero.org/itemTypes'},
 				{url:'error'}
 			];
-			return Zotero.net.queueRequest(requestConfigs).then(function(responses){
+			return Zotero.net.queueRequest(requestConfigs).then((responses) => {
 				assert.lengthOf(responses, 2);
 
 				assert.instanceOf(responses[0], Zotero.ApiResponse, 'response is an instance of Zotero.ApiResponse');

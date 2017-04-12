@@ -1,4 +1,6 @@
-module.exports = new Response(JSON.stringify(require('./secondPageVirtualWorldsItems.json')), {
+const responseBody = require('./items-response-page-2-body.json');
+
+module.exports = new Response(JSON.stringify(responseBody), {
 	status:200,
 	statusText:'OK',
 	headers:{

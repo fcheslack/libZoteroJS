@@ -1,26 +1,16 @@
 'use strict';
 
-var assert = require('chai').assert;
-var should = require('chai').should();
-var expect = require('chai').expect;
-var Zotero = require('../../src/libzotero.js');
+const assert = require('chai').assert;
+const Zotero = require('../src/libzotero.js');
 
-Zotero.testing = {
-	libraryID: 0,
-	libraryType: 'user'
-};
-
-describe( 'Zotero.Ajax.apiRequestUrl', function() {
-	describe('#apiRequest()', function () {
-		it("should generate the expected patterns from various configs", function(){
-			
+describe('Zotero.Ajax', () => {
+	it('should generate the expected patterns from various configs', () => {
 			var oldBaseApiUrl = Zotero.config.baseApiUrl;
+			var config;
+
 			Zotero.config.baseApiUrl = 'https://api.zotero.org';
 			
-			var config;
-			
 			config = {'target':'collections', 'libraryType':'user', 'libraryID':1, 'content':'json', limit:'100'};
-
 			assert.equal(Zotero.ajax.apiRequestUrl(config), 'https://api.zotero.org/users/1/collections');
 			assert.equal(Zotero.ajax.apiQueryString(config), '?content=json&limit=100');
 			
@@ -58,6 +48,4 @@ describe( 'Zotero.Ajax.apiRequestUrl', function() {
 			
 			Zotero.config.baseApiUrl = oldBaseApiUrl;
 		});
-	});
-} );
-
+});

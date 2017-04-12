@@ -1,9 +1,7 @@
 'use strict';
 
 var assert = require('chai').assert;
-var should = require('chai').should();
-var expect = require('chai').expect;
-var Zotero = require('../../src/libzotero.js');
+var Zotero = require('../src/libzotero.js');
 
 describe('Zotero.extend', function(){
 	

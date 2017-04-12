@@ -1,24 +1,19 @@
 'use strict';
 
-var assert = require('chai').assert;
-var should = require('chai').should();
-var expect = require('chai').expect;
-var Zotero = require('../../src/libzotero.js');
+const assert = require('chai').assert;
+const Zotero = require('../src/libzotero.js');
+const responseFixture = require('./fixtures/items-response-page-1.js');
 
 describe('Zotero.ApiResponse', function(){
-	before(function(){});
-
-	after(function(){});
-
-	describe('construct', function() {
-		it('should instantiate with no argument with default values', function(){
+	describe('construct', () => {
+		it('should instantiate with no argument with default values', () => {
 			let ar = new Zotero.ApiResponse();
 			assert.instanceOf(ar, Zotero.ApiResponse);
 			assert.equal(0, ar.totalResults);
 		});
 
-		it('should parse the headers when constructed with a Response', function(){
-			let r = require('../fixtures/firstPageVirtualWorldsItemsResponse.js');
+		it('should parse the headers when constructed with a Response', () => {
+			let r = responseFixture;
 			let ar = new Zotero.ApiResponse(r);
 
 			assert.instanceOf(ar, Zotero.ApiResponse);
@@ -32,7 +27,7 @@ describe('Zotero.ApiResponse', function(){
 			assert.equal(ar.parsedLinks['alternate'], 'https://staging.zotero.net/groups/12/items');
 		});
 
-		it('should parse backoff and retry-after headers into ints', function(){
+		it('should parse backoff and retry-after headers into ints', () => {
 			let r = new Response(null, {
 				headers: {
 					backoff: '5',

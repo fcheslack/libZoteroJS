@@ -1,0 +1,2802 @@
+[
+  {
+    "key": "TBGZPBMW",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TBGZPBMW",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/TBGZPBMW",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "TBGZPBMW",
+      "version": 1,
+      "name": "001",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "QAS6S4IM",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/QAS6S4IM",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/QAS6S4IM",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "QAS6S4IM",
+      "version": 1,
+      "name": "002",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "FRKNG8DT",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/FRKNG8DT",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/FRKNG8DT",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "FRKNG8DT",
+      "version": 1,
+      "name": "003",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "MQUAMXDT",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/MQUAMXDT",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/MQUAMXDT",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "MQUAMXDT",
+      "version": 1,
+      "name": "004",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "EZIDWRHT",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/EZIDWRHT",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/EZIDWRHT",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "EZIDWRHT",
+      "version": 1,
+      "name": "005",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "GPCWPWUQ",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/GPCWPWUQ",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/GPCWPWUQ",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "GPCWPWUQ",
+      "version": 1,
+      "name": "006",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "WPT5C43V",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/WPT5C43V",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/WPT5C43V",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "WPT5C43V",
+      "version": 1,
+      "name": "007",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "J763GHRE",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/J763GHRE",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/J763GHRE",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "J763GHRE",
+      "version": 1,
+      "name": "008",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "QCST946T",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/QCST946T",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/QCST946T",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "QCST946T",
+      "version": 1,
+      "name": "009",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "8ZXAH9VR",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/8ZXAH9VR",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/8ZXAH9VR",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "8ZXAH9VR",
+      "version": 1,
+      "name": "010",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "QC2IQTZP",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/QC2IQTZP",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/QC2IQTZP",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "QC2IQTZP",
+      "version": 1,
+      "name": "011",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "PM9NZ2BE",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/PM9NZ2BE",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/PM9NZ2BE",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "PM9NZ2BE",
+      "version": 1,
+      "name": "012",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "IADPM4DK",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/IADPM4DK",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/IADPM4DK",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "IADPM4DK",
+      "version": 1,
+      "name": "013",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "6GBZXVB2",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/6GBZXVB2",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/6GBZXVB2",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "6GBZXVB2",
+      "version": 1,
+      "name": "014",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "T5D93Q5E",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/T5D93Q5E",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/T5D93Q5E",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "T5D93Q5E",
+      "version": 1,
+      "name": "015",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "2MD4W33P",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/2MD4W33P",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/2MD4W33P",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "2MD4W33P",
+      "version": 1,
+      "name": "016",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "Z6MGMURK",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/Z6MGMURK",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/Z6MGMURK",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "Z6MGMURK",
+      "version": 1,
+      "name": "017",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "DS5XXDAJ",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/DS5XXDAJ",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/DS5XXDAJ",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "DS5XXDAJ",
+      "version": 1,
+      "name": "018",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "C48UQRFR",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/C48UQRFR",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/C48UQRFR",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "C48UQRFR",
+      "version": 1,
+      "name": "019",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "ANETI5VP",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/ANETI5VP",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/ANETI5VP",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "ANETI5VP",
+      "version": 1,
+      "name": "020",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "I9IBB4KI",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/I9IBB4KI",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/I9IBB4KI",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "I9IBB4KI",
+      "version": 1,
+      "name": "021",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "A56RXP33",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/A56RXP33",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/A56RXP33",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "A56RXP33",
+      "version": 1,
+      "name": "022",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "FIWH4K2U",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/FIWH4K2U",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/FIWH4K2U",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "FIWH4K2U",
+      "version": 1,
+      "name": "023",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "UK7HSEKS",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/UK7HSEKS",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/UK7HSEKS",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "UK7HSEKS",
+      "version": 1,
+      "name": "024",
+      "parentCollection": "TMTT5PUG",
+      "relations": {}
+    }
+  },
+  {
+    "key": "Z8QH8ZUB",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/Z8QH8ZUB",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/Z8QH8ZUB",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 11
+    },
+    "data": {
+      "key": "Z8QH8ZUB",
+      "version": 1,
+      "name": "civil rights law",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "RXSBTGGQ",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/RXSBTGGQ",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/RXSBTGGQ",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/5G5XWZZ4",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "RXSBTGGQ",
+      "version": 1,
+      "name": "Client",
+      "parentCollection": "5G5XWZZ4",
+      "relations": {}
+    }
+  },
+  {
+    "key": "P2T24IAG",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/P2T24IAG",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/P2T24IAG",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/A9XJKJJH",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "P2T24IAG",
+      "version": 1,
+      "name": "column",
+      "parentCollection": "A9XJKJJH",
+      "relations": {}
+    }
+  },
+  {
+    "key": "SIDS2SBM",
+    "version": 267,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/SIDS2SBM",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/SIDS2SBM",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 1,
+      "numItems": 0
+    },
+    "data": {
+      "key": "SIDS2SBM",
+      "version": 267,
+      "name": "CS",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "CPSZVQJE",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/CPSZVQJE",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/CPSZVQJE",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 19
+    },
+    "data": {
+      "key": "CPSZVQJE",
+      "version": 1,
+      "name": "CSL",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "92G44TK5",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/92G44TK5",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/92G44TK5",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 11
+    },
+    "data": {
+      "key": "92G44TK5",
+      "version": 1,
+      "name": "Digital Humanities",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "68U2DQFR",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/68U2DQFR",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/68U2DQFR",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/2QK2Z3GE",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 1,
+      "numItems": 0
+    },
+    "data": {
+      "key": "68U2DQFR",
+      "version": 1,
+      "name": "do",
+      "parentCollection": "2QK2Z3GE",
+      "relations": {}
+    }
+  },
+  {
+    "key": "KG847D7B",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/KG847D7B",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/KG847D7B",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 4,
+      "numItems": 0
+    },
+    "data": {
+      "key": "KG847D7B",
+      "version": 1,
+      "name": "Empty",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "PEMT2WPV",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/PEMT2WPV",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/PEMT2WPV",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/KG847D7B",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "PEMT2WPV",
+      "version": 1,
+      "name": "empty nest",
+      "parentCollection": "KG847D7B",
+      "relations": {}
+    }
+  },
+  {
+    "key": "RCN4G4JP",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/RCN4G4JP",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/RCN4G4JP",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 3
+    },
+    "data": {
+      "key": "RCN4G4JP",
+      "version": 1,
+      "name": "Ewen",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "UE4NHGT7",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/UE4NHGT7",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/UE4NHGT7",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/454NPMJ9",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 1,
+      "numItems": 0
+    },
+    "data": {
+      "key": "UE4NHGT7",
+      "version": 1,
+      "name": "for",
+      "parentCollection": "454NPMJ9",
+      "relations": {}
+    }
+  },
+  {
+    "key": "AGE3DEMP",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/AGE3DEMP",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/AGE3DEMP",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 2
+    },
+    "data": {
+      "key": "AGE3DEMP",
+      "version": 1,
+      "name": "general tech",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "5S6J5E6I",
+    "version": 219,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/5S6J5E6I",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/5S6J5E6I",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "5S6J5E6I",
+      "version": 219,
+      "name": "Google Reader Starred",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "RNQ6CMNC",
+    "version": 216,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/RNQ6CMNC",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/RNQ6CMNC",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "RNQ6CMNC",
+      "version": 216,
+      "name": "Google Reader Starred",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "JD2PKPJZ",
+    "version": 217,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/JD2PKPJZ",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/JD2PKPJZ",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "JD2PKPJZ",
+      "version": 217,
+      "name": "Google Reader Starred",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "8W37KB7I",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/8W37KB7I",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/8W37KB7I",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/6SA8WTAX",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 1,
+      "numItems": 0
+    },
+    "data": {
+      "key": "8W37KB7I",
+      "version": 1,
+      "name": "interface",
+      "parentCollection": "6SA8WTAX",
+      "relations": {}
+    }
+  },
+  {
+    "key": "2QN4GWX3",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/2QN4GWX3",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/2QN4GWX3",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 2
+    },
+    "data": {
+      "key": "2QN4GWX3",
+      "version": 1,
+      "name": "Linux",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "454NPMJ9",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/454NPMJ9",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/454NPMJ9",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/X8VSWSE3",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 1,
+      "numItems": 0
+    },
+    "data": {
+      "key": "454NPMJ9",
+      "version": 1,
+      "name": "nesting",
+      "parentCollection": "X8VSWSE3",
+      "relations": {}
+    }
+  },
+  {
+    "key": "W2PAZURS",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/W2PAZURS",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/W2PAZURS",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 7
+    },
+    "data": {
+      "key": "W2PAZURS",
+      "version": 1,
+      "name": "news items",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "3PWAFW4F",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/3PWAFW4F",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/3PWAFW4F",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/UVS8IQRT",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 1,
+      "numItems": 6
+    },
+    "data": {
+      "key": "3PWAFW4F",
+      "version": 1,
+      "name": "Patents and Copyrights",
+      "parentCollection": "UVS8IQRT",
+      "relations": {}
+    }
+  },
+  {
+    "key": "ZFTGRHCI",
+    "version": 267,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/ZFTGRHCI",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/ZFTGRHCI",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/SIDS2SBM",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "ZFTGRHCI",
+      "version": 267,
+      "name": "Pervasive Computing",
+      "parentCollection": "SIDS2SBM",
+      "relations": {}
+    }
+  },
+  {
+    "key": "G3XFWRKV",
+    "version": 414,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/G3XFWRKV",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/G3XFWRKV",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/KG847D7B",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "G3XFWRKV",
+      "version": 414,
+      "name": "poiuy",
+      "parentCollection": "KG847D7B",
+      "relations": {}
+    }
+  },
+  {
+    "key": "FNZ9KNPH",
+    "version": 382,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/FNZ9KNPH",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/FNZ9KNPH",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/KG847D7B",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "FNZ9KNPH",
+      "version": 382,
+      "name": "qwert",
+      "parentCollection": "KG847D7B",
+      "relations": {}
+    }
+  },
+  {
+    "key": "QTCK977H",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/QTCK977H",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/QTCK977H",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 9
+    },
+    "data": {
+      "key": "QTCK977H",
+      "version": 1,
+      "name": "Reading",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "TVS6NGIC",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TVS6NGIC",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/TVS6NGIC",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 7,
+      "numItems": 13
+    },
+    "data": {
+      "key": "TVS6NGIC",
+      "version": 1,
+      "name": "samples",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "HBGGGSZE",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/HBGGGSZE",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/HBGGGSZE",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 2
+    },
+    "data": {
+      "key": "HBGGGSZE",
+      "version": 1,
+      "name": "science",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "DRBWWQKQ",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/DRBWWQKQ",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/DRBWWQKQ",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/5G5XWZZ4",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "DRBWWQKQ",
+      "version": 1,
+      "name": "Server",
+      "parentCollection": "5G5XWZZ4",
+      "relations": {}
+    }
+  },
+  {
+    "key": "MGBSUQ95",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/MGBSUQ95",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/MGBSUQ95",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/3PWAFW4F",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "MGBSUQ95",
+      "version": 1,
+      "name": "Software Patents",
+      "parentCollection": "3PWAFW4F",
+      "relations": {}
+    }
+  },
+  {
+    "key": "X8VSWSE3",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/X8VSWSE3",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/X8VSWSE3",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/9V7VTTR8",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 1,
+      "numItems": 0
+    },
+    "data": {
+      "key": "X8VSWSE3",
+      "version": 1,
+      "name": "super",
+      "parentCollection": "9V7VTTR8",
+      "relations": {}
+    }
+  },
+  {
+    "key": "4KDHZW3C",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/4KDHZW3C",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/4KDHZW3C",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/UVS8IQRT",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "4KDHZW3C",
+      "version": 1,
+      "name": "Supreme Court",
+      "parentCollection": "UVS8IQRT",
+      "relations": {}
+    }
+  },
+  {
+    "key": "UVS8IQRT",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/UVS8IQRT",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/UVS8IQRT",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 2,
+      "numItems": 0
+    },
+    "data": {
+      "key": "UVS8IQRT",
+      "version": 1,
+      "name": "technology law",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "H3DI7RSB",
+    "version": 413,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/H3DI7RSB",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/H3DI7RSB",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/KG847D7B",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "H3DI7RSB",
+      "version": 413,
+      "name": "test",
+      "parentCollection": "KG847D7B",
+      "relations": {}
+    }
+  },
+  {
+    "key": "VWRGISZ2",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/VWRGISZ2",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/VWRGISZ2",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TVS6NGIC",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "VWRGISZ2",
+      "version": 1,
+      "name": "test",
+      "parentCollection": "TVS6NGIC",
+      "relations": {}
+    }
+  },
+  {
+    "key": "7AQWVAMG",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/7AQWVAMG",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/7AQWVAMG",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TVS6NGIC",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "7AQWVAMG",
+      "version": 1,
+      "name": "test dialog",
+      "parentCollection": "TVS6NGIC",
+      "relations": {}
+    }
+  },
+  {
+    "key": "62AHN3PN",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/62AHN3PN",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/62AHN3PN",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TVS6NGIC",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "62AHN3PN",
+      "version": 1,
+      "name": "test dialog 2",
+      "parentCollection": "TVS6NGIC",
+      "relations": {}
+    }
+  },
+  {
+    "key": "U7ZRTAUN",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/U7ZRTAUN",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/U7ZRTAUN",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TVS6NGIC",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "U7ZRTAUN",
+      "version": 1,
+      "name": "test sub again",
+      "parentCollection": "TVS6NGIC",
+      "relations": {}
+    }
+  },
+  {
+    "key": "9V7VTTR8",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/9V7VTTR8",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/9V7VTTR8",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TVS6NGIC",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 1,
+      "numItems": 0
+    },
+    "data": {
+      "key": "9V7VTTR8",
+      "version": 1,
+      "name": "testing",
+      "parentCollection": "TVS6NGIC",
+      "relations": {}
+    }
+  },
+  {
+    "key": "5HVTP3U7",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/5HVTP3U7",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/5HVTP3U7",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TVS6NGIC",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "5HVTP3U7",
+      "version": 1,
+      "name": "testSub",
+      "parentCollection": "TVS6NGIC",
+      "relations": {}
+    }
+  },
+  {
+    "key": "CUIC6VRS",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/CUIC6VRS",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/CUIC6VRS",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 1
+    },
+    "data": {
+      "key": "CUIC6VRS",
+      "version": 1,
+      "name": "textbooks",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "2QK2Z3GE",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/2QK2Z3GE",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/2QK2Z3GE",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/FIWG9HVK",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 1,
+      "numItems": 1
+    },
+    "data": {
+      "key": "2QK2Z3GE",
+      "version": 1,
+      "name": "to",
+      "parentCollection": "FIWG9HVK",
+      "relations": {}
+    }
+  },
+  {
+    "key": "TMTT5PUG",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TMTT5PUG",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/TMTT5PUG",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/TVS6NGIC",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 24,
+      "numItems": 0
+    },
+    "data": {
+      "key": "TMTT5PUG",
+      "version": 1,
+      "name": "tons of collections",
+      "parentCollection": "TVS6NGIC",
+      "relations": {}
+    }
+  },
+  {
+    "key": "C4EAAB9D",
+    "version": 879,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/C4EAAB9D",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/C4EAAB9D",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 0
+    },
+    "data": {
+      "key": "C4EAAB9D",
+      "version": 879,
+      "name": "ttt",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "DKA6DUK7",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/DKA6DUK7",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/DKA6DUK7",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/8W37KB7I",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 1,
+      "numItems": 0
+    },
+    "data": {
+      "key": "DKA6DUK7",
+      "version": 1,
+      "name": "Very long titles may or may not need to be trimmed",
+      "parentCollection": "8W37KB7I",
+      "relations": {}
+    }
+  },
+  {
+    "key": "6SA8WTAX",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/6SA8WTAX",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/6SA8WTAX",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/UE4NHGT7",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 1,
+      "numItems": 0
+    },
+    "data": {
+      "key": "6SA8WTAX",
+      "version": 1,
+      "name": "web",
+      "parentCollection": "UE4NHGT7",
+      "relations": {}
+    }
+  },
+  {
+    "key": "FIWG9HVK",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/FIWG9HVK",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/FIWG9HVK",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/DKA6DUK7",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 1,
+      "numItems": 0
+    },
+    "data": {
+      "key": "FIWG9HVK",
+      "version": 1,
+      "name": "what",
+      "parentCollection": "DKA6DUK7",
+      "relations": {}
+    }
+  },
+  {
+    "key": "A9XJKJJH",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/A9XJKJJH",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/A9XJKJJH",
+        "type": "text/html"
+      },
+      "up": {
+        "href": "https://apidev.zotero.org/users/10150/collections/68U2DQFR",
+        "type": "application/atom+xml"
+      }
+    },
+    "meta": {
+      "numCollections": 1,
+      "numItems": 0
+    },
+    "data": {
+      "key": "A9XJKJJH",
+      "version": 1,
+      "name": "when",
+      "parentCollection": "68U2DQFR",
+      "relations": {}
+    }
+  },
+  {
+    "key": "P7V992PR",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/P7V992PR",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/P7V992PR",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 0,
+      "numItems": 3
+    },
+    "data": {
+      "key": "P7V992PR",
+      "version": 1,
+      "name": "with/slash",
+      "parentCollection": false,
+      "relations": {}
+    }
+  },
+  {
+    "key": "5G5XWZZ4",
+    "version": 1,
+    "library": {
+      "type": "user",
+      "id": "10150",
+      "name": "fcheslack",
+      "links": {
+        "alternate": {
+          "href": "https://staging.zotero.net/fcheslack",
+          "type": "text/html"
+        }
+      }
+    },
+    "links": {
+      "self": {
+        "href": "https://apidev.zotero.org/users/10150/collections/5G5XWZZ4",
+        "type": "application/json"
+      },
+      "alternate": {
+        "href": "https://staging.zotero.net/fcheslack/collections/5G5XWZZ4",
+        "type": "text/html"
+      }
+    },
+    "meta": {
+      "numCollections": 2,
+      "numItems": 4
+    },
+    "data": {
+      "key": "5G5XWZZ4",
+      "version": 1,
+      "name": "Zotero",
+      "parentCollection": false,
+      "relations": {}
+    }
+  }
+]
