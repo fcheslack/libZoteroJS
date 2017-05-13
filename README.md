@@ -1,11 +1,13 @@
-Overview
---------
+## Overview
+
+[![npm version](https://badge.fury.io/js/libzotero.svg)](https://badge.fury.io/js/libzotero)
+
 This is a Zotero API client for the browser and node.
 
 Please note that this library should not be considered stable. Most of what is implemented works, but for the moment breaking changes may still happen in any release.
 
-Getting The Library
--------------------
+
+## Getting The Library
 
 The easiest way to obtain the latest version is to use npm:
 
@@ -17,13 +19,13 @@ Alternatively you can download the latest release directly from Github:
 
 Whichever option you choose, for the browser you will need to include `libzotero.js` from the `build` on your page. When included API will be accessbile via a global object `Zotero`. Additionaly this file follows an [Universal Module Definition](https://github.com/umdjs/umd) which means you can also use this library in systems that use AMD (e.g. [RequireJS](http://requirejs.org/)) or CommonJS module loader mechanism.
 
-Alternatively, in node environemnt and within Browserify-based builds you can just do:
+Alternatively, in node environment and within Browserify-based builds you can just do:
 
 	var Zotero = require('libzotero');
 
 
 
-###Using the library
+### Using the library
 
 libZotero provides various helper functions for working with the Zotero REST API, as well as 'classes' representing Zotero's fundamental objects and containers for those objects. Each object in a library has a key that uniquely identifies it within that library. A Library is of a particular type (user, group). Libraries contain Items, Collections, and Tags. Within Items are references to the collections and tags they are associated with. That is the core of the Zotero API. (There are also some more peripheral things like Settings for a library, which includes tag color associations.)
 
@@ -60,7 +62,7 @@ For simpler needs, when all you want is to get a particular set of items to work
 (see the Fetcher.js and FetchAll.js examples).
 
 
-####Request config
+#### Request config
 
 libZotero constructs requests based on a config object that can specify the paths and query parameters described in the [Zotero API documentation](https://www.zotero.org/support/dev/web_api/v3/basics).
 
