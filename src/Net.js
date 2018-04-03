@@ -1,6 +1,6 @@
 'use strict';
 
-var log = require('./Log.js').Logger('libZotero:FetchNet', 3);
+var log = require('./Log.js').Logger('libZotero:Net', 3);
 
 var Deferred = function(){
 	var d = this;
@@ -10,6 +10,10 @@ var Deferred = function(){
 		d.reject = reject;
 	});
 };
+
+var ApiResponse = require('./ApiResponse.js');
+var ajax = require('./Ajax.js');
+var extend = require('./Extend.js');
 
 //var Deferred = require('deferred');
 
@@ -43,7 +47,7 @@ Net.prototype.queueDeferred = function(){
 //add a request to the end of the queue, so that previously queue requests run first
 //if requestObject is an array of requests, run them sequentially
 Net.prototype.queueRequest = function(requestObject){
-	log.debug('Zotero.Net.queueRequest', 3);
+	log.debug('Net.queueRequest', 3);
 	var net = this;
 	var resultPromise;
 	
@@ -78,7 +82,7 @@ Net.prototype.queueRequest = function(requestObject){
 
 //run a request without waiting for any other requests to complete
 Net.prototype.runConcurrent = function(requestObject){
-	log.debug('Zotero.Net.runConcurrent', 3);
+	log.debug('Net.runConcurrent', 3);
 	return this.ajaxRequest(requestObject).then(function(response){
 		log.debug('done with runConcurrent request', 3);
 		return response;
@@ -90,7 +94,7 @@ Net.prototype.runConcurrent = function(requestObject){
 //adding the previous response to a responses array that will be
 //returned via promise to the caller when all requests are complete
 Net.prototype.runSequential = function(requestObjects){
-	log.debug('Zotero.Net.runSequential', 3);
+	log.debug('Net.runSequential', 3);
 	var net = this;
 	var responses = [];
 	var seqPromise = Promise.resolve();
@@ -119,7 +123,7 @@ Net.prototype.runSequential = function(requestObjects){
 //when one concurrent call, or a sequential series finishes, subtract it from the running
 //count and run the next if there is something waiting to be run
 Net.prototype.individualRequestDone = function(response){
-	log.debug('Zotero.Net.individualRequestDone', 3);
+	log.debug('Net.individualRequestDone', 3);
 	var net = this;
 	
 	//check if we need to back off before making more requests
@@ -145,7 +149,7 @@ Net.prototype.queuedRequestDone = function(){
 };
 
 Net.prototype.runNext = function(){
-	log.debug('Zotero.Net.runNext', 4);
+	log.debug('Net.runNext', 4);
 	var net = this;
 	var nowms = Date.now();
 	
@@ -172,7 +176,7 @@ Net.prototype.runNext = function(){
 };
 
 Net.prototype.checkDelay = function(response){
-	log.debug('Zotero.Net.checkDelay', 4);
+	log.debug('Net.checkDelay', 4);
 	var net = this;
 	var wait = 0;
 	if(Array.isArray(response)){
@@ -199,20 +203,20 @@ Net.prototype.checkDelay = function(response){
 //success/failure handlers to the promise chain before returning (or default error logger
 //if no failure handler is defined)
 Net.prototype.ajaxRequest = function(requestConfig){
-	log.debug('Zotero.Net.ajaxRequest', 3);
+	log.debug('Net.ajaxRequest', 3);
 	var net = this;
 	
 	var defaultConfig = {
 		type:'GET',
 		headers:{
-			'Zotero-API-Version': Zotero.config.apiVersion,
+			'Zotero-API-Version': 3,
 			'Content-Type': 'application/json'
 		},
 		success: function(response){
 			return response;
 		},
 		error: function(response){
-			if(!response instanceof Zotero.ApiResponse){
+			if(!response instanceof ApiResponse){
 				log.error(`Response is not a Zotero.ApiResponse: ${response}`);
 			} else if(response.rawResponse){
 				log.error(`ajaxRequest rejected:${response.rawResponse.status} - ${response.rawResponse.statusText}`);
@@ -225,21 +229,21 @@ Net.prototype.ajaxRequest = function(requestConfig){
 		//cache:false
 	};
 	
-	var headers = Z.extend({}, defaultConfig.headers, requestConfig.headers);
+	var headers = extend({}, defaultConfig.headers, requestConfig.headers);
 	if(requestConfig.key){
-		headers = Z.extend(headers, {'Zotero-API-Key': requestConfig.key});
+		headers = extend(headers, {'Zotero-API-Key': requestConfig.key});
 		delete requestConfig.key;
 	}
 	
-	var config = Z.extend({}, defaultConfig, requestConfig);
+	var config = extend({}, defaultConfig, requestConfig);
 	config.headers = headers;
 	if(typeof config.url == 'object'){
-		config.url = Zotero.ajax.apiRequestString(config.url);
+		config.url = ajax.apiRequestString(config.url);
 	}
-	config.url = Zotero.ajax.proxyWrapper(config.url, config.type);
+	//config.url = ajax.proxyWrapper(config.url, config.type);
 	
 	if(!config.url){
-		throw 'No url specified in Zotero.Net.ajaxRequest';
+		throw 'No url specified in Net.ajaxRequest';
 	}
 	
 	log.debug('AJAX config', 4);
@@ -265,7 +269,7 @@ Net.prototype.ajaxRequest = function(requestConfig){
 	var ajaxpromise = new Promise(function(resolve, reject){
 		net.ajax(config)
 		.then(function(response){
-			var ar = new Zotero.ApiResponse(response);
+			var ar = new ApiResponse(response);
 			if('processData' in config && config.processData === false) {
 				handleSuccessCallback(response).then(() => resolve(response))
 			} else {
@@ -282,11 +286,11 @@ Net.prototype.ajaxRequest = function(requestConfig){
 		}, function(response){
 			var ar;
 			if(response instanceof Error){
-				ar = new Zotero.ApiResponse();
+				ar = new ApiResponse();
 				ar.isError = true;
 				ar.error = response;
 			} else {
-				ar = new Zotero.ApiResponse(response);
+				ar = new ApiResponse(response);
 			}
 			
 			resolve(ar);
@@ -309,7 +313,7 @@ Net.prototype.ajaxRequest = function(requestConfig){
 //perform a network request defined by config, and return a promise for a Response
 //resolve with a successful status (200-300) reject, but with the same Response object otherwise
 Net.prototype.ajax = function(config){
-	config = Zotero.extend({type:'GET'}, config);
+	config = extend({type:'GET'}, config);
 	let headersInit = config.headers || {};
 	let headers = new Headers(headersInit);
 
@@ -317,6 +321,7 @@ Net.prototype.ajax = function(config){
 		method:config.type,
 		headers: headers,
 		mode:'cors',
+		credentials:'include',
 		body:config.data
 	});
 	
