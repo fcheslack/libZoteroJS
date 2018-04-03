@@ -12,7 +12,7 @@ var Deferred = function(){
 };
 
 var ApiResponse = require('./ApiResponse.js');
-var ajax = require('./Ajax.js');
+import {Ajax as ajax} from './Ajax.js';
 var extend = require('./Extend.js');
 
 //var Deferred = require('deferred');

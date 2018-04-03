@@ -1,8 +1,8 @@
 'use strict';
 
-var log = require('./Log.js').Logger('libZotero:Ajax');
+let log = require('./Log.js').Logger('libZotero:Ajax');
 
-var Validator = require('./Validator.js');
+let Validator = require('./Validator.js');
 
 var Ajax = {};
 
@@ -274,4 +274,4 @@ Ajax.downloadBlob = function(url){
 	});
 };
 
-module.exports = Ajax;
+export {Ajax};

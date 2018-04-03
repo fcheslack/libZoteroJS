@@ -27,13 +27,17 @@ if(typeof window === 'undefined') {
 	//module.exports = self.fetch.bind(self);
 }
 
+import {Cache} from './Cache.js';
+import {Ajax} from './Ajax.js';
 import {ApiObject} from './ApiObject.js';
 
-var Zotero = {};
+var Zotero = {
+	Cache: Cache,
+	Ajax: Ajax,
+	ajax: Ajax,
+	ApiObject: ApiObject
+};
 globalScope.Zotero = globalScope.Z = Zotero;
-Zotero.Cache = require('./Cache.js');
-Zotero.Ajax = Zotero.ajax = require('./Ajax.js');
-Zotero.ApiObject = ApiObject;
 Zotero.ApiResponse = require('./ApiResponse.js');
 Zotero.Net = Zotero.net = require('./Net.js');
 Zotero.Library = require('./Library.js');
