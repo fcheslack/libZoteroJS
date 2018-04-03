@@ -34,7 +34,7 @@ class Container{
 				return 1;
 			};
 		}
-	};
+	}
 
 	getObject(key){
 		var container = this;
@@ -44,7 +44,7 @@ class Container{
 		else{
 			return false;
 		}
-	};
+	}
 
 	getObjects(keys){
 		var container = this;
@@ -57,7 +57,7 @@ class Container{
 			}
 		}
 		return objects;
-	};
+	}
 
 	removeObject(key){
 		var container = this;
@@ -65,7 +65,7 @@ class Container{
 			delete container.objectmap[key];
 			container.initSecondaryData();
 		}
-	};
+	}
 
 	removeObjects(keys){
 		var container = this;
@@ -76,11 +76,11 @@ class Container{
 		
 		//rebuild array
 		container.initSecondaryData();
-	};
+	}
 
 	writeObjects(objects){
 		//TODO:implement
-	};
+	}
 
 	//generate keys for objects about to be written if they are new
 	assignKeys(objectsArray){
@@ -95,7 +95,7 @@ class Container{
 			}
 		}
 		return objectsArray;
-	};
+	}
 
 	//split an array of objects into chunks to write over multiple api requests
 	chunkObjectsArray(objectsArray){
@@ -107,7 +107,7 @@ class Container{
 		}
 		
 		return writeChunks;
-	};
+	}
 
 	rawChunks(chunks){
 		var rawChunkObjects = [];
@@ -119,7 +119,7 @@ class Container{
 			}
 		}
 		return rawChunkObjects;
-	};
+	}
 
 	/**
 	 * Update syncState property on container to keep track of updates that occur during sync process.
@@ -150,7 +150,7 @@ class Container{
 			container.syncState.latestVersion = version;
 		}
 		log.debug('done updating sync state', 3);
-	};
+	}
 
 	updateSyncedVersion(versionField) {
 		var container = this;
@@ -162,7 +162,7 @@ class Container{
 		else if(container.syncState.earliestVersion !== null) {
 			container.version = container.syncState.earliestVersion;
 		}
-	};
+	}
 
 	processDeletions(deletedKeys) {
 		var container = this;
@@ -179,7 +179,7 @@ class Container{
 				}
 			}
 		}
-	};
+	}
 
 	//update items appropriately based on response to multi-write request
 	//for success:
@@ -243,7 +243,7 @@ class Container{
 				resolve();
 			}
 		});
-	};
+	}
 
 	//return the key as a string when passed an argument that 
 	//could be either a string key or an object with a key property
@@ -252,7 +252,7 @@ class Container{
 			return object;
 		}
 		return object.get('key');
-	};
+	}
 }
 
 export {Container};
