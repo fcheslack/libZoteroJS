@@ -36,6 +36,7 @@ let net = new Net();
 import {Library} from './Library.js';
 import {Container} from './Container.js';
 import {Collections} from './Collections.js';
+import {Items} from './Items.js';
 
 var Zotero = {
 	Cache: Cache,
@@ -47,11 +48,11 @@ var Zotero = {
 	net: net,
 	Library: Library,
 	Container: Container,
-	Collections: Collections
+	Collections: Collections,
+	Items: Items
 };
 
 globalScope.Zotero = globalScope.Z = Zotero;
-Zotero.Items = require('./Items.js');
 Zotero.Tags = require('./Tags.js');
 Zotero.Groups = require('./Groups.js');
 Zotero.Searches = require('./Searches.js');
