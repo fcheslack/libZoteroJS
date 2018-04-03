@@ -37,6 +37,10 @@ import {Library} from './Library.js';
 import {Container} from './Container.js';
 import {Collections} from './Collections.js';
 import {Items} from './Items.js';
+import {Tags} from './Tags.js';
+import {Groups} from './Groups.js';
+import {Searches} from './Searches.js';
+import {Deleted} from './Deleted.js';
 
 var Zotero = {
 	Cache: Cache,
@@ -49,14 +53,14 @@ var Zotero = {
 	Library: Library,
 	Container: Container,
 	Collections: Collections,
-	Items: Items
+	Items: Items,
+	Tags: Tags,
+	Groups: Groups,
+	Searches: Searches,
+	Deleted: Deleted
 };
 
 globalScope.Zotero = globalScope.Z = Zotero;
-Zotero.Tags = require('./Tags.js');
-Zotero.Groups = require('./Groups.js');
-Zotero.Searches = require('./Searches.js');
-Zotero.Deleted = require('./Deleted.js');
 Zotero.Collection = require('./Collection.js');
 Zotero.Localizations = Zotero.localizations = require('./Localizations.js');
 Zotero.Item = require('./Item.js');
