@@ -280,8 +280,7 @@ var Utils = {
 	 * Given a query string, parse keys/values into an object
 	 **/
 	parseQuery: function(query) {
-		log.debug('parseQuery');
-		log.debug(query);
+		log.debug('parseQuery', 4);
 		var params = {};
 		var match;
 		var pl = /\+/g;  // Regex for replacing addition symbol with a space
@@ -291,7 +290,13 @@ var Utils = {
 		};
 
 		while(match = search.exec(query)) {
-			params[decode(match[1])] = decode(match[2]);
+			let key = decode(match[1]);
+			let val = decode(match[2]);
+			if(params[key]){
+				params[key] = [].concat(params[key], val);
+			} else {
+				params[key] = val;
+			}
 		}
 		return params;
 	},
