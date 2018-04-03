@@ -33,6 +33,7 @@ import {ApiObject} from './ApiObject.js';
 import {ApiResponse} from './ApiResponse.js';
 import {Net} from './Net.js';
 let net = new Net();
+import {Library} from './Library.js';
 
 var Zotero = {
 	Cache: Cache,
@@ -41,11 +42,11 @@ var Zotero = {
 	ApiObject: ApiObject,
 	ApiResponse: ApiResponse,
 	Net: net,
-	net: net
+	net: net,
+	Library: Library
 };
 
 globalScope.Zotero = globalScope.Z = Zotero;
-Zotero.Library = require('./Library.js');
 Zotero.Container = require('./Container');
 Zotero.Collections = require('./Collections.js');
 Zotero.Items = require('./Items.js');
