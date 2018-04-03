@@ -1,9 +1,10 @@
 'use strict';
 
-var log = require('./Log.js').Logger('libZotero:Item');
+let log = require('./Log.js').Logger('libZotero:Item');
 
-var striptags = require('striptags');
-var ItemMaps = require('./ItemMaps.js');
+import {ApiObject} from './ApiObject';
+let striptags = require('striptags');
+let ItemMaps = require('./ItemMaps.js');
 
 /*
  * TODO: several functions should not work unless we build a fresh item with a template
