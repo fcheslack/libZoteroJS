@@ -628,10 +628,11 @@ Item.prototype.itemTypeIconClass = function(){
 
 Item.prototype.get = function(key){
 	var item = this;
+	var itemType = item.apiObj.data.itemType;
 	switch(key) {
 		case 'title':
 			var title = '';
-			if(item.apiObj.data.itemType == 'note'){
+			if(itemType == 'note'){
 				return item.noteTitle(item.apiObj.data.note);
 			} else {
 				return item.apiObj.data.title;
@@ -666,8 +667,13 @@ Item.prototype.get = function(key){
 	}
 	else if(item.hasOwnProperty(key)){
 		return item[key];
+	} else{
+		var baseMapping = item.baseFieldMapping[itemType];
+		if(baseMapping && baseMapping[key]){
+			return item.apiObj.data[baseMapping[key]];
+		}
 	}
-	
+
 	return null;
 };
 

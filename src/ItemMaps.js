@@ -345,4 +345,116 @@ ItemMaps.cslTypeMap = {
 
 ItemMaps.citePaperJournalArticleURL = false;
 
+//itemType/baseField/field
+ItemMaps.baseFieldMapping = {
+	'bill': {
+		'volume':'codeVolume',
+	},
+	'case': {
+		'volume': 'reporterVolume',
+		'pages': 'firstPage',
+		'date': 'dateDecided',
+		'number': 'docketNumber',
+		'title': 'caseName'
+	},
+	'thesis':{
+		'publisher':'university',
+		'type':'thesisType'
+	},
+	'film':{
+		'publisher':'distributor',
+		'type':'genre',
+		'medium':'videoRecordingFormat'
+	},
+	'report':{
+		'publisher':'institution',
+		'number': 'reportNumber',
+		'type':'reportType'
+	},
+	'audioRecording':{
+		'publisher':'label',
+		'medium':'audioRecordingFormat'
+	},
+	'videoRecording':{
+		'publisher':'studio',
+		'medium':'videoRecordingFormat'
+	},
+	'tvBroadcast':{
+		'publisher':'network',
+		'publicationTitle':'programTitle',
+		'number':'episodeNumber',
+		'medium': 'videoRecordingMedium'
+	},
+	'radioBroadcast':{
+		'publisher':'network',
+		'publicationTitle':'programTitle',
+		'number':'episodeNumber',
+		'medium':'audioRecordingFormat'
+	},
+	'computerProgram':{
+		'publisher':'company'
+	},
+	'bookSection':{
+		'publicationTitle':'bookTitle'
+	},
+	'conferencePaper':{
+		'publicationTitle':'proceedingsTitle'
+	},
+	'webpage':{
+		'publicationTitle':'websiteTitle',
+		'type':'websiteType'
+	},
+	'blogPost':{
+		'publicationTitle':'blogTitle',
+		'type':'websiteType'
+	},
+	'forumPost':{
+		'publicationTitle':'blogTitle',
+		'type':'postType'
+	},
+	encyclopediaEntry:{
+		publicationTitle:'encyclopediaTitle'
+	},
+	dictionaryEntry:{
+		publicationTitle:'dictionaryTitle'
+	},
+	patent:{
+		date:'issueDate',
+		number:'patentNumber'
+	},
+	statute:{
+		date:'dateEnacted',
+		number:'publicLawNumber',
+		title:'nameOfAct'
+	},
+	hearing:{
+		number:'documentNumber'
+	},
+	podcast:{
+		number:'episodeNumber',
+		medium:'audioFileType'
+	},
+	letter:{
+		type:'letterType'
+	},
+	manuscript:{
+		type:'manuscriptType'
+	},
+	map:{
+		type:'mapType'
+	},
+	presentation:{
+		type:'presentationType'
+	},
+	interview:{
+		medium:'interviewMedium'
+	},
+	artwork:{
+		medium:'artworkMedium'
+	},
+	email:{
+		title:'subject'
+	}
+};
+
 module.exports = ItemMaps;
