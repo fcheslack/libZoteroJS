@@ -3,10 +3,11 @@
 var log = require('./Log.js').Logger('libZotero:Client');
 
 var Fetcher = require('./Fetcher.js');
+import {Net} from './Net.js';
 
 var Client = function(apiKey=''){
 	this._apiKey = apiKey;
-	this.net = require('./Net.js');
+	this.net = new Net();
 };
 
 Client.prototype.getUserGroups = function(userID) {
