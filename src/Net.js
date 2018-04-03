@@ -11,7 +11,7 @@ var Deferred = function(){
 	});
 };
 
-var ApiResponse = require('./ApiResponse.js');
+import {ApiResponse} from'./ApiResponse.js';
 import {Ajax as ajax} from './Ajax.js';
 var extend = require('./Extend.js');
 

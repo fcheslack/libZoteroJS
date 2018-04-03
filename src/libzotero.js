@@ -30,15 +30,17 @@ if(typeof window === 'undefined') {
 import {Cache} from './Cache.js';
 import {Ajax} from './Ajax.js';
 import {ApiObject} from './ApiObject.js';
+import {ApiResponse} from './ApiResponse.js';
 
 var Zotero = {
 	Cache: Cache,
 	Ajax: Ajax,
 	ajax: Ajax,
-	ApiObject: ApiObject
+	ApiObject: ApiObject,
+	ApiResponse: ApiResponse
 };
+
 globalScope.Zotero = globalScope.Z = Zotero;
-Zotero.ApiResponse = require('./ApiResponse.js');
 Zotero.Net = Zotero.net = require('./Net.js');
 Zotero.Library = require('./Library.js');
 Zotero.Container = require('./Container');
