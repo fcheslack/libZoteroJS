@@ -1,10 +1,16 @@
 'use strict';
 
 var log = require('./Log.js').Logger('libZotero:Container');
+import {chunkObjectsArray} from './Utils.js';
 
 class Container{
+	constructor(){
+		this.objectMap = {};
+		this.objectArray = [];
+	}
 	initSecondaryData(){}
 
+	//add an ApiObject to the array and map, and associate it with container's owningLibrary if present
 	addObject(object){
 		log.debug('Zotero.Container.addObject', 4);
 		var container = this;
@@ -17,6 +23,7 @@ class Container{
 		return container;
 	}
 
+	//return the function to use to compare a field of an ApiObject
 	fieldComparer(field){
 		if(Intl){
 			var collator = new Intl.Collator();
@@ -36,6 +43,7 @@ class Container{
 		}
 	}
 
+	//get a single object by key
 	getObject(key){
 		var container = this;
 		if(container.objectMap.hasOwnProperty(key)){
@@ -46,6 +54,7 @@ class Container{
 		}
 	}
 
+	//get multiple objects by key
 	getObjects(keys){
 		var container = this;
 		var objects = [];
@@ -59,6 +68,7 @@ class Container{
 		return objects;
 	}
 
+	//remove an object with a given key, then re-initialize secondary data which may have changed
 	removeObject(key){
 		var container = this;
 		if(container.objectMap.hasOwnProperty(key)){
@@ -67,6 +77,7 @@ class Container{
 		}
 	}
 
+	//remove multiple objects by key
 	removeObjects(keys){
 		var container = this;
 		//delete Objects from objectMap;
@@ -95,18 +106,6 @@ class Container{
 			}
 		}
 		return objectsArray;
-	}
-
-	//split an array of objects into chunks to write over multiple api requests
-	chunkObjectsArray(objectsArray){
-		var chunkSize = 50;
-		var writeChunks = [];
-		
-		for(var i = 0; i < objectsArray.length; i = i + chunkSize){
-			writeChunks.push(objectsArray.slice(i, i+chunkSize));
-		}
-		
-		return writeChunks;
 	}
 
 	rawChunks(chunks){
@@ -254,5 +253,6 @@ class Container{
 		return object.get('key');
 	}
 }
+Container.prototype.chunkObjectsArray = chunkObjectsArray;
 
 export {Container};

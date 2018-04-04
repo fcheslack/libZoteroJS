@@ -83,7 +83,6 @@ class Items extends Container{
 	}
 
 	deleteItems(deleteItems, version){
-		//TODO: split into multiple requests if necessary
 		log.debug('Zotero.Items.deleteItems', 3);
 		var items = this;
 		var deleteKeys = [];
