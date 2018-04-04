@@ -182,7 +182,7 @@ class Library {
 			url: url,
 			type: type
 		};
-		requestObject = Z.extend({}, requestObject, options);
+		requestObject = Object.assign({}, requestObject, options);
 		if(!requestObject.key && (this._apiKey != '')){
 			requestObject.key = this._apiKey;
 		}
@@ -553,7 +553,7 @@ class Library {
 		for(var i = 0; i < items.length; i++){
 			var item = items[i];
 			var transferData = item.emptyJsonItem();
-			transferData.data = Z.extend({}, items[i].apiObj.data);
+			transferData.data = Object.assign({}, items[i].apiObj.data);
 			//clear data that shouldn't be transferred:itemKey, collections
 			transferData.data.key = '';
 			transferData.data.version = 0;
@@ -563,7 +563,7 @@ class Library {
 			
 			var newForeignItem = new Zotero.Item(transferData);
 			
-			newForeignItem.pristine = Z.extend({}, newForeignItem.apiObj);
+			newForeignItem.pristine = Object.assign({}, newForeignItem.apiObj);
 			newForeignItem.initSecondaryData();
 			
 			//set relationship to tie to old item
@@ -836,7 +836,7 @@ class Library {
 	fetchItemKeys(config={}){
 		log.debug('Zotero.Library.fetchItemKeys', 3);
 		var library = this;
-		var urlconfig = Z.extend(true, {
+		var urlconfig = Object.assign(true, {
 			'target':'items',
 			'libraryType':this.libraryType,
 			'libraryID':this.libraryID,
@@ -903,10 +903,10 @@ class Library {
 		};
 		
 		//Build config object that should be displayed next and compare to currently displayed
-		var newConfig = Z.extend({}, defaultConfig, config);
+		var newConfig = Object.assign({}, defaultConfig, config);
 		//newConfig.start = parseInt(newConfig.limit, 10) * (parseInt(newConfig.itemPage, 10) - 1);
 		
-		var urlconfig = Z.extend({
+		var urlconfig = Object.assign({
 			'target':'items',
 			'libraryType':library.libraryType,
 			'libraryID':library.libraryID
@@ -946,9 +946,9 @@ class Library {
 		};
 		
 		//Build config object that should be displayed next and compare to currently displayed
-		var newConfig = Z.extend({}, defaultConfig, config);
+		var newConfig = Object.assign({}, defaultConfig, config);
 		
-		var urlconfig = Z.extend({
+		var urlconfig = Object.assign({
 			'target':'publications',
 			'libraryType':library.libraryType,
 			'libraryID':library.libraryID
@@ -1069,9 +1069,9 @@ class Library {
 		};
 		
 		//Build config object that should be displayed next and compare to currently displayed
-		var newConfig = Z.extend({}, defaultConfig, config);
+		var newConfig = Object.assign({}, defaultConfig, config);
 		
-		var urlconfig = Z.extend({'target':'items', 'libraryType': ''}, newConfig);
+		var urlconfig = Object.assign({'target':'items', 'libraryType': ''}, newConfig);
 		
 		return library.ajaxRequest(urlconfig, 'GET', {dataType:'json'})
 		.then(function(response){
@@ -1088,8 +1088,8 @@ class Library {
 		var defaultConfig = {target:'item'};
 		
 		//Build config object that should be displayed next and compare to currently displayed
-		var newConfig = Z.extend({}, defaultConfig);
-		var urlconfig = Z.extend({
+		var newConfig = Object.assign({}, defaultConfig);
+		var urlconfig = Object.assign({
 			'target':'item',
 			'libraryType': '',
 			'itemKey': globalKey
@@ -1112,8 +1112,8 @@ class Library {
 			sort:'asc',
 			limit: 100
 		};
-		var newConfig = Z.extend({}, defaultConfig, config);
-		var urlconfig = Z.extend({
+		var newConfig = Object.assign({}, defaultConfig, config);
+		var urlconfig = Object.assign({
 			'target':'tags',
 			'libraryType':this.libraryType,
 			'libraryID':this.libraryID
@@ -1167,8 +1167,8 @@ class Library {
 		};
 		
 		//Build config object that should be displayed next and compare to currently displayed
-		var newConfig = Z.extend({}, defaultConfig, config);
-		var urlconfig = Z.extend({}, newConfig);
+		var newConfig = Object.assign({}, defaultConfig, config);
+		var urlconfig = Object.assign({}, newConfig);
 		
 		//check if already loaded tags are okay to use
 		return new Promise(function(resolve, reject){
@@ -1187,7 +1187,7 @@ class Library {
 					
 					var nextLink = tags.nextLink;
 					var nextLinkConfig = Zotero.utils.parseQuery(Zotero.utils.querystring(nextLink));
-					var newConfig = Z.extend({}, config);
+					var newConfig = Object.assign({}, config);
 					newConfig.start = nextLinkConfig.start;
 					newConfig.limit = nextLinkConfig.limit;
 					return library.loadTags(newConfig).then(continueLoadingCallback);

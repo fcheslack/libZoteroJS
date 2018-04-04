@@ -20,7 +20,7 @@ class Tag extends ApiObject{
 
 	parseJsonTag(tagObj) {
 		var tag = this;
-		tag.apiObj = Z.extend({}, tagObj);
+		tag.apiObj = Object.assign({}, tagObj);
 		tag.urlencodedtag = encodeURIComponent(tag.apiObj.tag);
 		tag.version = tag.apiObj.version;
 	}

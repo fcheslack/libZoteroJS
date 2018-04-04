@@ -101,8 +101,6 @@ var Zotero = {
 globalScope.Zotero = globalScope.Z = Zotero;
 Zotero.Localizations = Zotero.localizations = require('./Localizations.js');
 
-Zotero.extend = require('./Extend.js');
-
 //non-DOM (jquery) event management
 Zotero.eventmanager = {callbacks: {}};
 let {trigger, listen} = require('./Events.js');
@@ -128,7 +126,7 @@ Zotero.ajaxRequest = function(url, type, options){
 		url: url,
 		type: type
 	};
-	requestObject = Z.extend({}, requestObject, options);
+	requestObject = Object.assign({}, requestObject, options);
 	log.debug(requestObject, 3);
 	return Zotero.net.queueRequest(requestObject);
 };

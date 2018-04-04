@@ -51,8 +51,8 @@ class Collection extends ApiObject{
 		var collection = this;
 		collection.key = apiObj.key;
 		collection.version = apiObj.version;
-		collection.apiObj = Z.extend({}, apiObj);
-		collection.pristineData = Z.extend({}, apiObj.data);
+		collection.apiObj = Object.assign({}, apiObj);
+		collection.pristineData = Object.assign({}, apiObj.data);
 
 		collection.parentCollection = false;
 		collection.topLevel = true;
@@ -182,7 +182,7 @@ class Collection extends ApiObject{
 
 	writeApiObj(){
 		var collection = this;
-		var writeObj = Z.extend({}, collection.pristineData, collection.apiObj.data);
+		var writeObj = Object.assign({}, collection.pristineData, collection.apiObj.data);
 		return writeObj;
 	}
 

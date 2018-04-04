@@ -49,7 +49,7 @@ class Client{
 			include: 'bib'
 		};
 
-		let urlconfig = Z.extend({}, defaultConfig, config, {
+		let urlconfig = Object.assign({}, defaultConfig, config, {
 			'target':'publications',
 			'libraryType':'user',
 			'libraryID':userID

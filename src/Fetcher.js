@@ -22,7 +22,7 @@ class Fetcher{
 			return Promise.resolve(null);
 		}
 
-		let urlconfig = Z.extend({}, this.config);
+		let urlconfig = Object.assign({}, this.config);
 		let p = Zotero.net.queueRequest({url:urlconfig});
 		p.then((response)=>{
 			if(response.parsedLinks.hasOwnProperty('next')){
@@ -37,7 +37,7 @@ class Fetcher{
 			return response;
 		});
 
-		let nconfig = Z.extend({}, urlconfig);
+		let nconfig = Object.assign({}, urlconfig);
 		nconfig.start = nconfig.start + nconfig.limit;
 		this.config = nconfig;
 		return p;

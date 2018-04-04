@@ -13,7 +13,6 @@ let Deferred = function(){
 
 import {ApiResponse} from'./ApiResponse.js';
 import {Ajax as ajax} from './Ajax.js';
-let extend = require('./Extend.js');
 
 /*
  * Make concurrent and sequential network requests, respecting backoff/retry-after
@@ -219,13 +218,13 @@ class Net {
 			//cache:false
 		};
 		
-		var headers = extend({}, defaultConfig.headers, requestConfig.headers);
+		var headers = Object.assign({}, defaultConfig.headers, requestConfig.headers);
 		if(requestConfig.key){
-			headers = extend(headers, {'Zotero-API-Key': requestConfig.key});
+			headers = Object.assign(headers, {'Zotero-API-Key': requestConfig.key});
 			delete requestConfig.key;
 		}
 		
-		var config = extend({}, defaultConfig, requestConfig);
+		var config = Object.assign({}, defaultConfig, requestConfig);
 		config.headers = headers;
 		if(typeof config.url == 'object'){
 			config.url = ajax.apiRequestString(config.url);
@@ -302,7 +301,7 @@ class Net {
 	//perform a network request defined by config, and return a promise for a Response
 	//resolve with a successful status (200-300) reject, but with the same Response object otherwise
 	ajax(config){
-		config = extend({type:'GET'}, config);
+		config = Object.assign({type:'GET'}, config);
 		let headersInit = config.headers || {};
 		let headers = new Headers(headersInit);
 

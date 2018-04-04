@@ -18,7 +18,7 @@ var trigger = function(eventType, data={}, filter=false){
 		if(Zotero.eventmanager.callbacks.hasOwnProperty(eventType)){
 			var callbacks = Zotero.eventmanager.callbacks[eventType];
 			callbacks.forEach(function(callback){
-				var cdata = Z.extend({}, data, callback.data);
+				var cdata = Object.assign({}, data, callback.data);
 				var e = {
 					data: cdata
 				};

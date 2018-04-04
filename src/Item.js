@@ -36,8 +36,8 @@ class Item extends ApiObject{
 		var item = this;
 		item.version = apiObj.version;
 		item.key = apiObj.key;
-		item.apiObj = Z.extend({}, apiObj);
-		item.pristineData = Z.extend({}, apiObj.data);
+		item.apiObj = Object.assign({}, apiObj);
+		item.pristineData = Object.assign({}, apiObj.data);
 		if(!item.apiObj._supplement){
 			item.apiObj._supplement = {};
 		}
@@ -124,7 +124,7 @@ class Item extends ApiObject{
 		item.version = 0;
 		
 		item.key = '';
-		item.pristineData = Z.extend({}, template);
+		item.pristineData = Object.assign({}, template);
 		item.apiObj = {
 			key: '',
 			version: 0,
@@ -201,7 +201,7 @@ class Item extends ApiObject{
 		
 		//copy apiObj, extend with pristine to make sure required fields are present
 		//and remove unwriteable fields(?)
-		var writeApiObj = Z.extend({}, item.pristineData, item.apiObj.data);
+		var writeApiObj = Object.assign({}, item.pristineData, item.apiObj.data);
 		return writeApiObj;
 	};
 
