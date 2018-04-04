@@ -320,4 +320,4 @@ var Utils = {
 	}
 };
 
-module.exports = Utils;
+export {Utils};

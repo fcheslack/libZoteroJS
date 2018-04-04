@@ -2,7 +2,8 @@
 
 const assert = require('chai').assert;
 const expect = require('chai').expect;
-const Utils = require('../src/Utils.js');
+const Zotero = require('../src/libzotero.js');
+const Utils = Zotero.Utils;
 
 describe('Zotero.Utils', () => {
 	describe('randomString()', () =>  {

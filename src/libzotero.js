@@ -41,6 +41,13 @@ import {Tags} from './Tags.js';
 import {Groups} from './Groups.js';
 import {Searches} from './Searches.js';
 import {Deleted} from './Deleted.js';
+import {Collection} from './Collection.js';
+import {Item} from './Item.js';
+import {Tag} from './Tag.js';
+import {Search} from './Search.js';
+import {Group} from './Group.js';
+import {User} from './User.js';
+import {Utils} from './Utils.js';
 
 var Zotero = {
 	Cache: Cache,
@@ -57,18 +64,20 @@ var Zotero = {
 	Tags: Tags,
 	Groups: Groups,
 	Searches: Searches,
-	Deleted: Deleted
+	Deleted: Deleted,
+	Collection: Collection,
+//localizations
+	Item: Item,
+	Tag: Tag,
+	Search: Search,
+	Group: Group,
+	User: User,
+	Utils: Utils,
+	utils: Utils
 };
 
 globalScope.Zotero = globalScope.Z = Zotero;
-Zotero.Collection = require('./Collection.js');
 Zotero.Localizations = Zotero.localizations = require('./Localizations.js');
-Zotero.Item = require('./Item.js');
-Zotero.Tag = require('./Tag.js');
-Zotero.Search = require('./Search.js');
-Zotero.Group = require('./Group.js');
-Zotero.User = require('./User.js');
-Zotero.Utils = Zotero.utils = require('./Utils.js');
 Zotero.Url = Zotero.url = require('./Url.js');
 Zotero.File = Zotero.file = require('./File.js');
 Zotero.Idb = require('./Idb.js');
