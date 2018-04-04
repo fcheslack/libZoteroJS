@@ -2,7 +2,7 @@
 
 let log = require('./Log.js').Logger('libZotero:Ajax');
 
-let Validator = require('./Validator.js');
+import {Validator} from './Validator.js';
 
 var Ajax = {};
 

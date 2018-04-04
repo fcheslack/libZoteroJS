@@ -1,7 +1,7 @@
 'use strict';
 
 var assert = require('chai').assert;
-var RequestConfig = require('../src/RequestConfig.js');
+import {RequestConfig} from '../src/RequestConfig.js';
 
 describe('RequestConfig', () => {
 	describe('build', () =>  {

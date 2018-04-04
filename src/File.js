@@ -4,10 +4,7 @@ var log = require('./Log.js').Logger('libZotero:File');
 
 var SparkMD5 = require('spark-md5');
 
-
-module.exports = {};
-
-module.exports.getFileInfo = function(file){
+let getFileInfo = function(file){
 	//fileInfo: md5, filename, filesize, mtime, zip, contentType, charset
 	if(typeof FileReader === 'undefined'){
 		return Promise.reject(new Error('FileReader not supported'));
@@ -34,7 +31,7 @@ module.exports.getFileInfo = function(file){
 	});
 };
 
-module.exports.uploadFile = function(uploadInfo, fileInfo){
+let uploadFile = function(uploadInfo, fileInfo){
 	log.debug('Zotero.file.uploadFile', 3);
 	log.debug(uploadInfo, 4);
 	
@@ -81,3 +78,4 @@ module.exports.uploadFile = function(uploadInfo, fileInfo){
 	//from JS)
 };
 
+export {getFileInfo, uploadFile};

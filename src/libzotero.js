@@ -48,6 +48,16 @@ import {Search} from './Search.js';
 import {Group} from './Group.js';
 import {User} from './User.js';
 import {Utils} from './Utils.js';
+import {Url} from './Url.js';
+import {getFileInfo, uploadFile} from './File.js';
+import {IdbLibrary} from './Idb.js';
+import {Preferences} from './Preferences.js';
+import {Client} from './Client.js';
+import {Fetcher} from './Fetcher.js';
+import {Writer} from './Writer.js';
+import {TagColors} from './TagColors.js';
+import {Validator} from './Validator.js';
+import {RequestConfig} from './RequestConfig.js';
 
 var Zotero = {
 	Cache: Cache,
@@ -73,21 +83,23 @@ var Zotero = {
 	Group: Group,
 	User: User,
 	Utils: Utils,
-	utils: Utils
+	utils: Utils,
+	Url: Url,
+	url: Url,
+	File: {getFileInfo, uploadFile},
+	file: {getFileInfo, uploadFile},
+	Idb: {Library: IdbLibrary},
+	Preferences: Preferences,
+	Client: Client,
+	Fetcher: Fetcher,
+	Writer: Writer,
+	TagColors: TagColors,
+	Validator: Validator,
+	RequestConfig: RequestConfig
 };
 
 globalScope.Zotero = globalScope.Z = Zotero;
 Zotero.Localizations = Zotero.localizations = require('./Localizations.js');
-Zotero.Url = Zotero.url = require('./Url.js');
-Zotero.File = Zotero.file = require('./File.js');
-Zotero.Idb = require('./Idb.js');
-Zotero.Preferences = require('./Preferences.js');
-Zotero.Client = require('./Client.js');
-Zotero.Fetcher = require('./Fetcher.js');
-Zotero.Writer = require('./Writer.js');
-Zotero.TagColors = require('./TagColors.js');
-Zotero.Validator = require('./Validator.js');
-Zotero.RequestConfig = require('./RequestConfig.js');
 
 Zotero.extend = require('./Extend.js');
 

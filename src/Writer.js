@@ -2,61 +2,66 @@
 
 var log = require('./Log.js').Logger('libZotero:Writer');
 
-var Writer = function(libraryType, libraryID, apiKey){
-	this.libraryType = libraryType;
-	this.libraryID = libraryID;
-	this.apiKey = apiKey;
-};
+import {Net} from './Net.js';
+let net = new Net();
 
-Writer.prototype.writeObjects = function(objectsArray, target){
-	let libraryType = this.libraryType;
-	let libraryID = this.libraryID;
-	
-	let rc = new Zotero.RequestConfig().LibraryType(libraryType).LibraryID(libraryID);
-	rc.Key(this.apiKey);
-	rc.Target(target);
-	
-	let writeChunks = chunkObjectsArray(objectsArray);
-	let rawChunkObjects = rawChunks(writeChunks);
-	
-	//update object with server response if successful
-	var writeSuccessCallback = function(response){
-		log.debug('write successCallback', 3);
-		updateObjectsFromWriteResponse(this.writeChunk, response);
-		response.returnObjects = this.writeChunk;
-		return response;
-	};
-	
-	var requestObjects = [];
-	writeChunks.forEach((writeChunk, i)=>{
-		var successContext = {writeChunk};
-		
-		var requestData = JSON.stringify(rawChunkObjects[i]);
-		requestObjects.push({
-			url: rc.config,
-			type: 'POST',
-			data: requestData,
-			processData: false,
-			success: writeSuccessCallback.bind(successContext)
+class Writer{
+	constructor(libraryType, libraryID, apiKey){
+		this.libraryType = libraryType;
+		this.libraryID = libraryID;
+		this.apiKey = apiKey;
+	}
+
+	writeObjects(objectsArray, target){
+		let libraryType = this.libraryType;
+		let libraryID = this.libraryID;
+
+		let rc = new Zotero.RequestConfig().LibraryType(libraryType).LibraryID(libraryID);
+		rc.Key(this.apiKey);
+		rc.Target(target);
+
+		let writeChunks = chunkObjectsArray(objectsArray);
+		let rawChunkObjects = rawChunks(writeChunks);
+
+		//update object with server response if successful
+		var writeSuccessCallback = function(response){
+			log.debug('write successCallback', 3);
+			updateObjectsFromWriteResponse(this.writeChunk, response);
+			response.returnObjects = this.writeChunk;
+			return response;
+		};
+
+		var requestObjects = [];
+		writeChunks.forEach((writeChunk, i)=>{
+			var successContext = {writeChunk};
+
+			var requestData = JSON.stringify(rawChunkObjects[i]);
+			requestObjects.push({
+				url: rc.config,
+				type: 'POST',
+				data: requestData,
+				processData: false,
+				success: writeSuccessCallback.bind(successContext)
+			});
 		});
-	});
-	
-	return Zotero.net.queueRequest(requestObjects)
-	.then(function(responses){
-		log.debug('Done with writeObjects sequentialRequests promise', 3);
-		return responses;
-	});
-};
 
-//accept an array of 'Zotero.Item's
-Writer.prototype.writeItems = function(itemsArray){
-	let writeItems = atomizeItems(itemsArray);
-	return this.writeObjects(writeItems, 'items');
-};
+		return net.queueRequest(requestObjects)
+		.then(function(responses){
+			log.debug('Done with writeObjects sequentialRequests promise', 3);
+			return responses;
+		});
+	};
+
+	//accept an array of 'Zotero.Item's
+	writeItems(itemsArray){
+		let writeItems = atomizeItems(itemsArray);
+		return this.writeObjects(writeItems, 'items');
+	};
+}
 
 //take an array of items and extract children into their own items
 //for writing
-var atomizeItems = function(itemsArray){
+let atomizeItems = function(itemsArray){
 	//process the array of items, pulling out child notes/attachments to write
 	//separately with correct parentItem set and assign generated itemKeys to
 	//new items
@@ -93,17 +98,17 @@ var atomizeItems = function(itemsArray){
 var chunkObjectsArray = function(objectsArray){
 	var chunkSize = 50;
 	var writeChunks = [];
-	
+
 	for(var i = 0; i < objectsArray.length; i = i + chunkSize){
 		writeChunks.push(objectsArray.slice(i, i+chunkSize));
 	}
-	
+
 	return writeChunks;
 };
 
 var rawChunks = function(chunks){
 	var rawChunkObjects = [];
-	
+
 	for(var i = 0; i < chunks.length; i++){
 		rawChunkObjects[i] = [];
 		for(var j = 0; j < chunks[i].length; j++){
@@ -126,7 +131,7 @@ var rawChunks = function(chunks){
 //  don't mark as synced
 //  calling code should check for writeFailure after the written objects
 //  are returned
-var updateObjectsFromWriteResponse = function(objectsArray, response){
+let updateObjectsFromWriteResponse = function(objectsArray, response){
 	log.debug('updateObjectsFromWriteResponse', 3);
 	log.debug('statusCode: ' + response.status, 3);
 	var data = response.data;
@@ -169,5 +174,4 @@ var updateObjectsFromWriteResponse = function(objectsArray, response){
 	}
 };
 
-
-module.exports = Writer;
+export {Writer, atomizeItems, updateObjectsFromWriteResponse};

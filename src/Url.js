@@ -173,4 +173,4 @@ Url.relationUrl = function(libraryType, libraryID, itemKey){
 	return '';
 };
 
-module.exports = Url;
+export {Url};
