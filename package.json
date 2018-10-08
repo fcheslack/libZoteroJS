@@ -1,14 +1,14 @@
 {
   "name": "libzotero",
-  "version": "0.1.13",
+  "version": "0.2.0",
   "description": "javascript libZotero",
-  "main": "lib/libzotero.js",
+  "main": "src/libzotero.js",
   "scripts": {
-    "build": "./node_modules/.bin/gulp",
-    "dev": "./node_modules/.bin/gulp dev",
+    "browserify": "NODE_ENV=production browserify -s libzotero src/libzotero.js -d -v -t [babelify] -g [ envify --NODE_ENV production ] -g uglifyify | uglifyjs --compress --mangle > build/libzotero.js",
+    "build": "run-s browserify",
+    "watchify": "NODE_ENV=production watchify -s libzotero src/libzotero.js -d -v -t [babelify] -p mapstraction -g [ envify --NODE_ENV production ] -o build/libzotero.js",
     "flow": "./node_modules/.bin/flow; test $? -eq 0 -o $? -eq 2",
-    "test": "nyc --require babel-core/register mocha ./test/*.spec.js",
-    "prepublish": "./node_modules/.bin/gulp prepublish"
+    "test": "nyc --require babel-core/register mocha ./test/*.spec.js"
   },
   "keywords": [
     "Zotero"
@@ -17,6 +17,7 @@
   "license": "AGPL-3.0",
   "devDependencies": {
     "babel-core": "^6.10.4",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-flow-strip-types": "^6.7.0",
     "babel-plugin-transform-object-rest-spread": "^6.8.0",
     "babel-preset-env": "^1.6.1",
@@ -25,23 +26,17 @@
     "babelify": "^7.2.0",
     "browserify": "^13.0.0",
     "chai": "^3.5.0",
+    "envify": "^4.1.0",
     "fetch-mock": "^5.0.5",
     "flow-bin": "^0.23.1",
-    "gulp": "3.9.0",
-    "gulp-babel": "^6.1.1",
-    "gulp-concat": "2.6.0",
-    "gulp-filter": "3.0.1",
-    "gulp-if": "2.0.0",
-    "gulp-plumber": "1.0.1",
-    "gulp-rename": "1.2.2",
-    "gulp-replace-task": "0.11.0",
-    "gulp-sourcemaps": "1.6.0",
-    "gulp-uglify": "1.5.1",
     "istanbul": "^0.4.5",
+    "mapstraction": "^1.0.1",
     "mocha": "^3.2.0",
+    "npm-run-all": "^4.1.3",
     "nyc": "^11.6.0",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "uglify-js": "^3.4.9",
+    "uglifyify": "^5.0.1",
+    "watchify": "^3.11.0"
   },
   "dependencies": {
     "es6-promise": "^3.1.2",

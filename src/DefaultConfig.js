@@ -1,12 +1,26 @@
 'use strict';
 
+let baseApiUrl = 'https://api.zotero.org';
+let baseWebsiteUrl = 'https://zotero.org';
+let baseFeedUrl = 'https://api.zotero.org';
+let baseZoteroWebsiteUrl = 'https://www.zotero.org';
+let baseDownloadUrl = 'https://www.zotero.org';
+
+if(process.env.NODE_ENV == 'development') {
+	baseApiUrl = 'https://apidev.zotero.org';
+	baseWebsiteUrl = 'https://dockerzotero.test:8081';
+	baseFeedUrl = 'https://apidev.zotero.org';
+	baseZoteroWebsiteUrl = 'https://dockerzotero.test:8081';
+	baseDownloadUrl = 'https://dockerzotero.test:8081';
+}
+
 var defaultConfig = {
 	librarySettings: {},
-	baseApiUrl: 'https://api.zotero.org',
-	baseWebsiteUrl: 'https://zotero.org',
-	baseFeedUrl: 'https://api.zotero.org',
-	baseZoteroWebsiteUrl: 'https://www.zotero.org',
-	baseDownloadUrl: 'https://www.zotero.org',
+	baseApiUrl,
+	baseWebsiteUrl,
+	baseFeedUrl,
+	baseZoteroWebsiteUrl,
+	baseDownloadUrl,
 	nonparsedBaseUrl: '',
 	debugLogEndpoint: '',
 	storeDebug: true,
