@@ -23,20 +23,20 @@ class Items extends Container{
 		}
 	}
 
-	getItem(key){
+	getItem = (key) => {
 		return this.getObject(key);
 	};
 
-	getItems(keys){
+	getItems = (keys) => {
 		return this.getObjects(keys);
 	};
 
-	addItem(item){
+	addItem = (item) => {
 		this.addObject(item);
 		return this;
 	}
 
-	addItemsFromJson(jsonBody){
+	addItemsFromJson = (jsonBody) => {
 		log.debug('addItemsFromJson', 3);
 		var items = this;
 		var parsedItemJson = jsonBody;
@@ -50,15 +50,15 @@ class Items extends Container{
 	}
 
 	//Remove item from local set if it has been marked as deleted by the server
-	removeLocalItem(key){
+	removeLocalItem = (key) => {
 		return this.removeObject(key);
 	}
 
-	removeLocalItems(keys){
+	removeLocalItems = (keys) => {
 		return this.removeObjects(keys);
 	}
 
-	deleteItem(itemKey){
+	deleteItem = (itemKey) => {
 		log.debug('Zotero.Items.deleteItem', 3);
 		var items = this;
 		var item;
@@ -82,7 +82,7 @@ class Items extends Container{
 		return items.owningLibrary.ajaxRequest(requestConfig);
 	}
 
-	deleteItems(deleteItems, version){
+	deleteItems = (deleteItems, version) => {
 		log.debug('Zotero.Items.deleteItems', 3);
 		var items = this;
 		var deleteKeys = [];
@@ -131,7 +131,7 @@ class Items extends Container{
 		return items.owningLibrary.sequentialRequests(requestObjects);
 	}
 
-	trashItems(itemsArray){
+	trashItems = (itemsArray) => {
 		var items = this;
 		var i;
 		for(i = 0; i < itemsArray.length; i++){
@@ -141,7 +141,7 @@ class Items extends Container{
 		return items.writeItems(itemsArray);
 	}
 
-	untrashItems(itemsArray){
+	untrashItems = (itemsArray) => {
 		var items = this;
 		var i;
 		for(i = 0; i < itemsArray.length; i++){
@@ -151,7 +151,7 @@ class Items extends Container{
 		return items.writeItems(itemsArray);
 	}
 
-	findItems(config){
+	findItems = (config) => {
 		var items = this;
 		var matchingItems = [];
 		Object.keys(items.itemObjects).forEach(function(key){
@@ -166,7 +166,7 @@ class Items extends Container{
 
 	//take an array of items and extract children into their own items
 	//for writing
-	atomizeItems(itemsArray){
+	atomizeItems = (itemsArray) => {
 		//process the array of items, pulling out child notes/attachments to write
 		//separately with correct parentItem set and assign generated itemKeys to
 		//new items
@@ -200,7 +200,7 @@ class Items extends Container{
 	}
 
 	//accept an array of 'Zotero.Item's
-	writeItems(itemsArray){
+	writeItems = (itemsArray) => {
 		var items = this;
 		var library = items.owningLibrary;
 		var i;

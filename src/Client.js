@@ -11,7 +11,7 @@ class Client{
 		this.net = new Net();
 	}
 
-	getUserGroups(userID) {
+	getUserGroups = (userID) => {
 		var aparams = {
 			'target':'userGroups',
 			'libraryType':'user',
@@ -31,13 +31,12 @@ class Client{
 				return new Zotero.Group(groupObj);
 			});
 
-			var fetchedGroups = groups.addGroupsFromJson(response.data);
-			response.fetchedGroups = fetchedGroups;
+			response.fetchedGroups = groups;
 			return response;
 		});
 	};
 
-	getUserPublications(userID, config={}) {
+	getUserPublications = (userID, config={}) => {
 		log.debug('Zotero.Client.loadPublications', 3);
 		
 		let defaultConfig = {
@@ -63,7 +62,7 @@ class Client{
 		});
 	};
 
-	getKeyPermissions(key=false) {
+	getKeyPermissions = (key=false) => {
 		if(!key){
 			return false;
 		}
@@ -77,7 +76,7 @@ class Client{
 		});
 	};
 
-	deleteKey(key=false) {
+	deleteKey = (key=false) => {
 		if(!key){
 			return false;
 		}

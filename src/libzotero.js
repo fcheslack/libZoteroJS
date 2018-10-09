@@ -1,5 +1,6 @@
-// use strict;
+'use strict';
 
+import 'babel-polyfill';
 var log = require('./Log.js').Logger('libZotero');
 
 var globalScope;

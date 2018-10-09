@@ -3,6 +3,7 @@
 const assert = require('chai').assert;
 const Zotero = require('../src/libzotero.js');
 const fetchMock = require('fetch-mock');
+import {randomString} from '../src/Utils.js';
 
 const bookTemplateFixture = require('./fixtures/book-template.json');
 const conferencePaperTemplateFixture = require('./fixtures/conference-paper-template.json');
@@ -90,9 +91,9 @@ describe('Zotero.Item', () => {
 
 		afterEach(fetchMock.restore);
 		
-		it('should create item', done => {
+		it('should create item', async () => {
 			const library = new Zotero.Library('user', 1, '', '');
-			const item = new Zotero.Item();
+			let item = new Zotero.Item();
 
 			fetchMock.post(
 				/https:\/\/api\.zotero\.org\/users\/1\/items\??/i,
@@ -116,36 +117,40 @@ describe('Zotero.Item', () => {
 				);
 
 			item.associateWithLibrary(library);
-			item.initEmpty('book')
-				.then(item => {
-					item.set('title', 'book-1');
-					item.writeItem()
-						.then(responses => {
-							let itemsArray = responses[0].returnItems;
-							assert.equal(itemsArray.length, 1, 'We expect 1 items was written');
-							assert.isOk(itemsArray[0].key, 'We expect the first item to have an itemKey');
-							assert.equal(item.version, 12, 'We expect version number to be updated');
-							done();
-					}).catch(done);
-			}).catch(done);
+			item = await item.initEmpty('book')
+			item.set('title', 'book-1');
+			let responses = await item.writeItem();
+			let itemsArray = responses[0].returnItems;
+			assert.equal(itemsArray.length, 1, 'We expect 1 items was written');
+			assert.isOk(itemsArray[0].key, 'We expect the first item to have an itemKey');
+			assert.equal(item.version, 12, 'We expect version number to be updated');
 		});
 
-		it('should create item with associated notes', () => {
+		it('should create item with associated notes', async () => {
 			const library = new Zotero.Library('user', 1, '', '');
-			const item = new Zotero.Item();
+			let item = new Zotero.Item();
 
 			fetchMock.post(
 				/https:\/\/api\.zotero\.org\/users\/1\/items\??/i,
 				request => {
 					let items = JSON.parse(request.body);
-					items = items.map(i => i.version = 123);
+					items = items.map(i => {i.version = 123; return i;});
 					return {
 						headers: {
 							'Last-Modified-Version': 12
 						},
 						body: {
-							'successful': items.reduce((a, v, i) => a[i] = v, {}),
-							'success': items.reduce((a, v, i) => a[i] = v.key, {}),
+							'successful': items.reduce((a, v, i) => {
+								if(!v.key){
+									v.key = randomString();
+								}
+								a[i] = v;
+								return a;
+							}, {}),
+							'success': items.reduce((a, v, i) => {
+								a[i] = v.key;
+								return a;
+							}, {}),
 							'unchanged': {},
 							'failed': {}
 						}
@@ -154,42 +159,39 @@ describe('Zotero.Item', () => {
 				);
 
 			item.associateWithLibrary(library);
-			item.initEmpty('conferencePaper')
-				.then(item => {
-					item.set('title', 'conference paper 1');
-					item.set('conferenceName', 'The Best Conference');
+			item = await item.initEmpty('conferencePaper');
+			item.set('title', 'conference paper 1');
+			item.set('conferenceName', 'The Best Conference');
 
-					const childNote1 = new Zotero.Item();
-					childNote1.initEmptyNote();
-					childNote1.set('note', 'Note Content 1');
+			const childNote1 = new Zotero.Item();
+			childNote1.initEmptyNote();
+			childNote1.set('note', 'Note Content 1');
 
-					const childNote2 = new Zotero.Item();
-					childNote2.initEmptyNote();
-					childNote2.set('note', 'Note Content 2');
+			const childNote2 = new Zotero.Item();
+			childNote2.initEmptyNote();
+			childNote2.set('note', 'Note Content 2');
 
-					item.notes = [];
-					item.notes.push(childNote1);
-					item.notes.push(childNote2);
+			item.notes = [];
+			item.notes.push(childNote1);
+			item.notes.push(childNote2);
 
-					item.writeItem().then(responses => {
-						let itemsArray = responses[0].returnItems;
-						assert.equal(itemsArray.length, 3, 'We expect 3 items were written');
-						assert.isOk(itemsArray[0].key, 'We expect the first item to have an itemKey');
-						assert.isOk(itemsArray[1].key, 'We expect the second item to have an itemKey');
-						assert.isOk(itemsArray[2].key, 'We expect the third item to have an itemKey');
+			let responses = await item.writeItem();
+			let itemsArray = responses[0].returnItems;
+			assert.equal(itemsArray.length, 3, 'We expect 3 items were written');
+			assert.isOk(itemsArray[0].key, 'We expect the first item to have an itemKey');
+			assert.isOk(itemsArray[1].key, 'We expect the second item to have an itemKey');
+			assert.isOk(itemsArray[2].key, 'We expect the third item to have an itemKey');
 
-						assert.isOk(itemsArray[0].get('version') > 0, 'We expect to have an updated itemVersion since it\'s on the server now');
-						assert.isOk(itemsArray[1].get('version') > 0, 'We expect to have an updated itemVersion since it\'s on the server now');
-						assert.isOk(itemsArray[2].get('version') > 0, 'We expect to have an updated itemVersion since it\'s on the server now');
+			assert.isOk(itemsArray[0].get('version') > 0, 'We expect to have an updated itemVersion since it\'s on the server now');
+			assert.isOk(itemsArray[1].get('version') > 0, 'We expect to have an updated itemVersion since it\'s on the server now');
+			assert.isOk(itemsArray[2].get('version') > 0, 'We expect to have an updated itemVersion since it\'s on the server now');
 
-						assert.isOk(itemsArray[1].get('version') == itemsArray[2].get('version'), 'Expect itemVersion for child notes to be assert.equal');
-					});
-				});
+			assert.isOk(itemsArray[1].get('version') == itemsArray[2].get('version'), 'Expect itemVersion for child notes to be assert.equal');
 		});
 
-		it('should handle error responses', done => {
+		it('should handle error responses', async () => {
 			const library = new Zotero.Library('user', 1, '', '');
-			const item = new Zotero.Item();
+			let item = new Zotero.Item();
 
 			fetchMock.post(
 				/https:\/\/api\.zotero\.org\/users\/1\/items\??/i,
@@ -216,19 +218,14 @@ describe('Zotero.Item', () => {
 			);
 
 			item.associateWithLibrary(library);
-			item.initEmpty('book')
-				.then(item => {
-					item.set('title', 'book-1');
-					item.writeItem()
-						.then(responses => {
-							let itemsArray = responses[0].returnItems;
-							assert.isOk(itemsArray[0].writeFailure);
-							assert.isOk('code' in itemsArray[0].writeFailure);
-							assert.equal(itemsArray[0].writeFailure.code, 400);
-							assert.equal(itemsArray[0].writeFailure.message, 'bad input error');
-							done();
-					}).catch(done);
-			}).catch(done);
+			item = await item.initEmpty('book');
+			item.set('title', 'book-1');
+			let responses = await item.writeItem();
+			let itemsArray = responses[0].returnItems;
+			assert.isOk(itemsArray[0].writeFailure);
+			assert.isOk('code' in itemsArray[0].writeFailure);
+			assert.equal(itemsArray[0].writeFailure.code, 400);
+			assert.equal(itemsArray[0].writeFailure.message, 'bad input error');
 		});
 	});
 });

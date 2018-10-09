@@ -34,11 +34,11 @@ class Collection extends ApiObject{
 		}
 	}
 
-	updateObjectKey(collectionKey){
+	updateObjectKey = (collectionKey) => {
 		this.updateCollectionKey(collectionKey);
 	}
 
-	updateCollectionKey(collectionKey){
+	updateCollectionKey = (collectionKey) => {
 		var collection = this;
 		collection.key = collectionKey;
 		collection.apiObj.key = collectionKey;
@@ -46,7 +46,7 @@ class Collection extends ApiObject{
 		return collection;
 	}
 
-	parseJsonCollection(apiObj) {
+	parseJsonCollection = (apiObj) => {
 		log.debug('parseJsonCollection', 4);
 		var collection = this;
 		collection.key = apiObj.key;
@@ -60,7 +60,7 @@ class Collection extends ApiObject{
 		collection.initSecondaryData();
 	}
 
-	initSecondaryData() {
+	initSecondaryData = () => {
 		var collection = this;
 		
 		if(collection.apiObj.data['parentCollection']){
@@ -80,7 +80,7 @@ class Collection extends ApiObject{
 		
 	}
 
-	nestCollection(collectionsObject) {
+	nestCollection = (collectionsObject) => {
 		log.debug('Zotero.Collection.nestCollection', 4);
 		var collection = this;
 		var parentCollectionKey = collection.get('parentCollection');
@@ -96,7 +96,7 @@ class Collection extends ApiObject{
 		return false;
 	}
 
-	addItems(itemKeys){
+	addItems = (itemKeys) => {
 		log.debug('Zotero.Collection.addItems', 3);
 		var collection = this;
 		var config = {
@@ -112,7 +112,7 @@ class Collection extends ApiObject{
 		});
 	}
 
-	getMemberItemKeys(){
+	getMemberItemKeys = () => {
 		log.debug('Zotero.Collection.getMemberItemKeys', 3);
 		var collection = this;
 		var config = {
@@ -139,7 +139,7 @@ class Collection extends ApiObject{
 		});
 	}
 
-	removeItem(itemKey){
+	removeItem = (itemKey) => {
 		var collection = this;
 		var config = {
 			'target':'item',
@@ -154,7 +154,7 @@ class Collection extends ApiObject{
 		});
 	}
 
-	update(name, parentKey){
+	update = (name, parentKey) => {
 		var collection = this;
 		if(!parentKey) parentKey = false;
 		var config = {
@@ -180,13 +180,13 @@ class Collection extends ApiObject{
 		});
 	}
 
-	writeApiObj(){
+	writeApiObj = () => {
 		var collection = this;
 		var writeObj = Object.assign({}, collection.pristineData, collection.apiObj.data);
 		return writeObj;
 	}
 
-	remove(){
+	remove = () => {
 		log.debug('Zotero.Collection.delete', 3);
 		var collection = this;
 		var owningLibrary = collection.owningLibrary;
@@ -210,7 +210,7 @@ class Collection extends ApiObject{
 		});
 	}
 
-	get(key){
+	get = (key) => {
 		var collection = this;
 		switch(key) {
 			case 'title':

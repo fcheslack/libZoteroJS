@@ -226,6 +226,7 @@ class Container{
 						Object.keys(data.failed).forEach(function(ind){
 							var failure = data.failed[ind];
 							log.error('failed write ' + ind + ' - ' + failure);
+							log.debug(failure);
 							var i = parseInt(ind, 10);
 							var object = objectsArray[i];
 							object.writeFailure = failure;

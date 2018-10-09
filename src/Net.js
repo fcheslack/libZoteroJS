@@ -34,7 +34,7 @@ class Net {
 		this.numConcurrent = 3;
 		this.backingOff = false;
 	}
-	queueDeferred(){
+	queueDeferred = () => {
 		let net = this;
 		let d = new Deferred();
 		net.deferredQueue.push(d);
@@ -42,7 +42,7 @@ class Net {
 	}
 	//add a request to the end of the queue, so that previously queue requests run first
 	//if requestObject is an array of requests, run them sequentially
-	queueRequest(requestObject){
+	queueRequest = (requestObject) => {
 		log.debug('Net.queueRequest', 3);
 		var net = this;
 		var resultPromise;
@@ -76,7 +76,7 @@ class Net {
 		return resultPromise;
 	}
 	//run a request without waiting for any other requests to complete
-	runConcurrent(requestObject){
+	runConcurrent = (requestObject) => {
 		log.debug('Net.runConcurrent', 3);
 		return this.ajaxRequest(requestObject).then(function(response){
 			log.debug('done with runConcurrent request', 3);
@@ -87,7 +87,7 @@ class Net {
 	//chaining each request onto the .then of the previous one, after
 	//adding the previous response to a responses array that will be
 	//returned via promise to the caller when all requests are complete
-	runSequential(requestObjects){
+	runSequential = (requestObjects) => {
 		log.debug('Net.runSequential', 3);
 		var net = this;
 		var responses = [];
@@ -115,7 +115,7 @@ class Net {
 	}
 	//when one concurrent call, or a sequential series finishes, subtract it from the running
 	//count and run the next if there is something waiting to be run
-	individualRequestDone(response){
+	individualRequestDone = (response) => {
 		log.debug('Net.individualRequestDone', 3);
 		var net = this;
 		
@@ -133,13 +133,13 @@ class Net {
 		
 		return response;
 	}
-	queuedRequestDone(){
+	queuedRequestDone = () => {
 		log.debug('queuedRequestDone', 3);
 		var net = this;
 		net.numRunning--;
 		net.runNext();
 	}
-	runNext(){
+	runNext = () => {
 		log.debug('Net.runNext', 4);
 		var net = this;
 		var nowms = Date.now();
@@ -165,7 +165,7 @@ class Net {
 			log.debug(net.numRunning + '/' + net.numConcurrent + ' Running. ' + net.deferredQueue.length + ' queued.', 4);
 		}
 	}
-	checkDelay(response){
+	checkDelay = (response) => {
 		log.debug('Net.checkDelay', 4);
 		var net = this;
 		var wait = 0;
@@ -191,7 +191,7 @@ class Net {
 	//convert the Response into a Zotero.ApiResponse, and attach the passed in
 	//success/failure handlers to the promise chain before returning (or default error logger
 	//if no failure handler is defined)
-	ajaxRequest(requestConfig){
+	ajaxRequest = (requestConfig) => {
 		log.debug('Net.ajaxRequest', 3);
 		var net = this;
 		
@@ -300,7 +300,7 @@ class Net {
 	}
 	//perform a network request defined by config, and return a promise for a Response
 	//resolve with a successful status (200-300) reject, but with the same Response object otherwise
-	ajax(config){
+	ajax = (config) => {
 		config = Object.assign({type:'GET'}, config);
 		let headersInit = config.headers || {};
 		let headers = new Headers(headersInit);
@@ -309,7 +309,7 @@ class Net {
 			method:config.type,
 			headers: headers,
 			mode:'cors',
-			credentials:'include',
+			credentials:'omit',
 			body:config.data
 		});
 		

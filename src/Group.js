@@ -12,12 +12,12 @@ class Group extends ApiObject{
 		}
 	}
 
-	parseJsonGroup(groupObj) {
+	parseJsonGroup = (groupObj) => {
 		var group = this;
 		group.apiObj = groupObj;
 	}
 
-	get(key) {
+	get = (key) => {
 		var group = this;
 		switch(key) {
 			case 'title':
@@ -51,9 +51,8 @@ class Group extends ApiObject{
 		return null;
 	}
 
-	isWritable(userID){
+	isWritable = (userID) => {
 		var group = this;
-		log.debug(group);
 		let admins = group.apiObj.data.admins;
 		if(!admins){
 			admins = [];

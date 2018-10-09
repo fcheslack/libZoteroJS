@@ -7,7 +7,7 @@ class Groups{
 		this.instance = 'Zotero.Groups';
 		this.groupsArray = [];
 	}
-	addGroupsFromJson(jsonBody){
+	addGroupsFromJson = (jsonBody) => {
 		var groups = this;
 		var groupsAdded = [];
 		jsonBody.forEach(function(groupObj){
@@ -19,8 +19,7 @@ class Groups{
 		return groupsAdded;
 	}
 
-	fetchUserGroups(userID, apikey){
-		var groups = this;
+	fetchUserGroups = (userID, apikey) => {
 		var aparams = {
 			'target':'userGroups',
 			'libraryType':'user',
@@ -31,14 +30,14 @@ class Groups{
 		if(apikey){
 			aparams['key'] = apikey;
 		}
-		else if(groups.owningLibrary) {
-			aparams['key'] = groups.owningLibrary._apiKey;
+		else if(this.owningLibrary) {
+			aparams['key'] = this.owningLibrary._apiKey;
 		}
 		
 		return Zotero.ajaxRequest(aparams)
-		.then(function(response){
+		.then((response) => {
 			log.debug('fetchUserGroups proxied callback', 3);
-			var fetchedGroups = groups.addGroupsFromJson(response.data);
+			var fetchedGroups = this.addGroupsFromJson(response.data);
 			response.fetchedGroups = fetchedGroups;
 			return response;
 		});

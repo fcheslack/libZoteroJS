@@ -24,7 +24,8 @@ describe('Zotero.Group', () => {
 		});
 
 		it('should return empty arrays when admin/members not set on api object', () => {
-			const modifiedGroupJson = Object.assign({}, groupjsonFixture);
+			let modifiedGroupJson = Object.assign({}, groupjsonFixture);
+			modifiedGroupJson.data = Object.assign({}, groupjsonFixture.data);
 			delete modifiedGroupJson.data.admins;
 			delete modifiedGroupJson.data.members;
 			
@@ -50,17 +51,16 @@ describe('Zotero.Group', () => {
 
 		afterEach(fetchMock.restore);
 
-		it('should fetch user groups', () => {
+		it('should fetch user groups', async () => {
 			var library = new Zotero.Library('user', 1, '', '');
 
-			library.groups.fetchUserGroups(1).then(() => {
-				assert.isOk(library.groups.groupsArray.length > 0);
-				assert.equal(library.groups.groupsArray[0].get('name'), 'Panda');
-				assert.equal(library.groups.groupsArray[0].get('owner'), 14058);
-				assert.equal(library.groups.groupsArray[0].get('type'), 'PublicClosed');
-				assert.lengthOf(library.groups.groupsArray[0].get('admins'), 2);
-				assert.lengthOf(library.groups.groupsArray[0].get('members'), 1);
-			});
+			await library.groups.fetchUserGroups(1);
+			assert.isOk(library.groups.groupsArray.length > 0);
+			assert.equal(library.groups.groupsArray[0].get('name'), 'Panda');
+			assert.equal(library.groups.groupsArray[0].get('owner'), 14058);
+			assert.equal(library.groups.groupsArray[0].get('type'), 'PublicClosed');
+			assert.lengthOf(library.groups.groupsArray[0].get('admins'), 2);
+			assert.lengthOf(library.groups.groupsArray[0].get('members'), 1);
 		});
 	});
 });
