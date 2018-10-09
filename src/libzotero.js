@@ -1,6 +1,6 @@
 'use strict';
 
-import 'babel-polyfill';
+import "@babel/polyfill";
 var log = require('./Log.js').Logger('libZotero');
 
 var globalScope;
@@ -17,15 +17,10 @@ if(typeof window === 'undefined') {
 	}
 } else {
 	globalScope = window;
-	if(typeof Promise === 'undefined') {
-		require('es6-promise').polyfill();
-	}
-	
 	//add github's whatwg-fetch for browsers
 	if(!globalScope.fetch){
 		require('whatwg-fetch');
 	}
-	//module.exports = self.fetch.bind(self);
 }
 
 import {Cache} from './Cache.js';
