@@ -7,20 +7,8 @@ var globalScope;
 
 if(typeof window === 'undefined') {
 	globalScope = global;
-	//add node-fetch
-	if(!globalScope.fetch){
-		var nfetch = require('node-fetch');
-		globalScope.fetch = nfetch;
-		globalScope.Response = nfetch.Response;
-		globalScope.Headers = nfetch.Headers;
-		globalScope.Request = nfetch.Request;
-	}
 } else {
 	globalScope = window;
-	//add github's whatwg-fetch for browsers
-	if(!globalScope.fetch){
-		require('whatwg-fetch');
-	}
 }
 
 import {Cache} from './Cache.js';

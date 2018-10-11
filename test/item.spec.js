@@ -76,11 +76,11 @@ describe('Zotero.Item', () => {
 	describe('Write', () => {
 		beforeEach(() => {
 			fetchMock.get(
-				/https:\/\/api\.zotero\.org\/items\/new\?itemType=book\&?/i,
+				'begin:https://api.zotero.org/items/new?itemType=book',
 				bookTemplateFixture
 			);
 			fetchMock.get(
-				/https:\/\/api\.zotero\.org\/items\/new\?itemType=conferencePaper\&?/i,
+				'begin:https://api.zotero.org/items/new?itemType=conferencePaper',
 				conferencePaperTemplateFixture
 			);
 
@@ -95,10 +95,22 @@ describe('Zotero.Item', () => {
 			const library = new Zotero.Library('user', 1, '', '');
 			let item = new Zotero.Item();
 
-			fetchMock.post(
-				/https:\/\/api\.zotero\.org\/users\/1\/items\??/i,
-				request => {
-					let item = JSON.parse(request.body)[0];
+			let reqItem;
+			fetchMock.mock({
+				method: 'POST',
+				matcher: (url, options, request) => {
+					if(options.method != 'POST') {
+						return false;
+					}
+					let parsedUrl = new URL(url);
+					if(parsedUrl.origin != 'https://api.zotero.org' || parsedUrl.pathname != '/users/1/items') {
+						return false;
+					}
+					reqItem = JSON.parse(request.body)[0];
+					return true;
+				},
+				response: () => {
+					let item = reqItem;
 					item.version = 12;
 					return {
 						headers: {
@@ -114,7 +126,7 @@ describe('Zotero.Item', () => {
 						}
 					};
 				}
-				);
+			});
 
 			item.associateWithLibrary(library);
 			item = await item.initEmpty('book')
@@ -130,24 +142,35 @@ describe('Zotero.Item', () => {
 			const library = new Zotero.Library('user', 1, '', '');
 			let item = new Zotero.Item();
 
-			fetchMock.post(
-				/https:\/\/api\.zotero\.org\/users\/1\/items\??/i,
-				request => {
-					let items = JSON.parse(request.body);
-					items = items.map(i => {i.version = 123; return i;});
+			let reqItems;
+			fetchMock.mock({
+				method:'POST',
+				matcher: (url, options, request) => {
+					if(options.method != 'POST') {
+						return false;
+					}
+					let parsedUrl = new URL(url);
+					if(parsedUrl.origin != 'https://api.zotero.org' || parsedUrl.pathname != '/users/1/items') {
+						return false;
+					}
+					reqItems = JSON.parse(request.body);
+					return true;
+				},
+				response: () => {
+					reqItems = reqItems.map(i => {i.version = 123; return i;});
 					return {
 						headers: {
 							'Last-Modified-Version': 12
 						},
 						body: {
-							'successful': items.reduce((a, v, i) => {
+							'successful': reqItems.reduce((a, v, i) => {
 								if(!v.key){
 									v.key = randomString();
 								}
 								a[i] = v;
 								return a;
 							}, {}),
-							'success': items.reduce((a, v, i) => {
+							'success': reqItems.reduce((a, v, i) => {
 								a[i] = v.key;
 								return a;
 							}, {}),
@@ -156,7 +179,7 @@ describe('Zotero.Item', () => {
 						}
 					};
 				}
-				);
+			});
 
 			item.associateWithLibrary(library);
 			item = await item.initEmpty('conferencePaper');
@@ -193,10 +216,22 @@ describe('Zotero.Item', () => {
 			const library = new Zotero.Library('user', 1, '', '');
 			let item = new Zotero.Item();
 
-			fetchMock.post(
-				/https:\/\/api\.zotero\.org\/users\/1\/items\??/i,
-				request => {
-					let item = JSON.parse(request.body)[0];
+			let reqItems;
+			fetchMock.mock({
+				method:'POST',
+				matcher: (url, options, request) => {
+					if(options.method != 'POST') {
+						return false;
+					}
+					let parsedUrl = new URL(url);
+					if(parsedUrl.origin != 'https://api.zotero.org' || parsedUrl.pathname != '/users/1/items') {
+						return false;
+					}
+					reqItems = JSON.parse(request.body);
+					return true;
+				},
+				response: () => {
+					let item = reqItems[0];
 					item.version = 12;
 					return {
 						headers: {
@@ -215,7 +250,7 @@ describe('Zotero.Item', () => {
 						}
 					};
 				}
-			);
+			});
 
 			item.associateWithLibrary(library);
 			item = await item.initEmpty('book');

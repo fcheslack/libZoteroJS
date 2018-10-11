@@ -15,6 +15,7 @@ class Group extends ApiObject{
 	parseJsonGroup = (groupObj) => {
 		var group = this;
 		group.apiObj = groupObj;
+		group.version = groupObj.version;
 	}
 
 	get = (key) => {

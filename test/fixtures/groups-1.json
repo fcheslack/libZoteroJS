@@ -1,0 +1,126 @@
+[
+    {
+        "id": 326,
+        "version": 3,
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/326",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/goats",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "created": "2018-07-26T14:30:47Z",
+            "lastModified": "2018-09-01T23:25:44Z",
+            "numItems": 0
+        },
+        "data": {
+            "id": 326,
+            "version": 3,
+            "name": "Goats",
+            "owner": 23869,
+            "type": "PublicClosed",
+            "description": "<p><strong>Group Description <em>With italics</em></strong> <a title=\"zotero\" href=\"http://zotero.org\" rel=\"nofollow\">zotero.org</a><br /></p>",
+            "url": "",
+            "libraryEditing": "members",
+            "libraryReading": "all",
+            "fileEditing": "members"
+        }
+    },
+    {
+        "id": 325,
+        "version": 1,
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/325",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/llamas",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "created": "2018-07-26T14:30:35Z",
+            "lastModified": "2018-07-26T14:30:35Z",
+            "numItems": 0
+        },
+        "data": {
+            "id": 325,
+            "version": 1,
+            "name": "Llamas",
+            "owner": 23869,
+            "type": "PublicClosed",
+            "description": "",
+            "url": "",
+            "libraryEditing": "members",
+            "libraryReading": "all",
+            "fileEditing": "members"
+        }
+    },
+    {
+        "id": 324,
+        "version": 1,
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/324",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/not_narwhal",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "created": "2018-07-10T13:44:27Z",
+            "lastModified": "2018-07-10T13:44:27Z",
+            "numItems": 0
+        },
+        "data": {
+            "id": 324,
+            "version": 1,
+            "name": "Not Narwhal",
+            "owner": 23869,
+            "type": "PublicOpen",
+            "description": "",
+            "url": "",
+            "libraryEditing": "members",
+            "libraryReading": "all",
+            "fileEditing": "none"
+        }
+    },
+    {
+        "id": 319,
+        "version": 4,
+        "links": {
+            "self": {
+                "href": "https://apidev.zotero.org/groups/319",
+                "type": "application/json"
+            },
+            "alternate": {
+                "href": "https://staging.zotero.net/groups/not_pandas",
+                "type": "text/html"
+            }
+        },
+        "meta": {
+            "created": "2018-03-13T16:44:50Z",
+            "lastModified": "2018-06-13T20:36:28Z",
+            "numItems": 0
+        },
+        "data": {
+            "id": 319,
+            "version": 4,
+            "name": "Not Pandas",
+            "owner": 23869,
+            "type": "PublicOpen",
+            "description": "Test Group for Test user 1",
+            "url": "test.com",
+            "libraryEditing": "admins",
+            "libraryReading": "all",
+            "fileEditing": "none"
+        }
+    }
+]

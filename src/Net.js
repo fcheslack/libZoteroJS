@@ -1,6 +1,7 @@
 'use strict';
 
 let log = require('./Log.js').Logger('libZotero:Net', 3);
+require('cross-fetch/polyfill');
 
 let Deferred = function(){
 	var d = this;

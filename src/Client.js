@@ -11,7 +11,7 @@ class Client{
 		this.net = new Net();
 	}
 
-	getUserGroups = (userID) => {
+	getUserGroups = async (userID) => {
 		var aparams = {
 			'target':'userGroups',
 			'libraryType':'user',
@@ -23,20 +23,17 @@ class Client{
 			aparams['key'] = this._apiKey;
 		}
 
-		return Zotero.ajaxRequest(aparams)
-		.then(function(response){
-			log.debug('fetchUserGroups proxied callback', 3);
-			let groupJson = response.data;
-			let groups = groupJson.map(function(groupObj){
-				return new Zotero.Group(groupObj);
-			});
-
-			response.fetchedGroups = groups;
-			return response;
+		let response = await Zotero.ajaxRequest(aparams);
+		let groupJson = response.data;
+		let groups = groupJson.map(function(groupObj){
+			return new Zotero.Group(groupObj);
 		});
+
+		response.fetchedGroups = groups;
+		return response;
 	};
 
-	getUserPublications = (userID, config={}) => {
+	getUserPublications = async (userID, config={}) => {
 		log.debug('Zotero.Client.loadPublications', 3);
 		
 		let defaultConfig = {
@@ -55,25 +52,22 @@ class Client{
 		});
 
 		let fetcher = new Fetcher(urlconfig);
-		return fetcher.fetchAll().then((results)=>{
-			return results.map(function(itemObj){
-				return new Zotero.Item(itemObj);
-			});
+		let results = await fetcher.fetchAll();
+		return results.map(function(itemObj){
+			return new Zotero.Item(itemObj);
 		});
 	};
 
-	getKeyPermissions = (key=false) => {
+	getKeyPermissions = async (key=false) => {
 		if(!key){
 			return false;
 		}
 
 		let urlconfig = {'target':'key', 'apiKey':key, 'libraryType':''};
 
-		return Zotero.ajaxRequest(urlconfig)
-		.then(function(response){
-			let keyObject = JSON.parse(response.data);
-			return keyObject;
-		});
+		let response = await Zotero.ajaxRequest(urlconfig);
+		let keyObject = JSON.parse(response.data);
+		return keyObject;
 	};
 
 	deleteKey = (key=false) => {
