@@ -14,18 +14,17 @@ class Container {
 	// add an ApiObject to the array and map, and associate it with container's owningLibrary if present
 	addObject(object) {
 		log.debug('Zotero.Container.addObject', 4);
-		var container = this;
-		container.objectArray.push(object);
-		container.objectMap[object.key] = object;
-		if (container.owningLibrary) {
-			object.associateWithLibrary(container.owningLibrary);
+		this.objectArray.push(object);
+		this.objectMap[object.key] = object;
+		if (this.owningLibrary) {
+			object.associateWithLibrary(this.owningLibrary);
 		}
 		
-		return container;
+		return this;
 	}
 
 	// return the function to use to compare a field of an ApiObject
-	fieldComparer(field) {
+	static fieldComparer(field) {
 		if (Intl) {
 			var collator = new Intl.Collator();
 			return function (a, b) {
@@ -47,9 +46,8 @@ class Container {
 
 	// get a single object by key
 	getObject(key) {
-		var container = this;
-		if (container.objectMap.hasOwnProperty(key)) {
-			return container.objectMap[key];
+		if (this.objectMap.hasOwnProperty(key)) {
+			return this.objectMap[key];
 		}
 		else {
 			return false;
@@ -58,11 +56,10 @@ class Container {
 
 	// get multiple objects by key
 	getObjects(keys) {
-		var container = this;
 		var objects = [];
 		var object;
 		for (var i = 0; i < keys.length; i++) {
-			object = container.getObject(keys[i]);
+			object = this.getObject(keys[i]);
 			if (object) {
 				objects.push(object);
 			}
@@ -72,23 +69,21 @@ class Container {
 
 	// remove an object with a given key, then re-initialize secondary data which may have changed
 	removeObject(key) {
-		var container = this;
-		if (container.objectMap.hasOwnProperty(key)) {
-			delete container.objectmap[key];
-			container.initSecondaryData();
+		if (this.objectMap.hasOwnProperty(key)) {
+			delete this.objectmap[key];
+			this.initSecondaryData();
 		}
 	}
 
 	// remove multiple objects by key
 	removeObjects(keys) {
-		var container = this;
 		// delete Objects from objectMap;
 		for (var i = 0; i < keys.length; i++) {
-			delete container.objectMap[keys[i]];
+			delete this.objectMap[keys[i]];
 		}
 		
 		// rebuild array
-		container.initSecondaryData();
+		this.initSecondaryData();
 	}
 
 	writeObjects(objects) {
@@ -132,48 +127,45 @@ class Container {
 	 * @return {null}
 	 */
 	updateSyncState(version) {
-		var container = this;
 		log.debug('updateSyncState: ' + version, 3);
-		if (!container.hasOwnProperty('syncState')) {
+		if (!this.hasOwnProperty('syncState')) {
 			log.debug('no syncState property');
 			throw new Error('Attempt to update sync state of object with no syncState property');
 		}
-		if (container.syncState.earliestVersion === null) {
-			container.syncState.earliestVersion = version;
+		if (this.syncState.earliestVersion === null) {
+			this.syncState.earliestVersion = version;
 		}
-		if (container.syncState.latestVersion === null) {
-			container.syncState.latestVersion = version;
+		if (this.syncState.latestVersion === null) {
+			this.syncState.latestVersion = version;
 		}
-		if (version < container.syncState.earliestVersion) {
-			container.syncState.earliestVersion = version;
+		if (version < this.syncState.earliestVersion) {
+			this.syncState.earliestVersion = version;
 		}
-		if (version > container.syncState.latestVersion) {
-			container.syncState.latestVersion = version;
+		if (version > this.syncState.latestVersion) {
+			this.syncState.latestVersion = version;
 		}
 		log.debug('done updating sync state', 3);
 	}
 
 	updateSyncedVersion(versionField) {
-		var container = this;
-		if (container.syncState.earliestVersion !== null
-			&& (container.syncState.earliestVersion == container.syncState.latestVersion)) {
-			container.version = container.syncState.latestVersion;
-			container.synced = true;
+		if (this.syncState.earliestVersion !== null
+			&& (this.syncState.earliestVersion == this.syncState.latestVersion)) {
+			this.version = this.syncState.latestVersion;
+			this.synced = true;
 		}
-		else if (container.syncState.earliestVersion !== null) {
-			container.version = container.syncState.earliestVersion;
+		else if (this.syncState.earliestVersion !== null) {
+			this.version = this.syncState.earliestVersion;
 		}
 	}
 
 	processDeletions(deletedKeys) {
-		var container = this;
 		for (var i = 0; i < deletedKeys.length; i++) {
-			var localObject = container.get(deletedKeys[i]);
+			var localObject = this.get(deletedKeys[i]);
 			if (localObject !== false) {
 				// still have object locally
 				if (localObject.synced === true) {
 					// our object is not modified, so delete it as the server thinks we should
-					container.removeObjects([deletedKeys[i]]);
+					this.removeObjects([deletedKeys[i]]);
 				}
 				else {
 					// TODO: conflict resolution
@@ -195,63 +187,53 @@ class Container {
 	//  don't mark as synced
 	//  calling code should check for writeFailure after the written objects
 	//  are returned
-	updateObjectsFromWriteResponse(objectsArray, response) {
+	static async updateObjectsFromWriteResponse(objectsArray, response) {
 		log.debug('Zotero.Container.updateObjectsFromWriteResponse', 3);
 		log.debug('statusCode: ' + response.status, 3);
-		return new Promise((resolve, reject) => {
-			if (response.status == 200) {
-				response.json().then((data) => {
-					let lastModifiedVersion = response.headers.get('Last-Modified-Version');
-					log.debug('newLastModifiedVersion: ' + lastModifiedVersion, 3);
-					// make sure writes were actually successful and
-					// update the itemKey for the parent
-					if (data.hasOwnProperty('success') && Object.keys(data.success).length) {
-						// update each successfully written item, possibly with new itemKeys
-						Object.keys(data.success).forEach(function (ind) {
-							var i = parseInt(ind, 10);
-							var key = data.success[ind];
-							var object = objectsArray[i];
-							// throw error if objectKey mismatch
-							if (object.key !== '' && object.key !== key) {
-								throw new Error('object key mismatch in multi-write response');
-							}
-							if (object.key === '') {
-								object.updateObjectKey(key);
-							}
-							object.set('version', lastModifiedVersion);
-							object.synced = true;
-							object.writeFailure = false;
-						});
-						resolve();
+		if (response.status == 200) {
+			let data = await response.json();
+			let lastModifiedVersion = response.headers.get('Last-Modified-Version');
+			log.debug('newLastModifiedVersion: ' + lastModifiedVersion, 3);
+			// make sure writes were actually successful and
+			// update the itemKey for the parent
+			if (data.hasOwnProperty('success') && Object.keys(data.success).length) {
+				// update each successfully written item, possibly with new itemKeys
+				Object.keys(data.success).forEach((ind) => {
+					var i = parseInt(ind, 10);
+					var key = data.success[ind];
+					var object = objectsArray[i];
+					// throw error if objectKey mismatch
+					if (object.key !== '' && object.key !== key) {
+						throw new Error('object key mismatch in multi-write response');
 					}
-					else if (data.hasOwnProperty('failed') && Object.keys(data.failed).length) {
-						log.debug('updating objects with failed writes', 3);
-						Object.keys(data.failed).forEach(function (ind) {
-							var failure = data.failed[ind];
-							log.error('failed write ' + ind + ' - ' + failure);
-							log.debug(failure);
-							var i = parseInt(ind, 10);
-							var object = objectsArray[i];
-							object.writeFailure = failure;
-						});
-						reject();
+					if (object.key === '') {
+						object.updateObjectKey(key);
 					}
-					else {
-						resolve();
-					}
+					object.set('version', lastModifiedVersion);
+					object.synced = true;
+					object.writeFailure = false;
 				});
+			} else if (data.hasOwnProperty('failed') && Object.keys(data.failed).length) {
+				log.debug('updating objects with failed writes', 3);
+				Object.keys(data.failed).forEach((ind) => {
+					var failure = data.failed[ind];
+					log.error('failed write ' + ind + ' - ' + failure);
+					log.debug(failure);
+					var i = parseInt(ind, 10);
+					var object = objectsArray[i];
+					object.writeFailure = failure;
+				});
+				throw new Error('some writes failed');
 			}
-			else if (response.status == 204) {
-				// single item put response, this probably should never go to this function
-				objectsArray[0].synced = true;
-				resolve();
-			}
-		});
+		} else if (response.status == 204) {
+			// single item put response, this probably should never go to this function
+			objectsArray[0].synced = true;
+		}
 	}
 
 	// return the key as a string when passed an argument that
 	// could be either a string key or an object with a key property
-	extractKey(object) {
+	static extractKey(object) {
 		if (typeof object == 'string') {
 			return object;
 		}

@@ -1,4 +1,4 @@
-'use strict';
+
 
 const assert = require('chai').assert;
 const fetchMock = require('fetch-mock');
@@ -30,30 +30,30 @@ describe('Zotero.Net', () => {
 
 		fetchMock.mock('error', 500);
 
-		fetchMock.mock('errorString', {status:400, body:'unknown field'});
+		fetchMock.mock('errorString', { status: 400, body: 'unknown field' });
 
-		fetchMock.mock('networkError', {throws:new TypeError('network error')});
+		fetchMock.mock('networkError', { throws: new TypeError('network error') });
 	});
 
 	after(fetchMock.restore);
 
-	describe('ajax', () =>  {
+	describe('ajax', () => {
 		it('should return a promise that resolves with a standard Fetch API response object', () => {
 			return Zotero.net.ajax({
-				url:'https://api.zotero.org/itemTypes'
-			}).then(response => {
+				url: 'https://api.zotero.org/itemTypes'
+			}).then((response) => {
 				assert.instanceOf(response, Response, 'response is an instance of Fetch API Response interface');
 				return response;
 			});
 		});
 	});
 
-	describe('ajaxRequest', () =>  {
+	describe('ajaxRequest', () => {
 		it('should return a promise that resolves with a Zotero.ApiResponse', () => {
 			var requestConfig = {
-				url:'https://api.zotero.org/itemTypes'
+				url: 'https://api.zotero.org/itemTypes'
 			};
-			return Zotero.net.ajaxRequest(requestConfig).then(response => {
+			return Zotero.net.ajaxRequest(requestConfig).then((response) => {
 				assert.instanceOf(response, Zotero.ApiResponse, 'response is an instance of Zotero.ApiResponse');
 				assert.instanceOf(response.rawResponse, Response, 'rawResponse is an instance of Fetch API Response interface');
 				
@@ -64,9 +64,9 @@ describe('Zotero.Net', () => {
 
 		it('should parse the json response into the data property', () => {
 			var requestConfig = {
-				url:'https://api.zotero.org/itemTypes'
+				url: 'https://api.zotero.org/itemTypes'
 			};
-			return Zotero.net.ajaxRequest(requestConfig).then(response => {
+			return Zotero.net.ajaxRequest(requestConfig).then((response) => {
 				assert.equal('artwork', response.data[0].itemType);
 				return response;
 			});
@@ -74,26 +74,26 @@ describe('Zotero.Net', () => {
 
 		it('should return a rejected promise if the response has bad json', () => {
 			var requestConfig = {
-				url:'malformed'
+				url: 'malformed'
 			};
 			
 			return Zotero.net.ajaxRequest(requestConfig).then(() => {
 				assert.fail('should never happen');
-				throw 'should never happen';
+				throw new Error('should never happen');
 			}, (err) => {
 				assert.isNotNull(err);
-				//log.debug(err);
+				// log.debug(err);
 			});
 		});
 
 		it('should throw a Zotero.ApiResponse indicating error for a 500 response', () => {
 			var requestConfig = {
-				url:'error'
+				url: 'error'
 			};
 			return Zotero.net.ajaxRequest(requestConfig).then(() => {
 				assert.fail('should never happen');
-				throw 'should never happen';
-			}, response => {
+				throw new Error('should never happen');
+			}, (response) => {
 				assert.instanceOf(response, Zotero.ApiResponse, 'instance of Zotero.ApiResponse');
 				assert.equal(true, response.isError);
 				assert.equal(500, response.status);
@@ -102,12 +102,12 @@ describe('Zotero.Net', () => {
 
 		it('should handle a 400 error with a bare string response gracefully', () => {
 			var requestConfig = {
-				url:'errorString'
+				url: 'errorString'
 			};
 			return Zotero.net.ajaxRequest(requestConfig).then(() => {
 				assert.fail('should never happen');
-				throw 'should never happen';
-			}, response => {
+				throw new Error('should never happen');
+			}, (response) => {
 				assert.instanceOf(response, Zotero.ApiResponse, 'instance of Zotero.ApiResponse');
 				assert.equal(true, response.isError);
 				assert.equal(400, response.status);
@@ -116,18 +116,19 @@ describe('Zotero.Net', () => {
 
 		it('should throw a Zotero.ApiResponse indicating a network error', () => {
 			var requestConfig = {
-				url:'networkError'
+				url: 'networkError'
 			};
 			return Zotero.net.ajaxRequest(requestConfig).then(() => {
 				assert.fail('should never happen');
-				throw 'should never happen';
-			}, response => {
+				throw new Error('should never happen');
+			}, (response) => {
 				assert.instanceOf(response, Zotero.ApiResponse, 'instance of Zotero.ApiResponse');
 				assert.equal(true, response.isError);
 			});
 		});
 	});
 
+	/*
 	//queueRequest should behave the same as ajaxRequest for individual requests
 	describe('queueRequest', () =>  {
 		it('should return a promise that resolves with a Zotero.ApiResponse', () => {
@@ -231,4 +232,5 @@ describe('Zotero.Net', () => {
 		});
 
 	});
+	*/
 });

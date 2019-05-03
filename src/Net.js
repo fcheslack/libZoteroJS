@@ -3,15 +3,6 @@
 let log = require('./Log.js').Logger('libZotero:Net', 3);
 require('cross-fetch/polyfill');
 
-let Deferred = function () {
-	var d = this;
-
-	d.promise = new Promise(function (resolve, reject) {
-		d.resolve = resolve;
-		d.reject = reject;
-	});
-};
-
 import { ApiResponse } from './ApiResponse.js';
 import { Ajax as ajax } from './Ajax.js';
 
@@ -36,105 +27,48 @@ class Net {
 		this.backingOff = false;
 	}
 
-	queueDeferred = () => {
-		let net = this;
-		let d = new Deferred();
-		net.deferredQueue.push(d);
-		return d.promise;
-	}
-
-	// add a request to the end of the queue, so that previously queue requests run first
-	// if requestObject is an array of requests, run them sequentially
-	queueRequest = (requestObject) => {
-		log.debug('Net.queueRequest', 3);
-		var net = this;
-		var resultPromise;
-		
-		if (Array.isArray(requestObject)) {
-			resultPromise = net.queueDeferred().then(function () {
-				log.debug('running sequential after queued deferred resolved', 4);
-				return net.runSequential(requestObject);
-			}).then(function (response) {
-				net.queuedRequestDone();
-				return response;
-			}, function (response) {
-				net.queuedRequestDone();
-				throw response;
-			});
-		}
-		else {
-			resultPromise = net.queueDeferred().then(function () {
-				log.debug('running concurrent after queued deferred resolved', 4);
-				return net.runConcurrent(requestObject);
-			}).then(function (response) {
-				net.queuedRequestDone();
-				return response;
-			}, function (response) {
-				net.queuedRequestDone();
-				throw response;
-			});
-		}
-		
-		net.runNext();
-		return resultPromise;
-	}
-
 	// run a request without waiting for any other requests to complete
-	runConcurrent = (requestObject) => {
+	runConcurrent = async (requestObject) => {
 		log.debug('Net.runConcurrent', 3);
-		return this.ajaxRequest(requestObject).then(function (response) {
-			log.debug('done with runConcurrent request', 3);
-			return response;
-		});
+		const response = await this.ajaxRequest(requestObject);
+		log.debug('done with runConcurrent request', 3);
+		return response;
 	}
 
-	// run the set of requests serially
-	// chaining each request onto the .then of the previous one, after
-	// adding the previous response to a responses array that will be
-	// returned via promise to the caller when all requests are complete
-	runSequential = (requestObjects) => {
+	// run set of requests serially, awaiting on response before running each subsequent one
+	// all responses are added to an array in order of request
+	// returned via promise to the caller that resolves when all requests are complete
+	runSequential = async (requestObjects) => {
 		log.debug('Net.runSequential', 3);
-		var net = this;
 		var responses = [];
 		var seqPromise = Promise.resolve();
 		
 		for (var i = 0; i < requestObjects.length; i++) {
 			let requestObject = requestObjects[i];
-			seqPromise = seqPromise.then(function () {
-				var p = net.ajaxRequest(requestObject)
-					.then(function (response) {
-						log.debug('pushing sequential response into result array', 3);
-						responses.push(response);
-					}, function (response) {
-					// return error responses too
-						responses.push(response);
-					});
-				return p;
-			});
+			let response = await this.ajaxRequest(requestObject);// eslint-disable-line no-await-in-loop
+			log.debug('pushing sequential response into result array', 3);
+			responses.push(response);
 		}
 		
-		return seqPromise.then(function () {
-			log.debug('done with sequential aggregator promise - returning responses', 4);
-			return responses;
-		});
+		await seqPromise;
+		log.debug('done with sequential aggregator promise - returning responses', 4);
+		return responses;
 	}
 
 	// when one concurrent call, or a sequential series finishes, subtract it from the running
 	// count and run the next if there is something waiting to be run
 	individualRequestDone = (response) => {
 		log.debug('Net.individualRequestDone', 3);
-		var net = this;
-		
 		// check if we need to back off before making more requests
-		var wait = net.checkDelay(response);
+		var wait = this.checkDelay(response);
 		if (wait > 0) {
 			var waitms = wait * 1000;
-			net.backingOff = true;
+			this.backingOff = true;
 			var waitExpiration = Date.now() + waitms;
-			if (waitExpiration > net.waitingExpires) {
-				net.waitingExpires = waitExpiration;
+			if (waitExpiration > this.waitingExpires) {
+				this.waitingExpires = waitExpiration;
 			}
-			setTimeout(net.runNext, waitms);
+			setTimeout(this.runNext, waitms);
 		}
 		
 		return response;
@@ -142,45 +76,42 @@ class Net {
 
 	queuedRequestDone = () => {
 		log.debug('queuedRequestDone', 3);
-		var net = this;
-		net.numRunning--;
-		net.runNext();
+		this.numRunning--;
+		this.runNext();
 	}
 
 	runNext = () => {
 		log.debug('Net.runNext', 4);
-		var net = this;
 		var nowms = Date.now();
 		
 		// check if we're backing off and need to remain backing off,
 		// or if we should now continue
-		if (net.backingOff && (net.waitingExpires > (nowms - 100))) {
+		if (this.backingOff && (this.waitingExpires > (nowms - 100))) {
 			log.debug('currently backing off', 3);
-			var waitms = net.waitingExpires - nowms;
-			setTimeout(net.runNext, waitms);
+			var waitms = this.waitingExpires - nowms;
+			setTimeout(this.runNext, waitms);
 			return;
 		}
-		else if (net.backingOff && (net.waitingExpires <= (nowms - 100))) {
-			net.backingOff = false;
+		else if (this.backingOff && (this.waitingExpires <= (nowms - 100))) {
+			this.backingOff = false;
 		}
 		
 		// continue making requests up to the concurrent limit
-		log.debug(net.numRunning + '/' + net.numConcurrent + ' Running. ' + net.deferredQueue.length + ' queued.', 4);
-		while ((net.deferredQueue.length > 0) && (net.numRunning < net.numConcurrent)) {
-			net.numRunning++;
-			var nextD = net.deferredQueue.shift();
+		log.debug(this.numRunning + '/' + this.numConcurrent + ' Running. ' + this.deferredQueue.length + ' queued.', 4);
+		while ((this.deferredQueue.length > 0) && (this.numRunning < this.numConcurrent)) {
+			this.numRunning++;
+			var nextD = this.deferredQueue.shift();
 			nextD.resolve();
-			log.debug(net.numRunning + '/' + net.numConcurrent + ' Running. ' + net.deferredQueue.length + ' queued.', 4);
+			log.debug(this.numRunning + '/' + this.numConcurrent + ' Running. ' + this.deferredQueue.length + ' queued.', 4);
 		}
 	}
 
 	checkDelay = (response) => {
 		log.debug('Net.checkDelay', 4);
-		var net = this;
 		var wait = 0;
 		if (Array.isArray(response)) {
 			for (var i = 0; i < response.length; i++) {
-				var iwait = net.checkDelay(response[i]);
+				var iwait = this.checkDelay(response[i]);
 				if (iwait > wait) {
 					wait = iwait;
 				}
@@ -231,7 +162,7 @@ class Net {
 			config.url = ajax.apiRequestString(config.url);
 		}
 		if (!config.url) {
-			throw 'No url specified in Net.apiRequest';
+			throw new Error('No url specified in Net.apiRequest');
 		}
 		let response;
 		let ar;
@@ -312,7 +243,7 @@ class Net {
 		// config.url = ajax.proxyWrapper(config.url, config.type);
 		
 		if (!config.url) {
-			throw 'No url specified in Net.ajaxRequest';
+			throw new Error('No url specified in Net.ajaxRequest');
 		}
 		
 		log.debug('AJAX config', 4);

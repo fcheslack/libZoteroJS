@@ -38,12 +38,11 @@ class Items extends Container {
 
 	addItemsFromJson = (jsonBody) => {
 		log.debug('addItemsFromJson', 3);
-		var items = this;
 		var parsedItemJson = jsonBody;
 		var itemsAdded = [];
-		parsedItemJson.forEach(function (itemObj) {
+		parsedItemJson.forEach((itemObj) => {
 			var item = new Zotero.Item(itemObj);
-			items.addItem(item);
+			this.addItem(item);
 			itemsAdded.push(item);
 		});
 		return itemsAdded;
@@ -60,17 +59,16 @@ class Items extends Container {
 
 	deleteItem = (itemKey) => {
 		log.debug('Zotero.Items.deleteItem', 3);
-		var items = this;
 		var item;
 		
 		if (!itemKey) return false;
-		itemKey = items.extractKey(itemKey);
-		item = items.getItem(itemKey);
+		itemKey = Items.extractKey(itemKey);
+		item = this.getItem(itemKey);
 		
 		var urlconfig = {
 			target: 'item',
-			libraryType: items.owningLibrary.libraryType,
-			libraryID: items.owningLibrary.libraryID,
+			libraryType: this.owningLibrary.libraryType,
+			libraryID: this.owningLibrary.libraryID,
 			itemKey: item.key
 		};
 		var requestConfig = {
@@ -79,30 +77,29 @@ class Items extends Container {
 			headers: { 'If-Unmodified-Since-Version': item.get('version') }
 		};
 		
-		return items.owningLibrary.ajaxRequest(requestConfig);
+		return this.owningLibrary.ajaxRequest(requestConfig);
 	}
 
 	deleteItems = (deleteItems, version) => {
 		log.debug('Zotero.Items.deleteItems', 3);
-		var items = this;
 		var deleteKeys = [];
 		var i;
-		if ((!version) && (items.itemsVersion !== 0)) {
-			version = items.itemsVersion;
+		if ((!version) && (this.itemsVersion !== 0)) {
+			version = this.itemsVersion;
 		}
 		
 		// make sure we're working with item keys, not items
 		var key;
 		for (i = 0; i < deleteItems.length; i++) {
 			if (!deleteItems[i]) continue;
-			key = items.extractKey(deleteItems[i]);
+			key = this.extractKey(deleteItems[i]);
 			if (key) {
 				deleteKeys.push(key);
 			}
 		}
 		
 		// split keys into chunks of 50 per request
-		var deleteChunks = items.chunkObjectsArray(deleteKeys);
+		var deleteChunks = this.chunkObjectsArray(deleteKeys);
 
 		/*
 		var successCallback = function(response){
@@ -116,8 +113,8 @@ class Items extends Container {
 			var deleteKeysString = deleteChunks[i].join(',');
 			var urlconfig = {
 				target: 'items',
-				libraryType: items.owningLibrary.libraryType,
-				libraryID: items.owningLibrary.libraryID,
+				libraryType: this.owningLibrary.libraryType,
+				libraryID: this.owningLibrary.libraryID,
 				itemKey: deleteKeysString
 			};
 			// headers['If-Unmodified-Since-Version'] = version;
@@ -129,38 +126,35 @@ class Items extends Container {
 			requestObjects.push(requestConfig);
 		}
 		
-		return items.owningLibrary.sequentialRequests(requestObjects);
+		return this.owningLibrary.sequentialRequests(requestObjects);
 	}
 
 	trashItems = (itemsArray) => {
-		var items = this;
 		var i;
 		for (i = 0; i < itemsArray.length; i++) {
 			var item = itemsArray[i];
 			item.set('deleted', 1);
 		}
-		return items.writeItems(itemsArray);
+		return this.writeItems(itemsArray);
 	}
 
 	untrashItems = (itemsArray) => {
-		var items = this;
 		var i;
 		for (i = 0; i < itemsArray.length; i++) {
 			var item = itemsArray[i];
 			item.set('deleted', 0);
 		}
-		return items.writeItems(itemsArray);
+		return this.writeItems(itemsArray);
 	}
 
 	findItems = (config) => {
-		var items = this;
 		var matchingItems = [];
-		Object.keys(items.itemObjects).forEach(function (key) {
+		Object.keys(this.itemObjects).forEach((key) => {
 			var item = item.itemObjects[key];
 			if (config.collectionKey && (item.apiObj.collections.indexOf(config.collectionKey) === -1)) {
 				return;
 			}
-			matchingItems.push(items.itemObjects[key]);
+			matchingItems.push(this.itemObjects[key]);
 		});
 		return matchingItems;
 	}
@@ -202,20 +196,20 @@ class Items extends Container {
 
 	// accept an array of 'Zotero.Item's
 	writeItems = (itemsArray) => {
-		var items = this;
-		var library = items.owningLibrary;
+		log.debug('writeItems');
+		var library = this.owningLibrary;
 		var i;
-		var writeItems = items.atomizeItems(itemsArray);
+		var writeItems = this.atomizeItems(itemsArray);
 
 		
 		var config = {
 			target: 'items',
-			libraryType: items.owningLibrary.libraryType,
-			libraryID: items.owningLibrary.libraryID
+			libraryType: this.owningLibrary.libraryType,
+			libraryID: this.owningLibrary.libraryID
 		};
 		
-		var writeChunks = items.chunkObjectsArray(writeItems);
-		var rawChunkObjects = items.rawChunks(writeChunks);
+		var writeChunks = this.chunkObjectsArray(writeItems);
+		var rawChunkObjects = this.rawChunks(writeChunks);
 		
 		// update item with server response if successful
 		var writeItemsSuccessCallback = function (response) {
@@ -235,14 +229,14 @@ class Items extends Container {
 				// @TODO: It would be nicer if rejections (for partially or entirely
 				//		invalid updates) would propagate all the way to the end-user
 				//		instead of being swalloed here.
-				items.updateObjectsFromWriteResponse(this.writeChunk, response)
+				Items.updateObjectsFromWriteResponse(this.writeChunk, response)
 					.then(writeItemsCallback)
 					.catch(writeItemsCallback);
 			});
 		};
 		
-		log.debug('items.itemsVersion: ' + items.itemsVersion, 3);
-		log.debug('items.libraryVersion: ' + items.libraryVersion, 3);
+		log.debug('items.itemsVersion: ' + this.itemsVersion, 3);
+		log.debug('items.libraryVersion: ' + this.libraryVersion, 3);
 		
 		var requestObjects = [];
 		for (i = 0; i < writeChunks.length; i++) {

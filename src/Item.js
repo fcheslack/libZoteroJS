@@ -28,23 +28,22 @@ class Item extends ApiObject {
 			this.parseJsonItem(itemObj);
 		}
 		else {
-			this.parseJsonItem(this.emptyJsonItem());
+			this.parseJsonItem(Item.emptyJsonItem());
 		}
 		this.initSecondaryData();
 	}
 
 	parseJsonItem(apiObj) {
-		var item = this;
-		item.version = apiObj.version;
-		item.key = apiObj.key;
-		item.apiObj = Object.assign({}, apiObj);
-		item.pristineData = Object.assign({}, apiObj.data);
-		if (!item.apiObj._supplement) {
-			item.apiObj._supplement = {};
+		this.version = apiObj.version;
+		this.key = apiObj.key;
+		this.apiObj = Object.assign({}, apiObj);
+		this.pristineData = Object.assign({}, apiObj.data);
+		if (!this.apiObj._supplement) {
+			this.apiObj._supplement = {};
 		}
 	}
 
-	emptyJsonItem() {
+	static emptyJsonItem() {
 		return {
 			key: '',
 			version: 0,
@@ -66,68 +65,62 @@ class Item extends ApiObject {
 
 	// populate property values derived from json content
 	initSecondaryData() {
-		var item = this;
+		this.version = this.apiObj.version;
 		
-		item.version = item.apiObj.version;
-		
-		if (item.apiObj.data.itemType == 'attachment') {
-			item.mimeType = item.apiObj.data.contentType;
-			item.translatedMimeType = Zotero.utils.translateMimeType(item.mimeType);
+		if (this.apiObj.data.itemType == 'attachment') {
+			this.mimeType = this.apiObj.data.contentType;
+			this.translatedMimeType = Zotero.utils.translateMimeType(this.mimeType);
 		}
-		if ('linkMode' in item.apiObj) {
-			item.linkMode = item.apiObj.data.linkMode;
+		if ('linkMode' in this.apiObj) {
+			this.linkMode = this.apiObj.data.linkMode;
 		}
 		
-		item.attachmentDownloadUrl = Zotero.url.attachmentDownloadUrl(item);
+		this.attachmentDownloadUrl = Zotero.url.attachmentDownloadUrl(this);
 		
-		if (item.apiObj.meta.parsedDate) {
-			item.parsedDate = new Date(item.apiObj.meta.parsedDate);
+		if (this.apiObj.meta.parsedDate) {
+			this.parsedDate = new Date(this.apiObj.meta.parsedDate);
 		}
 		else {
-			item.parsedDate = false;
+			this.parsedDate = false;
 		}
 		
-		item.synced = false;
+		this.synced = false;
 
-		item.updateTagStrings();
+		this.updateTagStrings();
 	}
 
 	updateTagStrings() {
-		var item = this;
 		var tagstrings = [];
-		for (var i = 0; i < item.apiObj.data.tags.length; i++) {
-			tagstrings.push(item.apiObj.data.tags[i].tag);
+		for (var i = 0; i < this.apiObj.data.tags.length; i++) {
+			tagstrings.push(this.apiObj.data.tags[i].tag);
 		}
-		item.apiObj._supplement.tagstrings = tagstrings;
+		this.apiObj._supplement.tagstrings = tagstrings;
 	}
 
 	initEmpty(itemType, linkMode) {
-		var item = this;
-		return item.getItemTemplate(itemType, linkMode)
-			.then(function (template) {
-				item.initEmptyFromTemplate(template);
-				return item;
+		return Item.getItemTemplate(itemType, linkMode)
+			.then((template) => {
+				this.initEmptyFromTemplate(template);
+				return this;
 			});
 	}
 
 	// special case note initialization to guarentee synchronous and simplify some uses
 	initEmptyNote() {
-		var item = this;
-		item.version = 0;
+		this.version = 0;
 		var noteTemplate = { itemType: 'note', note: '', tags: [], collections: [], relations: {} };
 		
-		item.initEmptyFromTemplate(noteTemplate);
+		this.initEmptyFromTemplate(noteTemplate);
 		
-		return item;
+		return this;
 	}
 
 	initEmptyFromTemplate(template) {
-		var item = this;
-		item.version = 0;
+		this.version = 0;
 		
-		item.key = '';
-		item.pristineData = Object.assign({}, template);
-		item.apiObj = {
+		this.key = '';
+		this.pristineData = Object.assign({}, template);
+		this.apiObj = {
 			key: '',
 			version: 0,
 			library: {},
@@ -137,13 +130,12 @@ class Item extends ApiObject {
 			_supplement: {}
 		};
 		
-		item.initSecondaryData();
-		return item;
+		this.initSecondaryData();
+		return this;
 	}
 
 	isSupplementaryItem() {
-		var item = this;
-		var itemType = item.get('itemType');
+		var itemType = this.get('itemType');
 		if (itemType == 'attachment' || itemType == 'note') {
 			return true;
 		}
@@ -151,10 +143,9 @@ class Item extends ApiObject {
 	}
 
 	isSnapshot() {
-		var item = this;
-		if (item.apiObj.links.enclosure) {
-			var ftype = item.apiObj.links.enclosure.type;
-			if (!item.apiObj.links.enclosure.length && ftype == 'text/html') {
+		if (this.apiObj.links.enclosure) {
+			var ftype = this.apiObj.links.enclosure.type;
+			if (!this.apiObj.links.enclosure.length && ftype == 'text/html') {
 				return true;
 			}
 		}
@@ -166,12 +157,11 @@ class Item extends ApiObject {
 	}
 
 	updateItemKey(itemKey) {
-		var item = this;
-		item.key = itemKey;
-		item.apiObj.key = itemKey;
-		item.apiObj.data.key = itemKey;
-		item.pristineData.key = itemKey;
-		return item;
+		this.key = itemKey;
+		this.apiObj.key = itemKey;
+		this.apiObj.data.key = itemKey;
+		this.pristineData.key = itemKey;
+		return this;
 	}
 
 	/*
@@ -179,54 +169,48 @@ class Item extends ApiObject {
 	 * create new child notes (or attachments?) of this item
 	 */
 	writeItem() {
-		var item = this;
-		if (!item.owningLibrary) {
+		if (!this.owningLibrary) {
 			throw new Error('Item must be associated with a library');
 		}
-		return item.owningLibrary.items.writeItems([item]);
+		return this.owningLibrary.items.writeItems([this]);
 	}
 
 	// get the JS object to be PUT/POSTed for write
 	writeApiObj() {
-		var item = this;
-		
 		// remove any creators that have no names
-		if (item.apiObj.data.creators) {
-			var newCreatorsArray = item.apiObj.data.creators.filter(function (c) {
+		if (this.apiObj.data.creators) {
+			var newCreatorsArray = this.apiObj.data.creators.filter(function (c) {
 				if (c.name || c.firstName || c.lastName) {
 					return true;
 				}
 				return false;
 			});
-			item.apiObj.data.creators = newCreatorsArray;
+			this.apiObj.data.creators = newCreatorsArray;
 		}
 		
 		// copy apiObj, extend with pristine to make sure required fields are present
 		// and remove unwriteable fields(?)
-		var writeApiObj = Object.assign({}, item.pristineData, item.apiObj.data);
+		var writeApiObj = Object.assign({}, this.pristineData, this.apiObj.data);
 		return writeApiObj;
 	}
 
-	createChildNotes(notes) {
-		var item = this;
+	async createChildNotes(notes) {
 		var childItems = [];
 		var childItemPromises = [];
 		
-		notes.forEach(function (note) {
+		notes.forEach((note) => {
 			var childItem = new Item();
 			var p = childItem.initEmpty('note')
-				.then(function (noteItem) {
+				.then((noteItem) => {
 					noteItem.set('note', note.note);
-					noteItem.set('parentItem', item.key);
+					noteItem.set('parentItem', this.key);
 					childItems.push(noteItem);
 				});
 			childItemPromises.push(p);
 		});
 		
-		return Promise.all(childItemPromises)
-			.then(function () {
-				return item.owningLibrary.writeItems(childItems);
-			});
+		await Promise.all(childItemPromises);
+		return this.owningLibrary.writeItems(childItems);
 	}
 
 	// TODO: implement
@@ -234,40 +218,34 @@ class Item extends ApiObject {
 		
 	}
 
-	getChildren(library) {
+	async getChildren(library) {
 		log.debug('Zotero.Item.getChildren', 4);
-		var item = this;
-		return Promise.resolve()
-			.then(function () {
-			// short circuit if has item has no children
-				if (!item.apiObj.meta.numChildren) {
-					return [];
-				}
-			
-				var config = {
-					url: {
-						target: 'children',
-						libraryType: item.apiObj.library.type,
-						libraryID: item.apiObj.library.id,
-						itemKey: item.key
-					}
-				};
-			
-				return item.owningLibrary.ajaxRequest(config)
-					.then(function (response) {
-						log.debug('getChildren proxied callback', 4);
-						var items = library.items;
-						var childItems = items.addItemsFromJson(response.data);
-						for (var i = childItems.length - 1; i >= 0; i--) {
-							childItems[i].associateWithLibrary(library);
-						}
-				
-						return childItems;
-					});
-			});
+		// short circuit if has item has no children
+		if (!this.apiObj.meta.numChildren) {
+			return [];
+		}
+	
+		let config = {
+			url: {
+				target: 'children',
+				libraryType: this.apiObj.library.type,
+				libraryID: this.apiObj.library.id,
+				itemKey: this.key
+			}
+		};
+	
+		let response = await this.owningLibrary.ajaxRequest(config);
+		log.debug('getChildren proxied callback', 4);
+		var items = library.items;
+		var childItems = items.addItemsFromJson(response.data);
+		for (var i = childItems.length - 1; i >= 0; i--) {
+			childItems[i].associateWithLibrary(library);
+		}
+
+		return childItems;
 	}
 
-	getItemTypes(locale) {
+	static getItemTypes(locale) {
 		log.debug('Zotero.Item.prototype.getItemTypes', 3);
 		if (!locale) {
 			locale = 'en-US';
@@ -330,7 +308,7 @@ class Item extends ApiObject {
 		});
 	}
 
-	getItemTemplate(itemType = 'document', linkMode = '') {
+	static async getItemTemplate(itemType = 'document', linkMode = '') {
 		log.debug('Zotero.Item.prototype.getItemTemplate', 3);
 		if (itemType == 'attachment' && linkMode == '') {
 			throw new Error('attachment template requested with no linkMode');
@@ -344,37 +322,32 @@ class Item extends ApiObject {
 		if (itemTemplate) {
 			log.debug('have itemTemplate in localStorage', 3);
 			var template = itemTemplate;// JSON.parse(Zotero.storage.localStorage[url]);
-			return Promise.resolve(template);
+			return template;
 		}
 		
-		return Zotero.ajaxRequest(requestUrl, 'GET', { dataType: 'json' })
-			.then(function (response) {
-				log.debug('got itemTemplate response', 3);
-				Zotero.cache.save(cacheConfig, response.data);
-				return response.data;
-			});
+		let response = await Zotero.ajaxRequest(requestUrl, 'GET', { dataType: 'json' });
+		log.debug('got itemTemplate response', 3);
+		Zotero.cache.save(cacheConfig, response.data);
+		return response.data;
 	}
 
 	getUploadAuthorization(fileinfo) {
 		// fileInfo: md5, filename, filesize, mtime, zip, contentType, charset
 		log.debug('Zotero.Item.getUploadAuthorization', 3);
-		var item = this;
-		
 		var config = {
 			target: 'item',
 			targetModifier: 'file',
-			libraryType: item.owningLibrary.type,
-			libraryID: item.owningLibrary.libraryID,
-			itemKey: item.key
+			libraryType: this.owningLibrary.type,
+			libraryID: this.owningLibrary.libraryID,
+			itemKey: this.key
 		};
 		var headers = {
 			'Content-Type': 'application/x-www-form-urlencoded'
 		};
-		var oldmd5 = item.get('md5');
+		var oldmd5 = this.get('md5');
 		if (oldmd5) {
 			headers['If-Match'] = oldmd5;
-		}
-		else {
+		} else {
 			headers['If-None-Match'] = '*';
 		}
 		
@@ -389,18 +362,17 @@ class Item extends ApiObject {
 
 	registerUpload(uploadKey) {
 		log.debug('Zotero.Item.registerUpload', 3);
-		var item = this;
 		var config = {
 			target: 'item',
 			targetModifier: 'file',
-			libraryType: item.owningLibrary.type,
-			libraryID: item.owningLibrary.libraryID,
-			itemKey: item.key
+			libraryType: this.owningLibrary.type,
+			libraryID: this.owningLibrary.libraryID,
+			itemKey: this.key
 		};
 		var headers = {
 			'Content-Type': 'application/x-www-form-urlencoded'
 		};
-		var oldmd5 = item.get('md5');
+		var oldmd5 = this.get('md5');
 		if (oldmd5) {
 			headers['If-Match'] = oldmd5;
 		}
@@ -415,12 +387,14 @@ class Item extends ApiObject {
 				headers: headers
 			});
 	}
-
+	
+	/*
 	fullUpload(file) {
 
 	}
-
-	getCreatorTypes(itemType) {
+	*/
+	
+	static getCreatorTypes(itemType) {
 		log.debug('Zotero.Item.prototype.getCreatorTypes: ' + itemType, 3);
 		if (!itemType) {
 			itemType = 'document';
@@ -456,7 +430,7 @@ class Item extends ApiObject {
 		}
 	}
 
-	getCreatorFields(locale) {
+	static getCreatorFields(_locale) {
 		log.debug('Zotero.Item.prototype.getCreatorFields', 3);
 		var creatorFields = Zotero.cache.load({ target: 'creatorFields' });
 		if (creatorFields) {
@@ -476,6 +450,7 @@ class Item extends ApiObject {
 
 	// ---Functions to manually add Zotero format data instead of fetching it from the API ---
 	// To be used first with cached data for offline, could also maybe be used for custom types
+	/*
 	addItemTypes(itemTypes, locale) {
 		
 	}
@@ -495,61 +470,60 @@ class Item extends ApiObject {
 	addItemTemplates(templates) {
 		
 	}
+	*/
 
 	itemTypeImageClass() {
 		// linkModes: imported_file,imported_url,linked_file,linked_url
-		var item = this;
-		if (item.apiObj.data.itemType == 'attachment') {
-			switch (item.apiObj.data.linkMode) {
+		if (this.apiObj.data.itemType == 'attachment') {
+			switch (this.apiObj.data.linkMode) {
 			case 'imported_file':
-				if (item.translatedMimeType == 'pdf') {
-					return item.itemTypeImageSrc.attachmentPdf;
+				if (this.translatedMimeType == 'pdf') {
+					return this.itemTypeImageSrc.attachmentPdf;
 				}
-				return item.itemTypeImageSrc.attachmentFile;
+				return this.itemTypeImageSrc.attachmentFile;
 			case 'imported_url':
-				if (item.translatedMimeType == 'pdf') {
-					return item.itemTypeImageSrc.attachmentPdf;
+				if (this.translatedMimeType == 'pdf') {
+					return this.itemTypeImageSrc.attachmentPdf;
 				}
-				return item.itemTypeImageSrc.attachmentSnapshot;
+				return this.itemTypeImageSrc.attachmentSnapshot;
 			case 'linked_file':
-				return item.itemTypeImageSrc.attachmentLink;
+				return this.itemTypeImageSrc.attachmentLink;
 			case 'linked_url':
-				return item.itemTypeImageSrc.attachmentWeblink;
+				return this.itemTypeImageSrc.attachmentWeblink;
 			default:
-				return item.itemTypeImageSrc.attachment;
+				return this.itemTypeImageSrc.attachment;
 			}
 		}
 		else {
-			return item.apiObj.data.itemType;
+			return this.apiObj.data.itemType;
 		}
 	}
 
 	itemTypeIconClass() {
 		// linkModes: imported_file,imported_url,linked_file,linked_url
-		var item = this;
 		var defaultIcon = 'fa fa-file-text-o';
-		switch (item.apiObj.data.itemType) {
+		switch (this.apiObj.data.itemType) {
 		case 'attachment':
-			switch (item.apiObj.data.linkMode) {
+			switch (this.apiObj.data.linkMode) {
 			case 'imported_file':
-				if (item.translatedMimeType == 'pdf') {
+				if (this.translatedMimeType == 'pdf') {
 					return 'fa fa-file-pdf-o';
 				}
 				return 'glyphicons glyphicons-file';
 			case 'imported_url':
-				if (item.translatedMimeType == 'pdf') {
+				if (this.translatedMimeType == 'pdf') {
 					return 'fa fa-file-pdf-o';
 				}
 				return 'glyphicons glyphicons-file';
 			case 'linked_file':
 				return 'glyphicons glyphicons-link';
-				// return item.itemTypeImageSrc['attachmentLink'];
+				// return this.itemTypeImageSrc['attachmentLink'];
 			case 'linked_url':
 				return 'glyphicons glyphicons-link';
-				// return item.itemTypeImageSrc['attachmentWeblink'];
+				// return this.itemTypeImageSrc['attachmentWeblink'];
 			default:
 				return 'glyphicons glyphicons-paperclip';
-						// return item.itemTypeImageSrc['attachment'];
+						// return this.itemTypeImageSrc['attachment'];
 			}
 			return 'glyphicons file';
 		case 'artwork':
@@ -628,16 +602,14 @@ class Item extends ApiObject {
 	}
 
 	get(key) {
-		var item = this;
-		var itemType = item.apiObj.data.itemType;
+		var itemType = this.apiObj.data.itemType;
 		switch (key) {
 		case 'title':
 			var title = '';
 			if (itemType == 'note') {
-				return item.noteTitle(item.apiObj.data.note);
-			}
-			else {
-				return item.apiObj.data.title;
+				return this.noteTitle(this.apiObj.data.note);
+			} else {
+				return this.apiObj.data.title;
 			}
 			if (title === '') {
 				return '[Untitled]';
@@ -645,35 +617,33 @@ class Item extends ApiObject {
 			return title;
 		case 'creatorSummary':
 		case 'creator':
-			if (typeof item.apiObj.meta.creatorSummary !== 'undefined') {
-				return item.apiObj.meta.creatorSummary;
-			}
-			else {
+			if (typeof this.apiObj.meta.creatorSummary !== 'undefined') {
+				return this.apiObj.meta.creatorSummary;
+			} else {
 				return '';
 			}
-			break;
 		case 'year':
-			if (item.parsedDate) {
-				return item.parsedDate.getFullYear();
+			if (this.parsedDate) {
+				return this.parsedDate.getFullYear();
 			}
 			else {
 				return '';
 			}
 		}
 		
-		if (key in item.apiObj.data) {
-			return item.apiObj.data[key];
+		if (key in this.apiObj.data) {
+			return this.apiObj.data[key];
 		}
-		else if (key in item.apiObj.meta) {
-			return item.apiObj.meta[key];
+		else if (key in this.apiObj.meta) {
+			return this.apiObj.meta[key];
 		}
-		else if (item.hasOwnProperty(key)) {
-			return item[key];
+		else if (this.hasOwnProperty(key)) {
+			return this[key];
 		}
 		else {
-			var baseMapping = item.baseFieldMapping[itemType];
+			var baseMapping = this.baseFieldMapping[itemType];
 			if (baseMapping && baseMapping[key]) {
-				return item.apiObj.data[baseMapping[key]];
+				return this.apiObj.data[baseMapping[key]];
 			}
 		}
 
@@ -681,50 +651,49 @@ class Item extends ApiObject {
 	}
 
 	set(key, val) {
-		var item = this;
-		if (key in item.apiObj) {
-			item.apiObj[key] = val;
+		if (key in this.apiObj) {
+			this.apiObj[key] = val;
 		}
-		if (key in item.apiObj.data) {
-			item.apiObj.data[key] = val;
+		if (key in this.apiObj.data) {
+			this.apiObj.data[key] = val;
 		}
-		if (key in item.apiObj.meta) {
-			item.apiObj.meta[key] = val;
+		if (key in this.apiObj.meta) {
+			this.apiObj.meta[key] = val;
 		}
 		
 		switch (key) {
 		case 'itemKey':
 		case 'key':
-			item.key = val;
-			item.apiObj.data.key = val;
+			this.key = val;
+			this.apiObj.data.key = val;
 			break;
 		case 'itemVersion':
 		case 'version':
-			item.version = val;
-			item.apiObj.data.version = val;
+			this.version = val;
+			this.apiObj.data.version = val;
 			break;
 		case 'itemType':
-			item.itemType = val;
+			this.itemType = val;
 			// TODO: translate api object to new item type
 			break;
 		case 'linkMode':
 			break;
 		case 'deleted':
-			item.apiObj.data.deleted = val;
+			this.apiObj.data.deleted = val;
 			break;
 		case 'parentItem':
 			if (val === '') {
 				val = false;
 			}
-			item.apiObj.data.parentItem = val;
+			this.apiObj.data.parentItem = val;
 			break;
 		}
 		
-		//    item.synced = false;
-		return item;
+		//    this.synced = false;
+		return this;
 	}
 
-	noteTitle(note) {
+	static noteTitle(note) {
 		var len = 120;
 		var notetext = striptags(note);
 		var firstNewline = notetext.indexOf('\n');
@@ -737,77 +706,68 @@ class Item extends ApiObject {
 	}
 
 	setParent(parentItemKey) {
-		var item = this;
 		// pull out itemKey string if we were passed an item object
 		if (typeof parentItemKey != 'string'
 			&& parentItemKey.hasOwnProperty('instance')
 			&& parentItemKey.instance == 'Zotero.Item') {
 			parentItemKey = parentItemKey.key;
 		}
-		item.set('parentItem', parentItemKey);
-		return item;
+		this.set('parentItem', parentItemKey);
+		return this;
 	}
 
 	addToCollection(collectionKey) {
-		var item = this;
 		// take out the collection key if we're passed a collection object instead
 		if (typeof collectionKey != 'string') {
 			if (collectionKey.instance == 'Zotero.Collection') {
 				collectionKey = collectionKey.key;
 			}
 		}
-		if (item.apiObj.data.collections.indexOf(collectionKey) === -1) {
-			item.apiObj.data.collections.push(collectionKey);
+		if (this.apiObj.data.collections.indexOf(collectionKey) === -1) {
+			this.apiObj.data.collections.push(collectionKey);
 		}
 	}
 
 	removeFromCollection(collectionKey) {
-		var item = this;
 		// take out the collection key if we're passed a collection object instead
 		if (typeof collectionKey != 'string') {
 			if (collectionKey.instance == 'Zotero.Collection') {
 				collectionKey = collectionKey.key;
 			}
 		}
-		var index = item.apiObj.data.collections.indexOf(collectionKey);
+		var index = this.apiObj.data.collections.indexOf(collectionKey);
 		if (index != -1) {
-			item.apiObj.data.collections.splice(index, 1);
+			this.apiObj.data.collections.splice(index, 1);
 		}
 	}
 
-	uploadChildAttachment(childItem, fileInfo, progressCallback) {
-		/*
-		 * write child item so that it exists
-		 * get upload authorization for actual file
-		 * perform full upload
-		 */
-		var item = this;
+	async uploadChildAttachment(childItem, fileInfo, progressCallback) {
+		// write child item so that it exists
+		// get upload authorization for actual file
+		// perform full upload
 		log.debug('uploadChildAttachment', 3);
-		if (!item.owningLibrary) {
-			return Promise.reject(new Error('Item must be associated with a library'));
+		if (!this.owningLibrary) {
+			throw new Error('Item must be associated with a library');
 		}
 
 		// make sure childItem has parent set
-		childItem.set('parentItem', item.key);
-		childItem.associateWithLibrary(item.owningLibrary);
+		childItem.set('parentItem', this.key);
+		childItem.associateWithLibrary(this.owningLibrary);
 		
-		return childItem.writeItem()
-			.then(function (response) {
-			// successful attachmentItemWrite
-				item.numChildren++;
-				return childItem.uploadFile(fileInfo, progressCallback);
-			}, function (response) {
-			// failure during attachmentItem write
-				throw {
-					message: 'Failure during attachmentItem write.',
-					code: response.status,
-					serverMessage: response.jqxhr.responseText,
-					response: response
-				};
-			});
+		let response = await childItem.writeItem();
+		// successful attachmentItemWrite
+		this.numChildren++;
+		if (!response.ok) {
+			let serverMessage = await response.text();
+			let err = new Error('Failure during attachmentItem write.');
+			err.code = response.status;
+			err.serverMessage = serverMessage;
+			throw err;
+		}
+		return childItem.uploadFile(fileInfo, progressCallback);
 	}
 
-	uploadFile(fileInfo, progressCallback) {
+	async uploadFile(fileInfo, _progressCallback) {
 		var item = this;
 		log.debug('Zotero.Item.uploadFile', 3);
 		var uploadAuthFileData = {
@@ -821,42 +781,34 @@ class Item extends ApiObject {
 		if (fileInfo.contentType === '') {
 			uploadAuthFileData.contentType = 'application/octet-stream';
 		}
-		return item.getUploadAuthorization(uploadAuthFileData)
-			.then(function (response) {
-				log.debug('uploadAuth callback', 3);
-				var upAuthOb;
-				if (typeof response.data == 'string') {
-					upAuthOb = JSON.parse(response.data);
-				}
-				else {
-					upAuthOb = response.data;
-				}
-				if (upAuthOb.exists == 1) {
-					return { message: 'File Exists' };
-				}
-				else {
-				// TODO: add progress
-					return Zotero.file.uploadFile(upAuthOb, fileInfo)
-						.then(function () {
-							// upload was successful: register it
-							return item.registerUpload(upAuthOb.uploadKey)
-								.then(function (response) {
-									if (response.isError) {
-										var e = {
-											message: 'Failed to register uploaded file.',
-											code: response.status,
-											serverMessage: response.jqxhr.responseText,
-											response: response
-										};
-										log.error(e);
-										throw e;
-									}
-									else {
-										return { message: 'Upload Successful' };
-									}
-								});
-						});
-				}
+		let uploadAuthResponse = await item.getUploadAuthorization(uploadAuthFileData);
+		log.debug('got uploadAuth', 3);
+		let upAuthOb;
+		if (typeof uploadAuthResponse.data == 'string') {
+			upAuthOb = JSON.parse(uploadAuthResponse.data);
+		} else {
+			upAuthOb = uploadAuthResponse.data;
+		}
+		if (upAuthOb.exists == 1) {
+			return { message: 'File Exists' };
+		} else {
+			// TODO: add progress
+			let uploadResp = await Zotero.file.uploadFile(upAuthOb, fileInfo);
+			// upload was successful: register it
+			let registerResponse = await item.registerUpload(upAuthOb.uploadKey);
+			if (registerResponse.isError) {
+				var e = {
+					message: 'Failed to register uploaded file.',
+					code: registerResponse.status,
+					serverMessage: registerResponse.jqxhr.responseText,
+					response: registerResponse
+				};
+				log.error(e);
+				throw e;
+			} else {
+				return { message: 'Upload Successful' };
+			}
+		}/*
 			}).catch(function (response) {
 				log.debug('Failure caught during upload', 3);
 				log.debug(response, 3);
@@ -867,6 +819,7 @@ class Item extends ApiObject {
 					response: response
 				};
 			});
+			*/
 	}
 
 	cslItem() {

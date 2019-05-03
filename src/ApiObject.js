@@ -19,7 +19,7 @@ class ApiObject {
 		return apiObject;
 	}
 
-	fieldComparer(attr) {
+	static fieldComparer(attr) {
 		if (Intl) {
 			var collator = new Intl.Collator();
 			return function (a, b) {

@@ -39,7 +39,7 @@ class Collections extends Container {
 			collections.collectionsArray.push(collection);
 		});
 		
-		collections.collectionsArray.sort(Zotero.ApiObject.prototype.fieldComparer('name'));
+		collections.collectionsArray.sort(Collections.fieldComparer('name'));
 		collections.nestCollections();
 		collections.assignDepths(0, collections.collectionsArray);
 	}
@@ -140,7 +140,7 @@ class Collections extends Container {
 			collection.children = [];
 		});
 		
-		collections.collectionsArray.sort(Zotero.ApiObject.prototype.fieldComparer('name'));
+		collections.collectionsArray.sort(Collections.fieldComparer('name'));
 		collections.collectionsArray.forEach(function (collection) {
 			collection.nestCollection(collections.collectionObjects);
 		});
@@ -177,7 +177,7 @@ class Collections extends Container {
 			log.debug('writeCollections successCallback', 3);
 			var library = this.library;
 			var writeChunk = this.writeChunk;
-			library.collections.updateObjectsFromWriteResponse(this.writeChunk, response);
+			Collections.updateObjectsFromWriteResponse(this.writeChunk, response);
 			// save updated collections to collections
 			for (var i = 0; i < writeChunk.length; i++) {
 				var collection = writeChunk[i];

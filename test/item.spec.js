@@ -1,9 +1,7 @@
-'use strict';
-
 const assert = require('chai').assert;
 const Zotero = require('../src/libzotero.js');
 const fetchMock = require('fetch-mock');
-import {randomString} from '../src/Utils.js';
+import { randomString } from '../src/Utils.js';
 
 const bookTemplateFixture = require('./fixtures/book-template.json');
 const conferencePaperTemplateFixture = require('./fixtures/conference-paper-template.json');
@@ -47,7 +45,7 @@ describe('Zotero.Item', () => {
 			item.set('abstractNote', 'This is a test item.');
 			item.set('notRealField', 'Not a real field value.');
 
-			//test that get returns what it should for each set
+			// test that get returns what it should for each set
 			assert.equal(item.get('title'), 'Journal Article Title', 'get title should return what was set.');
 			assert.equal(item.get('key'), 'ASDF1234', 'get key should return what was set.');
 			assert.equal(item.get('version'), 74, 'get version should return what was set.');
@@ -84,8 +82,8 @@ describe('Zotero.Item', () => {
 				conferencePaperTemplateFixture
 			);
 
-			fetchMock.catch(request => {
-				throw(new Error(`A request to ${request.url} was not expected`));
+			fetchMock.catch((request) => {
+				throw new Error(`A request to ${request.url} was not expected`);
 			});
 		});
 
@@ -99,11 +97,11 @@ describe('Zotero.Item', () => {
 			fetchMock.mock({
 				method: 'POST',
 				matcher: (url, options, request) => {
-					if(options.method != 'POST') {
+					if (options.method != 'POST') {
 						return false;
 					}
 					let parsedUrl = new URL(url);
-					if(parsedUrl.origin != 'https://api.zotero.org' || parsedUrl.pathname != '/users/1/items') {
+					if (parsedUrl.origin != 'https://api.zotero.org' || parsedUrl.pathname != '/users/1/items') {
 						return false;
 					}
 					reqItem = JSON.parse(request.body)[0];
@@ -117,19 +115,19 @@ describe('Zotero.Item', () => {
 							'Last-Modified-Version': 12
 						},
 						body: {
-							'successful': item,
-							'success': {
-								'0': item.key
+							successful: item,
+							success: {
+								0: item.key
 							},
-							'unchanged': {},
-							'failed': {}
+							unchanged: {},
+							failed: {}
 						}
 					};
 				}
 			});
 
 			item.associateWithLibrary(library);
-			item = await item.initEmpty('book')
+			item = await item.initEmpty('book');
 			item.set('title', 'book-1');
 			let responses = await item.writeItem();
 			let itemsArray = responses[0].returnItems;
@@ -144,38 +142,41 @@ describe('Zotero.Item', () => {
 
 			let reqItems;
 			fetchMock.mock({
-				method:'POST',
+				method: 'POST',
 				matcher: (url, options, request) => {
-					if(options.method != 'POST') {
+					if (options.method != 'POST') {
 						return false;
 					}
 					let parsedUrl = new URL(url);
-					if(parsedUrl.origin != 'https://api.zotero.org' || parsedUrl.pathname != '/users/1/items') {
+					if (parsedUrl.origin != 'https://api.zotero.org' || parsedUrl.pathname != '/users/1/items') {
 						return false;
 					}
 					reqItems = JSON.parse(request.body);
 					return true;
 				},
 				response: () => {
-					reqItems = reqItems.map(i => {i.version = 123; return i;});
+					reqItems = reqItems.map((i) => {
+						i.version = 123;
+						return i;
+					});
 					return {
 						headers: {
 							'Last-Modified-Version': 12
 						},
 						body: {
-							'successful': reqItems.reduce((a, v, i) => {
-								if(!v.key){
+							successful: reqItems.reduce((a, v, i) => {
+								if (!v.key) {
 									v.key = randomString();
 								}
 								a[i] = v;
 								return a;
 							}, {}),
-							'success': reqItems.reduce((a, v, i) => {
+							success: reqItems.reduce((a, v, i) => {
 								a[i] = v.key;
 								return a;
 							}, {}),
-							'unchanged': {},
-							'failed': {}
+							unchanged: {},
+							failed: {}
 						}
 					};
 				}
@@ -218,13 +219,13 @@ describe('Zotero.Item', () => {
 
 			let reqItems;
 			fetchMock.mock({
-				method:'POST',
+				method: 'POST',
 				matcher: (url, options, request) => {
-					if(options.method != 'POST') {
+					if (options.method != 'POST') {
 						return false;
 					}
 					let parsedUrl = new URL(url);
-					if(parsedUrl.origin != 'https://api.zotero.org' || parsedUrl.pathname != '/users/1/items') {
+					if (parsedUrl.origin != 'https://api.zotero.org' || parsedUrl.pathname != '/users/1/items') {
 						return false;
 					}
 					reqItems = JSON.parse(request.body);
@@ -238,13 +239,13 @@ describe('Zotero.Item', () => {
 							'Last-Modified-Version': 12
 						},
 						body: {
-							'successful': {},
-							'success': {},
-							'unchanged': {},
-							'failed': {
-								'0': {
-									'code': 400,
-									'message': 'bad input error'
+							successful: {},
+							success: {},
+							unchanged: {},
+							failed: {
+								0: {
+									code: 400,
+									message: 'bad input error'
 								}
 							}
 						}

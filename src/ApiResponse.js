@@ -20,28 +20,27 @@ class ApiResponse {
 
 	parseResponse(response) {
 		log.debug('parseResponse', 4);
-		var apiResponse = this;
-		apiResponse.rawResponse = response;
-		apiResponse.status = response.status;
+		this.rawResponse = response;
+		this.status = response.status;
 		// keep track of relevant headers
-		apiResponse.lastModifiedVersion = response.headers.get('last-modified-version');
-		apiResponse.apiVersion = response.headers.get('zotero-api-version');
-		apiResponse.backoff = response.headers.get('backoff');
-		apiResponse.retryAfter = response.headers.get('retry-after');
-		apiResponse.contentType = response.headers.get('content-type');
-		apiResponse.linkHeader = response.headers.get('link');
-		apiResponse.totalResults = response.headers.get('total-results');
-		if (apiResponse.backoff) {
-			apiResponse.backoff = parseInt(apiResponse.backoff, 10);
+		this.lastModifiedVersion = response.headers.get('last-modified-version');
+		this.apiVersion = response.headers.get('zotero-api-version');
+		this.backoff = response.headers.get('backoff');
+		this.retryAfter = response.headers.get('retry-after');
+		this.contentType = response.headers.get('content-type');
+		this.linkHeader = response.headers.get('link');
+		this.totalResults = response.headers.get('total-results');
+		if (this.backoff) {
+			this.backoff = parseInt(this.backoff, 10);
 		}
-		if (apiResponse.retryAfter) {
-			apiResponse.retryAfter = parseInt(apiResponse.retryAfter, 10);
+		if (this.retryAfter) {
+			this.retryAfter = parseInt(this.retryAfter, 10);
 		}
 		// TODO: parse link header into individual links
 		log.debug('parse link header', 4);
-		log.debug(apiResponse.linkHeader, 4);
-		if (apiResponse.linkHeader) {
-			var links = apiResponse.linkHeader.split(',');
+		log.debug(this.linkHeader, 4);
+		if (this.linkHeader) {
+			var links = this.linkHeader.split(',');
 			var parsedLinks = {};
 			var linkRegex = /^<([^>]+)>; rel="([^\"]*)"$/;
 			for (var i = 0; i < links.length; i++) {
@@ -50,7 +49,7 @@ class ApiResponse {
 					parsedLinks[matches[2]] = matches[1];
 				}
 			}
-			apiResponse.parsedLinks = parsedLinks;
+			this.parsedLinks = parsedLinks;
 		}
 	}
 }
