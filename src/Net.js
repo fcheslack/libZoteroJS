@@ -188,6 +188,70 @@ class Net {
 		}
 		return wait;
 	}
+	//perform API request defined by requestConfig
+	apiRequest = async (requestConfig) => {
+		let defaultConfig = {
+			type:'GET',
+			headers:{
+				'Zotero-API-Version': 3,
+				'Content-Type': 'application/json'
+			},
+			success: function(response){
+				return response;
+			},
+			error: function(response){
+				if(!response instanceof ApiResponse){
+					log.error(`Response is not a Zotero.ApiResponse: ${response}`);
+				} else if(response.rawResponse){
+					log.error(`apiRequest rejected:${response.rawResponse.status} - ${response.rawResponse.statusText}`);
+				} else {
+					log.error('apiRequest rejected: No rawResponse set. (likely network error)');
+					log.error(response.error);
+				}
+				throw response;
+			}
+		};
+		var headers = Object.assign({}, defaultConfig.headers, requestConfig.headers);
+		if(requestConfig.key){
+			headers = Object.assign(headers, {'Zotero-API-Key': requestConfig.key});
+			delete requestConfig.key;
+		}
+		var config = Object.assign({}, defaultConfig, requestConfig);
+		config.headers = headers;
+		if(typeof config.url == 'object'){
+			config.url = ajax.apiRequestString(config.url);
+		}
+		if(!config.url){
+			throw 'No url specified in Net.apiRequest';
+		}
+		let response;
+		let ar;
+		try{
+			response = await this.ajax(config);
+			ar = new ApiResponse(response);
+			if('processData' in config && config.processData === false) {
+				await config.success(response);
+				return response;
+			} else {
+				let data = await response.json();
+				ar.data = data;
+				ar = await config.success(ar);
+			}
+		} catch(response) {
+			if(response instanceof Error){
+				ar = new ApiResponse();
+				ar.isError = true;
+				ar.error = response;
+			} else {
+				ar = new ApiResponse(response);
+			}
+			ar = await config.error(ar);
+		}
+
+		//this.individualRequestDone(ar);
+		return ar;
+	}
+
 	//perform a network request defined by requestConfig
 	//convert the Response into a Zotero.ApiResponse, and attach the passed in
 	//success/failure handlers to the promise chain before returning (or default error logger
@@ -209,6 +273,7 @@ class Net {
 				if(!response instanceof ApiResponse){
 					log.error(`Response is not a Zotero.ApiResponse: ${response}`);
 				} else if(response.rawResponse){
+					log.debug('ajaxRequest response.rawResponse is set');
 					log.error(`ajaxRequest rejected:${response.rawResponse.status} - ${response.rawResponse.statusText}`);
 				} else {
 					log.error('ajaxRequest rejected: No rawResponse set. (likely network error)');
@@ -301,12 +366,12 @@ class Net {
 	}
 	//perform a network request defined by config, and return a promise for a Response
 	//resolve with a successful status (200-300) reject, but with the same Response object otherwise
-	ajax = (config) => {
+	ajax = async (config) => {
 		config = Object.assign({type:'GET'}, config);
 		let headersInit = config.headers || {};
 		let headers = new Headers(headersInit);
 
-		var request = new Request(config.url, {
+		let request = new Request(config.url, {
 			method:config.type,
 			headers: headers,
 			mode:'cors',
@@ -314,9 +379,8 @@ class Net {
 			body:config.data
 		});
 		
-		return fetch(request).then(function(response){
-			log.debug('fetch done', 4);
-			log.debug(request, 4);
+		try{
+			let response = await fetch(request);
 			if (response.status >= 200 && response.status < 300) {
 				log.debug('200-300 response: resolving Net.ajax promise', 3);
 				// Performs the function "resolve" when this.status is equal to 2xx
@@ -326,10 +390,10 @@ class Net {
 				// Performs the function "reject" when this.status is different than 2xx
 				throw response;
 			}
-		}, function(err){
+		} catch(err){
 			log.error(err);
 			throw(err);
-		});
+		}
 	}
 }
 

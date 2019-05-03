@@ -187,7 +187,7 @@ class Library {
 			requestObject.key = this._apiKey;
 		}
 		log.debug(requestObject, 3);
-		return Zotero.net.queueRequest(requestObject);
+		return Zotero.net.apiRequest(requestObject);
 	}
 
 	//Take an array of objects that specify Zotero API requests and perform them
@@ -205,16 +205,17 @@ class Library {
 	 * @param  {[] Objects} requests Array of objects specifying requests to be made
 	 * @return {Promise}          Promise that resolves/rejects along with requests
 	 */
-	sequentialRequests(requests){
+	sequentialRequests = async (requests) => {
 		log.debug('Zotero.Library.sequentialRequests', 3);
-		let modRequests = requests.map((request)=>{
-			if(!request.key && (this._apiKey != '')){
-				request.key = this._apiKey;
-			}
-			return request;
-		});
-		return Zotero.net.queueRequest(modRequests);
+		let responses = [];
+		for(let i=0; i<requests.length; i++){
+			let request = requests[i];
+			let resp = await this.ajaxRequest(null, null, request);
+			responses.push(resp);
+		}
+		return responses;
 	}
+	
 
 	/**
 	 * Generate a website url based on a dictionary of variables and the configured

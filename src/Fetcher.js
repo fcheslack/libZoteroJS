@@ -17,45 +17,36 @@ class Fetcher{
 		this.resultInfo = {};
 	}
 
-	next(){
+	next = async () => {
 		if(this.hasMore == false){
-			return Promise.resolve(null);
+			return null;
 		}
 
 		let urlconfig = Object.assign({}, this.config);
-		let p = Zotero.net.queueRequest({url:urlconfig});
-		p.then((response)=>{
-			if(response.parsedLinks.hasOwnProperty('next')){
-				this.hasMore = true;
-			} else {
-				this.hasMore = false;
-			}
+		let response = await Zotero.net.apiRequest({url:urlconfig});
+		if(response.parsedLinks.hasOwnProperty('next')){
+			this.hasMore = true;
+		} else {
+			this.hasMore = false;
+		}
 
-			this.results = this.results.concat(response.data);
-			this.totalResults = response.totalResults;
-
-			return response;
-		});
+		this.results = this.results.concat(response.data);
+		this.totalResults = response.totalResults;
 
 		let nconfig = Object.assign({}, urlconfig);
 		nconfig.start = nconfig.start + nconfig.limit;
 		this.config = nconfig;
-		return p;
+
+		return response;
 	};
 
-	fetchAll(){
+	fetchAll = async () => {
 		let results = [];
-		let tryNext = () => {
-			if(this.hasMore){
-				return this.next().then((response)=>{
-					results = results.concat(response.data);
-				}).then(tryNext);
-			} else {
-				return Promise.resolve(results);
-			}
-		};
-
-		return tryNext();
+		while(this.hasMore){
+			let response = await this.next();
+			results = results.concat(response.data);
+		}
+		return results;
 	}
 }
 

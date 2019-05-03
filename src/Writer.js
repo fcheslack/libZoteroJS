@@ -12,7 +12,7 @@ class Writer{
 		this.apiKey = apiKey;
 	}
 
-	writeObjects(objectsArray, target){
+	writeObjects = async (objectsArray, target) => {
 		let libraryType = this.libraryType;
 		let libraryID = this.libraryID;
 
@@ -23,33 +23,30 @@ class Writer{
 		let writeChunks = chunkObjectsArray(objectsArray);
 		let rawChunkObjects = rawChunks(writeChunks);
 
-		//update object with server response if successful
-		var writeSuccessCallback = function(response){
-			log.debug('write successCallback', 3);
-			updateObjectsFromWriteResponse(this.writeChunk, response);
-			response.returnObjects = this.writeChunk;
-			return response;
-		};
-
-		var requestObjects = [];
-		writeChunks.forEach((writeChunk, i)=>{
-			var successContext = {writeChunk};
-
-			var requestData = JSON.stringify(rawChunkObjects[i]);
-			requestObjects.push({
-				url: rc.config,
-				type: 'POST',
-				data: requestData,
-				processData: false,
-				success: writeSuccessCallback.bind(successContext)
-			});
-		});
-
-		return net.queueRequest(requestObjects)
-		.then(function(responses){
-			log.debug('Done with writeObjects sequentialRequests promise', 3);
-			return responses;
-		});
+		let responses = [];
+		for(let i=0; i<writeChunks.length; i++){
+			try{
+				let writeChunk = writeChunks[i];
+				let requestData = JSON.stringify(rawChunkObjects[i]);
+				let requestObject = {
+					url: rc.config,
+					type: 'POST',
+					data: requestData,
+					processData: false,
+				};
+				let response = await net.apiRequest(requestObject);
+				//update object with server response if successful
+				if(response.ok){
+					updateObjectsFromWriteResponse(writeChunk, response);
+					response.returnObjects = writeChunk;
+				}
+				responses.push(response);
+			} catch(e){
+				log.error(e);
+			}
+		}
+		log.debug('Done with writeObjects requests', 3);
+		return responses;
 	};
 
 	//accept an array of 'Zotero.Item's

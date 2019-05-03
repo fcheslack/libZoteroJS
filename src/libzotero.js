@@ -112,7 +112,7 @@ Zotero.ajaxRequest = function(url, type, options){
 	};
 	requestObject = Object.assign({}, requestObject, options);
 	log.debug(requestObject, 3);
-	return Zotero.net.queueRequest(requestObject);
+	return Zotero.net.apiRequest(requestObject);
 };
 
 Zotero.init = require('./Init.js');
