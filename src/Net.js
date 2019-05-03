@@ -91,8 +91,7 @@ class Net {
 			var waitms = this.waitingExpires - nowms;
 			setTimeout(this.runNext, waitms);
 			return;
-		}
-		else if (this.backingOff && (this.waitingExpires <= (nowms - 100))) {
+		} else if (this.backingOff && (this.waitingExpires <= (nowms - 100))) {
 			this.backingOff = false;
 		}
 		
@@ -116,11 +115,9 @@ class Net {
 					wait = iwait;
 				}
 			}
-		}
-		else if (response.status == 429) {
+		} else if (response.status == 429) {
 			wait = response.retryAfter;
-		}
-		else if (response.backoff) {
+		} else if (response.backoff) {
 			wait = response.backoff;
 		}
 		return wait;
@@ -140,11 +137,9 @@ class Net {
 			error: function (response) {
 				if (!(response instanceof ApiResponse)) {
 					log.error(`Response is not a Zotero.ApiResponse: ${response}`);
-				}
-				else if (response.rawResponse) {
+				} else if (response.rawResponse) {
 					log.error(`apiRequest rejected:${response.rawResponse.status} - ${response.rawResponse.statusText}`);
-				}
-				else {
+				} else {
 					log.error('apiRequest rejected: No rawResponse set. (likely network error)');
 					log.error(response.error);
 				}
@@ -172,20 +167,17 @@ class Net {
 			if ('processData' in config && config.processData === false) {
 				await config.success(response);
 				return response;
-			}
-			else {
+			} else {
 				let data = await response.json();
 				ar.data = data;
 				ar = await config.success(ar);
 			}
-		}
-		catch (response) {
+		} catch (response) {
 			if (response instanceof Error) {
 				ar = new ApiResponse();
 				ar.isError = true;
 				ar.error = response;
-			}
-			else {
+			} else {
 				ar = new ApiResponse(response);
 			}
 			ar = await config.error(ar);
@@ -215,12 +207,10 @@ class Net {
 			error: function (response) {
 				if (!(response instanceof ApiResponse)) {
 					log.error(`Response is not a Zotero.ApiResponse: ${response}`);
-				}
-				else if (response.rawResponse) {
+				} else if (response.rawResponse) {
 					log.debug('ajaxRequest response.rawResponse is set');
 					log.error(`ajaxRequest rejected:${response.rawResponse.status} - ${response.rawResponse.statusText}`);
-				}
-				else {
+				} else {
 					log.error('ajaxRequest rejected: No rawResponse set. (likely network error)');
 					log.error(response.error);
 				}
@@ -257,12 +247,10 @@ class Net {
 						maybePromise.then(() => {
 							resolve();
 						});
-					}
-					else {
+					} else {
 						resolve();
 					}
-				}
-				else {
+				} else {
 					resolve();
 				}
 			});
@@ -274,8 +262,7 @@ class Net {
 					var ar = new ApiResponse(response);
 					if ('processData' in config && config.processData === false) {
 						handleSuccessCallback(response).then(() => resolve(response));
-					}
-					else {
+					} else {
 						response.json().then(function (data) {
 							ar.data = data;
 							handleSuccessCallback(ar).then(() => resolve(ar));
@@ -292,8 +279,7 @@ class Net {
 						ar = new ApiResponse();
 						ar.isError = true;
 						ar.error = response;
-					}
-					else {
+					} else {
 						ar = new ApiResponse(response);
 					}
 				
@@ -335,14 +321,12 @@ class Net {
 				log.debug('200-300 response: resolving Net.ajax promise', 3);
 				// Performs the function "resolve" when this.status is equal to 2xx
 				return response;
-			}
-			else {
+			} else {
 				log.debug('not 200-300 response: rejecting Net.ajax promise', 3);
 				// Performs the function "reject" when this.status is different than 2xx
 				throw response;
 			}
-		}
-		catch (err) {
+		} catch (err) {
 			log.error(err);
 			throw (err);
 		}

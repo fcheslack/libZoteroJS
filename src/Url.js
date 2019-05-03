@@ -32,8 +32,7 @@ Url.attachmentDownloadLink = function (item) {
 		if (!item.apiObj.links.enclosure.length && item.isSnapshot()) {
 			// snapshot: redirect to view
 			retString += '<a href="' + downloadUrl + '">' + 'View Snapshot</a>';
-		}
-		else {
+		} else {
 			// file: offer download
 			var enctype = Zotero.utils.translateMimeType(item.apiObj.links.enclosure.type);
 			var enc = item.apiObj.links.enclosure;
@@ -41,19 +40,16 @@ Url.attachmentDownloadLink = function (item) {
 			var filesizeString = '' + filesize + ' B';
 			if (filesize > 1073741824) {
 				filesizeString = '' + (filesize / 1073741824).toFixed(1) + ' GB';
-			}
-			else if (filesize > 1048576) {
+			} else if (filesize > 1048576) {
 				filesizeString = '' + (filesize / 1048576).toFixed(1) + ' MB';
-			}
-			else if (filesize > 1024) {
+			} else if (filesize > 1024) {
 				filesizeString = '' + (filesize / 1024).toFixed(1) + ' KB';
 			}
 			log.debug(enctype, 3);
 			retString += '<a href="' + downloadUrl + '">';
 			if (enctype == 'undefined' || enctype === '' || typeof enctype == 'undefined') {
 				retString += filesizeString + '</a>';
-			}
-			else {
+			} else {
 				retString += enctype + ', ' + filesizeString + '</a>';
 			}
 			return retString;
@@ -67,8 +63,7 @@ Url.attachmentDownloadUrl = function (item) {
 		if (Zotero.config.proxyDownloads) {
 			// we have a proxy for downloads at baseDownloadUrl so just pass an itemkey to that
 			return Url.wwwDownloadUrl(item);
-		}
-		else {
+		} else {
 			return Url.apiDownloadUrl(item);
 		}
 	}
@@ -86,12 +81,10 @@ Url.proxyDownloadUrl = function (item) {
 	if (item.apiObj.links.enclosure) {
 		if (Zotero.config.proxyDownloads) {
 			return Zotero.config.baseDownloadUrl + '?itemkey=' + item.get('key');
-		}
-		else {
+		} else {
 			return Url.apiDownloadUrl(item);
 		}
-	}
-	else {
+	} else {
 		return false;
 	}
 };
@@ -99,8 +92,7 @@ Url.proxyDownloadUrl = function (item) {
 Url.wwwDownloadUrl = function (item) {
 	if (item.apiObj.links.enclosure) {
 		return Zotero.config.baseZoteroWebsiteUrl + Zotero.config.librarySettings.libraryPathString + '/' + item.get('key') + '/file/view';
-	}
-	else {
+	} else {
 		return false;
 	}
 };
@@ -123,16 +115,13 @@ Url.attachmentFileDetails = function (item) {
 		filesizeString = '' + filesize + ' B';
 		if (filesize > 1073741824) {
 			filesizeString = '' + (filesize / 1073741824).toFixed(1) + ' GB';
-		}
-		else if (filesize > 1048576) {
+		} else if (filesize > 1048576) {
 			filesizeString = '' + (filesize / 1048576).toFixed(1) + ' MB';
-		}
-		else if (filesize > 1024) {
+		} else if (filesize > 1024) {
 			filesizeString = '' + (filesize / 1024).toFixed(1) + ' KB';
 		}
 		return '(' + enctype + ', ' + filesizeString + ')';
-	}
-	else {
+	} else {
 		return '(' + enctype + ')';
 	}
 };
@@ -144,8 +133,7 @@ Url.userWebLibrary = function (slug) {
 Url.groupWebLibrary = function (group) {
 	if (group.type == 'Private') {
 		return [Zotero.config.baseWebsiteUrl, 'groups', group.get('id'), 'items'].join('/');
-	}
-	else {
+	} else {
 		return [Zotero.config.baseWebsiteUrl, 'groups', Zotero.utils.slugify(group.get('name')), 'items'].join('/');
 	}
 };

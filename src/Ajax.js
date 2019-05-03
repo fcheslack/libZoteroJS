@@ -64,16 +64,13 @@ Ajax.apiRequestUrl = function (params) {
 			if (params.collectionKey == 'trash') {
 				url += '/items/trash';
 				return url;
-			}
-			else if (params.collectionKey.indexOf(',') !== -1) {
+			} else if (params.collectionKey.indexOf(',') !== -1) {
 				
-			}
-			else if (params.target != 'collections') {
+			} else if (params.target != 'collections') {
 				url += '/collections/' + params.collectionKey;
 			}
 		}
-	}
-	else {
+	} else {
 		url = base;
 	}
 	
@@ -84,8 +81,7 @@ Ajax.apiRequestUrl = function (params) {
 	case 'item':
 		if (params.itemKey) {
 			url += '/items/' + params.itemKey;
-		}
-		else {
+		} else {
 			url += '/items';
 		}
 		break;
@@ -221,8 +217,7 @@ Ajax.apiQueryString = function (passedParams) {
 				}
 				queryParamsArray.push(encodeURIComponent(key) + '=' + encodeURIComponent(v));
 			});
-		}
-		else {
+		} else {
 			if (key == 'tag' && value[0] == '-') {
 				value = '\\' + value;
 			}
@@ -245,8 +240,7 @@ Ajax.proxyWrapper = function (requestUrl, method) {
 			method = 'GET';
 		}
 		return Zotero.config.proxyPath + '?requestMethod=' + method + '&requestUrl=' + encodeURIComponent(requestUrl);
-	}
-	else {
+	} else {
 		return requestUrl;
 	}
 };
@@ -263,8 +257,7 @@ Ajax.downloadBlob = function (url) {
 			if (xhr.status === 200) {
 				log.debug('downloadBlob Image retrieved. resolving', 3);
 				resolve(xhr.response);
-			}
-			else {
+			} else {
 				reject(xhr.response);
 			}
 		});

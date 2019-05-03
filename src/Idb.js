@@ -227,8 +227,7 @@ class IdbLibrary {
 				if (cursor) {
 					itemKeys.push(cursor.primaryKey);
 					cursor.continue();
-				}
-				else {
+				} else {
 					log.debug('No more cursor: done. Resolving deferred.', 3);
 					resolve(itemKeys);
 				}
@@ -265,8 +264,7 @@ class IdbLibrary {
 				if (cursor) {
 					itemKeys.push(cursor.primaryKey);
 					cursor.continue();
-				}
-				else {
+				} else {
 					log.debug('No more cursor: done. Resolving deferred.', 3);
 					resolve(itemKeys);
 				}
@@ -423,8 +421,7 @@ class IdbLibrary {
 				if (cursor) {
 					objects.push(cursor.value);
 					cursor.continue();
-				}
-				else {
+				} else {
 					resolve(objects);
 				}
 			};

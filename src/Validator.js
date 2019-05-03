@@ -7,8 +7,7 @@ class Validator {
 		log.debug('Zotero.validate', 4);
 		if (arg === '') {
 			return null;
-		}
-		else if (arg === null) {
+		} else if (arg === null) {
 			return true;
 		}
 		log.debug(arg + ' ' + type, 4);
@@ -16,8 +15,7 @@ class Validator {
 
 		if (patterns.hasOwnProperty(type)) {
 			return patterns[type].test(arg);
-		}
-		else {
+		} else {
 			return null;
 		}
 	}

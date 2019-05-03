@@ -30,8 +30,7 @@ class Container {
 			return function (a, b) {
 				return collator.compare(a.apiObj.data[field], b.apiObj.data[field]);
 			};
-		}
-		else {
+		} else {
 			return function (a, b) {
 				if (a.apiObj.data[field].toLowerCase() == b.apiObj.data[field].toLowerCase()) {
 					return 0;
@@ -48,8 +47,7 @@ class Container {
 	getObject(key) {
 		if (this.objectMap.hasOwnProperty(key)) {
 			return this.objectMap[key];
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -152,8 +150,7 @@ class Container {
 			&& (this.syncState.earliestVersion == this.syncState.latestVersion)) {
 			this.version = this.syncState.latestVersion;
 			this.synced = true;
-		}
-		else if (this.syncState.earliestVersion !== null) {
+		} else if (this.syncState.earliestVersion !== null) {
 			this.version = this.syncState.earliestVersion;
 		}
 	}
@@ -166,8 +163,7 @@ class Container {
 				if (localObject.synced === true) {
 					// our object is not modified, so delete it as the server thinks we should
 					this.removeObjects([deletedKeys[i]]);
-				}
-				else {
+				} else {
 					// TODO: conflict resolution
 				}
 			}

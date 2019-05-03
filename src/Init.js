@@ -4,11 +4,9 @@ var init = function () {
 	var store;
 	if (Zotero.config.cacheStoreType == 'localStorage' && typeof localStorage != 'undefined') {
 		store = localStorage;
-	}
-	else if (Zotero.config.cacheStoreType == 'sessionStorage' && typeof sessionStorage != 'undefined') {
+	} else if (Zotero.config.cacheStoreType == 'sessionStorage' && typeof sessionStorage != 'undefined') {
 		store = sessionStorage;
-	}
-	else {
+	} else {
 		store = {};
 	}
 	Zotero.store = store;

@@ -54,8 +54,7 @@ let uploadFile = function (uploadInfo, fileInfo) {
 			if (this.status == 201) {
 				log.debug('successful upload - 201', 3);
 				resolve();
-			}
-			else {
+			} else {
 				log.error('uploadFile failed - ' + xhr.status);
 				reject({
 					message: 'Failure uploading file.',

@@ -41,8 +41,7 @@ class Writer {
 					response.returnObjects = writeChunk;
 				}
 				responses.push(response);
-			}
-			catch (e) {
+			} catch (e) {
 				log.error(e);
 			}
 		}
@@ -165,8 +164,7 @@ let updateObjectsFromWriteResponse = function (objectsArray, response) {
 				object.writeFailure = failure;
 			});
 		}
-	}
-	else if (response.status == 204) {
+	} else if (response.status == 204) {
 		// single item put response, this probably should never go to this function
 		objectsArray[0].synced = true;
 	}

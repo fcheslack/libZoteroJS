@@ -30,8 +30,7 @@ class Groups {
 		
 		if (apikey) {
 			aparams.key = apikey;
-		}
-		else if (this.owningLibrary) {
+		} else if (this.owningLibrary) {
 			aparams.key = this.owningLibrary._apiKey;
 		}
 		

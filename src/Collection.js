@@ -65,16 +65,14 @@ class Collection extends ApiObject {
 		
 		if (collection.apiObj.data.parentCollection) {
 			collection.topLevel = false;
-		}
-		else {
+		} else {
 			collection.topLevel = true;
 		}
 		
 		if (Zotero.config.librarySettings.libraryPathString) {
 			collection.websiteCollectionLink = Zotero.config.librarySettings.libraryPathString
 			+ '/collectionKey/' + collection.apiObj.key;
-		}
-		else {
+		} else {
 			collection.websiteCollectionLink = '';
 		}
 		collection.hasChildren = !!(collection.apiObj.meta.numCollections);
@@ -228,11 +226,9 @@ class Collection extends ApiObject {
 		
 		if (key in collection.apiObj.data) {
 			return collection.apiObj.data[key];
-		}
-		else if (collection.apiObj.meta.hasOwnProperty(key)) {
+		} else if (collection.apiObj.meta.hasOwnProperty(key)) {
 			return collection.apiObj.meta[key];
-		}
-		else if (collection.hasOwnProperty(key)) {
+		} else if (collection.hasOwnProperty(key)) {
 			return collection[key];
 		}
 		

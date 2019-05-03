@@ -25,8 +25,7 @@ var trigger = function (eventType, data = {}, filter = false) {
 				callback.f(e);
 			});
 		}
-	}
-	catch (e) {
+	} catch (e) {
 		log.error(`failed triggering:${eventType}`);
 		log.error(e);
 	}
@@ -47,8 +46,7 @@ var listen = function (events, handler, data, filter) {
 				data: data,
 				f: handler
 			});
-		}
-		else {
+		} else {
 			Zotero.eventmanager.callbacks[ev] = [{
 				data: data,
 				f: handler

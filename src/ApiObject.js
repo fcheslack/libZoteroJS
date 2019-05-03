@@ -25,8 +25,7 @@ class ApiObject {
 			return function (a, b) {
 				return collator.compare(a.apiObj.data[attr], b.apiObj.data[attr]);
 			};
-		}
-		else {
+		} else {
 			return function (a, b) {
 				if (a.apiObj.data[attr].toLowerCase() == b.apiObj.data[attr].toLowerCase()) {
 					return 0;

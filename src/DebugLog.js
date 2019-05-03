@@ -7,8 +7,7 @@ var submitDebugLog = function () {
 		var data = JSON.parse(xhr.responseText);
 		if (data.logID) {
 			alert('ZoteroWWW debug logID:' + data.logID);
-		}
-		else if (data.error) {
+		} else if (data.error) {
 			alert('Error submitting ZoteroWWW debug log:' + data.error);
 		}
 	});

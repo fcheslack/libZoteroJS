@@ -19,13 +19,11 @@ class Cache {
 		let paramVarsArray = [];
 		Object.keys(params).forEach(function (index) {
 			let value = params[index];
-			if (!value) { }
-			else if (Array.isArray(value)) {
+			if (!value) { } else if (Array.isArray(value)) {
 				value.forEach(function (v) {
 					paramVarsArray.push(index + '/' + encodeURIComponent(v));
 				});
-			}
-			else {
+			} else {
 				paramVarsArray.push(index + '/' + encodeURIComponent(value));
 			}
 		});
@@ -65,12 +63,10 @@ class Cache {
 			if (!s) {
 				log.warn('No value found in cache store - ' + objectCacheString, 3);
 				return null;
-			}
-			else {
+			} else {
 				return JSON.parse(s);
 			}
-		}
-		catch (e) {
+		} catch (e) {
 			log.error(`Error parsing retrieved cache data: ${objectCacheString} : ${s}`);
 			return null;
 		}
@@ -93,8 +89,7 @@ class Cache {
 	clear() {
 		if (typeof (this.store.clear) == 'function') {
 			this.store.clear();
-		}
-		else {
+		} else {
 			this.store = {};
 		}
 	}

@@ -39,11 +39,9 @@ class Preferences {
 		var preferences = this;
 		if (preferences.preferencesObject[key]) {
 			return preferences.preferencesObject[key];
-		}
-		else if (preferences.defaults[key]) {
+		} else if (preferences.defaults[key]) {
 			return preferences.defaults[key];
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -65,8 +63,7 @@ class Preferences {
 		var storageObjectString = preferences.store[storageString];
 		if (!storageObjectString) {
 			preferences.preferencesObject = {};
-		}
-		else {
+		} else {
 			preferences.preferencesObject = JSON.parse(storageObjectString);
 		}
 	}

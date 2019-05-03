@@ -29,16 +29,14 @@ class Library {
 		library.libraryUrlIdentifier = libraryUrlIdentifier;
 		if (Zotero.config.librarySettings) {
 			library.libraryBaseWebsiteUrl = Zotero.config.librarySettings.libraryPathString;
-		}
-		else {
+		} else {
 			library.libraryBaseWebsiteUrl = Zotero.config.baseWebsiteUrl;
 			if (type == 'group') {
 				library.libraryBaseWebsiteUrl += 'groups/';
 			}
 			if (libraryUrlIdentifier) {
 				this.libraryBaseWebsiteUrl += libraryUrlIdentifier + '/items';
-			}
-			else {
+			} else {
 				log.warn('no libraryUrlIdentifier specified');
 			}
 		}
@@ -75,8 +73,7 @@ class Library {
 		if (typeof window === 'undefined') {
 			Zotero.config.useIndexedDB = false;
 			log.warn('Node detected; disabling indexedDB');
-		}
-		else {
+		} else {
 			// initialize indexedDB if we're supposed to use it
 			// detect safari until they fix their shit
 			var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
@@ -123,8 +120,7 @@ class Library {
 						});
 
 						return cacheLoadD;
-					}
-					else {
+					} else {
 					// trigger cachedDataLoaded since we are done with that step
 						library.trigger('cachedDataLoaded');
 					}
@@ -137,8 +133,7 @@ class Library {
 					log.error('Error initializing indexedDB. Promise rejected.');
 				// don't re-throw error, since we can still load data from the API
 				});
-		}
-		else {
+		} else {
 			library.cachedDataPromise = Promise.resolve();
 		}
 		
@@ -163,8 +158,7 @@ class Library {
 	comparer() {
 		if (Intl) {
 			return new Intl.Collator().compare;
-		}
-		else {
+		} else {
 			return function (a, b) {
 				if (a.toLocaleLowerCase() == b.toLocaleLowerCase()) {
 					return 0;
@@ -339,8 +333,7 @@ class Library {
 				if (collectionKeys.length === 0) {
 					log.debug('No collectionKeys need updating. resolving', 3);
 					return response;
-				}
-				else {
+				} else {
 					log.debug('fetching collections by key', 3);
 					return library.loadCollectionsFromKeys(collectionKeys)
 						.then(function () {
@@ -520,8 +513,7 @@ class Library {
 				var resultObject;
 				if (typeof response.data == 'string') {
 					resultObject = JSON.parse(response.data);
-				}
-				else {
+				} else {
 					resultObject = response.data;
 				}
 				// save the full settings object so we have it available if we need to write,
@@ -728,12 +720,10 @@ class Library {
 		if (params.collectionKey) {
 			if (params.collectionKey == 'trash') {
 				filterPromises.push(library.idbLibrary.filterItems('deleted', 1));
-			}
-			else {
+			} else {
 				filterPromises.push(library.idbLibrary.filterItems('collectionKeys', params.collectionKey));
 			}
-		}
-		else {
+		} else {
 			filterPromises.push(library.idbLibrary.getOrderedItemKeys('title'));
 		}
 		
@@ -1155,8 +1145,7 @@ class Library {
 				if (response.parsedLinks.hasOwnProperty('next')) {
 					library.tags.hasNextLink = true;
 					library.tags.nextLink = response.parsedLinks.next;
-				}
-				else {
+				} else {
 					library.tags.hasNextLink = false;
 					library.tags.nextLink = null;
 				}
@@ -1203,8 +1192,7 @@ class Library {
 					newConfig.start = nextLinkConfig.start;
 					newConfig.limit = nextLinkConfig.limit;
 					return library.loadTags(newConfig).then(continueLoadingCallback);
-				}
-				else {
+				} else {
 					log.debug('no next in tags link', 3);
 					tags.updateSyncedVersion();
 					tags.tagsArray.sort(Zotero.Tag.prototype.tagComparer());

@@ -26,8 +26,7 @@ class Fetcher {
 		let response = await Zotero.net.apiRequest({ url: urlconfig });
 		if (response.parsedLinks.hasOwnProperty('next')) {
 			this.hasMore = true;
-		}
-		else {
+		} else {
 			this.hasMore = false;
 		}
 

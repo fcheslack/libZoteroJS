@@ -11,11 +11,9 @@ class Tag extends ApiObject {
 		this.version = 0;
 		if (typeof tagObj == 'object') {
 			this.parseJsonTag(tagObj);
-		}
-		else if (typeof tagObj == 'string') {
+		} else if (typeof tagObj == 'string') {
 			this.parseJsonTag(this.templateApiObj(tagObj));
-		}
-		else {
+		} else {
 			this.parseJsonTag(this.tamplateApiObj(''));
 		}
 	}
@@ -44,8 +42,7 @@ class Tag extends ApiObject {
 			return function (a, b) {
 				return collator.compare(a.apiObj.tag, b.apiObj.tag);
 			};
-		}
-		else {
+		} else {
 			return function (a, b) {
 				if (a.apiObj.tag.toLocaleLowerCase() == b.apiObj.tag.toLocaleLowerCase()) {
 					return 0;

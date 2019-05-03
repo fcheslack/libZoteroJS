@@ -26,8 +26,7 @@ class Item extends ApiObject {
 		this.notes = [];
 		if (itemObj) {
 			this.parseJsonItem(itemObj);
-		}
-		else {
+		} else {
 			this.parseJsonItem(Item.emptyJsonItem());
 		}
 		this.initSecondaryData();
@@ -79,8 +78,7 @@ class Item extends ApiObject {
 		
 		if (this.apiObj.meta.parsedDate) {
 			this.parsedDate = new Date(this.apiObj.meta.parsedDate);
-		}
-		else {
+		} else {
 			this.parsedDate = false;
 		}
 		
@@ -375,8 +373,7 @@ class Item extends ApiObject {
 		var oldmd5 = this.get('md5');
 		if (oldmd5) {
 			headers['If-Match'] = oldmd5;
-		}
-		else {
+		} else {
 			headers['If-None-Match'] = '*';
 		}
 		
@@ -412,8 +409,7 @@ class Item extends ApiObject {
 			log.debug('creatorTypes of requested itemType available in localStorage', 3);
 			log.debug(Item.prototype.creatorTypes, 4);
 			return Promise.resolve(Item.prototype.creatorTypes[itemType]);
-		}
-		else {
+		} else {
 			log.debug('sending request for creatorTypes', 3);
 			var query = Zotero.ajax.apiQueryString({ itemType: itemType });
 			// TODO: this probably shouldn't be using baseApiUrl directly
@@ -493,8 +489,7 @@ class Item extends ApiObject {
 			default:
 				return this.itemTypeImageSrc.attachment;
 			}
-		}
-		else {
+		} else {
 			return this.apiObj.data.itemType;
 		}
 	}
@@ -625,22 +620,18 @@ class Item extends ApiObject {
 		case 'year':
 			if (this.parsedDate) {
 				return this.parsedDate.getFullYear();
-			}
-			else {
+			} else {
 				return '';
 			}
 		}
 		
 		if (key in this.apiObj.data) {
 			return this.apiObj.data[key];
-		}
-		else if (key in this.apiObj.meta) {
+		} else if (key in this.apiObj.meta) {
 			return this.apiObj.meta[key];
-		}
-		else if (this.hasOwnProperty(key)) {
+		} else if (this.hasOwnProperty(key)) {
 			return this[key];
-		}
-		else {
+		} else {
 			var baseMapping = this.baseFieldMapping[itemType];
 			if (baseMapping && baseMapping[key]) {
 				return this.apiObj.data[baseMapping[key]];
@@ -699,8 +690,7 @@ class Item extends ApiObject {
 		var firstNewline = notetext.indexOf('\n');
 		if ((firstNewline != -1) && firstNewline < len) {
 			return notetext.substr(0, firstNewline);
-		}
-		else {
+		} else {
 			return notetext.substr(0, len);
 		}
 	}
@@ -838,8 +828,7 @@ class Item extends ApiObject {
 		var cslItem = { type: cslType };
 		if (zoteroItem.owningLibrary) {
 			cslItem.id = zoteroItem.apiObj.library.id + '/' + zoteroItem.get('key');
-		}
-		else {
+		} else {
 			cslItem.id = Zotero.utils.getKey();
 		}
 		
@@ -866,15 +855,13 @@ class Item extends ApiObject {
 			var nameObj;
 			if (creator.hasOwnProperty('name')) {
 				nameObj = { literal: creator.name };
-			}
-			else {
+			} else {
 				nameObj = { family: creator.lastName, given: creator.firstName };
 			}
 			
 			if (cslItem.hasOwnProperty(creatorType)) {
 				cslItem[creatorType].push(nameObj);
-			}
-			else {
+			} else {
 				cslItem[creatorType] = [nameObj];
 			}
 		});

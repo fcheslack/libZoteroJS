@@ -12,8 +12,7 @@ if (typeof console == 'undefined') {
 	debugOut = function () {};
 	warnOut = function () {};
 	errorOut = function () {};
-}
-else {
+} else {
 	debugOut = function (s) {
 		console.log(s);
 	};
@@ -62,8 +61,7 @@ log.Logger = function (prefix, llevel = 2) {
 		debug: function (debugstring, level) {
 			if (typeof debugstring == 'string') {
 				return log.debug(`${prefix}: ${debugstring}`, level);
-			}
-			else {
+			} else {
 				log.debug(`${prefix}: \\`, level);
 				log.debug(debugstring, level);
 			}

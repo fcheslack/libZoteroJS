@@ -7,8 +7,7 @@ var globalScope;
 
 if (typeof window === 'undefined') {
 	globalScope = global;
-}
-else {
+} else {
 	globalScope = window;
 }
 

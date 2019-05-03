@@ -47,8 +47,7 @@ let prependAutocomplete = function (pre, source) {
 	satisfy = source.map(function (n) {
 		if (n.substr(0, plen).toLowerCase() == plower) {
 			return n;
-		}
-		else {
+		} else {
 			return null;
 		}
 	});
@@ -70,8 +69,7 @@ let matchAnyAutocomplete = function (pre, source) {
 	satisfy = source.map(function (n) {
 		if (n.toLowerCase().indexOf(plower) != -1) {
 			return n;
-		}
-		else {
+		} else {
 			return null;
 		}
 	});
@@ -92,14 +90,11 @@ let parseLibString = function (libraryString) {
 	var libraryID;
 	if (libraryString.charAt(0) == 'u') {
 		type = 'user';
-	}
-	else if (libraryString.charAt(0) == 'g') {
+	} else if (libraryString.charAt(0) == 'g') {
 		type = 'group';
-	}
-	else if (libraryString.charAt(0) == 'p') {
+	} else if (libraryString.charAt(0) == 'p') {
 		type = 'publications';
-	}
-	else {
+	} else {
 		throw new Error('unexpected type character in libraryString');
 	}
 	libraryID = parseInt(libraryString.substring(1), 10);
@@ -139,8 +134,7 @@ let parseApiDate = function (datestr) {
 	if (matches === null) {
 		log.debug(`error parsing api date: ${datestr}`, 2);
 		return null;
-	}
-	else {
+	} else {
 		var date = new Date(Date.UTC(matches[1], matches[2] - 1, matches[3], matches[4], matches[5], matches[6]));
 		return date;
 	}
@@ -292,8 +286,7 @@ let parseQuery = function (query) {
 		let val = decode(match[2]);
 		if (params[key]) {
 			params[key] = [].concat(params[key], val);
-		}
-		else {
+		} else {
 			params[key] = val;
 		}
 	}
