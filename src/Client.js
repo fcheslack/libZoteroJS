@@ -1,31 +1,31 @@
-'use strict';
+
 
 var log = require('./Log.js').Logger('libZotero:Client');
 
-import {Fetcher} from './Fetcher.js';
-import {Net} from './Net.js';
+import { Fetcher } from './Fetcher.js';
+import { Net } from './Net.js';
 
-class Client{
-	constructor(apiKey=''){
+class Client {
+	constructor(apiKey = '') {
 		this._apiKey = apiKey;
 		this.net = new Net();
 	}
 
 	getUserGroups = async (userID) => {
 		var aparams = {
-			'target':'userGroups',
-			'libraryType':'user',
-			'libraryID': userID,
-			'order':'title'
+			target: 'userGroups',
+			libraryType: 'user',
+			libraryID: userID,
+			order: 'title'
 		};
 
-		if(this._apiKey){
-			aparams['key'] = this._apiKey;
+		if (this._apiKey) {
+			aparams.key = this._apiKey;
 		}
 
 		let response = await Zotero.ajaxRequest(aparams);
 		let groupJson = response.data;
-		let groups = groupJson.map(function(groupObj){
+		let groups = groupJson.map(function (groupObj) {
 			return new Zotero.Group(groupObj);
 		});
 
@@ -33,11 +33,11 @@ class Client{
 		return response;
 	};
 
-	getUserPublications = async (userID, config={}) => {
+	getUserPublications = async (userID, config = {}) => {
 		log.debug('Zotero.Client.loadPublications', 3);
 		
 		let defaultConfig = {
-			target:'publications',
+			target: 'publications',
 			start: 0,
 			limit: 50,
 			order: Zotero.config.defaultSortColumn,
@@ -46,32 +46,32 @@ class Client{
 		};
 
 		let urlconfig = Object.assign({}, defaultConfig, config, {
-			'target':'publications',
-			'libraryType':'user',
-			'libraryID':userID
+			target: 'publications',
+			libraryType: 'user',
+			libraryID: userID
 		});
 
 		let fetcher = new Fetcher(urlconfig);
 		let results = await fetcher.fetchAll();
-		return results.map(function(itemObj){
+		return results.map(function (itemObj) {
 			return new Zotero.Item(itemObj);
 		});
 	};
 
-	getKeyPermissions = async (key=false) => {
-		if(!key){
+	getKeyPermissions = async (key = false) => {
+		if (!key) {
 			return false;
 		}
 
-		let urlconfig = {'target':'key', 'apiKey':key, 'libraryType':''};
+		let urlconfig = { target: 'key', apiKey: key, libraryType: '' };
 
 		let response = await Zotero.ajaxRequest(urlconfig);
 		let keyObject = JSON.parse(response.data);
 		return keyObject;
 	};
 
-	deleteKey = (key=false) => {
-		if(!key){
+	deleteKey = (key = false) => {
+		if (!key) {
 			return false;
 		}
 
@@ -79,4 +79,4 @@ class Client{
 	};
 }
 
-export {Client};
+export { Client };

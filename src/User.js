@@ -1,15 +1,15 @@
-'use strict';
+
 
 var log = require('./Log.js').Logger('libZotero:User');
-import {ApiObject} from './ApiObject';
+import { ApiObject } from './ApiObject';
 
-class User extends ApiObject{
-	constructor(){
+class User extends ApiObject {
+	constructor() {
 		super();
 		this.instance = 'Zotero.User';
 	}
 
-	loadObject(ob){
+	loadObject(ob) {
 		this.title = ob.title;
 		this.author = ob.author;
 		this.tagID = ob.tagID;
@@ -24,11 +24,11 @@ class User extends ApiObject{
 		this.key = ob.key;
 	}
 
-	parseXmlUser (tel) {
+	parseXmlUser(tel) {
 		this.parseXmlEntry(tel);
 
 		var tagEl = tel.find('content>tag');
-		if(tagEl.length !== 0){
+		if (tagEl.length !== 0) {
 			this.tagKey = tagEl.attr('key');// find("zapi\\:itemID").text();
 			this.libraryID = tagEl.attr('libraryID');
 			this.tagName = tagEl.attr('name');
@@ -38,4 +38,4 @@ class User extends ApiObject{
 	}
 }
 
-export {User};
+export { User };

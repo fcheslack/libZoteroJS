@@ -1,47 +1,48 @@
-'use strict';
+
 
 import "@babel/polyfill";
 var log = require('./Log.js').Logger('libZotero');
 
 var globalScope;
 
-if(typeof window === 'undefined') {
+if (typeof window === 'undefined') {
 	globalScope = global;
-} else {
+}
+else {
 	globalScope = window;
 }
 
-import {Cache} from './Cache.js';
-import {Ajax} from './Ajax.js';
-import {ApiObject} from './ApiObject.js';
-import {ApiResponse} from './ApiResponse.js';
-import {Net} from './Net.js';
+import { Cache } from './Cache.js';
+import { Ajax } from './Ajax.js';
+import { ApiObject } from './ApiObject.js';
+import { ApiResponse } from './ApiResponse.js';
+import { Net } from './Net.js';
 let net = new Net();
-import {Library} from './Library.js';
-import {Container} from './Container.js';
-import {Collections} from './Collections.js';
-import {Items} from './Items.js';
-import {Tags} from './Tags.js';
-import {Groups} from './Groups.js';
-import {Searches} from './Searches.js';
-import {Deleted} from './Deleted.js';
-import {Collection} from './Collection.js';
-import {Item} from './Item.js';
-import {Tag} from './Tag.js';
-import {Search} from './Search.js';
-import {Group} from './Group.js';
-import {User} from './User.js';
-import {Utils} from './Utils.js';
-import {Url} from './Url.js';
-import {getFileInfo, uploadFile} from './File.js';
-import {IdbLibrary} from './Idb.js';
-import {Preferences} from './Preferences.js';
-import {Client} from './Client.js';
-import {Fetcher} from './Fetcher.js';
-import {Writer} from './Writer.js';
-import {TagColors} from './TagColors.js';
-import {Validator} from './Validator.js';
-import {RequestConfig} from './RequestConfig.js';
+import { Library } from './Library.js';
+import { Container } from './Container.js';
+import { Collections } from './Collections.js';
+import { Items } from './Items.js';
+import { Tags } from './Tags.js';
+import { Groups } from './Groups.js';
+import { Searches } from './Searches.js';
+import { Deleted } from './Deleted.js';
+import { Collection } from './Collection.js';
+import { Item } from './Item.js';
+import { Tag } from './Tag.js';
+import { Search } from './Search.js';
+import { Group } from './Group.js';
+import { User } from './User.js';
+import { Utils } from './Utils.js';
+import { Url } from './Url.js';
+import { getFileInfo, uploadFile } from './File.js';
+import { IdbLibrary } from './Idb.js';
+import { Preferences } from './Preferences.js';
+import { Client } from './Client.js';
+import { Fetcher } from './Fetcher.js';
+import { Writer } from './Writer.js';
+import { TagColors } from './TagColors.js';
+import { Validator } from './Validator.js';
+import { RequestConfig } from './RequestConfig.js';
 
 var Zotero = {
 	Cache: Cache,
@@ -60,7 +61,7 @@ var Zotero = {
 	Searches: Searches,
 	Deleted: Deleted,
 	Collection: Collection,
-//localizations
+	// localizations
 	Item: Item,
 	Tag: Tag,
 	Search: Search,
@@ -70,9 +71,9 @@ var Zotero = {
 	utils: Utils,
 	Url: Url,
 	url: Url,
-	File: {getFileInfo, uploadFile},
-	file: {getFileInfo, uploadFile},
-	Idb: {Library: IdbLibrary},
+	File: { getFileInfo, uploadFile },
+	file: { getFileInfo, uploadFile },
+	Idb: { Library: IdbLibrary },
 	Preferences: Preferences,
 	Client: Client,
 	Fetcher: Fetcher,
@@ -85,25 +86,25 @@ var Zotero = {
 globalScope.Zotero = globalScope.Z = Zotero;
 Zotero.Localizations = Zotero.localizations = require('./Localizations.js');
 
-//non-DOM (jquery) event management
-Zotero.eventmanager = {callbacks: {}};
-let {trigger, listen} = require('./Events.js');
+// non-DOM (jquery) event management
+Zotero.eventmanager = { callbacks: {} };
+let { trigger, listen } = require('./Events.js');
 Zotero.trigger = trigger;
 Zotero.listen = listen;
 
 Zotero.libraries = {};
 Zotero.config = require('./DefaultConfig.js');
 
-Zotero.catchPromiseError = function(err){
+Zotero.catchPromiseError = function (err) {
 	log.error(err);
 };
 
-Zotero.ajaxRequest = function(url, type, options){
+Zotero.ajaxRequest = function (url, type, options) {
 	log.debug('Zotero.ajaxRequest ==== ' + url, 3);
-	if(!type){
+	if (!type) {
 		type = 'GET';
 	}
-	if(!options){
+	if (!options) {
 		options = {};
 	}
 	var requestObject = {

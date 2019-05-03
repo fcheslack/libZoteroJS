@@ -1,9 +1,9 @@
-'use strict';
+
 
 var log = require('./Log.js').Logger('libZotero:Sync');
 
-//sync pull:
-//upload changed data
+// sync pull:
+// upload changed data
 // get updatedVersions for collections
 // get updatedVersions for searches
 // get upatedVersions for items
@@ -16,15 +16,14 @@ var log = require('./Log.js').Logger('libZotero:Sync');
 // getDeletedData
 // process deleted
 // checkConcurrentUpdates (compare Last-Modified-Version from collections?newer request to one from /deleted request)
-Zotero.Library.prototype.syncLibrary = function(full){
+Zotero.Library.prototype.syncLibrary = function (full) {
 	var library = this;
-	//TODO: upload dirty collections
-	//TODO: upload dirty items
+	// TODO: upload dirty collections
+	// TODO: upload dirty items
 	
-	//pull down updated collections
+	// pull down updated collections
 	var syncPromise = library.loadUpdatedCollections()
-	.then(function(){
-		return library.loadUpdatedItems();
-	});
-	
+		.then(function () {
+			return library.loadUpdatedItems();
+		});
 };

@@ -1,9 +1,9 @@
-'use strict';
+
 
 var log = require('./Log.js').Logger('libZotero:Fetcher');
 
-class Fetcher{
-	constructor(config={}){
+class Fetcher {
+	constructor(config = {}) {
 		let defaultConfig = {
 			start: 0,
 			limit: 25
@@ -18,15 +18,16 @@ class Fetcher{
 	}
 
 	next = async () => {
-		if(this.hasMore == false){
+		if (this.hasMore == false) {
 			return null;
 		}
 
 		let urlconfig = Object.assign({}, this.config);
-		let response = await Zotero.net.apiRequest({url:urlconfig});
-		if(response.parsedLinks.hasOwnProperty('next')){
+		let response = await Zotero.net.apiRequest({ url: urlconfig });
+		if (response.parsedLinks.hasOwnProperty('next')) {
 			this.hasMore = true;
-		} else {
+		}
+		else {
 			this.hasMore = false;
 		}
 
@@ -34,7 +35,7 @@ class Fetcher{
 		this.totalResults = response.totalResults;
 
 		let nconfig = Object.assign({}, urlconfig);
-		nconfig.start = nconfig.start + nconfig.limit;
+		nconfig.start += nconfig.limit;
 		this.config = nconfig;
 
 		return response;
@@ -42,7 +43,7 @@ class Fetcher{
 
 	fetchAll = async () => {
 		let results = [];
-		while(this.hasMore){
+		while (this.hasMore) {
 			let response = await this.next();
 			results = results.concat(response.data);
 		}
@@ -50,4 +51,4 @@ class Fetcher{
 	}
 }
 
-export {Fetcher};
+export { Fetcher };

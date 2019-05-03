@@ -1,4 +1,4 @@
-'use strict';
+
 
 let baseApiUrl = 'https://api.zotero.org';
 let baseWebsiteUrl = 'https://zotero.org';
@@ -6,7 +6,7 @@ let baseFeedUrl = 'https://api.zotero.org';
 let baseZoteroWebsiteUrl = 'https://www.zotero.org';
 let baseDownloadUrl = 'https://www.zotero.org';
 
-if(process.env.NODE_ENV == 'development') {
+if (process.env.NODE_ENV == 'development') {
 	baseApiUrl = 'https://apidev.zotero.org';
 	baseWebsiteUrl = 'https://dockerzotero.test:8081';
 	baseFeedUrl = 'https://apidev.zotero.org';
@@ -37,25 +37,25 @@ var defaultConfig = {
 	cacheStoreType: 'localStorage',
 	preloadCachedLibrary: true,
 	sortOrdering: {
-		'dateAdded': 'desc',
-		'dateModified': 'desc',
-		'date': 'desc',
-		'year': 'desc',
-		'accessDate': 'desc',
-		'title': 'asc',
-		'creator': 'asc'
+		dateAdded: 'desc',
+		dateModified: 'desc',
+		date: 'desc',
+		year: 'desc',
+		accessDate: 'desc',
+		title: 'asc',
+		creator: 'asc'
 	},
 	defaultSortColumn: 'title',
 	defaultSortOrder: 'asc',
 	largeFields: {
-		'title': 1,
-		'abstractNote': 1,
-		'extra' : 1
+		title: 1,
+		abstractNote: 1,
+		extra: 1
 	},
 	richTextFields: {
-		'note': 1
+		note: 1
 	},
-	maxFieldSummaryLength: {title:60},
+	maxFieldSummaryLength: { title: 60 },
 	exportFormats: [
 		'bibtex',
 		'bookmarks',
@@ -66,23 +66,23 @@ var defaultConfig = {
 		'rdf_zotero',
 		'ris',
 		'wikipedia'
-		],
+	],
 	exportFormatsMap: {
-		'bibtex': 'BibTeX',
-		'bookmarks': 'Bookmarks',
-		'mods': 'MODS',
-		'refer': 'Refer/BibIX',
-		'rdf_bibliontology': 'Bibliontology RDF',
-		'rdf_dc': 'Unqualified Dublin Core RDF',
-		'rdf_zotero': 'Zotero RDF',
-		'ris': 'RIS',
-		'wikipedia': 'Wikipedia Citation Templates'
+		bibtex: 'BibTeX',
+		bookmarks: 'Bookmarks',
+		mods: 'MODS',
+		refer: 'Refer/BibIX',
+		rdf_bibliontology: 'Bibliontology RDF',
+		rdf_dc: 'Unqualified Dublin Core RDF',
+		rdf_zotero: 'Zotero RDF',
+		ris: 'RIS',
+		wikipedia: 'Wikipedia Citation Templates'
 	},
 	defaultApiArgs: {
-		'order': 'title',
-		'sort': 'asc',
-		'limit': 50,
-		'start': 0
+		order: 'title',
+		sort: 'asc',
+		limit: 50,
+		start: 0
 	}
 };
 

@@ -1,4 +1,4 @@
-'use strict';
+
 
 var ItemMaps = require('./ItemMaps.js');
 

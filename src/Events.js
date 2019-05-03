@@ -1,9 +1,9 @@
-'use strict';
+
 
 var log = require('./Log.js').Logger('libZotero:Events');
 
-var trigger = function(eventType, data={}, filter=false){
-	if(filter){
+var trigger = function (eventType, data = {}, filter = false) {
+	if (filter) {
 		log.debug('filter is not false', 3);
 		eventType += '_' + filter;
 	}
@@ -14,10 +14,10 @@ var trigger = function(eventType, data={}, filter=false){
 	// 	data.triggeringElement = J('#eventful');
 	// }
 	
-	try{
-		if(Zotero.eventmanager.callbacks.hasOwnProperty(eventType)){
+	try {
+		if (Zotero.eventmanager.callbacks.hasOwnProperty(eventType)) {
 			var callbacks = Zotero.eventmanager.callbacks[eventType];
-			callbacks.forEach(function(callback){
+			callbacks.forEach(function (callback) {
 				var cdata = Object.assign({}, data, callback.data);
 				var e = {
 					data: cdata
@@ -26,28 +26,29 @@ var trigger = function(eventType, data={}, filter=false){
 			});
 		}
 	}
-	catch(e){
+	catch (e) {
 		log.error(`failed triggering:${eventType}`);
 		log.error(e);
 	}
 };
 
-var listen = function(events, handler, data, filter){
+var listen = function (events, handler, data, filter) {
 	log.debug('Zotero.listen: ' + events, 3);
-	//append filter to event strings if it's specified
+	// append filter to event strings if it's specified
 	var eventsArray = events.split(' ');
-	if(eventsArray.length > 0 && filter){
-		for(var i = 0; i < eventsArray.length; i++){
+	if (eventsArray.length > 0 && filter) {
+		for (var i = 0; i < eventsArray.length; i++) {
 			eventsArray[i] += '_' + filter;
 		}
 	}
-	eventsArray.forEach(function(ev){
-		if(Zotero.eventmanager.callbacks.hasOwnProperty(ev)){
+	eventsArray.forEach(function (ev) {
+		if (Zotero.eventmanager.callbacks.hasOwnProperty(ev)) {
 			Zotero.eventmanager.callbacks[ev].push({
 				data: data,
 				f: handler
 			});
-		} else {
+		}
+		else {
 			Zotero.eventmanager.callbacks[ev] = [{
 				data: data,
 				f: handler
@@ -56,4 +57,4 @@ var listen = function(events, handler, data, filter){
 	});
 };
 
-module.exports = {trigger, listen};
+module.exports = { trigger, listen };

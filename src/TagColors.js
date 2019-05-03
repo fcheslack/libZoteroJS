@@ -1,9 +1,9 @@
-'use strict';
+
 
 var log = require('./Log.js').Logger('libZotero:TagColors');
 
-class TagColors{
-	constructor(tagColors = []){
+class TagColors {
+	constructor(tagColors = []) {
 		this.instance = 'Zotero.TagColors';
 		this.colorsArray = tagColors;
 		this.colors = new Map();
@@ -13,14 +13,14 @@ class TagColors{
 		});
 	}
 
-	//take an array of tags and return subset of tags that should be colored, along with
-	//the colors they should be
+	// take an array of tags and return subset of tags that should be colored, along with
+	// the colors they should be
 	match(tags) {
 		let resultTags = [];
 
-		for(let i = 0; i < tags.length; i++){
+		for (let i = 0; i < tags.length; i++) {
 			let lowerTag = tags[i].toLowerCase();
-			if(this.colors.has(lowerTag) ) {
+			if (this.colors.has(lowerTag)) {
 				resultTags.push(this.colors.get(lowerTag));
 			}
 		}
@@ -28,4 +28,4 @@ class TagColors{
 	}
 }
 
-export {TagColors};
+export { TagColors };

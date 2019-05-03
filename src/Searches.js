@@ -1,9 +1,9 @@
-'use strict';
+
 
 var log = require('./Log.js').Logger('libZotero:Searches');
 
-class Searches{
-	constructor(){
+class Searches {
+	constructor() {
 		this.instance = 'Zotero.Searches';
 		this.searchObjects = {};
 		this.syncState = {
@@ -13,4 +13,4 @@ class Searches{
 	}
 }
 
-export {Searches};
+export { Searches };

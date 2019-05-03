@@ -1,11 +1,11 @@
-'use strict';
+
 
 var log = require('./Log.js').Logger('libZotero:Deleted');
 
-class Deleted{
-	constructor(data){
+class Deleted {
+	constructor(data) {
 		this.instance = 'Zotero.Deleted';
-		if(typeof data === 'string'){
+		if (typeof data === 'string') {
 			this.deletedData = JSON.parse(data);
 		}
 		else {
@@ -17,11 +17,11 @@ class Deleted{
 		this.pending = false;
 	}
 
-	//create, save referece, and return a Promise that will be resolved
-	//the next time we finish a deleted request
-	addWaiter(){
+	// create, save referece, and return a Promise that will be resolved
+	// the next time we finish a deleted request
+	addWaiter() {
 		
 	}
 }
 
-export {Deleted};
+export { Deleted };

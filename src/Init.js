@@ -1,19 +1,21 @@
-'use strict';
 
-var init = function(){
+
+var init = function () {
 	var store;
-	if(Zotero.config.cacheStoreType == 'localStorage' && typeof localStorage != 'undefined'){
+	if (Zotero.config.cacheStoreType == 'localStorage' && typeof localStorage != 'undefined') {
 		store = localStorage;
-	} else if(Zotero.config.cacheStoreType == 'sessionStorage' && typeof sessionStorage != 'undefined'){
+	}
+	else if (Zotero.config.cacheStoreType == 'sessionStorage' && typeof sessionStorage != 'undefined') {
 		store = sessionStorage;
-	} else{
+	}
+	else {
 		store = {};
 	}
 	Zotero.store = store;
 	
 	Zotero.cache = new Zotero.Cache(store);
 	
-	//initialize global preferences object
+	// initialize global preferences object
 	Zotero.preferences = new Zotero.Preferences(Zotero.store, 'global');
 };
 

@@ -1,13 +1,13 @@
-'use strict';
+
 
 var log = require('./Log.js').Logger('libZotero:Tags');
-import {Container} from './Container.js';
+import { Container } from './Container.js';
 
-class Tags extends Container{
-	constructor(jsonBody){
+class Tags extends Container {
+	constructor(jsonBody) {
 		super(jsonBody);
 		this.instance = 'Zotero.Tags';
-		//represent collections as array for ordering purposes
+		// represent collections as array for ordering purposes
 		this.tagsVersion = 0;
 		this.syncState = {
 			earliestVersion: null,
@@ -18,52 +18,52 @@ class Tags extends Container{
 		this.tagObjects = {};
 		this.tagsArray = [];
 		this.loaded = false;
-		if(jsonBody){
+		if (jsonBody) {
 			this.addTagsFromJson(jsonBody);
 		}
 	}
 
-	addTag(tag){
+	addTag(tag) {
 		var tags = this;
 		tags.tagObjects[tag.apiObj.tag] = tag;
 		tags.tagsArray.push(tag);
-		if(tags.owningLibrary){
+		if (tags.owningLibrary) {
 			tag.associateWithLibrary(tags.owningLibrary);
 		}
-	};
+	}
 
-	getTag(tagname){
+	getTag(tagname) {
 		var tags = this;
-		if(tags.tagObjects.hasOwnProperty(tagname)){
+		if (tags.tagObjects.hasOwnProperty(tagname)) {
 			return this.tagObjects[tagname];
 		}
 		return null;
-	};
+	}
 
-	removeTag(tagname){
+	removeTag(tagname) {
 		var tags = this;
 		delete tags.tagObjects[tagname];
 		tags.updateSecondaryData();
-	};
+	}
 
-	removeTags(tagnames){
+	removeTags(tagnames) {
 		var tags = this;
-		tagnames.forEach(function(tagname){
+		tagnames.forEach(function (tagname) {
 			delete tags.tagObjects[tagname];
 		});
 		tags.updateSecondaryData();
-	};
+	}
 
-	plainTagsList(tagsArray){
+	plainTagsList(tagsArray) {
 		log.debug('Zotero.Tags.plainTagsList', 3);
 		var plainList = [];
-		tagsArray.forEach(function(tag){
+		tagsArray.forEach(function (tag) {
 			plainList.push(tag.apiObj.tag);
 		});
 		return plainList;
-	};
+	}
 
-	clear(){
+	clear() {
 		log.debug('Zotero.Tags.clear', 3);
 		this.tagsVersion = 0;
 		this.syncState.earliestVersion = null;
@@ -72,13 +72,13 @@ class Tags extends Container{
 		this.displayTagsUrl = '';
 		this.tagObjects = {};
 		this.tagsArray = [];
-	};
+	}
 
-	updateSecondaryData(){
+	updateSecondaryData() {
 		log.debug('Zotero.Tags.updateSecondaryData', 3);
 		var tags = this;
 		tags.tagsArray = [];
-		Object.keys(tags.tagObjects).forEach(function(key){
+		Object.keys(tags.tagObjects).forEach(function (key) {
 			var val = tags.tagObjects[key];
 			tags.tagsArray.push(val);
 		});
@@ -86,30 +86,30 @@ class Tags extends Container{
 		var plainList = tags.plainTagsList(tags.tagsArray);
 		plainList.sort(Zotero.Library.prototype.comparer());
 		tags.plainList = plainList;
-	};
+	}
 
 	updateTagsVersion(tagsVersion) {
 		var tags = this;
-		Object.keys(tags.tagObjects).forEach(function(key){
+		Object.keys(tags.tagObjects).forEach(function (key) {
 			var tag = tags.tagObjects[key];
 			tag.set('version', tagsVersion);
 		});
-	};
+	}
 
 	rebuildTagsArray() {
 		var tags = this;
 		tags.tagsArray = [];
-		Object.keys(tags.tagObjects).forEach(function(key){
+		Object.keys(tags.tagObjects).forEach(function (key) {
 			var tag = tags.tagObjects[key];
 			tags.tagsArray.push(tag);
 		});
-	};
+	}
 
-	addTagsFromJson(jsonBody){
+	addTagsFromJson(jsonBody) {
 		log.debug('Zotero.Tags.addTagsFromJson', 3);
 		var tags = this;
 		var tagsAdded = [];
-		jsonBody.forEach(function(tagObj){
+		jsonBody.forEach(function (tagObj) {
 			var tag = new Zotero.Tag(tagObj);
 			tags.addTag(tag);
 			tagsAdded.push(tag);
@@ -118,4 +118,4 @@ class Tags extends Container{
 	}
 }
 
-export {Tags};
+export { Tags };

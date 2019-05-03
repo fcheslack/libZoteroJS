@@ -20,11 +20,7 @@
 		},
 		"sourceType": "module"
 	},
-	"settings": {
-		"react": {
-			"version": "16.8"
-		}
-	},
+	"settings": {},
 	"rules": {
 		"accessor-pairs": "error",
 		"array-bracket-newline": [
@@ -310,8 +306,6 @@
 			"error",
 			"as-needed"
 		],
-		"react/react-in-jsx-scope": "off",
-		"react/prop-types": "warn",
 		"require-await": "off",
 		"require-yield": "off",
 		"rest-spread-spacing": [

@@ -1,13 +1,13 @@
-'use strict';
+
 
 var log = require('./Log.js').Logger('libZotero:Items');
-import {Container} from './Container.js';
+import { Container } from './Container.js';
 
-class Items extends Container{
-	constructor(jsonBody){
+class Items extends Container {
+	constructor(jsonBody) {
 		super(jsonBody);
 		this.instance = 'Zotero.Items';
-		//represent items as array for ordering purposes
+		// represent items as array for ordering purposes
 		this.itemsVersion = 0;
 		this.syncState = {
 			earliestVersion: null,
@@ -18,7 +18,7 @@ class Items extends Container{
 		this.objectArray = [];
 		this.unsyncedItemKeys = [];
 		
-		if(jsonBody){
+		if (jsonBody) {
 			this.addItemsFromJson(jsonBody);
 		}
 	}
@@ -41,7 +41,7 @@ class Items extends Container{
 		var items = this;
 		var parsedItemJson = jsonBody;
 		var itemsAdded = [];
-		parsedItemJson.forEach(function(itemObj){
+		parsedItemJson.forEach(function (itemObj) {
 			var item = new Zotero.Item(itemObj);
 			items.addItem(item);
 			itemsAdded.push(item);
@@ -49,7 +49,7 @@ class Items extends Container{
 		return itemsAdded;
 	}
 
-	//Remove item from local set if it has been marked as deleted by the server
+	// Remove item from local set if it has been marked as deleted by the server
 	removeLocalItem = (key) => {
 		return this.removeObject(key);
 	}
@@ -63,20 +63,20 @@ class Items extends Container{
 		var items = this;
 		var item;
 		
-		if(!itemKey) return false;
+		if (!itemKey) return false;
 		itemKey = items.extractKey(itemKey);
 		item = items.getItem(itemKey);
 		
 		var urlconfig = {
-			'target':'item',
-			'libraryType':items.owningLibrary.libraryType,
-			'libraryID':items.owningLibrary.libraryID,
-			'itemKey':item.key
+			target: 'item',
+			libraryType: items.owningLibrary.libraryType,
+			libraryID: items.owningLibrary.libraryID,
+			itemKey: item.key
 		};
 		var requestConfig = {
 			url: urlconfig,
 			type: 'DELETE',
-			headers:{'If-Unmodified-Since-Version':item.get('version')}
+			headers: { 'If-Unmodified-Since-Version': item.get('version') }
 		};
 		
 		return items.owningLibrary.ajaxRequest(requestConfig);
@@ -87,22 +87,23 @@ class Items extends Container{
 		var items = this;
 		var deleteKeys = [];
 		var i;
-		if((!version) && (items.itemsVersion !== 0)){
+		if ((!version) && (items.itemsVersion !== 0)) {
 			version = items.itemsVersion;
 		}
 		
-		//make sure we're working with item keys, not items
+		// make sure we're working with item keys, not items
 		var key;
-		for(i = 0; i < deleteItems.length; i++){
-			if(!deleteItems[i]) continue;
+		for (i = 0; i < deleteItems.length; i++) {
+			if (!deleteItems[i]) continue;
 			key = items.extractKey(deleteItems[i]);
-			if(key){
+			if (key) {
 				deleteKeys.push(key);
 			}
 		}
 		
-		//split keys into chunks of 50 per request
+		// split keys into chunks of 50 per request
 		var deleteChunks = items.chunkObjectsArray(deleteKeys);
+
 		/*
 		var successCallback = function(response){
 			var deleteProgress = index / deleteChunks.length;
@@ -111,15 +112,15 @@ class Items extends Container{
 		};
 		*/
 		var requestObjects = [];
-		for(i = 0; i < deleteChunks.length; i++){
+		for (i = 0; i < deleteChunks.length; i++) {
 			var deleteKeysString = deleteChunks[i].join(',');
 			var urlconfig = {
-				'target':'items',
-				'libraryType':items.owningLibrary.libraryType,
-				'libraryID':items.owningLibrary.libraryID,
-				'itemKey': deleteKeysString
+				target: 'items',
+				libraryType: items.owningLibrary.libraryType,
+				libraryID: items.owningLibrary.libraryID,
+				itemKey: deleteKeysString
 			};
-			//headers['If-Unmodified-Since-Version'] = version;
+			// headers['If-Unmodified-Since-Version'] = version;
 			
 			var requestConfig = {
 				url: urlconfig,
@@ -134,7 +135,7 @@ class Items extends Container{
 	trashItems = (itemsArray) => {
 		var items = this;
 		var i;
-		for(i = 0; i < itemsArray.length; i++){
+		for (i = 0; i < itemsArray.length; i++) {
 			var item = itemsArray[i];
 			item.set('deleted', 1);
 		}
@@ -144,7 +145,7 @@ class Items extends Container{
 	untrashItems = (itemsArray) => {
 		var items = this;
 		var i;
-		for(i = 0; i < itemsArray.length; i++){
+		for (i = 0; i < itemsArray.length; i++) {
 			var item = itemsArray[i];
 			item.set('deleted', 0);
 		}
@@ -154,9 +155,9 @@ class Items extends Container{
 	findItems = (config) => {
 		var items = this;
 		var matchingItems = [];
-		Object.keys(items.itemObjects).forEach(function(key){
+		Object.keys(items.itemObjects).forEach(function (key) {
 			var item = item.itemObjects[key];
-			if(config.collectionKey && (item.apiObj.collections.indexOf(config.collectionKey) === -1) ){
+			if (config.collectionKey && (item.apiObj.collections.indexOf(config.collectionKey) === -1)) {
 				return;
 			}
 			matchingItems.push(items.itemObjects[key]);
@@ -164,33 +165,33 @@ class Items extends Container{
 		return matchingItems;
 	}
 
-	//take an array of items and extract children into their own items
-	//for writing
+	// take an array of items and extract children into their own items
+	// for writing
 	atomizeItems = (itemsArray) => {
-		//process the array of items, pulling out child notes/attachments to write
-		//separately with correct parentItem set and assign generated itemKeys to
-		//new items
+		// process the array of items, pulling out child notes/attachments to write
+		// separately with correct parentItem set and assign generated itemKeys to
+		// new items
 		var writeItems = [];
 		var item;
-		for(var i = 0; i < itemsArray.length; i++){
+		for (var i = 0; i < itemsArray.length; i++) {
 			item = itemsArray[i];
-			//generate an itemKey if the item does not already have one
+			// generate an itemKey if the item does not already have one
 			var itemKey = item.get('key');
-			if(itemKey === '' || itemKey === null) {
+			if (itemKey === '' || itemKey === null) {
 				var newItemKey = Zotero.utils.getKey();
 				item.set('key', newItemKey);
 				item.set('version', 0);
 			}
-			//items that already have item key always in first pass, as are their children
+			// items that already have item key always in first pass, as are their children
 			writeItems.push(item);
-			if(item.hasOwnProperty('notes') && item.notes.length > 0){
-				for(var j = 0; j < item.notes.length; j++){
+			if (item.hasOwnProperty('notes') && item.notes.length > 0) {
+				for (var j = 0; j < item.notes.length; j++) {
 					item.notes[j].set('parentItem', item.get('key'));
 				}
 				writeItems = writeItems.concat(item.notes);
 			}
-			if(item.hasOwnProperty('attachments') && item.attachments.length > 0){
-				for(var k = 0; k < item.attachments.length; k++){
+			if (item.hasOwnProperty('attachments') && item.attachments.length > 0) {
+				for (var k = 0; k < item.attachments.length; k++) {
 					item.attachments[k].set('parentItem', item.get('key'));
 				}
 				writeItems = writeItems.concat(item.attachments);
@@ -199,7 +200,7 @@ class Items extends Container{
 		return writeItems;
 	}
 
-	//accept an array of 'Zotero.Item's
+	// accept an array of 'Zotero.Item's
 	writeItems = (itemsArray) => {
 		var items = this;
 		var library = items.owningLibrary;
@@ -208,35 +209,35 @@ class Items extends Container{
 
 		
 		var config = {
-			'target':'items',
-			'libraryType':items.owningLibrary.libraryType,
-			'libraryID':items.owningLibrary.libraryID
+			target: 'items',
+			libraryType: items.owningLibrary.libraryType,
+			libraryID: items.owningLibrary.libraryID
 		};
 		
 		var writeChunks = items.chunkObjectsArray(writeItems);
 		var rawChunkObjects = items.rawChunks(writeChunks);
 		
-		//update item with server response if successful
-		var writeItemsSuccessCallback = function(response) {
+		// update item with server response if successful
+		var writeItemsSuccessCallback = function (response) {
 			return new Promise((resolve) => {
 				var writeItemsCallback = () => {
-					//save updated items to IDB
-					if(Zotero.config.useIndexedDB){
+					// save updated items to IDB
+					if (Zotero.config.useIndexedDB) {
 						this.library.idbLibrary.updateItems(this.writeChunk);
 					}
 					
-					Zotero.trigger('itemsChanged', {library:this.library});
-					response.returnItems = this.writeChunk;	
+					Zotero.trigger('itemsChanged', { library: this.library });
+					response.returnItems = this.writeChunk;
 					resolve();
-				}
+				};
 				log.debug('writeItem successCallback', 3);
 				
-				//@TODO: It would be nicer if rejections (for partially or entirely 
+				// @TODO: It would be nicer if rejections (for partially or entirely
 				//		invalid updates) would propagate all the way to the end-user
 				//		instead of being swalloed here.
 				items.updateObjectsFromWriteResponse(this.writeChunk, response)
 					.then(writeItemsCallback)
-					.catch(writeItemsCallback)
+					.catch(writeItemsCallback);
 			});
 		};
 		
@@ -244,7 +245,7 @@ class Items extends Container{
 		log.debug('items.libraryVersion: ' + items.libraryVersion, 3);
 		
 		var requestObjects = [];
-		for(i = 0; i < writeChunks.length; i++) {
+		for (i = 0; i < writeChunks.length; i++) {
 			var successContext = {
 				writeChunk: writeChunks[i],
 				library: library
@@ -262,11 +263,11 @@ class Items extends Container{
 
 		
 		return library.sequentialRequests(requestObjects)
-			.then(responses => {
+			.then((responses) => {
 				log.debug('Done with writeItems sequentialRequests promise', 3);
 				return responses;
 			});
 	}
 }
 
-export {Items};
+export { Items };
