@@ -212,9 +212,11 @@ class Item extends ApiObject {
 	}
 
 	// TODO: implement
+	/*
 	writePatch() {
 		
 	}
+	*/
 
 	async getChildren(library) {
 		log.debug('Zotero.Item.getChildren', 4);
@@ -520,7 +522,6 @@ class Item extends ApiObject {
 				return 'glyphicons glyphicons-paperclip';
 						// return this.itemTypeImageSrc['attachment'];
 			}
-			return 'glyphicons file';
 		case 'artwork':
 			return 'glyphicons glyphicons-picture';
 		case 'audioRecording':
@@ -602,12 +603,12 @@ class Item extends ApiObject {
 		case 'title':
 			var title = '';
 			if (itemType == 'note') {
-				return this.noteTitle(this.apiObj.data.note);
+				title = this.noteTitle(this.apiObj.data.note);
 			} else {
-				return this.apiObj.data.title;
+				title = this.apiObj.data.title;
 			}
 			if (title === '') {
-				return '[Untitled]';
+				title = '[Untitled]';
 			}
 			return title;
 		case 'creatorSummary':
@@ -758,11 +759,10 @@ class Item extends ApiObject {
 	}
 
 	async uploadFile(fileInfo, _progressCallback) {
-		var item = this;
 		log.debug('Zotero.Item.uploadFile', 3);
 		var uploadAuthFileData = {
 			md5: fileInfo.md5,
-			filename: item.get('title'),
+			filename: this.get('title'),
 			filesize: fileInfo.filesize,
 			mtime: fileInfo.mtime,
 			contentType: fileInfo.contentType,
@@ -771,7 +771,7 @@ class Item extends ApiObject {
 		if (fileInfo.contentType === '') {
 			uploadAuthFileData.contentType = 'application/octet-stream';
 		}
-		let uploadAuthResponse = await item.getUploadAuthorization(uploadAuthFileData);
+		let uploadAuthResponse = await this.getUploadAuthorization(uploadAuthFileData);
 		log.debug('got uploadAuth', 3);
 		let upAuthOb;
 		if (typeof uploadAuthResponse.data == 'string') {
@@ -784,8 +784,12 @@ class Item extends ApiObject {
 		} else {
 			// TODO: add progress
 			let uploadResp = await Zotero.file.uploadFile(upAuthOb, fileInfo);
+			if (uploadResp.isError) {
+				log.error(uploadResp);
+				throw new Error('Error response when uploading file');
+			}
 			// upload was successful: register it
-			let registerResponse = await item.registerUpload(upAuthOb.uploadKey);
+			let registerResponse = await this.registerUpload(upAuthOb.uploadKey);
 			if (registerResponse.isError) {
 				var e = {
 					message: 'Failed to register uploaded file.',
@@ -812,33 +816,32 @@ class Item extends ApiObject {
 			*/
 	}
 
+	// convert a libZotero.Item to a CSL Item
 	cslItem() {
-		var zoteroItem = this;
-		
 		// don't return URL or accessed information for journal articles if a
 		// pages field exists
-		var itemType = zoteroItem.get('itemType');// Zotero_ItemTypes::getName($zoteroItem->itemTypeID);
-		var cslType = zoteroItem.cslTypeMap.hasOwnProperty(itemType) ? zoteroItem.cslTypeMap[itemType] : false;
+		var itemType = this.get('itemType');// Zotero_ItemTypes::getName($zoteroItem->itemTypeID);
+		var cslType = this.cslTypeMap.hasOwnProperty(itemType) ? this.cslTypeMap[itemType] : false;
 		if (!cslType) cslType = 'article';
-		var ignoreURL = ((zoteroItem.get('accessDate') || zoteroItem.get('url'))
+		var ignoreURL = ((this.get('accessDate') || this.get('url'))
 				&& itemType in { journalArticle: 1, newspaperArticle: 1, magazineArticle: 1 }
-				&& zoteroItem.get('pages')
-				&& zoteroItem.citePaperJournalArticleURL);
+				&& this.get('pages')
+				&& this.citePaperJournalArticleURL);
 		
 		var cslItem = { type: cslType };
-		if (zoteroItem.owningLibrary) {
-			cslItem.id = zoteroItem.apiObj.library.id + '/' + zoteroItem.get('key');
+		if (this.owningLibrary) {
+			cslItem.id = this.apiObj.library.id + '/' + this.get('key');
 		} else {
 			cslItem.id = Zotero.utils.getKey();
 		}
 		
 		// get all text variables (there must be a better way)
 		// TODO: does citeproc-js permit short forms?
-		Object.keys(zoteroItem.cslFieldMap).forEach(function (variable) {
-			var fields = zoteroItem.cslFieldMap[variable];
+		Object.keys(this.cslFieldMap).forEach((variable) => {
+			var fields = this.cslFieldMap[variable];
 			if (variable == 'URL' && ignoreURL) return;
-			fields.forEach(function (field) {
-				var value = zoteroItem.get(field);
+			fields.forEach((field) => {
+				var value = this.get(field);
 				if (value) {
 					// TODO: strip enclosing quotes? necessary when not pulling from DB?
 					cslItem[variable] = value;
@@ -847,8 +850,8 @@ class Item extends ApiObject {
 		});
 		
 		// separate name variables
-		var creators = zoteroItem.get('creators');
-		creators.forEach(function (creator) {
+		var creators = this.get('creators');
+		creators.forEach((creator) => {
 			var creatorType = creator.creatorType;// isset(self::$zoteroNameMap[$creatorType]) ? self::$zoteroNameMap[$creatorType] : false;
 			if (!creatorType) return;
 			
@@ -867,9 +870,9 @@ class Item extends ApiObject {
 		});
 		
 		// get date variables
-		Object.keys(zoteroItem.cslDateMap).forEach(function (key) {
-			var val = zoteroItem.cslDateMap[key];
-			var date = zoteroItem.get(val);
+		Object.keys(this.cslDateMap).forEach((key) => {
+			var val = this.cslDateMap[key];
+			var date = this.get(val);
 			if (date) {
 				cslItem[key] = { raw: date };
 			}

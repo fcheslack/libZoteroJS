@@ -1,6 +1,6 @@
 
 
-var log = require('./Log.js').Logger('libZotero:Tag');
+//var log = require('./Log.js').Logger('libZotero:Tag');
 import { ApiObject } from './ApiObject';
 
 class Tag extends ApiObject {
@@ -12,9 +12,9 @@ class Tag extends ApiObject {
 		if (typeof tagObj == 'object') {
 			this.parseJsonTag(tagObj);
 		} else if (typeof tagObj == 'string') {
-			this.parseJsonTag(this.templateApiObj(tagObj));
+			this.parseJsonTag(Tag.templateApiObj(tagObj));
 		} else {
-			this.parseJsonTag(this.tamplateApiObj(''));
+			this.parseJsonTag(Tag.templateApiObj(''));
 		}
 	}
 
@@ -25,7 +25,7 @@ class Tag extends ApiObject {
 		tag.version = tag.apiObj.version;
 	}
 
-	templateApiObj(tagString) {
+	static templateApiObj(tagString) {
 		return {
 			tag: tagString,
 			links: {},
@@ -36,7 +36,7 @@ class Tag extends ApiObject {
 		};
 	}
 
-	tagComparer() {
+	static tagComparer() {
 		if (Intl) {
 			var collator = new Intl.Collator();
 			return function (a, b) {

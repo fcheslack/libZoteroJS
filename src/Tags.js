@@ -54,7 +54,7 @@ class Tags extends Container {
 		tags.updateSecondaryData();
 	}
 
-	plainTagsList(tagsArray) {
+	static plainTagsList(tagsArray) {
 		log.debug('Zotero.Tags.plainTagsList', 3);
 		var plainList = [];
 		tagsArray.forEach(function (tag) {
@@ -83,7 +83,7 @@ class Tags extends Container {
 			tags.tagsArray.push(val);
 		});
 		tags.tagsArray.sort(Zotero.Tag.prototype.tagComparer());
-		var plainList = tags.plainTagsList(tags.tagsArray);
+		var plainList = Tags.plainTagsList(tags.tagsArray);
 		plainList.sort(Zotero.Library.prototype.comparer());
 		tags.plainList = plainList;
 	}

@@ -6,7 +6,6 @@ import { Container } from './Container.js';
 class Collections extends Container {
 	constructor(jsonBody) {
 		super(jsonBody);
-		var collections = this;
 		this.instance = 'Zotero.Collections';
 		this.version = 0;
 		this.syncState = {
@@ -30,18 +29,16 @@ class Collections extends Container {
 	// depend on all collections already being present
 	initSecondaryData() {
 		log.debug('Zotero.Collections.initSecondaryData', 3);
-		var collections = this;
-		
 		// rebuild collectionsArray
-		collections.collectionsArray = [];
-		Object.keys(collections.collectionObjects).forEach(function (key) {
-			var collection = collections.collectionObjects[key];
-			collections.collectionsArray.push(collection);
+		this.collectionsArray = [];
+		Object.keys(this.collectionObjects).forEach((key) => {
+			var collection = this.collectionObjects[key];
+			this.collectionsArray.push(collection);
 		});
 		
-		collections.collectionsArray.sort(Collections.fieldComparer('name'));
-		collections.nestCollections();
-		collections.assignDepths(0, collections.collectionsArray);
+		this.collectionsArray.sort(Collections.fieldComparer('name'));
+		this.nestCollections();
+		this.assignDepths(0, this.collectionsArray);
 	}
 
 	// take Collection XML and insert a Collection object
@@ -52,19 +49,17 @@ class Collections extends Container {
 
 	addCollectionsFromJson(jsonBody) {
 		log.debug('addCollectionsFromJson', 3);
-		var collections = this;
 		var collectionsAdded = [];
-		jsonBody.forEach(function (collectionObj) {
+		jsonBody.forEach((collectionObj) => {
 			var collection = new Zotero.Collection(collectionObj);
-			collections.addObject(collection);
+			this.addObject(collection);
 			collectionsAdded.push(collection);
 		});
 		return collectionsAdded;
 	}
 
-	assignDepths(depth, cArray) {
+	assignDepths(_depth, _cArray) {
 		log.debug('Zotero.Collections.assignDepths', 3);
-		var collections = this;
 		var insertchildren = function (depth, children) {
 			children.forEach(function (col) {
 				col.nestingDepth = depth;
@@ -73,7 +68,7 @@ class Collections extends Container {
 				}
 			});
 		};
-		collections.collectionsArray.forEach(function (collection) {
+		this.collectionsArray.forEach(function (collection) {
 			if (collection.topLevel) {
 				collection.nestingDepth = 1;
 				if (collection.hasChildren) {
@@ -85,7 +80,6 @@ class Collections extends Container {
 
 	nestedOrderingArray() {
 		log.debug('Zotero.Collections.nestedOrderingArray', 3);
-		var collections = this;
 		var nested = [];
 		var insertchildren = function (a, children) {
 			children.forEach(function (col) {
@@ -95,7 +89,7 @@ class Collections extends Container {
 				}
 			});
 		};
-		collections.collectionsArray.forEach(function (collection) {
+		this.collectionsArray.forEach(function (collection) {
 			if (collection.topLevel) {
 				nested.push(collection);
 				if (collection.hasChildren) {
@@ -112,50 +106,45 @@ class Collections extends Container {
 	}
 
 	remoteDeleteCollection(collectionKey) {
-		var collections = this;
-		return collections.removeLocalCollection(collectionKey);
+		return this.removeLocalCollection(collectionKey);
 	}
 
 	removeLocalCollection(collectionKey) {
-		var collections = this;
-		return collections.removeLocalCollections([collectionKey]);
+		return this.removeLocalCollections([collectionKey]);
 	}
 
 	removeLocalCollections(collectionKeys) {
-		var collections = this;
 		// delete Collection from collectionObjects
 		for (var i = 0; i < collectionKeys.length; i++) {
-			delete collections.collectionObjects[collectionKeys[i]];
+			delete this.collectionObjects[collectionKeys[i]];
 		}
 		
 		// rebuild collectionsArray
-		collections.initSecondaryData();
+		this.initSecondaryData();
 	}
 
 	// reprocess all collections to add references to children inside their parents
 	nestCollections() {
-		var collections = this;
 		// clear out all child references so we don't duplicate
-		collections.collectionsArray.forEach(function (collection) {
+		this.collectionsArray.forEach(function (collection) {
 			collection.children = [];
 		});
 		
-		collections.collectionsArray.sort(Collections.fieldComparer('name'));
-		collections.collectionsArray.forEach(function (collection) {
-			collection.nestCollection(collections.collectionObjects);
+		this.collectionsArray.sort(Collections.fieldComparer('name'));
+		this.collectionsArray.forEach((collection) => {
+			collection.nestCollection(this.collectionObjects);
 		});
 	}
 
 	writeCollections(collectionsArray) {
 		log.debug('Zotero.Collections.writeCollections', 3);
-		var collections = this;
-		var library = collections.owningLibrary;
+		var library = this.owningLibrary;
 		var i;
 		
 		var config = {
 			target: 'collections',
-			libraryType: collections.owningLibrary.libraryType,
-			libraryID: collections.owningLibrary.libraryID
+			libraryType: this.owningLibrary.libraryType,
+			libraryID: this.owningLibrary.libraryID
 		};
 		
 		// add collectionKeys to collections if they don't exist yet
@@ -170,10 +159,10 @@ class Collections extends Container {
 			}
 		}
 
-		var writeChunks = collections.chunkObjectsArray(collectionsArray);
-		var rawChunkObjects = collections.rawChunks(writeChunks);
+		var writeChunks = Collections.chunkObjectsArray(collectionsArray);
+		var rawChunkObjects = Collections.rawChunks(writeChunks);
 		// update collections with server response if successful
-		var writeCollectionsSuccessCallback = function (response) {
+		var writeCollectionsSuccessCallback = (response) => {
 			log.debug('writeCollections successCallback', 3);
 			var library = this.library;
 			var writeChunk = this.writeChunk;
@@ -194,8 +183,8 @@ class Collections extends Container {
 			return response;
 		};
 		
-		log.debug('collections.version: ' + collections.version, 3);
-		log.debug('collections.libraryVersion: ' + collections.libraryVersion, 3);
+		log.debug('collections.version: ' + this.version, 3);
+		log.debug('collections.libraryVersion: ' + this.libraryVersion, 3);
 		
 		var requestObjects = [];
 		for (i = 0; i < writeChunks.length; i++) {
@@ -211,7 +200,7 @@ class Collections extends Container {
 				data: requestData,
 				processData: false,
 				headers: {
-					// 'If-Unmodified-Since-Version': collections.version,
+					// 'If-Unmodified-Since-Version': this.version,
 					// 'Content-Type': 'application/json'
 				},
 				success: writeCollectionsSuccessCallback.bind(successContext)
@@ -219,11 +208,11 @@ class Collections extends Container {
 		}
 
 		return library.sequentialRequests(requestObjects)
-			.then(function (responses) {
+			.then((responses) => {
 				log.debug('Done with writeCollections sequentialRequests promise', 3);
-				collections.initSecondaryData();
+				this.initSecondaryData();
 			
-				responses.forEach(function (response) {
+				responses.forEach((response) => {
 					if (response.isError || (response.data.hasOwnProperty('failed') && Object.keys(response.data.failed).length > 0)) {
 						throw new Error('failure when writing collections');
 					}

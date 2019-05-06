@@ -281,6 +281,7 @@ let parseQuery = function (query) {
 		return decodeURIComponent(s.replace(pl, ' '));
 	};
 
+	// eslint-disable-next-line no-cond-assign
 	while (match = search.exec(query)) {
 		let key = decode(match[1]);
 		let val = decode(match[2]);

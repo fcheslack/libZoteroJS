@@ -26,12 +26,11 @@ Url.itemHref = function (item) {
 Url.attachmentDownloadLink = function (item) {
 	var retString = '';
 	var downloadUrl = item.attachmentDownloadUrl;
-	var contentType = item.get('contentType');
 	
 	if (item.apiObj.links && item.apiObj.links.enclosure) {
 		if (!item.apiObj.links.enclosure.length && item.isSnapshot()) {
 			// snapshot: redirect to view
-			retString += '<a href="' + downloadUrl + '">' + 'View Snapshot</a>';
+			retString += '<a href="' + downloadUrl + '">View Snapshot</a>';
 		} else {
 			// file: offer download
 			var enctype = Zotero.utils.translateMimeType(item.apiObj.links.enclosure.type);

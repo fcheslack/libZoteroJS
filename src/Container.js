@@ -89,13 +89,13 @@ class Container {
 	}
 
 	// generate keys for objects about to be written if they are new
-	assignKeys(objectsArray) {
-		var object;
-		for (var i = 0; i < objectsArray.length; i++) {
+	static assignKeys(objectsArray) {
+		let object;
+		for (let i = 0; i < objectsArray.length; i++) {
 			object = objectsArray[i];
-			var key = object.get('key');
+			let key = object.get('key');
 			if (!key) {
-				var newObjectKey = Zotero.utils.getKey();
+				let newObjectKey = Zotero.utils.getKey();
 				object.set('key', newObjectKey);
 				object.set('version', 0);
 			}
@@ -103,12 +103,14 @@ class Container {
 		return objectsArray;
 	}
 
-	rawChunks(chunks) {
-		var rawChunkObjects = [];
+	// given an array of chunks for writing, build an array converting each object inside each chunk
+	// using writeApiObj() to get an object to send to the Zotero API
+	static rawChunks(chunks) {
+		let rawChunkObjects = [];
 		
-		for (var i = 0; i < chunks.length; i++) {
+		for (let i = 0; i < chunks.length; i++) {
 			rawChunkObjects[i] = [];
-			for (var j = 0; j < chunks[i].length; j++) {
+			for (let j = 0; j < chunks[i].length; j++) {
 				rawChunkObjects[i].push(chunks[i][j].writeApiObj());
 			}
 		}
@@ -145,7 +147,7 @@ class Container {
 		log.debug('done updating sync state', 3);
 	}
 
-	updateSyncedVersion(versionField) {
+	updateSyncedVersion(_versionField) {
 		if (this.syncState.earliestVersion !== null
 			&& (this.syncState.earliestVersion == this.syncState.latestVersion)) {
 			this.version = this.syncState.latestVersion;

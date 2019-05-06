@@ -39,55 +39,50 @@ class Collection extends ApiObject {
 	}
 
 	updateCollectionKey = (collectionKey) => {
-		var collection = this;
-		collection.key = collectionKey;
-		collection.apiObj.key = collectionKey;
-		collection.apiObj.data.key = collectionKey;
-		return collection;
+		this.key = collectionKey;
+		this.apiObj.key = collectionKey;
+		this.apiObj.data.key = collectionKey;
+		return this;
 	}
 
 	parseJsonCollection = (apiObj) => {
 		log.debug('parseJsonCollection', 4);
-		var collection = this;
-		collection.key = apiObj.key;
-		collection.version = apiObj.version;
-		collection.apiObj = Object.assign({}, apiObj);
-		collection.pristineData = Object.assign({}, apiObj.data);
+		this.key = apiObj.key;
+		this.version = apiObj.version;
+		this.apiObj = Object.assign({}, apiObj);
+		this.pristineData = Object.assign({}, apiObj.data);
 
-		collection.parentCollection = false;
-		collection.topLevel = true;
-		collection.synced = true;
-		collection.initSecondaryData();
+		this.parentCollection = false;
+		this.topLevel = true;
+		this.synced = true;
+		this.initSecondaryData();
 	}
 
 	initSecondaryData = () => {
-		var collection = this;
-		
-		if (collection.apiObj.data.parentCollection) {
-			collection.topLevel = false;
+		if (this.apiObj.data.parentCollection) {
+			this.topLevel = false;
 		} else {
-			collection.topLevel = true;
+			this.topLevel = true;
 		}
 		
 		if (Zotero.config.librarySettings.libraryPathString) {
-			collection.websiteCollectionLink = Zotero.config.librarySettings.libraryPathString
-			+ '/collectionKey/' + collection.apiObj.key;
+			this.websiteCollectionLink = Zotero.config.librarySettings.libraryPathString
+			+ '/collectionKey/' + this.apiObj.key;
 		} else {
-			collection.websiteCollectionLink = '';
+			this.websiteCollectionLink = '';
 		}
-		collection.hasChildren = !!(collection.apiObj.meta.numCollections);
+		this.hasChildren = !!(this.apiObj.meta.numCollections);
 	}
 
 	nestCollection = (collectionsObject) => {
 		log.debug('Zotero.Collection.nestCollection', 4);
-		var collection = this;
-		var parentCollectionKey = collection.get('parentCollection');
+		var parentCollectionKey = this.get('parentCollection');
 		if (parentCollectionKey !== false) {
 			if (collectionsObject.hasOwnProperty(parentCollectionKey)) {
 				var parentOb = collectionsObject[parentCollectionKey];
-				parentOb.children.push(collection);
+				parentOb.children.push(this);
 				parentOb.hasChildren = true;
-				collection.topLevel = false;
+				this.topLevel = false;
 				return true;
 			}
 		}
@@ -96,12 +91,11 @@ class Collection extends ApiObject {
 
 	addItems = (itemKeys) => {
 		log.debug('Zotero.Collection.addItems', 3);
-		var collection = this;
 		var config = {
 			target: 'items',
-			libraryType: collection.apiObj.library.type,
-			libraryID: collection.apiObj.library.id,
-			collectionKey: collection.key
+			libraryType: this.apiObj.library.type,
+			libraryID: this.apiObj.library.id,
+			collectionKey: this.key
 		};
 		var requestData = itemKeys.join(' ');
 		
@@ -112,12 +106,11 @@ class Collection extends ApiObject {
 
 	getMemberItemKeys = () => {
 		log.debug('Zotero.Collection.getMemberItemKeys', 3);
-		var collection = this;
 		var config = {
 			target: 'items',
-			libraryType: collection.apiObj.library.type,
-			libraryID: collection.apiObj.library.id,
-			collectionKey: collection.key,
+			libraryType: this.apiObj.library.type,
+			libraryID: this.apiObj.library.id,
+			collectionKey: this.key,
 			format: 'keys'
 		};
 
@@ -130,7 +123,7 @@ class Collection extends ApiObject {
 				log.debug('getMemberItemKeys callback', 3);
 				response.text().then((keys) => {
 					keys = keys.trim().split(/[\s]+/);
-					collection.itemKeys = keys;
+					this.itemKeys = keys;
 					resolve(keys);
 				}).catch(reject);
 			}).catch(reject);
@@ -138,12 +131,11 @@ class Collection extends ApiObject {
 	}
 
 	removeItem = (itemKey) => {
-		var collection = this;
 		var config = {
 			target: 'item',
-			libraryType: collection.apiObj.library.type,
-			libraryID: collection.apiObj.library.id,
-			collectionKey: collection.key,
+			libraryType: this.apiObj.library.type,
+			libraryID: this.apiObj.library.id,
+			collectionKey: this.key,
 			itemKey: itemKey
 		};
 		return this.owningLibrary.ajaxRequest(config, 'DELETE', {
@@ -153,117 +145,112 @@ class Collection extends ApiObject {
 	}
 
 	update = (name, parentKey) => {
-		var collection = this;
 		if (!parentKey) parentKey = false;
 		var config = {
 			target: 'collection',
-			libraryType: collection.apiObj.library.type,
-			libraryID: collection.apiObj.library.id,
-			collectionKey: collection.key
+			libraryType: this.apiObj.library.type,
+			libraryID: this.apiObj.library.id,
+			collectionKey: this.key
 		};
 		
-		collection.set('name', name);
-		collection.set('parentCollection', parentKey);
+		this.set('name', name);
+		this.set('parentCollection', parentKey);
 		
-		var writeObject = collection.writeApiObj();
+		var writeObject = this.writeApiObj();
 		var requestData = JSON.stringify(writeObject);
 		
 		return this.owningLibrary.ajaxRequest(config, 'PUT', {
 			data: requestData,
 			processData: false,
 			headers: {
-				'If-Unmodified-Since-Version': collection.version
+				'If-Unmodified-Since-Version': this.version
 			},
 			cache: false
 		});
 	}
 
 	writeApiObj = () => {
-		var collection = this;
-		var writeObj = Object.assign({}, collection.pristineData, collection.apiObj.data);
+		var writeObj = Object.assign({}, this.pristineData, this.apiObj.data);
 		return writeObj;
 	}
 
 	remove = () => {
 		log.debug('Zotero.Collection.delete', 3);
-		var collection = this;
-		var owningLibrary = collection.owningLibrary;
+		var owningLibrary = this.owningLibrary;
 		var config = {
 			target: 'collection',
-			libraryType: collection.apiObj.library.type,
-			libraryID: collection.apiObj.library.id,
-			collectionKey: collection.key
+			libraryType: this.apiObj.library.type,
+			libraryID: this.apiObj.library.id,
+			collectionKey: this.key
 		};
 		
 		return this.owningLibrary.ajaxRequest(config, 'DELETE', {
 			processData: false,
 			headers: {
-				'If-Unmodified-Since-Version': collection.version
+				'If-Unmodified-Since-Version': this.version
 			},
 			cache: false
 		}).then(function () {
 			log.debug('done deleting collection. remove local copy.', 3);
-			owningLibrary.collections.removeLocalCollection(collection.key);
+			owningLibrary.collections.removeLocalCollection(this.key);
 			owningLibrary.trigger('libraryCollectionsUpdated');
 		});
 	}
 
 	get = (key) => {
-		var collection = this;
 		switch (key) {
 		case 'title':
 		case 'name':
-			return collection.apiObj.data.name;
+			return this.apiObj.data.name;
 		case 'collectionKey':
 		case 'key':
-			return collection.apiObj.key || collection.key;
+			return this.apiObj.key || this.key;
 		case 'collectionVersion':
 		case 'version':
-			return collection.apiObj.version;
+			return this.apiObj.version;
 		case 'parentCollection':
-			return collection.apiObj.data.parentCollection;
+			return this.apiObj.data.parentCollection;
 		}
 		
-		if (key in collection.apiObj.data) {
-			return collection.apiObj.data[key];
-		} else if (collection.apiObj.meta.hasOwnProperty(key)) {
-			return collection.apiObj.meta[key];
-		} else if (collection.hasOwnProperty(key)) {
-			return collection[key];
+		if (key in this.apiObj.data) {
+			return this.apiObj.data[key];
+		} else if (this.apiObj.meta.hasOwnProperty(key)) {
+			return this.apiObj.meta[key];
+		} else if (this.hasOwnProperty(key)) {
+			return this[key];
 		}
 		
 		return null;
 	}
 
 	set(key, val) {
-		var collection = this;
-		if (key in collection.apiObj.data) {
-			collection.apiObj.data[key] = val;
+		if (key in this.apiObj.data) {
+			this.apiObj.data[key] = val;
 		}
 		switch (key) {
 		case 'title':
 		case 'name':
-			collection.apiObj.data.name = val;
+			this.apiObj.data.name = val;
 			break;
 		case 'collectionKey':
 		case 'key':
-			collection.key = val;
-			collection.apiObj.key = val;
-			collection.apiObj.data.key = val;
+			this.key = val;
+			this.apiObj.key = val;
+			this.apiObj.data.key = val;
 			break;
 		case 'parentCollection':
-			collection.apiObj.data.parentCollection = val;
+			this.apiObj.data.parentCollection = val;
 			break;
 		case 'collectionVersion':
 		case 'version':
-			collection.version = val;
-			collection.apiObj.version = val;
-			collection.apiObj.data.version = val;
+			this.version = val;
+			this.apiObj.version = val;
+			this.apiObj.data.version = val;
 			break;
 		}
 		
-		if (collection.hasOwnProperty(key)) {
-			collection[key] = val;
+		if (this.hasOwnProperty(key)) {
+			this[key] = val;
 		}
 	}
 }

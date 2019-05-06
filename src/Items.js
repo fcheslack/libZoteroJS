@@ -209,7 +209,7 @@ class Items extends Container {
 		};
 		
 		var writeChunks = this.chunkObjectsArray(writeItems);
-		var rawChunkObjects = this.rawChunks(writeChunks);
+		var rawChunkObjects = Items.rawChunks(writeChunks);
 		
 		// update item with server response if successful
 		var writeItemsSuccessCallback = function (response) {

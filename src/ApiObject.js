@@ -1,22 +1,19 @@
-
-
-let log = require('./Log.js').Logger('libZotero:ApiObject');
+// let log = require('./Log.js').Logger('libZotero:ApiObject');
 
 class ApiObject {
-	constructor(props) {
+	constructor(_props) {
 		this.instance = 'Zotero.ApiObject';
 		this.version = 0;
 	}
 
 	// associate Entry with a library so we can update it on the server
 	associateWithLibrary(library) {
-		var apiObject = this;
-		apiObject.owningLibrary = library;
+		this.owningLibrary = library;
 		if (typeof this.apiObj.library == 'object') {
 			this.apiObj.library.type = library.type;
 			this.apiObj.library.id = library.libraryID;
 		}
-		return apiObject;
+		return this;
 	}
 
 	static fieldComparer(attr) {
