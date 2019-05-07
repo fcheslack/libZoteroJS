@@ -15,6 +15,8 @@ class Fetcher {
 		this.results = [];
 		this.totalResults = null;
 		this.resultInfo = {};
+		this.backingOff = false;
+		this.backoffDone = false;
 	}
 
 	next = async () => {
@@ -23,6 +25,11 @@ class Fetcher {
 		}
 
 		let urlconfig = Object.assign({}, this.config);
+		// if currently backing off, wait until it's done to make the request
+		if (this.backingOff) {
+			await this.backoffDone;
+			this.backingOff = false;
+		}
 		let response = await Zotero.net.apiRequest({ url: urlconfig });
 		if (response.parsedLinks.hasOwnProperty('next')) {
 			this.hasMore = true;
@@ -47,6 +54,29 @@ class Fetcher {
 			results = results.concat(response.data);
 		}
 		return results;
+	}
+	
+	requestOrRetry = async (config) => {
+		let response = await Zotero.net.apiRequest(config);
+		if (response.backoff) {
+			this.backingOff = true;
+			this.backoffDone = this.delaySeconds(response.backoff);
+		}
+		if (response.status == 429) {
+			await this.delaySeconds(response.retryAfter);
+			return this.requestOrRetry(config);
+		}
+		
+		return response;
+	}
+	
+	delaySeconds = (seconds) => {
+		let delayMS = 1000 * seconds;
+		return new Promise((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, delayMS);
+		});
 	}
 }
 
