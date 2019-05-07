@@ -169,6 +169,16 @@ class Collection extends ApiObject {
 		});
 	}
 
+	/*
+	 * Write updated information for the collection to the api and potentially
+	 */
+	writeCollection = () => {
+		if (!this.owningLibrary) {
+			throw new Error('Collection must be associated with a library');
+		}
+		return this.owningLibrary.collections.writeCollections([this]);
+	}
+
 	writeApiObj = () => {
 		var writeObj = Object.assign({}, this.pristineData, this.apiObj.data);
 		return writeObj;
@@ -251,6 +261,10 @@ class Collection extends ApiObject {
 		
 		if (this.hasOwnProperty(key)) {
 			this[key] = val;
+		} else if (key in this.apiObj.data) {
+			this.apiObj.data[key] = val;
+		} else if (key in this.apiObj.meta) {
+			this.apiObj.meta[key] = val;
 		}
 	}
 }

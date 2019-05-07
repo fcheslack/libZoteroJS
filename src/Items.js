@@ -195,54 +195,43 @@ class Items extends Container {
 	}
 
 	// accept an array of 'Zotero.Item's
-	writeItems = (itemsArray) => {
+	writeItems = async (itemsArray) => {
 		log.debug('writeItems');
-		var library = this.owningLibrary;
-		var i;
+		const library = this.owningLibrary;
 		var writeItems = this.atomizeItems(itemsArray);
 
-		
 		var config = {
 			target: 'items',
-			libraryType: this.owningLibrary.libraryType,
-			libraryID: this.owningLibrary.libraryID
+			libraryType: library.libraryType,
+			libraryID: library.libraryID
 		};
 		
 		var writeChunks = this.chunkObjectsArray(writeItems);
 		var rawChunkObjects = Items.rawChunks(writeChunks);
 		
-		// update item with server response if successful
-		var writeItemsSuccessCallback = function (response) {
-			return new Promise((resolve) => {
-				var writeItemsCallback = () => {
-					// save updated items to IDB
-					if (Zotero.config.useIndexedDB) {
-						this.library.idbLibrary.updateItems(this.writeChunk);
-					}
-					
-					Zotero.trigger('itemsChanged', { library: this.library });
-					response.returnItems = this.writeChunk;
-					resolve();
-				};
-				log.debug('writeItem successCallback', 3);
-				
-				// @TODO: It would be nicer if rejections (for partially or entirely
-				//		invalid updates) would propagate all the way to the end-user
-				//		instead of being swalloed here.
-				Items.updateObjectsFromWriteResponse(this.writeChunk, response)
-					.then(writeItemsCallback)
-					.catch(writeItemsCallback);
-			});
-		};
-		
 		log.debug('items.itemsVersion: ' + this.itemsVersion, 3);
 		log.debug('items.libraryVersion: ' + this.libraryVersion, 3);
 		
 		var requestObjects = [];
-		for (i = 0; i < writeChunks.length; i++) {
-			var successContext = {
-				writeChunk: writeChunks[i],
-				library: library
+		for (let i = 0; i < writeChunks.length; i++) {
+			let writeChunk = writeChunks[i];
+			// @TODO: It would be nicer if rejections (for partially or entirely
+			//		invalid updates) would propagate all the way to the end-user
+			//		instead of being swalloed here.
+			
+			// update item with server response if successful
+			let successCallback = async (response) => {
+				log.debug('writeItems successCallback', 3);
+				await Items.updateObjectsFromWriteResponse(writeChunk, response);
+				
+				// save updated items to IDB
+				if (Zotero.config.useIndexedDB) {
+					library.idbLibrary.updateItems(writeChunk);
+				}
+				
+				Zotero.trigger('itemsChanged', { library: library });
+				response.returnItems = writeChunk;
+				return response;
 			};
 			
 			var requestData = JSON.stringify(rawChunkObjects[i]);
@@ -250,17 +239,14 @@ class Items extends Container {
 				url: config,
 				type: 'POST',
 				data: requestData,
-				processData: false,
-				success: writeItemsSuccessCallback.bind(successContext)
+				processData: true,
+				success: successCallback
 			});
 		}
 
-		
-		return library.sequentialRequests(requestObjects)
-			.then((responses) => {
-				log.debug('Done with writeItems sequentialRequests promise', 3);
-				return responses;
-			});
+		let responses = await library.sequentialRequests(requestObjects);
+		log.debug('Done with writeItems sequentialRequests promise', 3);
+		return responses;
 	}
 }
 

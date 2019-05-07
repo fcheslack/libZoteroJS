@@ -95,12 +95,10 @@ class Item extends ApiObject {
 		this.apiObj._supplement.tagstrings = tagstrings;
 	}
 
-	initEmpty(itemType, linkMode) {
-		return Item.getItemTemplate(itemType, linkMode)
-			.then((template) => {
-				this.initEmptyFromTemplate(template);
-				return this;
-			});
+	async initEmpty(itemType, linkMode) {
+		const template = await Item.getItemTemplate(itemType, linkMode);
+		this.initEmptyFromTemplate(template);
+		return this;
 	}
 
 	// special case note initialization to guarentee synchronous and simplify some uses
@@ -163,7 +161,7 @@ class Item extends ApiObject {
 	}
 
 	/*
-	 * Write updated information for the item to the api and potentiallyp
+	 * Write updated information for the item to the api and potentially
 	 * create new child notes (or attachments?) of this item
 	 */
 	writeItem() {
@@ -195,13 +193,14 @@ class Item extends ApiObject {
 	async createChildNotes(notes) {
 		var childItems = [];
 		var childItemPromises = [];
+		const parentKey = this.key;
 		
 		notes.forEach((note) => {
 			var childItem = new Item();
 			var p = childItem.initEmpty('note')
 				.then((noteItem) => {
 					noteItem.set('note', note.note);
-					noteItem.set('parentItem', this.key);
+					noteItem.set('parentItem', parentKey);
 					childItems.push(noteItem);
 				});
 			childItemPromises.push(p);
@@ -393,7 +392,7 @@ class Item extends ApiObject {
 	}
 	*/
 	
-	static getCreatorTypes(itemType) {
+	static async getCreatorTypes(itemType) {
 		log.debug('Zotero.Item.prototype.getCreatorTypes: ' + itemType, 3);
 		if (!itemType) {
 			itemType = 'document';
@@ -417,18 +416,16 @@ class Item extends ApiObject {
 			// TODO: this probably shouldn't be using baseApiUrl directly
 			var requestUrl = Zotero.config.baseApiUrl + '/itemTypeCreatorTypes' + query;
 			
-			return Zotero.ajaxRequest(requestUrl, 'GET', { dataType: 'json' })
-				.then(function (response) {
-					log.debug('got creatorTypes response', 4);
-					Item.prototype.creatorTypes[itemType] = response.data;
-					// Zotero.storage.localStorage['creatorTypes'] = JSON.stringify(Item.prototype.creatorTypes);
-					Zotero.cache.save({ target: 'creatorTypes' }, Item.prototype.creatorTypes);
-					return Item.prototype.creatorTypes[itemType];
-				});
+			let response = await Zotero.ajaxRequest(requestUrl, 'GET', { dataType: 'json' });
+			log.debug('got creatorTypes response', 4);
+			Item.prototype.creatorTypes[itemType] = response.data;
+			// Zotero.storage.localStorage['creatorTypes'] = JSON.stringify(Item.prototype.creatorTypes);
+			Zotero.cache.save({ target: 'creatorTypes' }, Item.prototype.creatorTypes);
+			return Item.prototype.creatorTypes[itemType];
 		}
 	}
 
-	static getCreatorFields(_locale) {
+	static async getCreatorFields(_locale) {
 		log.debug('Zotero.Item.prototype.getCreatorFields', 3);
 		var creatorFields = Zotero.cache.load({ target: 'creatorFields' });
 		if (creatorFields) {
@@ -438,12 +435,11 @@ class Item extends ApiObject {
 		}
 		
 		var requestUrl = Zotero.config.baseApiUrl + '/creatorFields';
-		return Zotero.ajaxRequest(requestUrl, 'GET', { dataType: 'json' })
-			.then(function (response) {
-				log.debug('got itemTypes response', 4);
-				Item.prototype.creatorFields = response.data;
-				Zotero.cache.save({ target: 'creatorFields' }, response.data);
-			});
+		let response = await Zotero.ajaxRequest(requestUrl, 'GET', { dataType: 'json' });
+		log.debug('got itemTypes response', 4);
+		Item.prototype.creatorFields = response.data;
+		Zotero.cache.save({ target: 'creatorFields' }, response.data);
+		return response.data;
 	}
 
 	// ---Functions to manually add Zotero format data instead of fetching it from the API ---
@@ -603,7 +599,7 @@ class Item extends ApiObject {
 		case 'title':
 			var title = '';
 			if (itemType == 'note') {
-				title = this.noteTitle(this.apiObj.data.note);
+				title = Item.noteTitle(this.apiObj.data.note);
 			} else {
 				title = this.apiObj.data.title;
 			}

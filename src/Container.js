@@ -189,8 +189,8 @@ class Container {
 		log.debug('Zotero.Container.updateObjectsFromWriteResponse', 3);
 		log.debug('statusCode: ' + response.status, 3);
 		if (response.status == 200) {
-			let data = await response.json();
-			let lastModifiedVersion = response.headers.get('Last-Modified-Version');
+			let data = await response.data;
+			let lastModifiedVersion = response.rawResponse.headers.get('Last-Modified-Version');
 			log.debug('newLastModifiedVersion: ' + lastModifiedVersion, 3);
 			// make sure writes were actually successful and
 			// update the itemKey for the parent
@@ -207,6 +207,7 @@ class Container {
 					if (object.key === '') {
 						object.updateObjectKey(key);
 					}
+					log.debug(`setting version to ${lastModifiedVersion}`, 4);
 					object.set('version', lastModifiedVersion);
 					object.synced = true;
 					object.writeFailure = false;
@@ -221,7 +222,7 @@ class Container {
 					var object = objectsArray[i];
 					object.writeFailure = failure;
 				});
-				throw new Error('some writes failed');
+				// throw new Error('some writes failed');
 			}
 		} else if (response.status == 204) {
 			// single item put response, this probably should never go to this function

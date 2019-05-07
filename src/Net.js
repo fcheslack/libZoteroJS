@@ -60,7 +60,7 @@ class Net {
 	individualRequestDone = (response) => {
 		log.debug('Net.individualRequestDone', 3);
 		// check if we need to back off before making more requests
-		var wait = this.checkDelay(response);
+		var wait = Net.checkDelay(response);
 		if (wait > 0) {
 			var waitms = wait * 1000;
 			this.backingOff = true;
@@ -105,12 +105,12 @@ class Net {
 		}
 	}
 
-	checkDelay = (response) => {
+	static checkDelay = (response) => {
 		log.debug('Net.checkDelay', 4);
 		var wait = 0;
 		if (Array.isArray(response)) {
 			for (var i = 0; i < response.length; i++) {
-				var iwait = this.checkDelay(response[i]);
+				var iwait = Net.checkDelay(response[i]);
 				if (iwait > wait) {
 					wait = iwait;
 				}
@@ -125,6 +125,9 @@ class Net {
 
 	// perform API request defined by requestConfig
 	apiRequest = async (requestConfig) => {
+		return this.ajaxRequest(requestConfig);
+		
+		/*
 		let defaultConfig = {
 			type: 'GET',
 			headers: {
@@ -185,22 +188,24 @@ class Net {
 
 		// this.individualRequestDone(ar);
 		return ar;
+		*/
 	}
 
 	// perform a network request defined by requestConfig
 	// convert the Response into a Zotero.ApiResponse, and attach the passed in
 	// success/failure handlers to the promise chain before returning (or default error logger
 	// if no failure handler is defined)
-	ajaxRequest = (requestConfig) => {
+	ajaxRequest = async (requestConfig) => {
 		log.debug('Net.ajaxRequest', 3);
-		var net = this;
 		
-		var defaultConfig = {
+		let defaultConfig = {
 			type: 'GET',
 			headers: {
 				'Zotero-API-Version': 3,
 				'Content-Type': 'application/json'
 			},
+			processData: true,
+			throwOnError: true,
 			success: function (response) {
 				return response;
 			},
@@ -214,7 +219,7 @@ class Net {
 					log.error('ajaxRequest rejected: No rawResponse set. (likely network error)');
 					log.error(response.error);
 				}
-				throw response;
+				return response;
 			}
 			// cache:false
 		};
@@ -238,66 +243,52 @@ class Net {
 		
 		log.debug('AJAX config', 4);
 		log.debug(config, 4);
-
-		let handleSuccessCallback = (response) => {
-			return new Promise((resolve) => {
-				if (config.success) {
-					let maybePromise = config.success(response);
-					if (maybePromise && 'then' in maybePromise) {
-						maybePromise.then(() => {
-							resolve();
-						});
-					} else {
-						resolve();
-					}
+		let response, ar;
+		try {
+			response = await this.ajax(config);
+			ar = new ApiResponse(response);
+			
+			if ('processData' in config && config.processData === false) {
+				if (ar.isError) {
+					await config.error(ar);
 				} else {
-					resolve();
+					await config.success(ar);
 				}
-			});
-		};
-
-		var ajaxpromise = new Promise(function (resolve, reject) {
-			net.ajax(config)
-				.then(function (response) {
-					var ar = new ApiResponse(response);
-					if ('processData' in config && config.processData === false) {
-						handleSuccessCallback(response).then(() => resolve(response));
-					} else {
-						response.json().then(function (data) {
-							ar.data = data;
-							handleSuccessCallback(ar).then(() => resolve(ar));
-						}, function (err) {
-							log.error(err);
-							ar.isError = true;
-							ar.error = err;
-							reject(ar); // reject promise on malformed json
-						});
-					}
-				}, function (response) {
-					var ar;
-					if (response instanceof Error) {
-						ar = new ApiResponse();
+			} else {
+				log.debug('reading fetch response body', 4);
+				let data = await response.text();
+				try {
+					let bodyJson = JSON.parse(data);
+					ar.data = bodyJson;
+				} catch (_err) {
+					if (!ar.isError) {
+						// malformed JSON when it shouldn't be
 						ar.isError = true;
-						ar.error = response;
-					} else {
-						ar = new ApiResponse(response);
 					}
-				
-					resolve(ar);
-				});
-		})
-			.then(net.individualRequestDone.bind(net))
-			.then(function (response) {
-			// now that we're done handling, reject
-				if (response.isError) {
-				// re-throw ApiResponse that was a rejection
-					throw response;
+					ar.data = data;
 				}
-				return response;
-			})
-			.catch(config.error);
+				
+				if (ar.isError) {
+					await config.error(ar);
+				} else {
+					await config.success(ar);
+				}
+			}
+		} catch (error) {
+			// network error
+			log.debug(error, 2);
+			ar = new ApiResponse();
+			ar.isError = true;
+			ar.rawResponse = error;
+			ar.data = error;
+		}
 		
-		return ajaxpromise;
+		//this.individualRequestDone(ar);
+		
+		if (ar.isError && config.throwOnError) {
+			throw ar;
+		}
+		return ar;
 	}
 
 	// perform a network request defined by config, and return a promise for a Response
@@ -315,21 +306,7 @@ class Net {
 			body: config.data
 		});
 		
-		try {
-			let response = await fetch(request);
-			if (response.status >= 200 && response.status < 300) {
-				log.debug('200-300 response: resolving Net.ajax promise', 3);
-				// Performs the function "resolve" when this.status is equal to 2xx
-				return response;
-			} else {
-				log.debug('not 200-300 response: rejecting Net.ajax promise', 3);
-				// Performs the function "reject" when this.status is different than 2xx
-				throw response;
-			}
-		} catch (err) {
-			log.error(err);
-			throw (err);
-		}
+		return fetch(request);
 	}
 }
 
