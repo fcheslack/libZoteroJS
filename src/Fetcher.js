@@ -13,6 +13,7 @@ class Fetcher {
 		this.hasMore = true;
 
 		this.results = [];
+		this.responses = [];
 		this.totalResults = null;
 		this.resultInfo = {};
 		this.backingOff = false;
@@ -30,7 +31,7 @@ class Fetcher {
 			await this.backoffDone;
 			this.backingOff = false;
 		}
-		let response = await Zotero.net.apiRequest({ url: urlconfig });
+		let response = await this.requestOrRetry({ url: urlconfig });
 		if (response.parsedLinks.hasOwnProperty('next')) {
 			this.hasMore = true;
 		} else {
@@ -44,6 +45,7 @@ class Fetcher {
 		nconfig.start += nconfig.limit;
 		this.config = nconfig;
 
+		this.responses.push(response);
 		return response;
 	};
 
