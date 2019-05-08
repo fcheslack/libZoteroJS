@@ -1,3 +1,4 @@
+import { Fetcher } from '../lib/Fetcher.js';
 
 
 var log = require('./Log.js').Logger('libZotero:Library');
@@ -18,21 +19,21 @@ class Library {
 		log.debug('Library Constructor: ' + type + ' ' + libraryID + ' ', 3);
 		var library = this;
 		log.debug(libraryUrlIdentifier, 4);
-		library.instance = 'Zotero.Library';
-		library.libraryVersion = 0;
-		library.syncState = {
+		this.instance = 'Zotero.Library';
+		this.libraryVersion = 0;
+		this.syncState = {
 			earliestVersion: null,
 			latestVersion: null
 		};
-		library._apiKey = apiKey || '';
+		this._apiKey = apiKey || '';
 		
-		library.libraryUrlIdentifier = libraryUrlIdentifier;
+		this.libraryUrlIdentifier = libraryUrlIdentifier;
 		if (Zotero.config.librarySettings) {
-			library.libraryBaseWebsiteUrl = Zotero.config.librarySettings.libraryPathString;
+			this.libraryBaseWebsiteUrl = Zotero.config.librarySettings.libraryPathString;
 		} else {
-			library.libraryBaseWebsiteUrl = Zotero.config.baseWebsiteUrl;
+			this.libraryBaseWebsiteUrl = Zotero.config.baseWebsiteUrl;
 			if (type == 'group') {
-				library.libraryBaseWebsiteUrl += 'groups/';
+				this.libraryBaseWebsiteUrl += 'groups/';
 			}
 			if (libraryUrlIdentifier) {
 				this.libraryBaseWebsiteUrl += libraryUrlIdentifier + '/items';
@@ -41,19 +42,19 @@ class Library {
 			}
 		}
 		// object holders within this library, whether tied to a specific library or not
-		library.items = new Zotero.Items();
-		library.items.owningLibrary = library;
-		library.itemKeys = [];
-		library.collections = new Zotero.Collections();
-		library.collections.libraryUrlIdentifier = library.libraryUrlIdentifier;
-		library.collections.owningLibrary = library;
-		library.tags = new Zotero.Tags();
-		library.searches = new Zotero.Searches();
-		library.searches.owningLibrary = library;
-		library.groups = new Zotero.Groups();
-		library.groups.owningLibrary = library;
-		library.deleted = new Zotero.Deleted();
-		library.deleted.owningLibrary = library;
+		this.items = new Zotero.Items();
+		this.items.owningLibrary = library;
+		this.itemKeys = [];
+		this.collections = new Zotero.Collections();
+		this.collections.libraryUrlIdentifier = this.libraryUrlIdentifier;
+		this.collections.owningLibrary = library;
+		this.tags = new Zotero.Tags();
+		this.searches = new Zotero.Searches();
+		this.searches.owningLibrary = library;
+		this.groups = new Zotero.Groups();
+		this.groups.owningLibrary = library;
+		this.deleted = new Zotero.Deleted();
+		this.deleted.owningLibrary = library;
 		
 		if (!type) {
 			// return early if library not specified
@@ -61,14 +62,14 @@ class Library {
 			return;
 		}
 		// attributes tying instance to a specific Zotero library
-		library.type = type;
-		library.libraryType = type;
-		library.libraryID = libraryID;
-		library.libraryString = Zotero.utils.libraryString(library.libraryType, library.libraryID);
-		library.libraryUrlIdentifier = libraryUrlIdentifier;
+		this.type = type;
+		this.libraryType = type;
+		this.libraryID = libraryID;
+		this.libraryString = Zotero.utils.libraryString(this.libraryType, this.libraryID);
+		this.libraryUrlIdentifier = libraryUrlIdentifier;
 		
 		// initialize preferences object
-		library.preferences = new Zotero.Preferences(Zotero.store, library.libraryString);
+		this.preferences = new Zotero.Preferences(Zotero.store, this.libraryString);
 		
 		if (typeof window === 'undefined') {
 			Zotero.config.useIndexedDB = false;
@@ -76,18 +77,18 @@ class Library {
 		} else {
 			// initialize indexedDB if we're supposed to use it
 			// detect safari until they fix their shit
-			var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
-			var is_explorer = navigator.userAgent.indexOf('MSIE') > -1;
-			var is_firefox = navigator.userAgent.indexOf('Firefox') > -1;
-			var is_safari = navigator.userAgent.indexOf('Safari') > -1;
-			var is_opera = navigator.userAgent.toLowerCase().indexOf('op') > -1;
-			if ((is_chrome) && (is_safari)) {
-				is_safari = false;
+			var isChrome = navigator.userAgent.indexOf('Chrome') > -1;
+			var isExplorer = navigator.userAgent.indexOf('MSIE') > -1;
+			// var isFirefox = navigator.userAgent.indexOf('Firefox') > -1;
+			var isSafari = navigator.userAgent.indexOf('Safari') > -1;
+			var isOpera = navigator.userAgent.toLowerCase().indexOf('op') > -1;
+			if ((isChrome) && (isSafari)) {
+				isSafari = false;
 			}
-			if ((is_chrome) && (is_opera)) {
-				is_chrome = false;
+			if ((isChrome) && (isOpera)) {
+				isChrome = false;
 			}
-			if (is_safari) {
+			if (isSafari || isExplorer) {
 				Zotero.config.useIndexedDB = false;
 				log.warn('Safari detected; disabling indexedDB');
 			}
@@ -95,54 +96,51 @@ class Library {
 
 		if (Zotero.config.useIndexedDB === true) {
 			log.debug('Library Constructor: indexedDB init', 3);
-			var idbLibrary = new Zotero.Idb.Library(library.libraryString);
+			var idbLibrary = new Zotero.Idb.Library(this.libraryString);
 			idbLibrary.owningLibrary = this;
-			library.idbLibrary = idbLibrary;
-			library.cachedDataPromise = idbLibrary.init()
-				.then(function () {
+			this.idbLibrary = idbLibrary;
+			this.cachedDataPromise = idbLibrary.init()
+				.then(async () => {
 					log.debug('Library Constructor: idbInitD Done', 3);
 					if (Zotero.config.preloadCachedLibrary === true) {
 						log.debug('Library Constructor: preloading cached library', 3);
-						var cacheLoadD = library.loadIndexedDBCache();
-						cacheLoadD.then(function () {
-						// TODO: any stuff that needs to execute only after cache is loaded
-						// possibly fire new events to cause display to refresh after load
-							log.debug('Library Constructor: Library.items.itemsVersion: ' + library.items.itemsVersion, 3);
-							log.debug('Library Constructor: Library.collections.collectionsVersion: ' + library.collections.collectionsVersion, 3);
-							log.debug('Library Constructor: Library.tags.tagsVersion: ' + library.tags.tagsVersion, 3);
+						try {
+							await this.loadIndexedDBCache();// resolved with items, collections, and tags promises we don't use
+							// TODO: any stuff that needs to execute only after cache is loaded
+							// possibly fire new events to cause display to refresh after load
+							log.debug('Library Constructor: Library.items.itemsVersion: ' + this.items.itemsVersion, 3);
+							log.debug('Library Constructor: Library.collections.collectionsVersion: ' + this.collections.collectionsVersion, 3);
+							log.debug('Library Constructor: Library.tags.tagsVersion: ' + this.tags.tagsVersion, 3);
 							log.debug('Library Constructor: Triggering cachedDataLoaded', 3);
-							library.trigger('cachedDataLoaded');
-						},
-						function (err) {
+							this.trigger('cachedDataLoaded');
+						} catch (err) {
 							log.error('Error loading cached library');
 							log.error(err);
 							throw new Error('Error loading cached library');
-						});
-
-						return cacheLoadD;
+						}
 					} else {
-					// trigger cachedDataLoaded since we are done with that step
-						library.trigger('cachedDataLoaded');
+						// trigger cachedDataLoaded since we are done with that step
+						this.trigger('cachedDataLoaded');
 					}
-				},
-				function () {
-				// can't use indexedDB. Set to false in config and trigger error to notify user
+					return null;
+				}).catch(() => {
+					// can't use indexedDB. Set to false in config and trigger error to notify user
 					Zotero.config.useIndexedDB = false;
-					library.trigger('indexedDBError');
-					library.trigger('cachedDataLoaded');
+					this.trigger('indexedDBError');
+					this.trigger('cachedDataLoaded');
 					log.error('Error initializing indexedDB. Promise rejected.');
-				// don't re-throw error, since we can still load data from the API
+					// don't re-throw error, since we can still load data from the API
 				});
 		} else {
-			library.cachedDataPromise = Promise.resolve();
+			this.cachedDataPromise = Promise.resolve();
 		}
 		
-		library.dirty = false;
+		this.dirty = false;
 		
 		// set noop data-change callbacks
-		library.tagsChanged = function () {};
-		library.collectionsChanged = function () {};
-		library.itemsChanged = function () {};
+		this.tagsChanged = function () {};
+		this.collectionsChanged = function () {};
+		this.itemsChanged = function () {};
 	}
 
 
@@ -155,7 +153,7 @@ class Library {
 	 * @param  {string} b [description]
 	 * @return {int}   [description]
 	 */
-	comparer() {
+	static comparer() {
 		if (Intl) {
 			return new Intl.Collator().compare;
 		} else {
@@ -231,8 +229,6 @@ class Library {
 	websiteUrl(urlvars) {
 		log.debug('Zotero.library.websiteUrl', 3);
 		log.debug(urlvars, 4);
-		var library = this;
-		
 		var urlVarsArray = [];
 		Object.keys(urlvars).forEach(function (key) {
 			var value = urlvars[key];
@@ -243,7 +239,7 @@ class Library {
 		log.debug(urlVarsArray, 4);
 		var pathVarsString = urlVarsArray.join('/');
 		
-		return library.libraryBaseWebsiteUrl + '/' + pathVarsString;
+		return this.libraryBaseWebsiteUrl + '/' + pathVarsString;
 	}
 
 	synchronize() {
@@ -264,195 +260,170 @@ class Library {
 	 * if configured to use it.
 	 * @return {Promise} Promise
 	 */
-	loadUpdatedItems() {
+	async loadUpdatedItems() {
 		log.debug('Zotero.Library.loadUpdatedItems', 3);
-		var library = this;
 		// sync from the libraryVersion if it exists, otherwise use the itemsVersion, which is likely
 		// derived from the most recent version of any individual item we have.
-		var syncFromVersion = library.libraryVersion ? library.libraryVersion : library.items.itemsVersion;
-		return Promise.resolve(library.updatedVersions('items', syncFromVersion))
-			.then(function (response) {
-				log.debug('itemVersions resolved', 3);
-				log.debug('items Last-Modified-Version: ' + response.lastModifiedVersion, 3);
-				library.items.updateSyncState(response.lastModifiedVersion);
-			
-				var itemVersions = response.data;
-				library.itemVersions = itemVersions;
-				var itemKeys = [];
-				Object.keys(itemVersions).forEach(function (key) {
-					var val = itemVersions[key];
-					var item = library.items.getItem(key);
-					if ((!item) || (item.apiObj.key != val)) {
-						itemKeys.push(key);
-					}
-				});
-				return library.loadItemsFromKeys(itemKeys);
-			}).then(function (responses) {
-				log.debug('loadItemsFromKeys resolved', 3);
-				library.items.updateSyncedVersion();
-			
-				// TODO: library needs its own state
-				if (Zotero.state) {
-					var displayParams = Zotero.state.getUrlVars();
-					library.buildItemDisplayView(displayParams);
-				}
-				// save updated items to IDB
-				if (Zotero.config.useIndexedDB) {
-					var saveItemsD = library.idbLibrary.updateItems(library.items.objectArray);
-				}
-			});
+		var syncFromVersion = this.libraryVersion ? this.libraryVersion : this.items.itemsVersion;
+		const response = await Promise.resolve(this.updatedVersions('items', syncFromVersion));
+		log.debug('itemVersions resolved', 3);
+		log.debug('items Last-Modified-Version: ' + response.lastModifiedVersion, 3);
+		this.items.updateSyncState(response.lastModifiedVersion);
+		var itemVersions = response.data;
+		this.itemVersions = itemVersions;
+		var itemKeys = [];
+		Object.keys(itemVersions).forEach(function (key) {
+			var val = itemVersions[key];
+			var item = this.items.getItem(key);
+			if ((!item) || (item.apiObj.key != val)) {
+				itemKeys.push(key);
+			}
+		});
+		await this.loadItemsFromKeys(itemKeys);
+		log.debug('loadItemsFromKeys resolved', 3);
+		this.items.updateSyncedVersion();
+		// TODO: library needs its own state
+		if (Zotero.state) {
+			var displayParams = Zotero.state.getUrlVars();
+			this.buildItemDisplayView(displayParams);
+		}
+		// save updated items to IDB
+		if (Zotero.config.useIndexedDB) {
+			await this.idbLibrary.updateItems(this.items.objectArray);
+		}
 	}
 
-	loadUpdatedCollections() {
+	async loadUpdatedCollections() {
 		log.debug('Zotero.Library.loadUpdatedCollections', 3);
-		var library = this;
 		// sync from the libraryVersion if it exists, otherwise use the collectionsVersion, which is likely
 		// derived from the most recent version of any individual collection we have.
-		log.debug('library.collections.collectionsVersion:' + library.collections.collectionsVersion, 4);
-		// var syncFromVersion = library.libraryVersion ? library.libraryVersion : library.collections.collectionsVersion;
-		var syncFromVersion = library.collections.collectionsVersion;
+		log.debug('library.collections.collectionsVersion:' + this.collections.collectionsVersion, 4);
+		// var syncFromVersion = this.libraryVersion ? this.libraryVersion : this.collections.collectionsVersion;
+		var syncFromVersion = this.collections.collectionsVersion;
 		log.debug(`loadUpdatedCollections syncFromVersion: ${syncFromVersion}`, 3);
 		// we need modified collectionKeys regardless, so load them
-		return library.updatedVersions('collections', syncFromVersion)
-			.then(function (response) {
-				log.debug('collectionVersions finished', 3);
-				log.debug('Collections Last-Modified-Version: ' + response.lastModifiedVersion, 3);
-				// start the syncState version tracking. This should be the earliest version throughout
-				library.collections.updateSyncState(response.lastModifiedVersion);
-			
-				var collectionVersions = response.data;
-				library.collectionVersions = collectionVersions;
-				var collectionKeys = [];
-				Object.keys(collectionVersions).forEach(function (key) {
-					var val = collectionVersions[key];
-					var c = library.collections.getCollection(key);
-					if ((!c) || (c.apiObj.version != val)) {
-						collectionKeys.push(key);
-					}
-				});
-				if (collectionKeys.length === 0) {
-					log.debug('No collectionKeys need updating. resolving', 3);
-					return response;
-				} else {
-					log.debug('fetching collections by key', 3);
-					return library.loadCollectionsFromKeys(collectionKeys)
-						.then(function () {
-							var collections = library.collections;
-							collections.initSecondaryData();
-					
-							log.debug('All updated collections loaded', 3);
-							library.collections.updateSyncedVersion();
-							// TODO: library needs its own state
-					
-							// save updated collections to cache
-							log.debug('loadUpdatedCollections complete - saving collections to cache before resolving', 3);
-							log.debug('collectionsVersion: ' + library.collections.collectionsVersion, 3);
-							// library.saveCachedCollections();
-							// save updated collections to IDB
-							if (Zotero.config.useIndexedDB) {
-								return library.idbLibrary.updateCollections(collections.collectionsArray);
-							}
-						});
-				}
-			})
-			.then(function () {
-				log.debug('done getting collection data. requesting deleted data', 3);
-				return library.getDeleted(library.libraryVersion);
-			})
-			.then(function (response) {
-				log.debug('got deleted collections data: removing local copies', 3);
-				log.debug(library.deleted, 3);
-				if (library.deleted.deletedData.collections && library.deleted.deletedData.collections.length > 0) {
-					library.collections.removeLocalCollections(library.deleted.deletedData.collections);
-				}
-			});
+		let versionResponse = await this.updatedVersions('collections', syncFromVersion);
+		log.debug('collectionVersions finished', 3);
+		log.debug('Collections Last-Modified-Version: ' + versionResponse.lastModifiedVersion, 3);
+		// start the syncState version tracking. This should be the earliest version throughout
+		this.collections.updateSyncState(versionResponse.lastModifiedVersion);
+	
+		var collectionVersions = versionResponse.data;
+		this.collectionVersions = collectionVersions;
+		var collectionKeys = [];
+		Object.keys(collectionVersions).forEach(function (key) {
+			var val = collectionVersions[key];
+			var c = this.collections.getCollection(key);
+			if ((!c) || (c.apiObj.version != val)) {
+				collectionKeys.push(key);
+			}
+		});
+		if (collectionKeys.length === 0) {
+			log.debug('No collectionKeys need updating. resolving', 3);
+		} else {
+			log.debug('fetching collections by key', 3);
+			await this.loadCollectionsFromKeys(collectionKeys);
+			this.collections.initSecondaryData();
+	
+			log.debug('All updated collections loaded', 3);
+			this.collections.updateSyncedVersion();
+			// TODO: library needs its own state
+	
+			// save updated collections to cache
+			log.debug('loadUpdatedCollections complete - saving collections to cache before resolving', 3);
+			log.debug('collectionsVersion: ' + this.collections.collectionsVersion, 3);
+			// this.saveCachedCollections();
+			// save updated collections to IDB
+			if (Zotero.config.useIndexedDB) {
+				return this.idbLibrary.updateCollections(this.collections.collectionsArray);
+			}
+		}
+		log.debug('done getting collection data. requesting deleted data', 3);
+		await this.getDeleted(this.libraryVersion); // data is saved to Library.deleted so we don't need the promise
+		log.debug('got deleted collections data: removing local copies', 3);
+		log.debug(this.deleted, 3);
+		if (this.deleted.deletedData.collections && this.deleted.deletedData.collections.length > 0) {
+			this.collections.removeLocalCollections(this.deleted.deletedData.collections);
+		}
+		return null;
 	}
 
-	loadUpdatedTags() {
+	async loadUpdatedTags() {
 		log.debug('Zotero.Library.loadUpdatedTags', 3);
-		var library = this;
-		log.debug('tagsVersion: ' + library.tags.tagsVersion, 3);
-		return Promise.resolve(library.loadAllTags({ since: library.tags.tagsVersion }))
-			.then(function () {
-				log.debug('done getting tags, request deleted tags data', 3);
-				return library.getDeleted(library.libraryVersion);
-			})
-			.then(function (response) {
-				log.debug('got deleted tags data', 3);
-				if (library.deleted.deletedData.tags && library.deleted.deletedData.tags.length > 0) {
-					library.tags.removeTags(library.deleted.deletedData.tags);
-				}
-				// save updated tags to IDB
-				if (Zotero.config.useIndexedDB) {
-					log.debug('saving updated tags to IDB', 3);
-					var saveTagsD = library.idbLibrary.updateTags(library.tags.tagsArray);
-				}
-			});
+		log.debug('tagsVersion: ' + this.tags.tagsVersion, 3);
+		await Promise.resolve(this.loadAllTags({ since: this.tags.tagsVersion }));
+		log.debug('done getting tags, request deleted tags data', 3);
+		await this.getDeleted(this.libraryVersion);
+		log.debug('got deleted tags data', 3);
+		if (this.deleted.deletedData.tags && this.deleted.deletedData.tags.length > 0) {
+			this.tags.removeTags(this.deleted.deletedData.tags);
+		}
+		// save updated tags to IDB
+		if (Zotero.config.useIndexedDB) {
+			log.debug('saving updated tags to IDB', 3);
+			await this.idbLibrary.updateTags(this.tags.tagsArray);
+		}
 	}
 
-	getDeleted(version) {
+	async getDeleted(version) {
 		log.debug('Zotero.Library.getDeleted', 3);
-		var library = this;
 		var urlconf = {
 			target: 'deleted',
-			libraryType: library.libraryType,
-			libraryID: library.libraryID,
+			libraryType: this.libraryType,
+			libraryID: this.libraryID,
 			since: version
 		};
 		
 		// if there is already a request working, create a new promise to resolve
 		// when the actual request finishes
-		if (library.deleted.pending) {
+		if (this.deleted.pending) {
 			log.debug('getDeleted resolving with previously pending promise', 3);
-			return Promise.resolve(library.deleted.pendingPromise);
+			return this.deleted.pendingPromise;
 		}
 		
 		// don't fetch again if version we'd be requesting is between
 		// deleted.newer and delete.deleted versions, just use that one
 		log.debug('version:' + version, 3);
-		log.debug('sinceVersion:' + library.deleted.sinceVersion, 3);
-		log.debug('untilVersion:' + library.deleted.untilVersion, 3);
+		log.debug('sinceVersion:' + this.deleted.sinceVersion, 3);
+		log.debug('untilVersion:' + this.deleted.untilVersion, 3);
 		
-		if (library.deleted.untilVersion
-			&& version >= library.deleted.sinceVersion /* &&
-			version < library.deleted.untilVersion*/) {
+		if (this.deleted.untilVersion
+			&& version >= this.deleted.sinceVersion /* &&
+			version < this.deleted.untilVersion*/) {
 			log.debug('deletedVersion matches requested: immediately resolving', 3);
-			return Promise.resolve(library.deleted.deletedData);
+			return this.deleted.deletedData;
 		}
 		
-		library.deleted.pending = true;
-		library.deleted.pendingPromise = library.ajaxRequest(urlconf)
-			.then(function (response) {
-				log.debug('got deleted response', 3);
-				library.deleted.deletedData = response.data;
-				log.debug('Deleted Last-Modified-Version:' + response.lastModifiedVersion, 3);
-				library.deleted.untilVersion = response.lastModifiedVersion;
-				library.deleted.sinceVersion = version;
-			}).then(function (response) {
-				log.debug('cleaning up deleted pending', 3);
-				library.deleted.pending = false;
-				library.deleted.pendingPromise = false;
-			});
+		this.deleted.pending = true;
+		let response = await this.ajaxRequest(urlconf);
+		this.deleted.pendingPromise = response;
 		
-		return library.deleted.pendingPromise;
+		log.debug('got deleted response', 3);
+		this.deleted.deletedData = response.data;
+		log.debug('Deleted Last-Modified-Version:' + response.lastModifiedVersion, 3);
+		this.deleted.untilVersion = response.lastModifiedVersion;
+		this.deleted.sinceVersion = version;
+		log.debug('cleaning up deleted pending', 3);
+		this.deleted.pending = false;
+		this.deleted.pendingPromise = false;
+		
+		return response;
 	}
 
 	processDeletions(deletions) {
-		var library = this;
 		// process deleted collections
-		library.collections.processDeletions(deletions.collections);
+		this.collections.processDeletions(deletions.collections);
 		// process deleted items
-		library.items.processDeletions(deletions.items);
+		this.items.processDeletions(deletions.items);
 	}
 
 	// Get a full bibliography from the API for web based citating
-	loadFullBib(itemKeys, style) {
-		var library = this;
+	async loadFullBib(itemKeys, style) {
 		var itemKeyString = itemKeys.join(',');
 		var urlconfig = {
 			target: 'items',
-			libraryType: library.libraryType,
-			libraryID: library.libraryID,
+			libraryType: this.libraryType,
+			libraryID: this.libraryID,
 			itemKey: itemKeyString,
 			format: 'bib',
 			linkwrap: '1'
@@ -464,22 +435,17 @@ class Library {
 			urlconfig.style = style;
 		}
 		
-		var loadBibPromise = library.ajaxRequest(urlconfig)
-			.then(function (response) {
-				return response.data;
-			});
-		
-		return loadBibPromise;
+		let response = await this.ajaxRequest(urlconfig);
+		return response.data;
 	}
 
 	// load bib for a single item from the API
-	loadItemBib(itemKey, style) {
+	async loadItemBib(itemKey, style) {
 		log.debug('Zotero.Library.loadItemBib', 3);
-		var library = this;
 		var urlconfig = {
 			target: 'item',
-			libraryType: library.libraryType,
-			libraryID: library.libraryID,
+			libraryType: this.libraryType,
+			libraryID: this.libraryID,
 			itemKey: itemKey,
 			content: 'bib'
 		};
@@ -487,60 +453,51 @@ class Library {
 			urlconfig.style = style;
 		}
 		
-		var itemBibPromise = library.ajaxRequest(urlconfig)
-			.then(function (response) {
-				var item = new Zotero.Item(response.data);
-				var bibContent = item.apiObj.bib;
-				return bibContent;
-			});
-		
-		return itemBibPromise;
+		let response = await this.ajaxRequest(urlconfig);
+		var item = new Zotero.Item(response.data);
+		var bibContent = item.apiObj.bib;
+		return bibContent;
 	}
 
 	// load library settings from Zotero API and return a promise that gets resolved with
 	// the Zotero.Preferences object for this library
-	loadSettings() {
+	async loadSettings() {
 		log.debug('Zotero.Library.loadSettings', 3);
-		var library = this;
 		var urlconfig = {
 			target: 'settings',
-			libraryType: library.libraryType,
-			libraryID: library.libraryID
+			libraryType: this.libraryType,
+			libraryID: this.libraryID
 		};
 		
-		return library.ajaxRequest(urlconfig)
-			.then(function (response) {
-				var resultObject;
-				if (typeof response.data == 'string') {
-					resultObject = JSON.parse(response.data);
-				} else {
-					resultObject = response.data;
-				}
-				// save the full settings object so we have it available if we need to write,
-				// even if it has settings we don't use or know about
-				library.preferences.setPref('settings', resultObject);
-			
-				library.trigger('settingsLoaded');
-				return library.preferences;
-			});
+		let response = await this.ajaxRequest(urlconfig);
+		let resultObject;
+		if (typeof response.data == 'string') {
+			resultObject = JSON.parse(response.data);
+		} else {
+			resultObject = response.data;
+		}
+		// save the full settings object so we have it available if we need to write,
+		// even if it has settings we don't use or know about
+		this.preferences.setPref('settings', resultObject);
+		
+		this.trigger('settingsLoaded');
+		return this.preferences;
 	}
 
 	// take an array of tags and return subset of tags that should be colored, along with
 	// the colors they should be
 	matchColoredTags(tags) {
-		var library = this;
-
-		if (!library.tagColors) {
+		if (!this.tagColors) {
 			// pull out the settings we know we care about so we can query them directly
 			let tagColors = [];
-			let settings = library.preferences.getPref('settings');
+			let settings = this.preferences.getPref('settings');
 			if (settings && settings.hasOwnProperty('tagColors')) {
 				tagColors = settings.tagColors.value;
 			}
-			library.tagColors = new Zotero.TagColors(tagColors);
+			this.tagColors = new Zotero.TagColors(tagColors);
 		}
 		
-		return library.tagColors.match(tags);
+		return this.tagColors.match(tags);
 	}
 
 	/**
@@ -552,7 +509,7 @@ class Library {
 	 * @param  {Zotero.Library} foreignLibrary
 	 * @return {Promise.Zotero.Item[]} - newly created items
 	 */
-	sendToLibrary(items, foreignLibrary) {
+	static sendToLibrary(items, foreignLibrary) {
 		var foreignItems = [];
 		for (var i = 0; i < items.length; i++) {
 			var item = items[i];
@@ -599,37 +556,33 @@ class Library {
 
 	updatedVersions(target = 'items', version = this.libraryVersion) {
 		log.debug('Library.updatedVersions', 3);
-		var library = this;
 		var urlconf = {
 			target: target,
 			format: 'versions',
-			libraryType: library.libraryType,
-			libraryID: library.libraryID,
+			libraryType: this.libraryType,
+			libraryID: this.libraryID,
 			since: version
 		};
-		return library.ajaxRequest(urlconf);
+		return this.ajaxRequest(urlconf);
 	}
 
 	// Download and save information about every item in the library
 	// keys is an array of itemKeys from this library that we need to download
 	loadItemsFromKeys(keys) {
 		log.debug('Zotero.Library.loadItemsFromKeys', 3);
-		var library = this;
-		return library.loadFromKeys(keys, 'items');
+		return this.loadFromKeys(keys, 'items');
 	}
 
 	// keys is an array of collectionKeys from this library that we need to download
 	loadCollectionsFromKeys(keys) {
 		log.debug('Zotero.Library.loadCollectionsFromKeys', 3);
-		var library = this;
-		return library.loadFromKeys(keys, 'collections');
+		return this.loadFromKeys(keys, 'collections');
 	}
 
 	// keys is an array of searchKeys from this library that we need to download
 	loadSeachesFromKeys(keys) {
 		log.debug('Zotero.Library.loadSearchesFromKeys', 3);
-		var library = this;
-		return library.loadFromKeys(keys, 'searches');
+		return this.loadFromKeys(keys, 'searches');
 	}
 
 	loadFromKeys(keys, objectType) {
@@ -770,7 +723,7 @@ class Library {
 				var sort = params.sort || 'asc';
 				log.debug('Sorting by ' + orderCol + ' - ' + sort, 3);
 			
-				var comparer = Zotero.comparer();
+				var comparer = Library.comparer();
 			
 				displayItemsArray.sort(function (a, b) {
 					var aval = a.get(orderCol);
@@ -792,52 +745,45 @@ class Library {
 	}
 
 	trigger(eventType, data) {
-		var library = this;
-		Zotero.trigger(eventType, data, library.libraryString);
+		Zotero.trigger(eventType, data, this.libraryString);
 	}
 
 	listen(events, handler, data) {
-		var library = this;
-		var filter = library.libraryString;
+		var filter = this.libraryString;
 		Zotero.listen(events, handler, data, filter);
 	}
 
 	// CollectionFunctions
 	processLoadedCollections(response) {
 		log.debug('processLoadedCollections', 3);
-		var library = this;
-		
 		// clear out display items
 		log.debug('adding collections to library.collections', 3);
-		var collectionsAdded = library.collections.addCollectionsFromJson(response.data);
+		var collectionsAdded = this.collections.addCollectionsFromJson(response.data);
 		for (var i = 0; i < collectionsAdded.length; i++) {
-			collectionsAdded[i].associateWithLibrary(library);
+			collectionsAdded[i].associateWithLibrary(this);
 		}
 		// update sync state
-		library.collections.updateSyncState(response.lastModifiedVersion);
+		this.collections.updateSyncState(response.lastModifiedVersion);
 		
-		Zotero.trigger('loadedCollectionsProcessed', { library: library, collectionsAdded: collectionsAdded });
+		Zotero.trigger('loadedCollectionsProcessed', { library: this, collectionsAdded: collectionsAdded });
 		return response;
 	}
 
 	// create+write a collection given a name and optional parentCollectionKey
 	addCollection(name, parentCollection) {
 		log.debug('Zotero.Library.addCollection', 3);
-		var library = this;
-		
 		var collection = new Zotero.Collection();
-		collection.associateWithLibrary(library);
+		collection.associateWithLibrary(this);
 		collection.set('name', name);
 		collection.set('parentCollection', parentCollection);
 		
-		return library.collections.writeCollections([collection]);
+		return this.collections.writeCollections([collection]);
 	}
 
 	// ItemFunctions
 	// make request for item keys and return jquery ajax promise
 	fetchItemKeys(config = {}) {
 		log.debug('Zotero.Library.fetchItemKeys', 3);
-		var library = this;
 		var urlconfig = Object.assign(true, {
 			target: 'items',
 			libraryType: this.libraryType,
@@ -845,56 +791,44 @@ class Library {
 			format: 'keys'
 		}, config);
 		
-		return library.ajaxRequest(urlconfig);
+		return this.ajaxRequest(urlconfig);
 	}
 
 	// get keys of all items marked for deletion
 	getTrashKeys() {
 		log.debug('Zotero.Library.getTrashKeys', 3);
-		var library = this;
 		var urlconfig = {
 			target: 'items',
-			libraryType: library.libraryType,
-			libraryID: library.libraryID,
+			libraryType: this.libraryType,
+			libraryID: this.libraryID,
 			format: 'keys',
 			collectionKey: 'trash'
 		};
 		
-		return library.ajaxRequest(urlconfig);
+		return this.ajaxRequest(urlconfig);
 	}
 
-	emptyTrash() {
+	async emptyTrash() {
 		log.debug('Zotero.Library.emptyTrash', 3);
-		var library = this;
-		return library.getTrashKeys()
-			.then(function (response) {
-				var trashedItemKeys = response.data.split('\n');
-				return library.items.deleteItems(trashedItemKeys, response.lastModifiedVersion);
-			});
+		let response = await this.getTrashKeys();
+		var trashedItemKeys = response.data.split('\n');
+		return this.items.deleteItems(trashedItemKeys, response.lastModifiedVersion);
 	}
 
 	// gets the full set of item keys that satisfy `config`
-	loadItemKeys(config) {
+	async loadItemKeys(config) {
 		log.debug('Zotero.Library.loadItemKeys', 3);
-		var library = this;
-		return this.fetchItemKeys(config)
-			.then(function (response) {
-				log.debug('loadItemKeys proxied callback', 3);
-				var keys = response.data.split(/[\s]+/);
-				library.itemKeys = keys;
-			});
+		const response = await this.fetchItemKeys(config);
+		log.debug('loadItemKeys response received', 3);
+		var keys = response.data.split(/[\s]+/);
+		this.itemKeys = keys;
 	}
 
 	// loads a set of items specified by `config`
 	// The items are added to this Library's items container, as well included as an array of Zotero.Item
 	// on the returned promise as `response.loadedItems`
-	loadItems(config) {
+	async loadItems(config = {}) {
 		log.debug('Zotero.Library.loadItems', 3);
-		var library = this;
-		if (!config) {
-			config = {};
-		}
-		
 		var defaultConfig = {
 			target: 'items',
 			targetModifier: 'top',
@@ -910,34 +844,26 @@ class Library {
 		
 		var urlconfig = Object.assign({
 			target: 'items',
-			libraryType: library.libraryType,
-			libraryID: library.libraryID
+			libraryType: this.libraryType,
+			libraryID: this.libraryID
 		}, newConfig);
 		
-		return library.ajaxRequest(urlconfig)
-			.then(function (response) {
-				log.debug('loadItems proxied callback', 3);
-				// var library = this;
-				var items = library.items;
-				// clear out display items
-				var loadedItemsArray = items.addItemsFromJson(response.data);
-				for (let i = 0; i < loadedItemsArray.length; i++) {
-					loadedItemsArray[i].associateWithLibrary(library);
-				}
-			
-				response.loadedItems = loadedItemsArray;
-				Zotero.trigger('itemsChanged', { library: library });
-				return response;
-			});
+		const response = await this.ajaxRequest(urlconfig);
+		log.debug('loadItems proxied callback', 3);
+		
+		// clear out display items
+		var loadedItemsArray = this.items.addItemsFromJson(response.data);
+		for (let i = 0; i < loadedItemsArray.length; i++) {
+			loadedItemsArray[i].associateWithLibrary(this);
+		}
+	
+		response.loadedItems = loadedItemsArray;
+		Zotero.trigger('itemsChanged', { library: this });
+		return response;
 	}
 
-	loadPublications(config) {
+	async loadPublications(config = {}) {
 		log.debug('Zotero.Library.loadPublications', 3);
-		var library = this;
-		if (!config) {
-			config = {};
-		}
-		
 		var defaultConfig = {
 			target: 'publications',
 			start: 0,
@@ -952,73 +878,58 @@ class Library {
 		
 		var urlconfig = Object.assign({
 			target: 'publications',
-			libraryType: library.libraryType,
-			libraryID: library.libraryID
+			libraryType: this.libraryType,
+			libraryID: this.libraryID
 		}, newConfig);
 		
-		return library.ajaxRequest(urlconfig)
-			.then(function (response) {
-				log.debug('loadPublications proxied callback', 3);
-				var publicationItems = [];
-				var parsedItemJson = response.data;
-				parsedItemJson.forEach(function (itemObj) {
-					var item = new Zotero.Item(itemObj);
-					publicationItems.push(item);
-				});
-			
-				response.publicationItems = publicationItems;
-				return response;
-			});
+		let response = await this.ajaxRequest(urlconfig);
+		log.debug('loadPublications response received', 3);
+		let publicationItems = [];
+		let parsedItemJson = response.data;
+		parsedItemJson.forEach((itemObj) => {
+			var item = new Zotero.Item(itemObj);
+			publicationItems.push(item);
+		});
+	
+		response.publicationItems = publicationItems;
+		return response;
 	}
 
 	processLoadedItems(response) {
 		log.debug('processLoadedItems', 3);
-		var library = this;
-		var items = library.items;
 		// clear out display items
-		var loadedItemsArray = items.addItemsFromJson(response.data);
+		var loadedItemsArray = this.items.addItemsFromJson(response.data);
 		for (var i = 0; i < loadedItemsArray.length; i++) {
-			loadedItemsArray[i].associateWithLibrary(library);
+			loadedItemsArray[i].associateWithLibrary(this);
 		}
 		
 		// update sync state
-		library.items.updateSyncState(response.lastModifiedVersion);
+		this.items.updateSyncState(response.lastModifiedVersion);
 		
-		Zotero.trigger('itemsChanged', { library: library, loadedItems: loadedItemsArray });
+		Zotero.trigger('itemsChanged', { library: this, loadedItems: loadedItemsArray });
 		return response;
 	}
 
-	loadItem(itemKey) {
+	async loadItem(itemKey) {
 		log.debug('Zotero.Library.loadItem', 3);
-		var library = this;
-		if (!config) {
-			var config = {};
-		}
-		
 		var urlconfig = {
 			target: 'item',
-			libraryType: library.libraryType,
-			libraryID: library.libraryID,
+			libraryType: this.libraryType,
+			libraryID: this.libraryID,
 			itemKey: itemKey
 		};
 		
-		return library.ajaxRequest(urlconfig)
-			.then(function (response) {
-				log.debug('Got loadItem response', 3);
-				var item = new Zotero.Item(response.data);
-				item.owningLibrary = library;
-				library.items.itemObjects[item.key] = item;
-				Zotero.trigger('itemsChanged', { library: library });
-				return (item);
-			},
-			function (response) {
-				log.warn('Error loading Item');
-			});
+		let response = await this.ajaxRequest(urlconfig);
+		log.debug('Got loadItem response', 3);
+		let item = new Zotero.Item(response.data);
+		item.owningLibrary = this;
+		this.items.itemObjects[item.key] = item;
+		Zotero.trigger('itemsChanged', { library: this });
+		return (item);
 	}
 
 	trashItem(itemKey) {
-		var library = this;
-		return library.items.trashItems([library.items.getItem(itemKey)]);
+		return this.items.trashItems([this.items.getItem(itemKey)]);
 	}
 
 	untrashItem(itemKey) {
@@ -1032,31 +943,30 @@ class Library {
 
 	deleteItem(itemKey) {
 		log.debug('Zotero.Library.deleteItem', 3);
-		var library = this;
-		return library.items.deleteItem(itemKey);
+		return this.items.deleteItem(itemKey);
 	}
 
 	deleteItems(itemKeys) {
 		log.debug('Zotero.Library.deleteItems', 3);
-		var library = this;
-		return library.items.deleteItems(itemKeys);
+		return this.items.deleteItems(itemKeys);
 	}
 
+	/*
 	addNote(itemKey, note) {
 		log.debug('Zotero.addNote', 3);
-		var library = this;
 		var config = {
 			target: 'children',
-			libraryType: library.libraryType,
-			libraryID: library.libraryID,
+			libraryType: this.libraryType,
+			libraryID: this.libraryID,
 			itemKey: itemKey
 		};
 		
 		var item = this.items.getItem(itemKey);
 		
-		return library.ajaxRequest(config, 'POST', { processData: false });
+		return this.ajaxRequest(config, 'POST', { processData: false });
 	}
-
+	*/
+	/*
 	fetchGlobalItems(config) {
 		log.debug('Zotero.Library.fetchGlobalItems', 3);
 		var library = this;
@@ -1081,7 +991,8 @@ class Library {
 				return (response.data);
 			});
 	}
-
+	*/
+	/*
 	fetchGlobalItem(globalKey) {
 		log.debug('Zotero.Library.fetchGlobalItem', 3);
 		log.debug(globalKey, 3);
@@ -1103,11 +1014,10 @@ class Library {
 				return (response.data);
 			});
 	}
-
+	*/
 	// TagFunctions
 	fetchTags(config) {
 		log.debug('Zotero.Library.fetchTags', 3);
-		var library = this;
 		var defaultConfig = {
 			target: 'tags',
 			order: 'title',
@@ -1121,69 +1031,93 @@ class Library {
 			libraryID: this.libraryID
 		}, newConfig);
 		
-		return Zotero.ajaxRequest(urlconfig);
+		return this.ajaxRequest(urlconfig);
 	}
 
-	loadTags(config = {}) {
+	async loadTags(config = {}) {
 		log.debug('Zotero.Library.loadTags', 3);
-		var library = this;
-		
 		if (config.showAutomaticTags && config.collectionKey) {
 			delete config.collectionKey;
 		}
 		
-		library.tags.displayTagsArray = [];
-		return library.fetchTags(config)
-			.then(function (response) {
-				log.debug('loadTags proxied callback', 3);
-				var updatedVersion = response.lastModifiedVersion;
-				library.tags.updateSyncState(updatedVersion);
-				var addedTags = library.tags.addTagsFromJson(response.data);
-				library.tags.updateTagsVersion(updatedVersion);
-				library.tags.rebuildTagsArray();
-			
-				if (response.parsedLinks.hasOwnProperty('next')) {
-					library.tags.hasNextLink = true;
-					library.tags.nextLink = response.parsedLinks.next;
-				} else {
-					library.tags.hasNextLink = false;
-					library.tags.nextLink = null;
-				}
-				library.trigger('tagsChanged', { library: library });
-				return library.tags;
-			});
+		this.tags.displayTagsArray = [];
+		let response = await this.fetchTags(config);
+		log.debug('loadTags response received', 3);
+		var updatedVersion = response.lastModifiedVersion;
+		this.tags.updateSyncState(updatedVersion);
+		this.tags.addTagsFromJson(response.data);
+		this.tags.updateTagsVersion(updatedVersion);
+		this.tags.rebuildTagsArray();
+	
+		if (response.parsedLinks.hasOwnProperty('next')) {
+			this.tags.hasNextLink = true;
+			this.tags.nextLink = response.parsedLinks.next;
+		} else {
+			this.tags.hasNextLink = false;
+			this.tags.nextLink = null;
+		}
+		this.trigger('tagsChanged', { library: this });
+		return this.tags;
 	}
 
 
-	loadAllTags(config = {}) {
+	async loadAllTags(config = {}) {
 		log.debug('Zotero.Library.loadAllTags', 3);
-		var library = this;
 		var defaultConfig = {
 			target: 'tags',
 			order: 'title',
 			sort: 'asc',
 			limit: 100,
-			libraryType: library.libraryType,
-			libraryID: library.libraryID
+			libraryType: this.libraryType,
+			libraryID: this.libraryID
 		};
 		
 		// Build config object that should be displayed next and compare to currently displayed
 		var newConfig = Object.assign({}, defaultConfig, config);
 		var urlconfig = Object.assign({}, newConfig);
 		
-		// check if already loaded tags are okay to use
+		// TODO: check if already loaded tags are okay to use
+		
+		let fetcher = new Fetcher(urlconfig);
+		await fetcher.fetchAll();
+		
+		let updatedVersion = fetcher.responses[0].lastModifiedVersion;
+		this.tags.clear();
+		this.tags.updateSyncState(updatedVersion);
+		this.tags.addTagsFromJson(fetcher.results);
+		this.tags.updateTagsVersion(updatedVersion);
+		this.tags.rebuildTagsArray();
+		this.tags.updateSecondaryData();
+		
+		return null;
+		
+		/*
+		let allTagsBare = fetcher.results;
+		let allTags = allTagsBare.map((bareTag) => {
+			return Zotero.Tag(bareTag);
+		});
+		this.tags.clear();
+		allTags.forEach((tag) => {
+			this.tags.addTag(tag);
+		});
+		this.tags.updateSecondaryData();
+		this.tags.tagsArray.forEach((tag) => {
+			tag.apiObj.version = this.tags.tagsVersion;
+		});
+		
+		let tags = await library.loadTags(urlconfig);
 		return new Promise(function (resolve, reject) {
 			var continueLoadingCallback = function (tags) {
 				log.debug('loadAllTags continueLoadingCallback', 3);
 				var plainList = Zotero.Tags.prototype.plainTagsList(tags.tagsArray);
-				plainList.sort(comparer());
+				plainList.sort(Library.comparer());
 				tags.plainList = plainList;
 				
 				if (tags.hasNextLink) {
 					log.debug('still has next link.', 3);
 					tags.tagsArray.sort(Zotero.Tag.prototype.tagComparer());
 					plainList = Zotero.Tags.prototype.plainTagsList(tags.tagsArray);
-					plainList.sort(comparer());
+					plainList.sort(Library.comparer());
 					tags.plainList = plainList;
 					
 					var nextLink = tags.nextLink;
@@ -1191,25 +1125,25 @@ class Library {
 					var newConfig = Object.assign({}, config);
 					newConfig.start = nextLinkConfig.start;
 					newConfig.limit = nextLinkConfig.limit;
-					return library.loadTags(newConfig).then(continueLoadingCallback);
+					return this.loadTags(newConfig).then(continueLoadingCallback);
 				} else {
 					log.debug('no next in tags link', 3);
 					tags.updateSyncedVersion();
 					tags.tagsArray.sort(Zotero.Tag.prototype.tagComparer());
 					plainList = Zotero.Tags.prototype.plainTagsList(tags.tagsArray);
-					plainList.sort(comparer());
+					plainList.sort(Library.comparer());
 					tags.plainList = plainList;
 					log.debug('resolving loadTags deferred', 3);
-					library.tagsLoaded = true;
-					library.tags.loaded = true;
+					this.tagsLoaded = true;
+					this.tags.loaded = true;
 					tags.loadedConfig = config;
 					
 					// update all tags with tagsVersion
-					for (var i = 0; i < library.tags.tagsArray.length; i++) {
+					for (var i = 0; i < this.tags.tagsArray.length; i++) {
 						tags.tagsArray[i].apiObj.version = tags.tagsVersion;
 					}
 					
-					library.trigger('tagsChanged', { library: library });
+					this.trigger('tagsChanged', { library: library });
 					return tags;
 				}
 			};
@@ -1217,6 +1151,7 @@ class Library {
 			resolve(library.loadTags(urlconfig)
 				.then(continueLoadingCallback));
 		});
+		*/
 	}
 
 	// LibraryCache
@@ -1325,10 +1260,11 @@ Library.sortableColumns = ['title',
 	'rights',
 	'dateAdded',
 	'dateModified',
+	'addedBy'];
+	
+/* 'numChildren',*/
+/* 'modifiedBy'*/
 
-	/* 'numChildren',*/
-	'addedBy'
-	/* 'modifiedBy'*/];
 /**
  * Columns that can be displayed in an items table UI
  * @type {Array}
@@ -1349,8 +1285,10 @@ Library.displayableColumns = ['title',
 	'dateAdded',
 	'dateModified',
 	'numChildren',
-	'addedBy'
-	/* 'modifiedBy'*/];
+	'addedBy'];
+
+/* 'modifiedBy'*/
+
 /**
  * Items columns that only apply to group libraries
  * @type {Array}
