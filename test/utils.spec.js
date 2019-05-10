@@ -1,4 +1,4 @@
-'use strict';
+
 
 const assert = require('chai').assert;
 const expect = require('chai').expect;
@@ -6,7 +6,7 @@ const Zotero = require('../src/libzotero.js');
 const Utils = Zotero.Utils;
 
 describe('Zotero.Utils', () => {
-	describe('randomString()', () =>  {
+	describe('randomString()', () => {
 		it('should return an 8 character string', () => {
 			var s = Utils.randomString(8);
 			assert.equal(8, s.length);
@@ -32,7 +32,7 @@ describe('Zotero.Utils', () => {
 		});
 	});
 
-	describe('libraryString()', () =>  {
+	describe('libraryString()', () => {
 		it('should construct proper library strings from type/id', () => {
 			assert.equal(Utils.libraryString('group', 74), 'g74');
 			assert.equal(Utils.libraryString('user', 10150), 'u10150');
@@ -40,7 +40,7 @@ describe('Zotero.Utils', () => {
 		});
 	});
 
-	describe('parseLibString()', () =>  {
+	describe('parseLibString()', () => {
 		it('should deconstruct proper library strings to type/id', () => {
 			assert.equal(Utils.parseLibString('g74').libraryType, 'group');
 			assert.equal(Utils.parseLibString('g74').libraryID, 74);
@@ -59,7 +59,7 @@ describe('Zotero.Utils', () => {
 		});
 	});
 
-	describe('parseApiDate()', () =>  {
+	describe('parseApiDate()', () => {
 		it('should parse a properly formatted date string from the Zotero API', () => {
 			var parsed = Utils.parseApiDate('2010-09-04T09:34:42Z');
 			var created = new Date(Date.UTC(2010, 8, 4, 9, 34, 42));

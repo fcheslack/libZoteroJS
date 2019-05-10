@@ -280,14 +280,14 @@ module.exports = new Response(`[
 		}
 	}
 ]`, {
-	status:200,
-	statusText:'OK',
-	headers:{
+	status: 200,
+	statusText: 'OK',
+	headers: {
 		'Zotero-API-Version': 3,
 		'Total-Results': 4,
-		'Link': '<https://www.zotero.org/users/3/publications/items>; rel="alternate"',
+		Link: '<https://www.zotero.org/users/3/publications/items>; rel="alternate"',
 		'Last-Modified-Version': 8,
-		'Vary': 'Accept-Encoding',
+		Vary: 'Accept-Encoding',
 		'Content-Type': 'application/json'
 	}
 });

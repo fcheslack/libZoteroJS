@@ -1,4 +1,4 @@
-'use strict';
+
 
 const assert = require('chai').assert;
 const Zotero = require('../src/libzotero.js');
@@ -13,8 +13,8 @@ describe('Zotero.Client', () => {
 			groupsFixture
 		);
 
-		fetchMock.catch(request => {
-			throw(new Error(`A request to ${request.url} was not expected`));
+		fetchMock.catch((request) => {
+			throw (new Error(`A request to ${request.url} was not expected`));
 		});
 	});
 

@@ -1,4 +1,4 @@
-'use strict';
+
 
 const assert = require('chai').assert;
 const Zotero = require('../src/libzotero.js');
@@ -6,7 +6,7 @@ const fetchMock = require('fetch-mock');
 const groupjsonFixture = require('./fixtures/group-1.json');
 
 describe('Zotero.Group', () => {
-	describe('Construct', () =>  {
+	describe('Construct', () => {
 		it('should instantiate group from api object', () => {
 			const group = new Zotero.Group(groupjsonFixture);
 
@@ -44,8 +44,8 @@ describe('Zotero.Group', () => {
 				[groupjsonFixture]
 			);
 
-			fetchMock.catch(request => {
-				throw(new Error(`A request to ${request.url} was not expected`));
+			fetchMock.catch((request) => {
+				throw (new Error(`A request to ${request.url} was not expected`));
 			});
 		});
 

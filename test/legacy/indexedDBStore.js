@@ -1,4 +1,4 @@
-'use strict';
+
 
 var assert = require('chai').assert;
 var should = require('chai').should();
@@ -10,22 +10,22 @@ Zotero.testing = {
 	libraryType: 'user'
 };
 
-describe.skip( 'Zotero.Idb', function() {
-	it("test Zotero IDB", function(){
-		//TODO: actually write tests
-		//destroy any existing IDB
-		//initialize Zotero.Idb
-		//instantiate library
-		//preload some items
-		//preload some collections
-		//preload some tags
-		//save to indexedDB
-		//delete library with all items, collections, tags
-		//instantiate new library
-		//load from indexedDB
-		//test for accurate items
-		//test for accurate collections
-		//test for accurate tags
+describe.skip('Zotero.Idb', function () {
+	it("test Zotero IDB", function () {
+		// TODO: actually write tests
+		// destroy any existing IDB
+		// initialize Zotero.Idb
+		// instantiate library
+		// preload some items
+		// preload some collections
+		// preload some tags
+		// save to indexedDB
+		// delete library with all items, collections, tags
+		// instantiate new library
+		// load from indexedDB
+		// test for accurate items
+		// test for accurate collections
+		// test for accurate tags
 	});
-} );
+});
 

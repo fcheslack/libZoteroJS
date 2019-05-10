@@ -1,4 +1,4 @@
-'use strict';
+
 
 const assert = require('chai').assert;
 const Zotero = require('../src/libzotero.js');
@@ -6,12 +6,20 @@ const Zotero = require('../src/libzotero.js');
 describe('Zotero.Events', () => {
 	let counter = 0;
 
-	//set up listeners to increment and decrement counter
-	Zotero.listen('increment', () => { counter = counter + 1; });
-	Zotero.listen('decrement', () => { counter = counter - 1; });
+	// set up listeners to increment and decrement counter
+	Zotero.listen('increment', () => {
+		counter += 1;
+	});
+	Zotero.listen('decrement', () => {
+		counter -= 1;
+	});
 
-	Zotero.listen('incrementBy', ev => { counter = counter + ev.data.by; });
-	Zotero.listen('decrementWithData', ev => { counter = counter - ev.data.amount; }, { amount: 5 });
+	Zotero.listen('incrementBy', (ev) => {
+		counter += ev.data.by;
+	});
+	Zotero.listen('decrementWithData', (ev) => {
+		counter -= ev.data.amount;
+	}, { amount: 5 });
 
 	it('should increment counter when we trigger an increment event', () => {
 		Zotero.trigger('increment');
@@ -29,7 +37,7 @@ describe('Zotero.Events', () => {
 	it('should increment by the amount passed in data', () => {
 		counter = 0;
 
-		Zotero.trigger('incrementBy', {by:7});
+		Zotero.trigger('incrementBy', { by: 7 });
 		assert.equal(counter, 7);
 	});
 

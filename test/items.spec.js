@@ -1,4 +1,4 @@
-'use strict';
+
 
 const assert = require('chai').assert;
 const Zotero = require('../src/libzotero.js');
@@ -14,7 +14,7 @@ describe('Zotero.Items', () => {
 			assert.lengthOf(items.objectArray, 190);
 		});
 
-		it('should allow access by key', () =>{
+		it('should allow access by key', () => {
 			let i = items.getItem('ZB3CU5JJ');
 			assert.equal(i.instance, 'Zotero.Item');
 			assert.equal(i.get('version'), 1);

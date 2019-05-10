@@ -1,11 +1,11 @@
-'use strict';
+
 
 const assert = require('chai').assert;
 const Zotero = require('../src/libzotero.js');
 const tagsApiObjectsFixture = require('./fixtures/tags-1.json');
 
 describe('Zotero.Tags', () => {
-	describe('Tags', () =>  {
+	describe('Tags', () => {
 		let tags;
 
 		beforeEach(() => {
@@ -32,9 +32,9 @@ describe('Zotero.Tags', () => {
 
 		beforeEach(() => {
 			tagColors = new Zotero.TagColors([
-				{name:'redtag', color:'#FF0000'},
-				{name:'greentag', color:'#00FF00'},
-				{name:'bluetag', color:'#0000FF'}
+				{ name: 'redtag', color: '#FF0000' },
+				{ name: 'greentag', color: '#00FF00' },
+				{ name: 'bluetag', color: '#0000FF' }
 			]);
 		});
 		
@@ -56,7 +56,6 @@ describe('Zotero.Tags', () => {
 			matches = tagColors.match(['bluetag', 'redtag', 'purpletag']);
 			assert.lengthOf(matches, 2);
 			assert.equal(matches[0], '#0000FF');
-
 		});
 	});
 });

@@ -1,10 +1,10 @@
-'use strict';
+
 
 const assert = require('chai').assert;
 const Zotero = require('../src/libzotero.js');
 const responseFixture = require('./fixtures/items-response-page-1.js');
 
-describe('Zotero.ApiResponse', function(){
+describe('Zotero.ApiResponse', function () {
 	describe('construct', () => {
 		it('should instantiate with no argument with default values', () => {
 			let ar = new Zotero.ApiResponse();
@@ -22,9 +22,9 @@ describe('Zotero.ApiResponse', function(){
 			assert.equal(2869, ar.lastModifiedVersion);
 			assert.equal('application/json', ar.contentType);
 			
-			assert.equal(ar.parsedLinks['next'], 'https://apidev.zotero.org/groups/12/items?start=25');
-			assert.equal(ar.parsedLinks['last'], 'https://apidev.zotero.org/groups/12/items?start=175');
-			assert.equal(ar.parsedLinks['alternate'], 'https://staging.zotero.net/groups/12/items');
+			assert.equal(ar.parsedLinks.next, 'https://apidev.zotero.org/groups/12/items?start=25');
+			assert.equal(ar.parsedLinks.last, 'https://apidev.zotero.org/groups/12/items?start=175');
+			assert.equal(ar.parsedLinks.alternate, 'https://staging.zotero.net/groups/12/items');
 		});
 
 		it('should parse backoff and retry-after headers into ints', () => {
