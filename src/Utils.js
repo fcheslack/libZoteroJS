@@ -1,6 +1,7 @@
 
 
-var log = require('./Log.js').Logger('libZotero:Utils');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Utils');
 
 let randomString = function (len, chars) {
 	if (!chars) {

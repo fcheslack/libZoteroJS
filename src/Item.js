@@ -1,6 +1,7 @@
 
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Item', 4);
 
-let log = require('./Log.js').Logger('libZotero:Item');
 
 import { ApiObject } from './ApiObject';
 let striptags = require('striptags');

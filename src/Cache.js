@@ -1,6 +1,7 @@
 
 
-let log = require('./Log.js').Logger('libZotero:Cache');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Cache');
 
 // build a consistent string from an object to use as a cache key
 // put object key/value pairs into array, sort array, and concatenate

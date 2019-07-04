@@ -1,6 +1,7 @@
 
 
-//var log = require('./Log.js').Logger('libZotero:Tag');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Tag');
 import { ApiObject } from './ApiObject';
 
 class Tag extends ApiObject {

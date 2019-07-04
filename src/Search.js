@@ -1,6 +1,7 @@
 
 
-var log = require('./Log.js').Logger('libZotero:Search');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Search');
 
 class Search {
 	constructor() {

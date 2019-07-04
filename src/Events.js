@@ -1,6 +1,7 @@
 
 
-var log = require('./Log.js').Logger('libZotero:Events');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Events');
 
 var trigger = function (eventType, data = {}, filter = false) {
 	if (filter) {

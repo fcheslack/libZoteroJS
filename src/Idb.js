@@ -1,6 +1,7 @@
 
 
-var log = require('./Log.js').Logger('libZotero:Idb');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Idb');
 
 // Initialize an indexedDB for the specified library user or group + id
 // returns a promise that is resolved with a Zotero.Idb.Library instance when successful

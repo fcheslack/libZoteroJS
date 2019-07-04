@@ -1,6 +1,7 @@
 
 
-let log = require('./Log.js').Logger('libZotero:Ajax');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Ajax');
 
 import { Validator } from './Validator.js';
 

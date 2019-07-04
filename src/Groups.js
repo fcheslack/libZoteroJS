@@ -1,6 +1,7 @@
 
 
-var log = require('./Log.js').Logger('libZotero:Groups');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Groups');
 
 class Groups {
 	constructor() {

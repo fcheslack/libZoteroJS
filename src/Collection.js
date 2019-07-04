@@ -1,6 +1,7 @@
 
 
-var log = require('./Log.js').Logger('libZotero:Collection');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Collection');
 import { ApiObject } from './ApiObject.js';
 
 class Collection extends ApiObject {

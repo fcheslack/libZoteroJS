@@ -1,6 +1,7 @@
 
 
-var log = require('./Log.js').Logger('libZotero:Items');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Items');
 import { Container } from './Container.js';
 
 class Items extends Container {

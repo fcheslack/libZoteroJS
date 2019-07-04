@@ -1,4 +1,5 @@
-var log = require('./Log.js').Logger('libZotero:RequestConfig');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:RequestConfig');
 import { Validator } from './Validator.js';
 
 class RequestConfig {

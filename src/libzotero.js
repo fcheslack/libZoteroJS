@@ -1,7 +1,8 @@
 
 
 import "@babel/polyfill";
-var log = require('./Log.js').Logger('libZotero');
+import { Logger, setDefaultLogLevel } from './Log.js';
+const log = new Logger('libZotero');
 
 var globalScope;
 
@@ -79,7 +80,8 @@ var Zotero = {
 	Writer: Writer,
 	TagColors: TagColors,
 	Validator: Validator,
-	RequestConfig: RequestConfig
+	RequestConfig: RequestConfig,
+	setDefaultLogLevel
 };
 
 globalScope.Zotero = globalScope.Z = Zotero;

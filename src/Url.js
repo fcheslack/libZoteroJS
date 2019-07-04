@@ -1,6 +1,7 @@
 
 
-var log = require('./Log.js').Logger('libZotero:Url');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Url');
 
 // Url.js - construct certain urls and links locally that may depend on the
 // current website's routing scheme etc. Not necessarily pointing to zotero.org

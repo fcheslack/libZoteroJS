@@ -1,6 +1,7 @@
 
 
-var log = require('./Log.js').Logger('libZotero:Sync');
+//import { Logger } from './Log.js';
+const log = new Logger('libZotero:Sync');
 
 // sync pull:
 // upload changed data

@@ -1,12 +1,12 @@
 
+let defaultLogLevel = 1;
+let setDefaultLogLevel = (level) => {
+	defaultLogLevel = level;
+};
 
-var log = {};
-
-var prefLevel = 1;
-
-var debugOut;
-var warnOut;
-var errorOut;
+let debugOut;
+let warnOut;
+let errorOut;
 
 if (typeof console == 'undefined') {
 	debugOut = function () {};
@@ -24,55 +24,41 @@ if (typeof console == 'undefined') {
 	};
 }
 
-
-log.SetLevel = function (level) {
-	prefLevel = level;
-};
-
-log.debug = function (debugstring, level) {
-	if (typeof (level) !== 'number') {
-		level = 1;
+class Logger {
+	constructor(prefix, logLevel = defaultLogLevel) {
+		this.prefix = prefix;
+		this.logLevel = logLevel;
 	}
-	if (level <= prefLevel) {
-		debugOut(debugstring);
+	
+	setLevel = (level) => {
+		this.logLevel = level;
 	}
-};
 
-log.debugObject = function (obj, level) {
-	if (typeof (level) !== 'number') {
-		level = 1;
-	}
-	if (level <= prefLevel) {
-		debugOut(obj);
-	}
-};
-
-log.warn = function (warnstring) {
-	warnOut(warnstring);
-};
-
-log.error = function (errorstring) {
-	errorOut(errorstring);
-};
-
-log.Logger = function (prefix, llevel = 2) {
-	prefLevel = llevel;
-	return {
-		debug: function (debugstring, level) {
-			if (typeof debugstring == 'string') {
-				return log.debug(`${prefix}: ${debugstring}`, level);
-			} else {
-				log.debug(`${prefix}: \\`, level);
-				log.debug(debugstring, level);
-			}
-		},
-		warn: function (warnstring) {
-			return log.warn(`${prefix}: ${warnstring}`);
-		},
-		error: function (errorstring) {
-			return log.error(`${prefix}: ${errorstring}`);
+	debug = (debugstring, level) => {
+		if (typeof (level) !== 'number') {
+			level = 1;
 		}
-	};
-};
+		if (level <= this.logLevel) {
+			debugOut(debugstring);
+		}
+	}
+	
+	debugObject = (obj, level) => {
+		if (typeof (level) !== 'number') {
+			level = 1;
+		}
+		if (level <= this.logLevel) {
+			debugOut(obj);
+		}
+	}
+	
+	warn = (warnstring) => {
+		warnOut(warnstring);
+	}
+	
+	error = (errorstring) => {
+		errorOut(errorstring);
+	}
+}
 
-module.exports = log;
+export { Logger, setDefaultLogLevel };

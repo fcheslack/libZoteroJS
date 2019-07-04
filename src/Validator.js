@@ -1,6 +1,7 @@
 
 
-var log = require('./Log.js').Logger('libZotero:Validator');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Validator');
 
 class Validator {
 	static validate(arg, type) {

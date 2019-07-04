@@ -1,6 +1,7 @@
 
 
-var log = require('./Log.js').Logger('libZotero:File');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:File');
 
 var SparkMD5 = require('spark-md5');
 

@@ -1,6 +1,7 @@
 
 
-var log = require('./Log.js').Logger('libZotero:TagColors');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:TagColors');
 
 class TagColors {
 	constructor(tagColors = []) {

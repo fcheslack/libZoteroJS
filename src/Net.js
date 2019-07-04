@@ -1,7 +1,7 @@
 
 
-let log = require('./Log.js').Logger('libZotero:Net', 3);
-require('cross-fetch/polyfill');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Net');
 
 import { ApiResponse } from './ApiResponse.js';
 import { Ajax as ajax } from './Ajax.js';

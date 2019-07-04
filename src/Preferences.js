@@ -1,6 +1,7 @@
 
 
-var log = require('./Log.js').Logger('libZotero:Preferences');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Preferences');
 
 class Preferences {
 	constructor(store, idString) {

@@ -1,6 +1,7 @@
 
 
-var log = require('./Log.js').Logger('libZotero:Deleted');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Deleted');
 
 class Deleted {
 	constructor(data) {

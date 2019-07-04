@@ -1,4 +1,5 @@
-// let log = require('./Log.js').Logger('libZotero:ApiObject');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:ApiObject');
 
 class ApiObject {
 	constructor(_props) {

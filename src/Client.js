@@ -1,6 +1,7 @@
 
 
-var log = require('./Log.js').Logger('libZotero:Client');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Client');
 
 import { Fetcher } from './Fetcher.js';
 import { Net } from './Net.js';

@@ -1,7 +1,8 @@
 import { Fetcher } from '../lib/Fetcher.js';
 
 
-var log = require('./Log.js').Logger('libZotero:Library');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Library');
 
 /**
  * A user or group Zotero library. This is generally the top level object

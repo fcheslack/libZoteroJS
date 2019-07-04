@@ -1,6 +1,7 @@
 
 
-var log = require('./Log.js').Logger('libZotero:Tags');
+import { Logger } from './Log.js';
+const log = new Logger('libZotero:Tags');
 import { Container } from './Container.js';
 
 class Tags extends Container {
