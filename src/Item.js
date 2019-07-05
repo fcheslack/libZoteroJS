@@ -331,6 +331,7 @@ class Item extends ApiObject {
 	getUploadAuthorization(fileinfo) {
 		// fileInfo: md5, filename, filesize, mtime, zip, contentType, charset
 		log.debug('Zotero.Item.getUploadAuthorization', 3);
+		log.debug(fileinfo, 4);
 		var config = {
 			target: 'item',
 			targetModifier: 'file',
@@ -348,10 +349,12 @@ class Item extends ApiObject {
 			headers['If-None-Match'] = '*';
 		}
 		
-		return Zotero.ajaxRequest(config, 'POST',
+		const { md5, filename, filesize, mtime } = fileinfo;
+		const body = `md5=${md5}&filename=${filename}&filesize=${filesize}&mtime=${mtime}`;
+		return this.owningLibrary.ajaxRequest(config, 'POST',
 			{
 				processData: true,
-				data: fileinfo,
+				data: body,
 				headers: headers
 			}
 		);
@@ -376,7 +379,7 @@ class Item extends ApiObject {
 			headers['If-None-Match'] = '*';
 		}
 		
-		return Zotero.ajaxRequest(config, 'POST',
+		return this.owningLibrary.ajaxRequest(config, 'POST',
 			{
 				processData: true,
 				data: { upload: uploadKey },
