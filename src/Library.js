@@ -73,8 +73,11 @@ class Library {
 		this.preferences = new Zotero.Preferences(Zotero.store, this.libraryString);
 		
 		if (typeof window === 'undefined') {
-			Zotero.config.useIndexedDB = false;
-			log.warn('Node detected; disabling indexedDB');
+			if (Zotero.config.useIndexedDB) {
+				// warn if we would otherwise have used IDB
+				Zotero.config.useIndexedDB = false;
+				log.warn('Node detected; disabling indexedDB');
+			}
 		} else {
 			// initialize indexedDB if we're supposed to use it
 			// detect safari until they fix their shit
@@ -1231,14 +1234,40 @@ class Library {
 	}
 
 	saveIndexedDB() {
-		var library = this;
-		
-		var saveItemsPromise = library.idbLibrary.updateItems(library.items.itemsArray);
-		var saveCollectionsPromise = library.idbLibrary.updateCollections(library.collections.collectionsArray);
-		var saveTagsPromise = library.idbLibrary.updateTags(library.tags.tagsArray);
+		var saveItemsPromise = this.idbLibrary.updateItems(this.items.itemsArray);
+		var saveCollectionsPromise = this.idbLibrary.updateCollections(this.collections.collectionsArray);
+		var saveTagsPromise = this.idbLibrary.updateTags(this.tags.tagsArray);
 		
 		// resolve the overall deferred when all the child deferreds are finished
 		return Promise.all([saveItemsPromise, saveCollectionsPromise, saveTagsPromise]);
+	}
+	
+	toJson() {
+		return {
+			items: this.items.toJson(),
+			collections: this.collections.toJson(),
+			tags: this.tags.toJson()
+		};
+	}
+	
+	load(libraryJson) {
+		const { items, collections, tags } = libraryJson;
+		
+		this.items.addItemsFromJson(items);
+		this.collections.addCollectionsFromJson(collections);
+		this.collections.initSecondaryData();
+		this.tags.addTagsFromJson(tags);
+		this.tags.initSecondaryData();
+		
+		this.items.itemsVersion = this.items.objectArray.map(item => item.get('version')).reduce((max, cur) => {
+			return Math.max(max, cur);
+		}, 0);
+		
+		this.collections.collectionsVersion = this.collections.objectArray.map(collection => collection.get('version')).reduce((max, cur) => {
+			return Math.max(max, cur);
+		}, 0);
+		
+		return this;
 	}
 }
 

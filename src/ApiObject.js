@@ -35,6 +35,10 @@ class ApiObject {
 			};
 		}
 	}
+	
+	toJson() {
+		return this.apiObj;
+	}
 }
 
 // module.exports = ApiObject;

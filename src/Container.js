@@ -239,6 +239,16 @@ class Container {
 		}
 		return object.get('key');
 	}
+	
+	toJson() {
+		let jsonArray = this.objectArray.map((ob) => {
+			if (typeof ob.toJson == 'function') {
+				return ob.toJson();
+			}
+			return {};
+		});
+		return jsonArray;
+	}
 }
 Container.prototype.chunkObjectsArray = chunkObjectsArray;
 
