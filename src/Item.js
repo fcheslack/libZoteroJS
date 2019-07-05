@@ -191,23 +191,20 @@ class Item extends ApiObject {
 		return writeApiObj;
 	}
 
+	// takes an array of objects with a 'note' property and creates child notes of this item
 	async createChildNotes(notes) {
 		var childItems = [];
-		var childItemPromises = [];
 		const parentKey = this.key;
 		
-		notes.forEach((note) => {
-			var childItem = new Item();
-			var p = childItem.initEmpty('note')
-				.then((noteItem) => {
-					noteItem.set('note', note.note);
-					noteItem.set('parentItem', parentKey);
-					childItems.push(noteItem);
-				});
-			childItemPromises.push(p);
+		notes.forEach(async (note) => {
+			let childItem = new Item();
+			await childItem.initEmpty('note');
+			childItem.set('note', note.note);
+			childItem.set('parentItem', parentKey);
+			
+			childItems.push(childItem);
 		});
 		
-		await Promise.all(childItemPromises);
 		return this.owningLibrary.writeItems(childItems);
 	}
 
@@ -410,7 +407,7 @@ class Item extends ApiObject {
 		if (Item.prototype.creatorTypes[itemType]) {
 			log.debug('creatorTypes of requested itemType available in localStorage', 3);
 			log.debug(Item.prototype.creatorTypes, 4);
-			return Promise.resolve(Item.prototype.creatorTypes[itemType]);
+			return Item.prototype.creatorTypes[itemType];
 		} else {
 			log.debug('sending request for creatorTypes', 3);
 			var query = Zotero.ajax.apiQueryString({ itemType: itemType });
@@ -432,7 +429,7 @@ class Item extends ApiObject {
 		if (creatorFields) {
 			log.debug('have creatorFields in localStorage', 3);
 			Item.prototype.creatorFields = creatorFields;// JSON.parse(Zotero.storage.localStorage['creatorFields']);
-			return Promise.resolve(creatorFields);
+			return creatorFields;
 		}
 		
 		var requestUrl = Zotero.config.baseApiUrl + '/creatorFields';
@@ -545,6 +542,14 @@ class Item extends ApiObject {
 		case 'parentItem':
 			if (val === '') {
 				val = false;
+				break;
+			}
+			// try to set correct parentItem key if passed an actual item
+			if (typeof val == 'object' || typeof val == 'function') {
+				if (val.itemKey) {
+					this.apiObj.data.parentItem = val.itemKey;
+					break;
+				}
 			}
 			this.apiObj.data.parentItem = val;
 			break;
@@ -616,12 +621,13 @@ class Item extends ApiObject {
 		
 		let response = await childItem.writeItem();
 		// successful attachmentItemWrite
+		// log.debug(response);
 		this.numChildren++;
-		if (!response.ok) {
-			let serverMessage = await response.text();
+		if (response.isError) {
+			// let serverMessage = await response.text();
 			let err = new Error('Failure during attachmentItem write.');
-			err.code = response.status;
-			err.serverMessage = serverMessage;
+			err.code = response.rawResponse.status;
+			// err.serverMessage = serverMessage;
 			throw err;
 		}
 		return childItem.uploadFile(fileInfo, progressCallback);
@@ -698,7 +704,7 @@ class Item extends ApiObject {
 				&& this.citePaperJournalArticleURL);
 		
 		var cslItem = { type: cslType };
-		if (this.owningLibrary) {
+		if (this.apiObj.library.id) {
 			cslItem.id = this.apiObj.library.id + '/' + this.get('key');
 		} else {
 			cslItem.id = Zotero.utils.getKey();

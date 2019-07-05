@@ -17,14 +17,11 @@ const log = new Logger('libZotero:Sync');
 // getDeletedData
 // process deleted
 // checkConcurrentUpdates (compare Last-Modified-Version from collections?newer request to one from /deleted request)
-Zotero.Library.prototype.syncLibrary = function (full) {
-	var library = this;
+Zotero.Library.prototype.syncLibrary = async function (_full) {
 	// TODO: upload dirty collections
 	// TODO: upload dirty items
 	
 	// pull down updated collections
-	var syncPromise = library.loadUpdatedCollections()
-		.then(function () {
-			return library.loadUpdatedItems();
-		});
+	await this.loadUpdatedCollections();
+	await this.loadUpdatedItems();
 };

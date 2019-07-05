@@ -1,10 +1,10 @@
 
-
 import { Logger } from './Log.js';
 const log = new Logger('libZotero:Net');
 
 import { ApiResponse } from './ApiResponse.js';
 import { Ajax as ajax } from './Ajax.js';
+import { fetch, Headers, Request } from 'cross-fetch';
 
 /*
  * Make concurrent and sequential network requests, respecting backoff/retry-after
@@ -41,7 +41,6 @@ class Net {
 	runSequential = async (requestObjects) => {
 		log.debug('Net.runSequential', 3);
 		var responses = [];
-		var seqPromise = Promise.resolve();
 		
 		for (var i = 0; i < requestObjects.length; i++) {
 			let requestObject = requestObjects[i];
@@ -50,7 +49,6 @@ class Net {
 			responses.push(response);
 		}
 		
-		await seqPromise;
 		log.debug('done with sequential aggregator promise - returning responses', 4);
 		return responses;
 	}
@@ -126,69 +124,6 @@ class Net {
 	// perform API request defined by requestConfig
 	apiRequest = async (requestConfig) => {
 		return this.ajaxRequest(requestConfig);
-		
-		/*
-		let defaultConfig = {
-			type: 'GET',
-			headers: {
-				'Zotero-API-Version': 3,
-				'Content-Type': 'application/json'
-			},
-			success: function (response) {
-				return response;
-			},
-			error: function (response) {
-				if (!(response instanceof ApiResponse)) {
-					log.error(`Response is not a Zotero.ApiResponse: ${response}`);
-				} else if (response.rawResponse) {
-					log.error(`apiRequest rejected:${response.rawResponse.status} - ${response.rawResponse.statusText}`);
-				} else {
-					log.error('apiRequest rejected: No rawResponse set. (likely network error)');
-					log.error(response.error);
-				}
-				throw response;
-			}
-		};
-		var headers = Object.assign({}, defaultConfig.headers, requestConfig.headers);
-		if (requestConfig.key) {
-			headers = Object.assign(headers, { 'Zotero-API-Key': requestConfig.key });
-			delete requestConfig.key;
-		}
-		var config = Object.assign({}, defaultConfig, requestConfig);
-		config.headers = headers;
-		if (typeof config.url == 'object') {
-			config.url = ajax.apiRequestString(config.url);
-		}
-		if (!config.url) {
-			throw new Error('No url specified in Net.apiRequest');
-		}
-		let response;
-		let ar;
-		try {
-			response = await this.ajax(config);
-			ar = new ApiResponse(response);
-			if ('processData' in config && config.processData === false) {
-				await config.success(response);
-				return response;
-			} else {
-				let data = await response.json();
-				ar.data = data;
-				ar = await config.success(ar);
-			}
-		} catch (response) {
-			if (response instanceof Error) {
-				ar = new ApiResponse();
-				ar.isError = true;
-				ar.error = response;
-			} else {
-				ar = new ApiResponse(response);
-			}
-			ar = await config.error(ar);
-		}
-
-		// this.individualRequestDone(ar);
-		return ar;
-		*/
 	}
 
 	// perform a network request defined by requestConfig
@@ -229,13 +164,18 @@ class Net {
 			headers = Object.assign(headers, { 'Zotero-API-Key': requestConfig.key });
 			delete requestConfig.key;
 		}
+		if (requestConfig.ifModifiedSinceVersion) {
+			headers = Object.assign(headers, { 'If-Modified-Since-Version': requestConfig.ifModifiedSinceVersion });
+		}
+		if (requestConfig.ifUnmodifiedSinceVersion) {
+			headers = Object.assign(headers, { 'If-Unmodified-Since-Version': requestConfig.ifUnmodifiedSinceVersion });
+		}
 		
 		var config = Object.assign({}, defaultConfig, requestConfig);
 		config.headers = headers;
 		if (typeof config.url == 'object') {
 			config.url = ajax.apiRequestString(config.url);
 		}
-		// config.url = ajax.proxyWrapper(config.url, config.type);
 		
 		if (!config.url) {
 			throw new Error('No url specified in Net.ajaxRequest');
@@ -282,8 +222,6 @@ class Net {
 			ar.rawResponse = error;
 			ar.data = error;
 		}
-		
-		//this.individualRequestDone(ar);
 		
 		if (ar.isError && config.throwOnError) {
 			throw ar;

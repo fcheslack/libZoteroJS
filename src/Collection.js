@@ -105,7 +105,7 @@ class Collection extends ApiObject {
 		});
 	}
 
-	getMemberItemKeys = () => {
+	getMemberItemKeys = async () => {
 		log.debug('Zotero.Collection.getMemberItemKeys', 3);
 		var config = {
 			target: 'items',
@@ -114,21 +114,17 @@ class Collection extends ApiObject {
 			collectionKey: this.key,
 			format: 'keys'
 		};
-
-		return new Promise((resolve, reject) => {
-			this.owningLibrary.ajaxRequest(
-				config,
-				'GET',
-				{ processData: false }
-			).then((response) => {
-				log.debug('getMemberItemKeys callback', 3);
-				response.text().then((keys) => {
-					keys = keys.trim().split(/[\s]+/);
-					this.itemKeys = keys;
-					resolve(keys);
-				}).catch(reject);
-			}).catch(reject);
-		});
+		
+		let response = await this.owningLibrary.ajaxRequest(
+			config,
+			'GET',
+			{ processData: false }
+		);
+		log.debug('getMemberItemKeys got response', 3);
+		let keys = await response.text();
+		keys = keys.trim().split(/[\s]+/);
+		this.itemKeys = keys;
+		return keys;
 	}
 
 	removeItem = (itemKey) => {

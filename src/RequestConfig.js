@@ -129,6 +129,11 @@ class RequestConfig {
 
 		return valid;
 	}
+	
+	Since(val) {
+		this.config.since = val;
+		return this;
+	}
 }
 
 export { RequestConfig };
