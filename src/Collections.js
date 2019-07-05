@@ -19,6 +19,7 @@ class Collections extends Container {
 		this.objectArray = this.collectionsArray;
 		this.dirty = false;
 		this.loaded = false;
+		this.collectionsVersion = 0;
 		
 		if (jsonBody) {
 			this.addCollectionsFromJson(jsonBody);
