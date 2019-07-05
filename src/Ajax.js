@@ -1,5 +1,4 @@
 
-
 import { Logger } from './Log.js';
 const log = new Logger('libZotero:Ajax');
 
@@ -244,27 +243,6 @@ Ajax.proxyWrapper = function (requestUrl, method) {
 	} else {
 		return requestUrl;
 	}
-};
-
-Ajax.downloadBlob = function (url) {
-	return new Promise(function (resolve, reject) {
-		var xhr = new XMLHttpRequest();
-		var blob;
-		
-		xhr.open('GET', url, true);
-		xhr.responseType = 'blob';
-		
-		xhr.addEventListener('load', function () {
-			if (xhr.status === 200) {
-				log.debug('downloadBlob Image retrieved. resolving', 3);
-				resolve(xhr.response);
-			} else {
-				reject(xhr.response);
-			}
-		});
-		// Send XHR
-		xhr.send();
-	});
 };
 
 export { Ajax };
