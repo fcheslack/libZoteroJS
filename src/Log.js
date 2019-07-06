@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 
 let defaultLogLevel = 1;
 let setDefaultLogLevel = (level) => {
