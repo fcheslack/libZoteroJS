@@ -79,7 +79,7 @@
 			"never"
 		],
 		"consistent-return": "error",
-		"consistent-this": "error",
+		"consistent-this": "warn",
 		"curly": "off",
 		"default-case": "off",
 		"dot-location": [
@@ -303,7 +303,7 @@
 		],
 		"quotes": "off",
 		"radix": [
-			"error",
+			"warn",
 			"as-needed"
 		],
 		"require-await": "off",
